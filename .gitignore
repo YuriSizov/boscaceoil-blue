@@ -1,0 +1,41 @@
+### Project-specific ignores ###
+
+bin/*
+
+### Godot-specific ignores ###
+.godot/
+
+
+### IDEs and code editors ###
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+.history/
+
+
+### Operating systems ###
+
+# Linux
+*~
+.directory
+
+# macOS
+.DS_Store
+__MACOSX
+
+# Windows
+# https://github.com/github/gitignore/blob/main/Global/Windows.gitignore
+[Tt]humbs.db
+[Tt]humbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
