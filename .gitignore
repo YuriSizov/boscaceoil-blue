@@ -4,6 +4,7 @@ bin/*
 
 ### Godot-specific ignores ###
 .godot/
+*.tmp
 
 
 ### IDEs and code editors ###

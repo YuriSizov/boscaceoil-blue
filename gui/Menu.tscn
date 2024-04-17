@@ -1,0 +1,80 @@
+[gd_scene load_steps=9 format=3 uid="uid://l0bjoy6vwtbx"]
+
+[ext_resource type="Script" path="res://gui/Menu.gd" id="1_pjxdv"]
+[ext_resource type="Texture2D" uid="uid://l0r5er3xyb4r" path="res://gui/theme/fullscreen_on_icon.tres" id="2_kmlcb"]
+[ext_resource type="PackedScene" uid="uid://7lvvn5lu3ywt" path="res://gui/widgets/NavigationButton.tscn" id="2_l3q7q"]
+[ext_resource type="ButtonGroup" uid="uid://duqg28jfenc12" path="res://gui/theme/navigation_buttons.tres" id="3_kmmx3"]
+[ext_resource type="PackedScene" uid="uid://d0lne8svx0ysl" path="res://gui/views/FileView.tscn" id="5_6f3ft"]
+[ext_resource type="PackedScene" uid="uid://c1oriajgloul5" path="res://gui/views/ArrangementView.tscn" id="6_0weha"]
+[ext_resource type="PackedScene" uid="uid://cw48njslxrtsl" path="res://gui/views/InstrumentView.tscn" id="7_32hp6"]
+[ext_resource type="PackedScene" uid="uid://ggnvgntxytdg" path="res://gui/views/AdvancedView.tscn" id="8_b5sqt"]
+
+[node name="Menu" type="VBoxContainer"]
+auto_translate_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_pjxdv")
+
+[node name="Navigation" type="HBoxContainer" parent="."]
+auto_translate_mode = 1
+layout_mode = 2
+
+[node name="FileTab" parent="Navigation" instance=ExtResource("2_l3q7q")]
+layout_mode = 2
+size_flags_horizontal = 3
+button_pressed = true
+button_group = ExtResource("3_kmmx3")
+label_text = "FILE"
+
+[node name="ArrangementTab" parent="Navigation" instance=ExtResource("2_l3q7q")]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 3
+button_group = ExtResource("3_kmmx3")
+label_text = "ARRANGEMENT"
+
+[node name="InstrumentTab" parent="Navigation" instance=ExtResource("2_l3q7q")]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 3
+button_group = ExtResource("3_kmmx3")
+label_text = "INSTRUMENT"
+
+[node name="AdvancedTab" parent="Navigation" instance=ExtResource("2_l3q7q")]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 3
+button_group = ExtResource("3_kmmx3")
+label_text = "ADVANCED"
+
+[node name="FullscreenToggle" type="Button" parent="Navigation"]
+custom_minimum_size = Vector2(64, 28)
+layout_mode = 2
+theme_type_variation = &"FullscreenButton"
+icon = ExtResource("2_kmlcb")
+icon_alignment = 1
+expand_icon = true
+
+[node name="Contents" type="PanelContainer" parent="."]
+auto_translate_mode = 1
+custom_minimum_size = Vector2(0, 300)
+layout_mode = 2
+theme_type_variation = &"MenuContentsPanel"
+
+[node name="FileView" parent="Contents" instance=ExtResource("5_6f3ft")]
+layout_mode = 2
+
+[node name="ArrangementView" parent="Contents" instance=ExtResource("6_0weha")]
+visible = false
+layout_mode = 2
+
+[node name="InstrumentView" parent="Contents" instance=ExtResource("7_32hp6")]
+visible = false
+layout_mode = 2
+
+[node name="AdvancedView" parent="Contents" instance=ExtResource("8_b5sqt")]
+visible = false
+layout_mode = 2

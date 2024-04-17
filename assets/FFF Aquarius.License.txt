@@ -1,0 +1,4 @@
+The FFF Aquarius font is a part of a collection offered by FontsForFlash (http://www.fontsforflash.com/) — a now-defunct resource providing pixel fonts for Flash applications.
+The FFF resource is credited to Randy Caldwell. The author of the FFF Aquarius font itself is unknown. The license status of the font is unknown.
+
+The font is used by the original Bosca Ceoil application. Bosca Ceoil Blue reuses it in good faith. If you believe that this application violates the license of the FFF Aquarius font, please contact Yuri Sizov at yuris@humnom.net so the font can be replaced.

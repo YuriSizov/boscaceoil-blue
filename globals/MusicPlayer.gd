@@ -48,6 +48,8 @@ func _playback_step() -> void:
 		return
 
 	var song := Controller.current_song
+	if song.instruments.is_empty() || song.patterns.is_empty() || not song.arrangement:
+		return
 
 	# Prepare the next timeline bar in the arrangement.
 	if _pattern_time >= song.pattern_size:

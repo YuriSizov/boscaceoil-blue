@@ -23,10 +23,20 @@ Controller="*res://globals/Controller.gd"
 
 gdscript/warnings/untyped_declaration=1
 
+[display]
+
+window/size/viewport_width=1382
+window/size/viewport_height=1008
+window/stretch/scale_mode="integer"
+
 [editor]
 
 naming/scene_name_casing=1
 naming/script_name_casing=1
+
+[gui]
+
+theme/custom="res://gui/theme/project_theme.tres"
 
 [rendering]
 

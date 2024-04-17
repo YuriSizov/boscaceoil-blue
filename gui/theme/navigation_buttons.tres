@@ -1,0 +1,5 @@
+[gd_resource type="ButtonGroup" format=3 uid="uid://duqg28jfenc12"]
+
+[resource]
+resource_local_to_scene = false
+resource_name = "NavigationButtons"

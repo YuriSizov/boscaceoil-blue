@@ -1,0 +1,35 @@
+[gd_scene load_steps=2 format=3 uid="uid://byfh0p3nqrosa"]
+
+[ext_resource type="PackedScene" uid="uid://dciyoa2wkbtfp" path="res://gui/views/NoteMap.tscn" id="1_jt24t"]
+
+[node name="PatternEditor" type="VBoxContainer"]
+auto_translate_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+
+[node name="NoteMap" parent="." instance=ExtResource("1_jt24t")]
+layout_mode = 2
+
+[node name="PropertyBar" type="HBoxContainer" parent="."]
+auto_translate_mode = 1
+layout_mode = 2
+
+[node name="InstrumentPicker" type="Control" parent="PropertyBar"]
+auto_translate_mode = 1
+layout_mode = 2
+
+[node name="NoteShifter" type="Control" parent="PropertyBar"]
+auto_translate_mode = 1
+layout_mode = 2
+
+[node name="ScalePicker" type="Control" parent="PropertyBar"]
+auto_translate_mode = 1
+layout_mode = 2
+
+[node name="KeyPicker" type="Control" parent="PropertyBar"]
+auto_translate_mode = 1
+layout_mode = 2

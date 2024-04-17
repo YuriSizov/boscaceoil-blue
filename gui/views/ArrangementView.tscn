@@ -1,0 +1,4 @@
+[gd_scene format=3 uid="uid://c1oriajgloul5"]
+
+[node name="ArrangementView" type="MarginContainer"]
+auto_translate_mode = 1

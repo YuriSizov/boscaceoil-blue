@@ -1,0 +1,4 @@
+[gd_scene format=3 uid="uid://ggnvgntxytdg"]
+
+[node name="AdvancedView" type="MarginContainer"]
+auto_translate_mode = 1

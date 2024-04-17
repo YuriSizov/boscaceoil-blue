@@ -1,0 +1,205 @@
+[gd_scene load_steps=5 format=3 uid="uid://d0lne8svx0ysl"]
+
+[ext_resource type="PackedScene" uid="uid://jjkaxpgl6mmu" path="res://gui/widgets/AnimatedLogo.tscn" id="1_cb5p1"]
+[ext_resource type="Texture2D" uid="uid://b4pqq6culbr6a" path="res://gui/theme/right_arrow.tres" id="3_jbhik"]
+[ext_resource type="Texture2D" uid="uid://ck1durkyp2j8a" path="res://gui/theme/pause_icon.tres" id="4_np651"]
+[ext_resource type="Texture2D" uid="uid://c152mlked4d1i" path="res://gui/theme/stop_icon.tres" id="5_7b7gn"]
+
+[node name="FileView" type="MarginContainer"]
+auto_translate_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Layout" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="FillerStart" type="Control" parent="Layout"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Introduction" type="PanelContainer" parent="Layout"]
+custom_minimum_size = Vector2(640, 0)
+layout_mode = 2
+
+[node name="Contents" type="VBoxContainer" parent="Layout/Introduction"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"VBoxSpaced"
+
+[node name="BoscaFlair" type="VBoxContainer" parent="Layout/Introduction/Contents"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Logo" parent="Layout/Introduction/Contents/BoscaFlair" instance=ExtResource("1_cb5p1")]
+layout_mode = 2
+
+[node name="VersionFlair" type="HBoxContainer" parent="Layout/Introduction/Contents/BoscaFlair"]
+layout_mode = 2
+theme_type_variation = &"HBoxSpaced"
+
+[node name="Subtitle" type="Label" parent="Layout/Introduction/Contents/BoscaFlair/VersionFlair"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"SubtitleLabel"
+text = "The Blue Album"
+
+[node name="Version" type="Label" parent="Layout/Introduction/Contents/BoscaFlair/VersionFlair"]
+layout_mode = 2
+theme_type_variation = &"CreditsLabel"
+text = "v3.0 alpha"
+horizontal_alignment = 2
+
+[node name="Credit" type="Label" parent="Layout/Introduction/Contents"]
+auto_translate_mode = 1
+layout_mode = 2
+theme_type_variation = &"CreditsLabel"
+text = "Created by Terry Cavanagh & Yuri Sizov"
+
+[node name="Controls" type="HBoxContainer" parent="Layout/Introduction/Contents"]
+layout_mode = 2
+theme_type_variation = &"HBoxSpaced"
+
+[node name="Credits" type="Button" parent="Layout/Introduction/Contents/Controls"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+text = "CREDITS"
+
+[node name="Help" type="Button" parent="Layout/Introduction/Contents/Controls"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+text = "HELP"
+
+[node name="Playback" type="PanelContainer" parent="Layout/Introduction/Contents/Controls"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_type_variation = &"WidgetPanel"
+
+[node name="Layout" type="HBoxContainer" parent="Layout/Introduction/Contents/Controls/Playback"]
+layout_mode = 2
+alignment = 1
+
+[node name="Play" type="Button" parent="Layout/Introduction/Contents/Controls/Playback/Layout"]
+custom_minimum_size = Vector2(48, 32)
+layout_mode = 2
+theme_type_variation = &"PlaybackButton"
+icon = ExtResource("3_jbhik")
+flat = true
+icon_alignment = 1
+expand_icon = true
+
+[node name="Pause" type="Button" parent="Layout/Introduction/Contents/Controls/Playback/Layout"]
+auto_translate_mode = 1
+custom_minimum_size = Vector2(48, 32)
+layout_mode = 2
+theme_type_variation = &"PlaybackButton"
+icon = ExtResource("4_np651")
+flat = true
+icon_alignment = 1
+expand_icon = true
+
+[node name="Stop" type="Button" parent="Layout/Introduction/Contents/Controls/Playback/Layout"]
+auto_translate_mode = 1
+custom_minimum_size = Vector2(48, 32)
+layout_mode = 2
+theme_type_variation = &"PlaybackButton"
+icon = ExtResource("5_7b7gn")
+flat = true
+icon_alignment = 1
+expand_icon = true
+
+[node name="FillerMiddle" type="Control" parent="Layout"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BaseControls" type="PanelContainer" parent="Layout"]
+auto_translate_mode = 1
+custom_minimum_size = Vector2(640, 0)
+layout_mode = 2
+
+[node name="Rows" type="VBoxContainer" parent="Layout/BaseControls"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"VBoxSpaced"
+
+[node name="CreateExport" type="HBoxContainer" parent="Layout/BaseControls/Rows"]
+layout_mode = 2
+theme_type_variation = &"HBoxSpaced"
+alignment = 1
+
+[node name="CreateSong" type="Button" parent="Layout/BaseControls/Rows/CreateExport"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+text = "NEW SONG"
+
+[node name="ExportSong" type="Button" parent="Layout/BaseControls/Rows/CreateExport"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+text = "EXPORT..."
+
+[node name="SaveLoad" type="HBoxContainer" parent="Layout/BaseControls/Rows"]
+auto_translate_mode = 1
+layout_mode = 2
+theme_type_variation = &"HBoxSpaced"
+alignment = 1
+
+[node name="LoadCeol" type="Button" parent="Layout/BaseControls/Rows/SaveLoad"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+text = "LOAD .ceol"
+
+[node name="SaveCeol" type="Button" parent="Layout/BaseControls/Rows/SaveLoad"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+text = "SAVE .ceol"
+
+[node name="PatternSettings" type="PanelContainer" parent="Layout/BaseControls/Rows"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_type_variation = &"WidgetPanel"
+
+[node name="Layout" type="HBoxContainer" parent="Layout/BaseControls/Rows/PatternSettings"]
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="Layout/BaseControls/Rows/PatternSettings/Layout"]
+layout_mode = 2
+text = "PATTERN"
+uppercase = true
+
+[node name="BPMSettings" type="PanelContainer" parent="Layout/BaseControls/Rows"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_type_variation = &"WidgetPanel"
+
+[node name="Layout" type="HBoxContainer" parent="Layout/BaseControls/Rows/BPMSettings"]
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="Layout/BaseControls/Rows/BPMSettings/Layout"]
+auto_translate_mode = 1
+layout_mode = 2
+text = "BPM"
+uppercase = true
+
+[node name="FillerEnd" type="Control" parent="Layout"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 3

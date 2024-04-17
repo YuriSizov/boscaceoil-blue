@@ -4,10 +4,13 @@
 # Provided under MIT                              #
 ###################################################
 
-extends VBoxContainer
+@tool
+extends Control
+
+@onready var _logo: TextureRect = $Logo
 
 
-func _enter_tree() -> void:
-	# Ensure that the minimum size of the UI is respected and
-	# the main window cannot go any lower.
-	get_window().wrap_controls = true
+func _get_minimum_size() -> Vector2:
+	if not _logo:
+		return Vector2.ZERO
+	return _logo.get_combined_minimum_size()

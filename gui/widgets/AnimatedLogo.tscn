@@ -1,0 +1,46 @@
+[gd_scene load_steps=4 format=3 uid="uid://jjkaxpgl6mmu"]
+
+[ext_resource type="Script" path="res://gui/widgets/AnimatedLogo.gd" id="1_i10nm"]
+[ext_resource type="Texture2D" uid="uid://bl2bn0gj2t4wo" path="res://assets/logo_blue.png" id="1_lc2ol"]
+[ext_resource type="Texture2D" uid="uid://uxa5unpo0xp8" path="res://assets/logo_shadow.png" id="2_w1mr7"]
+
+[node name="LogoContainer" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_i10nm")
+
+[node name="Logo" type="TextureRect" parent="."]
+auto_translate_mode = 1
+texture_filter = 1
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_lc2ol")
+stretch_mode = 5
+
+[node name="LogoShadow" type="TextureRect" parent="Logo"]
+auto_translate_mode = 1
+show_behind_parent = true
+texture_filter = 1
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 8.0
+offset_bottom = 8.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_w1mr7")
+expand_mode = 1
+stretch_mode = 5

@@ -1,0 +1,83 @@
+[gd_scene load_steps=7 format=3 uid="uid://dciyoa2wkbtfp"]
+
+[ext_resource type="Script" path="res://gui/views/NoteMap.gd" id="1_opxc8"]
+[ext_resource type="Script" path="res://gui/views/note_map/NoteMapGutter.gd" id="2_3knao"]
+[ext_resource type="Script" path="res://gui/views/note_map/NoteMapScrollbar.gd" id="3_gs7e5"]
+[ext_resource type="Texture2D" uid="uid://bd6e6pu2tm4u3" path="res://gui/theme/up_arrow_small.tres" id="4_lvxl6"]
+[ext_resource type="Texture2D" uid="uid://dsaf8rh2mger7" path="res://gui/theme/down_arrow_small.tres" id="5_cu2vu"]
+[ext_resource type="Script" path="res://gui/views/note_map/NoteMapOverlay.gd" id="6_20i0e"]
+
+[node name="NoteMap" type="Control"]
+auto_translate_mode = 1
+clip_contents = true
+custom_minimum_size = Vector2(0, 280)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+mouse_default_cursor_shape = 2
+script = ExtResource("1_opxc8")
+
+[node name="NoteMapGutter" type="Control" parent="."]
+auto_translate_mode = 1
+custom_minimum_size = Vector2(56, 0)
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+grow_vertical = 2
+script = ExtResource("2_3knao")
+
+[node name="NoteMapScrollbar" type="Control" parent="."]
+auto_translate_mode = 1
+custom_minimum_size = Vector2(42, 0)
+layout_mode = 1
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 2
+script = ExtResource("3_gs7e5")
+
+[node name="UpButton" type="Button" parent="NoteMapScrollbar"]
+z_index = 1
+custom_minimum_size = Vector2(0, 28)
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 8.0
+grow_horizontal = 2
+theme_type_variation = &"ScrollbarButton"
+icon = ExtResource("4_lvxl6")
+icon_alignment = 1
+expand_icon = true
+
+[node name="DownButton" type="Button" parent="NoteMapScrollbar"]
+auto_translate_mode = 1
+z_index = 1
+custom_minimum_size = Vector2(0, 28)
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -8.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_type_variation = &"ScrollbarButton"
+icon = ExtResource("5_cu2vu")
+icon_alignment = 1
+expand_icon = true
+
+[node name="NoteMapOverlay" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("6_20i0e")

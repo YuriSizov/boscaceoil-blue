@@ -1,0 +1,4 @@
+[gd_scene format=3 uid="uid://cw48njslxrtsl"]
+
+[node name="InstrumentView" type="MarginContainer"]
+auto_translate_mode = 1
