@@ -44,9 +44,14 @@ func reset_driver() -> void:
 	
 	_driver.stop()
 
-	_driver.set_bpm(Controller.current_song.bpm)
+	update_driver_bpm()
 	_driver.play(null, false)
 	print("Driver streaming started.")
+
+
+func update_driver_bpm() -> void:
+	if Controller.current_song:
+		_driver.set_bpm(Controller.current_song.bpm)
 
 
 # Output and streaming control.

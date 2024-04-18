@@ -67,7 +67,7 @@ func add_note(note: int, position: int, length: int, autosort: bool = true) -> v
 
 
 func sort_notes() -> void:
-	notes.sort_custom(func (a, b):
+	notes.sort_custom(func (a: Vector3i, b: Vector3i) -> bool:
 		if a.x < 0: # Empty record, sort to the end.
 			return false
 		if b.x < 0: # Empty record, sort to the end.

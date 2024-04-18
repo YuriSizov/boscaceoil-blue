@@ -10,34 +10,20 @@ extends Control
 signal shifted_up()
 signal shifted_down()
 
-const HOLD_THRESHOLD := 0.064
-
 var octave_rows: Array[NoteMap.OctaveRow] = []
 
-var _hold_button: Button = null
-var _hold_interval: float = 0
-
+var _button_holder: ButtonHolder = null
 @onready var _up_button: Button = $UpButton
 @onready var _down_button: Button = $DownButton
 
 
 func _ready() -> void:
-	set_process(false)
-
-	_up_button.button_down.connect(_button_press_started.bind(_up_button))
-	_down_button.button_down.connect(_button_press_started.bind(_down_button))
-	_up_button.button_up.connect(_button_press_stopped)
-	_down_button.button_up.connect(_button_press_stopped)
+	_button_holder = ButtonHolder.new(self, _up_button, _down_button)
+	_button_holder.set_press_callback(_emit_hold_signal)
 
 
 func _process(delta: float) -> void:
-	if not _hold_button:
-		return
-
-	_hold_interval += delta
-	if _hold_interval >= HOLD_THRESHOLD:
-		_hold_interval = 0
-		_emit_hold_signal()
+	_button_holder.process(delta)
 
 
 func _draw() -> void:
@@ -80,23 +66,11 @@ func get_available_rect() -> Rect2:
 	return available_rect
 
 
-func _button_press_started(button: Button) -> void:
-	_hold_button = button
-	_emit_hold_signal()
-	set_process(true)
-
-
-func _button_press_stopped() -> void:
-	set_process(false)
-	_hold_button = null
-	_hold_interval = 0
-
-
-func _emit_hold_signal() -> void:
-	if not _hold_button:
+func _emit_hold_signal(hold_button: Button) -> void:
+	if not hold_button:
 		return
 	
-	if _hold_button == _up_button:
+	if hold_button == _up_button:
 		shifted_up.emit()
-	elif _hold_button == _down_button:
+	elif hold_button == _down_button:
 		shifted_down.emit()

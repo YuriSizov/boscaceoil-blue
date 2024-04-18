@@ -26,10 +26,10 @@ const FILE_FORMAT := 3
 	set(value): pattern_size = ValueValidator.range(value, 1, 32)
 ## Length of a bar in notes, purely visual.
 @export var bar_size: int = 4:
-	set(value): bar_size = ValueValidator.positive(value)
+	set(value): bar_size = ValueValidator.range(value, 1, 32)
 ## Beats per minute.
 @export var bpm: int = 120:
-	set(value): bpm = ValueValidator.positive(value)
+	set(value): bpm = ValueValidator.range(value, 10, 220)
 
 # Advanced settings.
 
@@ -72,7 +72,7 @@ static func create_default_song() -> Song:
 	return song
 
 
-# Composition processing.
+# Composition.
 
 func progress_arrangement() -> bool:
 	var next_bar := arrangement.current_bar_idx + 1

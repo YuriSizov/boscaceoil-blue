@@ -12,6 +12,7 @@ const NOTE_SHARP_COLOR := Color(0.16862745583057, 0.1294117718935, 0.59215688705
 const BORDER_COLOR := Color(0.01960784383118, 0.0274509806186, 0.12549020349979)
 
 const OCTAVE_SIZE := 12
+
 enum DrawingMode {
 	DRAWING_OFF,
 	DRAWING_ADD,
@@ -27,9 +28,9 @@ var note_count: int = 128:
 		note_count = value
 		_update_scroll_offset()
 ## Number of notes in a row.
-var pattern_size: int = 0
+var pattern_size: int = 1
 ## Number of notes in a bar.
-var bar_size: int = 0
+var bar_size: int = 1
 
 ## Window-dependent horizontal size of a note, based on pattern_size.
 var _note_width: float = 0
@@ -67,10 +68,14 @@ func _ready() -> void:
 	_scrollbar.shifted_up.connect(_change_offset.bind(1))
 	_scrollbar.shifted_down.connect(_change_offset.bind(-1))
 	
+	_update_pattern_size()
 	_edit_current_pattern()
-	Controller.song_loaded.connect(_edit_current_pattern)
-	Controller.music_player.playback_tick.connect(_update_playback_cursor)
-	Controller.music_player.playback_stopped.connect(_update_playback_cursor)
+	if not Engine.is_editor_hint():
+		Controller.song_loaded.connect(_update_pattern_size)
+		Controller.song_loaded.connect(_edit_current_pattern)
+		Controller.song_pattern_changed.connect(_update_pattern_size)
+		Controller.music_player.playback_tick.connect(_update_playback_cursor)
+		Controller.music_player.playback_stopped.connect(_update_playback_cursor)
 
 
 func _gui_input(event: InputEvent) -> void:
@@ -120,14 +125,26 @@ func _draw() -> void:
 
 	# Draw vertical lines.
 	var col_index := 0
-	while col_index < pattern_size:
+	var last_col_x := 0
+	while col_index < (pattern_size + 1):
 		var col_position := origin + Vector2(_note_width * col_index, -available_rect.size.y)
 		var border_size := Vector2(border_width, available_rect.size.y)
 		if col_index % bar_size == 0: # Draw bars twice as thick.
 			border_size.x = border_width * 2
 
 		draw_rect(Rect2(col_position, border_size), BORDER_COLOR)
+		
 		col_index += 1
+		last_col_x = col_position.x
+	
+	# Draw an extra cover on top of inactive bars.
+	if last_col_x < available_rect.end.x:
+		var cover_position := Vector2(last_col_x, origin.y - available_rect.size.y)
+		var cover_size := Vector2(available_rect.end.x - last_col_x, available_rect.size.y)
+		var cover_alpha := float(get_theme_constant("border_cover_opacity", "NoteMap")) / 100.0
+		var cover_color := Color(BORDER_COLOR, cover_alpha)
+		
+		draw_rect(Rect2(cover_position, cover_size), cover_color)
 
 
 # Drawables and visuals.
@@ -148,11 +165,25 @@ func get_available_rect() -> Rect2:
 
 func _update_note_width() -> void:
 	var available_rect := get_available_rect()
-	_note_width = available_rect.size.x / pattern_size
+	var effective_pattern_size := 16 if pattern_size <= 16 else 32
+	
+	_note_width = available_rect.size.x / effective_pattern_size
 	_overlay.note_unit_width = _note_width
 	
 	queue_redraw()
 	_overlay.queue_redraw()
+
+
+func _update_pattern_size() -> void:
+	if Engine.is_editor_hint():
+		return
+	if not Controller.current_song:
+		return
+	
+	pattern_size = Controller.current_song.pattern_size
+	bar_size = Controller.current_song.bar_size
+	_update_note_width()
+	_update_active_notes()
 
 
 func _change_offset(delta: int) ->  void:
@@ -222,6 +253,7 @@ func _update_grid() -> void:
 		_note_rows.push_back(note)
 		
 		# Create octave row data.
+		@warning_ignore("integer_division")
 		var octave_index := note_index / OCTAVE_SIZE
 		if octave_index != last_octave_index:
 			last_octave_index = octave_index
@@ -265,7 +297,7 @@ func _get_note_at_cursor() -> Vector2i:
 	if available_rect.has_point(mouse_position):
 		var mouse_normalized := mouse_position - available_rect.position
 		var note_indexed := Vector2i(0,0)
-		note_indexed.x = floori(mouse_normalized.x / _note_width)
+		note_indexed.x = clampi(floori(mouse_normalized.x / _note_width), 0, pattern_size - 1)
 		note_indexed.y = floori((available_rect.size.y - mouse_normalized.y) / note_height)
 		return note_indexed
 
@@ -289,12 +321,9 @@ func _update_active_notes() -> void:
 		_overlay.active_notes = _active_notes
 		return
 
-	var available_rect := get_available_rect()
-	var note_height := get_theme_constant("note_height", "NoteMap")
-	
 	for i in current_pattern.note_amount:
 		var note_data := current_pattern.notes[i]
-		if note_data.x < 0 || note_data.y < 0 || note_data.z < 1:
+		if note_data.x < 0 || note_data.y < 0 || note_data.y >= pattern_size || note_data.z < 1:
 			continue # Outside of the grid, or too short.
 		var note_value := note_data.x - scroll_offset
 		
@@ -311,6 +340,9 @@ func _update_active_notes() -> void:
 
 
 func _update_playback_cursor() -> void:
+	if Engine.is_editor_hint():
+		return
+	
 	var available_rect := get_available_rect()
 	
 	# If the player is paused or stopped, park the cursor on the leftmost bar.
@@ -362,11 +394,10 @@ func _update_note_cursor() -> void:
 # Logic and editing.
 
 func _edit_current_pattern() -> void:
+	if Engine.is_editor_hint():
+		return
 	if not Controller.current_song:
 		return
-	
-	pattern_size = Controller.current_song.pattern_size
-	bar_size = Controller.current_song.bar_size
 	
 	current_pattern = Controller.get_current_pattern()
 	_update_active_notes()
@@ -375,7 +406,7 @@ func _edit_current_pattern() -> void:
 
 
 func _start_drawing_notes(mode: int) -> void:
-	_note_drawing_mode = ValueValidator.index(mode, DrawingMode.MAX)
+	_note_drawing_mode = ValueValidator.index(mode, DrawingMode.MAX) as DrawingMode
 	_draw_note()
 
 

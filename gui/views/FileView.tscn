@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://d0lne8svx0ysl"]
+[gd_scene load_steps=7 format=3 uid="uid://d0lne8svx0ysl"]
 
 [ext_resource type="PackedScene" uid="uid://jjkaxpgl6mmu" path="res://gui/widgets/AnimatedLogo.tscn" id="1_cb5p1"]
 [ext_resource type="Script" path="res://gui/views/FileView.gd" id="1_i5se4"]
 [ext_resource type="Texture2D" uid="uid://b4pqq6culbr6a" path="res://gui/theme/right_arrow.tres" id="3_jbhik"]
 [ext_resource type="Texture2D" uid="uid://ck1durkyp2j8a" path="res://gui/theme/pause_icon.tres" id="4_np651"]
 [ext_resource type="Texture2D" uid="uid://c152mlked4d1i" path="res://gui/theme/stop_icon.tres" id="5_7b7gn"]
+[ext_resource type="PackedScene" uid="uid://d2peohvka6nmb" path="res://gui/widgets/Stepper.tscn" id="6_8p7iu"]
 
 [node name="FileView" type="MarginContainer"]
 auto_translate_mode = 1
@@ -186,12 +187,29 @@ theme_type_variation = &"WidgetPanel"
 
 [node name="Layout" type="HBoxContainer" parent="Layout/BaseControls/Rows/PatternSettings"]
 layout_mode = 2
+theme_type_variation = &"HBoxSpaced"
 alignment = 1
 
 [node name="Label" type="Label" parent="Layout/BaseControls/Rows/PatternSettings/Layout"]
 layout_mode = 2
+size_flags_horizontal = 3
 text = "PATTERN"
 uppercase = true
+
+[node name="BarStepper" parent="Layout/BaseControls/Rows/PatternSettings/Layout" instance=ExtResource("6_8p7iu")]
+unique_name_in_owner = true
+layout_mode = 2
+value = 4
+min_value = 1
+max_value = 32
+
+[node name="PatternStepper" parent="Layout/BaseControls/Rows/PatternSettings/Layout" instance=ExtResource("6_8p7iu")]
+unique_name_in_owner = true
+auto_translate_mode = 1
+layout_mode = 2
+value = 16
+min_value = 1
+max_value = 32
 
 [node name="BPMSettings" type="PanelContainer" parent="Layout/BaseControls/Rows"]
 auto_translate_mode = 1
@@ -202,13 +220,23 @@ theme_type_variation = &"WidgetPanel"
 
 [node name="Layout" type="HBoxContainer" parent="Layout/BaseControls/Rows/BPMSettings"]
 layout_mode = 2
+theme_type_variation = &"HBoxSpaced"
 alignment = 1
 
 [node name="Label" type="Label" parent="Layout/BaseControls/Rows/BPMSettings/Layout"]
 auto_translate_mode = 1
 layout_mode = 2
+size_flags_horizontal = 3
 text = "BPM"
 uppercase = true
+
+[node name="BPMStepper" parent="Layout/BaseControls/Rows/BPMSettings/Layout" instance=ExtResource("6_8p7iu")]
+unique_name_in_owner = true
+layout_mode = 2
+value = 120
+min_value = 10
+max_value = 220
+step = 5
 
 [node name="FillerEnd" type="Control" parent="Layout"]
 auto_translate_mode = 1

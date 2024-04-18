@@ -7,6 +7,7 @@
 extends Node
 
 signal song_loaded()
+signal song_pattern_changed()
 
 var voice_manager: VoiceManager = null
 var music_player: MusicPlayer = null
@@ -64,3 +65,27 @@ func get_current_pattern() -> Pattern:
 		return null
 	
 	return current_song.patterns[current_pattern_index]
+
+
+func set_pattern_size(value: int) -> void:
+	if not current_song:
+		return
+	
+	current_song.pattern_size = value
+	song_pattern_changed.emit()
+
+
+func set_bar_size(value: int) -> void:
+	if not current_song:
+		return
+	
+	current_song.bar_size = value
+	song_pattern_changed.emit()
+
+
+func set_bpm(value: int) -> void:
+	if not current_song:
+		return
+	
+	current_song.bpm = value
+	music_player.update_driver_bpm()

@@ -21,6 +21,7 @@ var note_cursor_position: Vector2 = Vector2i(-1, -1)
 func _draw() -> void:
 	var note_height := get_theme_constant("note_height", "NoteMap")
 	var border_width := get_theme_constant("border_width", "NoteMap")
+	var half_border_width := float(border_width) / 2.0
 
 	var label_font := get_theme_default_font()
 	var label_font_size := get_theme_default_font_size()
@@ -34,7 +35,7 @@ func _draw() -> void:
 	var octave_bar_shadow := get_theme_color("octave_bar_shadow_color", "NoteMap")
 	
 	for octave in octave_rows:
-		var bar_position := octave.position + Vector2(OCTAVE_BAR_INSET, -(note_height + border_width / 2))
+		var bar_position := octave.position + Vector2(OCTAVE_BAR_INSET, -(note_height + half_border_width))
 		var bar_size := Vector2(size.x - OCTAVE_BAR_INSET, border_width)
 
 		var shadow_position := bar_position + Vector2(0, 2)
@@ -57,7 +58,7 @@ func _draw() -> void:
 			last_active_value = active_note.note_value
 			spanning_active_indices.clear()
 		
-		var note_bevel_position := active_note.position + Vector2(border_width / 2, border_width / 2)
+		var note_bevel_position := active_note.position + Vector2(half_border_width, half_border_width)
 		var note_bevel_size := Vector2(note_unit_width * active_note.length, note_height)
 		var note_position := note_bevel_position + Vector2(border_width, 0)
 		var note_size := note_bevel_size - Vector2(note_bevel_width + border_width, note_bevel_width)
@@ -106,8 +107,9 @@ func _draw() -> void:
 		var cursor_size := Vector2(playback_cursor_width, size.y)
 		var cursor_color := get_theme_color("playback_cursor_color", "NoteMap")
 		
-		var cursor_bevel_position := Vector2(playback_cursor_position + playback_cursor_width / 2, 0)
-		var cursor_bevel_size := Vector2(playback_cursor_width / 2, size.y)
+		var half_cursor_width := float(playback_cursor_width) / 2.0
+		var cursor_bevel_position := Vector2(playback_cursor_position + half_cursor_width, 0)
+		var cursor_bevel_size := Vector2(half_cursor_width, size.y)
 		var cursor_bevel_color := get_theme_color("playback_cursor_bevel_color", "NoteMap")
 		
 		draw_rect(Rect2(cursor_position, cursor_size), cursor_color)
@@ -116,7 +118,7 @@ func _draw() -> void:
 	# Draw the note cursor.
 	
 	if note_unit_width > 0 && note_cursor_position.x >= 0 && note_cursor_position.y >= 0:
-		var note_position := note_cursor_position + Vector2(border_width / 2, border_width / 2)
+		var note_position := note_cursor_position + Vector2(half_border_width, half_border_width)
 		var note_size := Vector2(note_unit_width * note_cursor_size, note_height) - Vector2(border_width, border_width)
 		var note_cursor_color := get_theme_color("note_cursor_color", "NoteMap")
 		var note_cursor_width := get_theme_constant("note_cursor_width", "NoteMap")

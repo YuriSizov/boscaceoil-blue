@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=28 format=3 uid="uid://chpsnl8o0raaf"]
+[gd_resource type="Theme" load_steps=32 format=3 uid="uid://chpsnl8o0raaf"]
 
 [ext_resource type="Texture2D" uid="uid://d2aswndmtik56" path="res://assets/overlap-dither.png" id="1_4kypt"]
 [ext_resource type="FontFile" uid="uid://blsoavvmevh5x" path="res://assets/FFF Aquarius Bold Condensed Regular.ttf" id="1_q75co"]
@@ -164,6 +164,30 @@ border_width_right = 3
 border_width_bottom = 3
 border_color = Color(0, 0, 0, 1)
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cf8hl"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cxepd"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7otdp"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ivbq4"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cjrsp"]
 content_margin_left = 16.0
 content_margin_top = 4.0
@@ -223,6 +247,7 @@ NoteMap/colors/playback_cursor_bevel_color = Color(0.427451, 0.521569, 0.552941,
 NoteMap/colors/playback_cursor_color = Color(1, 1, 1, 1)
 NoteMap/constants/active_note_bevel_width = 6
 NoteMap/constants/active_note_overlap_opacity = 40
+NoteMap/constants/border_cover_opacity = 88
 NoteMap/constants/border_width = 3
 NoteMap/constants/note_cursor_width = 3
 NoteMap/constants/note_height = 32
@@ -240,6 +265,16 @@ ScrollbarButton/styles/focus = SubResource("StyleBoxEmpty_3fj3y")
 ScrollbarButton/styles/hover = SubResource("StyleBoxFlat_7qnyx")
 ScrollbarButton/styles/normal = SubResource("StyleBoxFlat_on2ux")
 ScrollbarButton/styles/pressed = SubResource("StyleBoxFlat_np3ou")
+StepperBox/base_type = &"HBoxContainer"
+StepperBox/constants/separation = 12
+StepperButton/base_type = &"Button"
+StepperButton/colors/icon_disabled_color = Color(0.329412, 0.360784, 0.329412, 0.470588)
+StepperButton/colors/icon_hover_color = Color(0.835294, 0.835294, 0.835294, 1)
+StepperButton/colors/icon_pressed_color = Color(0.517647, 0.517647, 0.517647, 1)
+StepperButton/styles/disabled = SubResource("StyleBoxEmpty_cf8hl")
+StepperButton/styles/hover = SubResource("StyleBoxEmpty_cxepd")
+StepperButton/styles/normal = SubResource("StyleBoxEmpty_7otdp")
+StepperButton/styles/pressed = SubResource("StyleBoxEmpty_ivbq4")
 SubtitleLabel/base_type = &"Label"
 SubtitleLabel/colors/font_color = Color(0.3951, 0.650881, 0.848373, 1)
 SubtitleLabel/colors/font_shadow_color = Color(0, 0, 0, 1)

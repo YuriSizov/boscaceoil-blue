@@ -1,0 +1,38 @@
+[gd_scene load_steps=4 format=3 uid="uid://d2peohvka6nmb"]
+
+[ext_resource type="Texture2D" uid="uid://c2pre5wtyjchp" path="res://gui/theme/left_arrow.tres" id="1_1pona"]
+[ext_resource type="Script" path="res://gui/widgets/Stepper.gd" id="1_ng8l4"]
+[ext_resource type="Texture2D" uid="uid://b4pqq6culbr6a" path="res://gui/theme/right_arrow.tres" id="2_14366"]
+
+[node name="Stepper" type="HBoxContainer"]
+offset_right = 82.0
+offset_bottom = 32.0
+theme_type_variation = &"StepperBox"
+alignment = 1
+script = ExtResource("1_ng8l4")
+
+[node name="Decrease" type="Button" parent="."]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"StepperButton"
+disabled = true
+icon = ExtResource("1_1pona")
+flat = true
+icon_alignment = 1
+expand_icon = true
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+text = "0"
+
+[node name="Increase" type="Button" parent="."]
+auto_translate_mode = 1
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"StepperButton"
+icon = ExtResource("2_14366")
+flat = true
+icon_alignment = 1
+expand_icon = true
