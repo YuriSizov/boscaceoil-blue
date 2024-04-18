@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://hfibjq4t76rn"
-path="res://.godot/imported/icons.png-9638851efbee5517d4b4cd55f414e20f.ctex"
+uid="uid://d2aswndmtik56"
+path="res://.godot/imported/overlap-dither.png-eb6aba2379d0525df1d9bc72d022c3ff.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/icons.png"
-dest_files=["res://.godot/imported/icons.png-9638851efbee5517d4b4cd55f414e20f.ctex"]
+source_file="res://assets/overlap-dither.png"
+dest_files=["res://.godot/imported/overlap-dither.png-eb6aba2379d0525df1d9bc72d022c3ff.ctex"]
 
 [params]
 

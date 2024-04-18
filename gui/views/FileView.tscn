@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://d0lne8svx0ysl"]
+[gd_scene load_steps=6 format=3 uid="uid://d0lne8svx0ysl"]
 
 [ext_resource type="PackedScene" uid="uid://jjkaxpgl6mmu" path="res://gui/widgets/AnimatedLogo.tscn" id="1_cb5p1"]
+[ext_resource type="Script" path="res://gui/views/FileView.gd" id="1_i5se4"]
 [ext_resource type="Texture2D" uid="uid://b4pqq6culbr6a" path="res://gui/theme/right_arrow.tres" id="3_jbhik"]
 [ext_resource type="Texture2D" uid="uid://ck1durkyp2j8a" path="res://gui/theme/pause_icon.tres" id="4_np651"]
 [ext_resource type="Texture2D" uid="uid://c152mlked4d1i" path="res://gui/theme/stop_icon.tres" id="5_7b7gn"]
@@ -12,6 +13,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_i5se4")
 
 [node name="Layout" type="HBoxContainer" parent="."]
 layout_mode = 2
@@ -64,12 +66,14 @@ layout_mode = 2
 theme_type_variation = &"HBoxSpaced"
 
 [node name="Credits" type="Button" parent="Layout/Introduction/Contents/Controls"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 text = "CREDITS"
 
 [node name="Help" type="Button" parent="Layout/Introduction/Contents/Controls"]
+unique_name_in_owner = true
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 3
@@ -87,6 +91,7 @@ layout_mode = 2
 alignment = 1
 
 [node name="Play" type="Button" parent="Layout/Introduction/Contents/Controls/Playback/Layout"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(48, 32)
 layout_mode = 2
 theme_type_variation = &"PlaybackButton"
@@ -96,6 +101,7 @@ icon_alignment = 1
 expand_icon = true
 
 [node name="Pause" type="Button" parent="Layout/Introduction/Contents/Controls/Playback/Layout"]
+unique_name_in_owner = true
 auto_translate_mode = 1
 custom_minimum_size = Vector2(48, 32)
 layout_mode = 2
@@ -106,6 +112,7 @@ icon_alignment = 1
 expand_icon = true
 
 [node name="Stop" type="Button" parent="Layout/Introduction/Contents/Controls/Playback/Layout"]
+unique_name_in_owner = true
 auto_translate_mode = 1
 custom_minimum_size = Vector2(48, 32)
 layout_mode = 2
@@ -136,12 +143,14 @@ theme_type_variation = &"HBoxSpaced"
 alignment = 1
 
 [node name="CreateSong" type="Button" parent="Layout/BaseControls/Rows/CreateExport"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 text = "NEW SONG"
 
 [node name="ExportSong" type="Button" parent="Layout/BaseControls/Rows/CreateExport"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -154,6 +163,7 @@ theme_type_variation = &"HBoxSpaced"
 alignment = 1
 
 [node name="LoadCeol" type="Button" parent="Layout/BaseControls/Rows/SaveLoad"]
+unique_name_in_owner = true
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 3
@@ -161,6 +171,7 @@ size_flags_vertical = 4
 text = "LOAD .ceol"
 
 [node name="SaveCeol" type="Button" parent="Layout/BaseControls/Rows/SaveLoad"]
+unique_name_in_owner = true
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 3

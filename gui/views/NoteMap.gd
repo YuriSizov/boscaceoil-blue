@@ -12,16 +12,27 @@ const NOTE_SHARP_COLOR := Color(0.16862745583057, 0.1294117718935, 0.59215688705
 const BORDER_COLOR := Color(0.01960784383118, 0.0274509806186, 0.12549020349979)
 
 const OCTAVE_SIZE := 12
+enum DrawingMode {
+	DRAWING_OFF,
+	DRAWING_ADD,
+	DRAWING_REMOVE,
+	MAX
+}
 
+## Current edited pattern.
+var current_pattern: Pattern = null
 ## Number of rows in the piano roll.
 var note_count: int = 128:
 	set(value):
 		note_count = value
 		_update_scroll_offset()
 ## Number of notes in a row.
-var pattern_size: int = 16
+var pattern_size: int = 0
 ## Number of notes in a bar.
-var bar_size: int = 4
+var bar_size: int = 0
+
+## Window-dependent horizontal size of a note, based on pattern_size.
+var _note_width: float = 0
 
 ## Offset, in number of note rows.
 var scroll_offset: int = 0
@@ -30,7 +41,10 @@ var _max_scroll_offset: int = -1
 
 var _note_rows: Array[NoteRow] = []
 var _octave_rows: Array[OctaveRow] = []
+var _active_notes: Array[ActiveNote] = []
 var _note_cursor_visible: bool = false
+var _note_cursor_size: int = 1
+var _note_drawing_mode: DrawingMode = DrawingMode.DRAWING_OFF
 
 @onready var _gutter: Control = $NoteMapGutter
 @onready var _scrollbar: Control = $NoteMapScrollbar
@@ -38,29 +52,49 @@ var _note_cursor_visible: bool = false
 
 
 func _ready() -> void:
-	set_process(false)
+	set_physics_process(false)
 	
+	_update_note_width()
 	_update_scroll_offset()
+	_update_playback_cursor()
+	resized.connect(_update_note_width)
 	resized.connect(_update_scroll_offset)
+	resized.connect(_update_playback_cursor)
 	
 	mouse_entered.connect(_show_note_cursor)
 	mouse_exited.connect(_hide_note_cursor)
 
 	_scrollbar.shifted_up.connect(_change_offset.bind(1))
 	_scrollbar.shifted_down.connect(_change_offset.bind(-1))
+	
+	_edit_current_pattern()
+	Controller.song_loaded.connect(_edit_current_pattern)
+	Controller.music_player.playback_tick.connect(_update_playback_cursor)
+	Controller.music_player.playback_stopped.connect(_update_playback_cursor)
 
 
-func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton && event.is_pressed():
+func _gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
 		var mb := event as InputEventMouseButton
-		if mb.button_index == MOUSE_BUTTON_WHEEL_UP:
-			_overlay.resize_note_cursor(1)
-		if mb.button_index == MOUSE_BUTTON_WHEEL_DOWN:
-			_overlay.resize_note_cursor(-1)
+		
+		if _note_cursor_visible && event.is_pressed():
+			if mb.button_index == MOUSE_BUTTON_WHEEL_UP:
+				_resize_note_cursor(1)
+			elif mb.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+				_resize_note_cursor(-1)
+			elif mb.button_index == MOUSE_BUTTON_LEFT:
+				_start_drawing_notes(DrawingMode.DRAWING_ADD)
+			elif mb.button_index == MOUSE_BUTTON_RIGHT:
+				_start_drawing_notes(DrawingMode.DRAWING_REMOVE)
+		
+		if _note_drawing_mode != DrawingMode.DRAWING_OFF && !event.is_pressed():
+			if mb.button_index == MOUSE_BUTTON_LEFT || mb.button_index == MOUSE_BUTTON_RIGHT:
+				_stop_drawing_notes()
 
 
-func _process(_delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	_update_note_cursor()
+	_draw_note()
 
 
 func _draw() -> void:
@@ -85,10 +119,9 @@ func _draw() -> void:
 		draw_rect(Rect2(note.grid_position, border_size), BORDER_COLOR)
 
 	# Draw vertical lines.
-	var note_width := available_rect.size.x / pattern_size
 	var col_index := 0
 	while col_index < pattern_size:
-		var col_position := origin + Vector2(note_width * col_index, -available_rect.size.y)
+		var col_position := origin + Vector2(_note_width * col_index, -available_rect.size.y)
 		var border_size := Vector2(border_width, available_rect.size.y)
 		if col_index % bar_size == 0: # Draw bars twice as thick.
 			border_size.x = border_width * 2
@@ -96,6 +129,8 @@ func _draw() -> void:
 		draw_rect(Rect2(col_position, border_size), BORDER_COLOR)
 		col_index += 1
 
+
+# Drawables and visuals.
 
 func get_available_rect() -> Rect2:
 	var available_rect := Rect2(Vector2.ZERO, size)
@@ -111,10 +146,20 @@ func get_available_rect() -> Rect2:
 	return available_rect
 
 
+func _update_note_width() -> void:
+	var available_rect := get_available_rect()
+	_note_width = available_rect.size.x / pattern_size
+	_overlay.note_unit_width = _note_width
+	
+	queue_redraw()
+	_overlay.queue_redraw()
+
+
 func _change_offset(delta: int) ->  void:
 	scroll_offset += delta
 
 	scroll_offset = clamp(scroll_offset, 0, _max_scroll_offset)
+	_update_active_notes()
 	queue_redraw()
 	_gutter.queue_redraw()
 	_scrollbar.queue_redraw()
@@ -130,6 +175,7 @@ func _update_scroll_offset() -> void:
 	_max_scroll_offset -= notes_on_screen - 1
 
 	scroll_offset = clamp(scroll_offset, 0, _max_scroll_offset)
+	_update_active_notes()
 	queue_redraw()
 	_gutter.queue_redraw()
 	_scrollbar.queue_redraw()
@@ -211,45 +257,165 @@ func _update_grid() -> void:
 	_overlay.octave_rows = _octave_rows
 
 
-func _show_note_cursor() -> void:
-	_note_cursor_visible = true
-	_update_note_cursor()
-	set_process(true)
-
-
-func _hide_note_cursor() -> void:
-	set_process(false)
-	_note_cursor_visible = false
-	_update_note_cursor()
-
-
-func _update_note_cursor() -> void:
-	if not _note_cursor_visible:
-		_overlay.note_cursor_unit_width = 0
-		_overlay.note_cursor_position = Vector2(-1, -1)
-		_overlay.queue_redraw()
-		return
-	
+func _get_note_at_cursor() -> Vector2i:
 	var available_rect: Rect2 = get_available_rect()
-	var note_width := available_rect.size.x / pattern_size
 	var note_height := get_theme_constant("note_height", "NoteMap")
 	
 	var mouse_position := get_local_mouse_position()
 	if available_rect.has_point(mouse_position):
 		var mouse_normalized := mouse_position - available_rect.position
 		var note_indexed := Vector2i(0,0)
-		note_indexed.x = floori(mouse_normalized.x / note_width)
+		note_indexed.x = floori(mouse_normalized.x / _note_width)
 		note_indexed.y = floori((available_rect.size.y - mouse_normalized.y) / note_height)
+		return note_indexed
+
+	return Vector2i(-1, -1)
+
+
+func _get_indexed_note_position(indexed: Vector2i) -> Vector2:
+	var available_rect := get_available_rect()
+	var note_height := get_theme_constant("note_height", "NoteMap")
+	
+	return Vector2(
+		available_rect.position.x + indexed.x * _note_width,
+		available_rect.size.y - (indexed.y + 1) * note_height + available_rect.position.y
+	)
+
+
+func _update_active_notes() -> void:
+	# Reset the collection
+	_active_notes.clear()
+	if not current_pattern:
+		_overlay.active_notes = _active_notes
+		return
+
+	var available_rect := get_available_rect()
+	var note_height := get_theme_constant("note_height", "NoteMap")
+	
+	for i in current_pattern.note_amount:
+		var note_data := current_pattern.notes[i]
+		if note_data.x < 0 || note_data.y < 0 || note_data.z < 1:
+			continue # Outside of the grid, or too short.
+		var note_value := note_data.x - scroll_offset
 		
-		_overlay.note_cursor_unit_width = note_width
-		_overlay.note_cursor_position = Vector2(
-			note_indexed.x * note_width + available_rect.position.x,
-			available_rect.size.y - (note_indexed.y + 1) * note_height + available_rect.position.y
-		)
+		var note := ActiveNote.new()
+		note.note_value = note_data.x
+		note.note_index = note_data.y
+		note.position = _get_indexed_note_position(Vector2i(note_data.y, note_value))
+		note.length = note_data.z
+		_active_notes.push_back(note)
+	
+	
+	# Update children with the new data.
+	_overlay.active_notes = _active_notes
+
+
+func _update_playback_cursor() -> void:
+	var available_rect := get_available_rect()
+	
+	# If the player is paused or stopped, park the cursor on the leftmost bar.
+	# This is normally unreachable for normal playback, as at index 0 we want
+	# to display the cursor to the right of the first note.
+	if not Controller.music_player.is_playing():
+		_overlay.playback_cursor_position = available_rect.position.x
+		_overlay.queue_redraw()
+		return
+	
+	var playback_note_index := Controller.music_player.get_pattern_time()
+	_overlay.playback_cursor_position = available_rect.position.x + playback_note_index * _note_width
+	_overlay.queue_redraw()
+
+
+func _show_note_cursor() -> void:
+	_note_cursor_visible = true
+	_update_note_cursor()
+	set_physics_process(true)
+
+
+func _hide_note_cursor() -> void:
+	set_physics_process(false)
+	_note_cursor_visible = false
+	_update_note_cursor()
+
+
+func _resize_note_cursor(delta: int) -> void:
+	_note_cursor_size = clamp(_note_cursor_size + delta, 1, pattern_size)
+	_overlay.note_cursor_size = _note_cursor_size
+	_overlay.queue_redraw()
+
+
+func _update_note_cursor() -> void:
+	if not _note_cursor_visible:
+		_overlay.note_cursor_position = Vector2(-1, -1)
+		_overlay.queue_redraw()
+		return
+	
+	var note_indexed := _get_note_at_cursor()
+	if note_indexed.x >= 0 && note_indexed.y >= 0:
+		_overlay.note_cursor_position = _get_indexed_note_position(note_indexed)
 	else:
-		_overlay.note_cursor_unit_width = 0
 		_overlay.note_cursor_position = Vector2(-1, -1)
 	
+	_overlay.queue_redraw()
+
+
+# Logic and editing.
+
+func _edit_current_pattern() -> void:
+	if not Controller.current_song:
+		return
+	
+	pattern_size = Controller.current_song.pattern_size
+	bar_size = Controller.current_song.bar_size
+	
+	current_pattern = Controller.get_current_pattern()
+	_update_active_notes()
+	queue_redraw()
+	_overlay.queue_redraw()
+
+
+func _start_drawing_notes(mode: int) -> void:
+	_note_drawing_mode = ValueValidator.index(mode, DrawingMode.MAX)
+	_draw_note()
+
+
+func _stop_drawing_notes() -> void:
+	_note_drawing_mode = DrawingMode.DRAWING_OFF
+
+
+func _draw_note() -> void:
+	if _note_drawing_mode == DrawingMode.DRAWING_ADD:
+		_add_note_at_cursor()
+	elif _note_drawing_mode == DrawingMode.DRAWING_REMOVE:
+		_remove_note_at_cursor()
+
+
+func _add_note_at_cursor() -> void:
+	if not current_pattern:
+		return
+	var note_indexed := _get_note_at_cursor()
+	if note_indexed.x < 0 || note_indexed.y < 0:
+		return
+	
+	var note_value := note_indexed.y + scroll_offset
+	if current_pattern.has_note(note_value, note_indexed.x, true):
+		return # Space is already occupied.
+	
+	current_pattern.add_note(note_value, note_indexed.x, _note_cursor_size)
+	_update_active_notes()
+	_overlay.queue_redraw()
+
+
+func _remove_note_at_cursor() -> void:
+	if not current_pattern:
+		return
+	var note_indexed := _get_note_at_cursor()
+	if note_indexed.x < 0 || note_indexed.y < 0:
+		return
+	
+	var note_value := note_indexed.y + scroll_offset
+	current_pattern.remove_note(note_value, note_indexed.x, true)
+	_update_active_notes()
 	_overlay.queue_redraw()
 
 
@@ -266,3 +432,10 @@ class OctaveRow:
 	var octave_index: int = -1
 	var position: Vector2 = Vector2.ZERO
 	var label_position: Vector2 = Vector2.ZERO
+
+
+class ActiveNote:
+	var note_value: int = -1
+	var note_index: int = -1
+	var position: Vector2 = Vector2.ZERO
+	var length: int = 1

@@ -53,9 +53,23 @@ const FILE_FORMAT := 3
 @export var arrangement: Arrangement = Arrangement.new()
 
 
-func _init() -> void:
+static func create_default_song() -> Song:
+	var song := Song.new()
+	
+	# Create the default instrument, which is hard set to be MIDI Grand Piano.
+	var voice_data := Controller.voice_manager.get_voice_data("MIDI", "Grand Piano")
+	var default_instrument := SingleVoiceInstrument.new(voice_data)
+	song.instruments.push_back(default_instrument)
+
+	# There must be at least one pattern in the song.
+	var default_pattern := Pattern.new()
+	default_pattern.instrument_idx = 0
+	song.patterns.push_back(default_pattern)
+	
 	# By default make the first pattern active on the timeline.
-	arrangement.set_pattern(0, 0, 0)
+	song.arrangement.set_pattern(0, 0, 0)
+	
+	return song
 
 
 # Composition processing.

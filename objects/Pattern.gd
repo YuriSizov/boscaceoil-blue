@@ -50,7 +50,7 @@ func _init() -> void:
 		record_filter_values.push_back(Vector3i(Instrument.VOLUME_MAX, Instrument.FILTER_CUTOFF_MAX, 0))
 
 
-func add_note(note: int, position: int, length: int) -> void:
+func add_note(note: int, position: int, length: int, autosort: bool = true) -> void:
 	if note < 0 || position < 0:
 		printerr("Pattern: Cannot add a note %d at %d, values cannot be less than zero." % [ note, position ])
 		return
@@ -61,10 +61,26 @@ func add_note(note: int, position: int, length: int) -> void:
 	notes[note_amount] = Vector3i(note, position, length)
 	_hash = (_hash + (note * length)) % 2147483647
 
+	if autosort: # Can be disabled and called manually when many notes are added quickly.
+		sort_notes()
 	note_amount += 1
 
 
-func has_note(note: int, position: int) -> bool:
+func sort_notes() -> void:
+	notes.sort_custom(func (a, b):
+		if a.x < 0: # Empty record, sort to the end.
+			return false
+		if b.x < 0: # Empty record, sort to the end.
+			return true
+		if a.x < b.x: # Sort by note value first.
+			return true
+		if a.x == b.x && a.y < b.y: # Then sort by note position in a pattern row.
+			return true
+		return false
+	)
+
+
+func has_note(note: int, position: int, exact: bool = false) -> bool:
 	if note < 0 || position < 0:
 		return false
 
@@ -72,22 +88,29 @@ func has_note(note: int, position: int) -> bool:
 		if notes[i].x != note:
 			continue
 
-		if position >= notes[i].y && position < (notes[i].y + notes[i].z):
+		if exact && position == notes[i].y:
+			return true
+		if not exact && position >= notes[i].y && position < (notes[i].y + notes[i].z):
 			return true
 
 	return false
 
 
-func remove_note(note: int, position: int) -> void:
+func remove_note(note: int, position: int, exact: bool = false) -> void:
 	if note < 0 || position < 0:
 		printerr("Pattern: Cannot remove a note %d at %d, values cannot be less than zero." % [ note, position ])
 		return
 
 	var i := 0
 	while i < note_amount:
-		if notes[i].x == note && position >= notes[i].y && position < (notes[i].y + notes[i].z):
-			remove_note_at(i)
-			i -= 1
+		if notes[i].x == note:
+			if exact && position == notes[i].y:
+				remove_note_at(i)
+				i -= 1
+			
+			if not exact && position >= notes[i].y && position < (notes[i].y + notes[i].z):
+				remove_note_at(i)
+				i -= 1
 
 		i += 1
 

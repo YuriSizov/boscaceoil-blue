@@ -8,6 +8,11 @@
 ## composition data.
 class_name MusicPlayer extends Object
 
+signal playback_started()
+signal playback_tick()
+signal playback_paused()
+signal playback_stopped()
+
 var _driver: SiONDriver = null
 var _music_playing: bool = false
 var _swing_active: bool = false
@@ -30,14 +35,18 @@ func _init(controller: Node) -> void:
 func initialize() -> void:
 	_driver.set_beat_callback_interval(1)
 	_driver.set_timer_interval(1)
-	_driver.set_bpm(Controller.current_song.bpm)
-
-
-func start_driver() -> void:
-	# This call enables endless streaming. We use the timer callback to supply the stream
-	# with new notes to play based on the composition of the current song.
-	_driver.play(null, false)
 	print("Driver initialized.")
+
+
+func reset_driver() -> void:
+	# SiONDriver.play enables endless streaming. We use the timer callback (a.k.a. a metronome)
+	# to supply the stream with new notes to play based on the composition of the current song.
+	
+	_driver.stop()
+
+	_driver.set_bpm(Controller.current_song.bpm)
+	_driver.play(null, false)
+	print("Driver streaming started.")
 
 
 # Output and streaming control.
@@ -72,8 +81,11 @@ func _playback_step() -> void:
 		var active_instrument := song.instruments[pattern.instrument_idx]
 		for note_idx in pattern.note_amount:
 			var note := pattern.notes[note_idx]
-			if note.x < 0 || note.y != _pattern_time:
-				continue # X — note number is invalid; Y — note position in the pattern doesn't match current time.
+			if note.x < 0 || note.y < 0 || note.y != _pattern_time || note.z < 1:
+				# X — note number is invalid.
+				# Y — note position in the pattern is invalid or doesn't match current time.
+				# Z — note length is shorter than 1 unit of length.
+				continue
 			if not active_instrument.is_note_valid(note):
 				continue # Custom validation for different instrument types failed.
 
@@ -92,6 +104,7 @@ func _playback_step() -> void:
 	# Finalize the step
 	_pattern_time += 1
 	_update_swing()
+	playback_tick.emit()
 
 
 func _update_swing() -> void:
@@ -118,9 +131,14 @@ func is_playing() -> bool:
 	return _music_playing
 
 
+func get_pattern_time() -> int:
+	return _pattern_time
+
+
 func start_playback() -> void:
 	_driver.timer_interval.connect(_playback_step)
 	_music_playing = true
+	playback_started.emit()
 
 
 func pause_playback() -> void:
@@ -129,12 +147,13 @@ func pause_playback() -> void:
 
 	_driver.timer_interval.disconnect(_playback_step)
 	_music_playing = false
+	playback_paused.emit()
 
 
 func stop_playback() -> void:
-	if not _music_playing:
-		return
-
-	_driver.timer_interval.disconnect(_playback_step)
-	_music_playing = false
+	if _music_playing:
+		_driver.timer_interval.disconnect(_playback_step)
+		_music_playing = false
+	
 	_pattern_time = 0
+	playback_stopped.emit()

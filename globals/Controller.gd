@@ -6,11 +6,17 @@
 
 extends Node
 
+signal song_loaded()
+
 var voice_manager: VoiceManager = null
 var music_player: MusicPlayer = null
 
 ## Current edited song.
-var current_song: Song = Song.new()
+var current_song: Song = null
+## Current edited pattern in the song, by index.
+var current_pattern_index: int = -1
+## Current edited instrument in the song, by index.
+var current_instrument_index: int = -1
 
 
 func _init() -> void:
@@ -22,20 +28,39 @@ func _ready() -> void:
 	# Driver must be ready by this time.
 
 	music_player.initialize()
+	create_new_song()
 
 
-	## TEMP
-	var voice_data := Controller.voice_manager.get_voice_data("MIDI", "Grand Piano")
-	var temp_instrument := SingleVoiceInstrument.new(voice_data)
-	current_song.instruments.push_back(temp_instrument)
+# Song management.
 
-	var test_pattern := Pattern.new()
-	test_pattern.instrument_idx = 0
-	test_pattern.add_note(43, 3, 1)
-	test_pattern.add_note(41, 7, 2)
-	current_song.patterns.push_back(test_pattern)
-	## TEMP
-
-
-	music_player.start_driver()
+func create_new_song() -> void:
+	if music_player.is_playing():
+		music_player.stop_playback()
+	
+	current_song = Song.create_default_song()
+	current_pattern_index = 0
+	current_instrument_index = 0
+	
+	music_player.reset_driver()
 	music_player.start_playback()
+	
+	song_loaded.emit()
+
+
+func load_ceol_song() -> void:
+	pass
+
+
+func save_ceol_song() -> void:
+	pass
+
+
+# Song editing.
+
+func get_current_pattern() -> Pattern:
+	if not current_song:
+		return null
+	if current_pattern_index < 0 || current_pattern_index >= current_song.patterns.size():
+		return null
+	
+	return current_song.patterns[current_pattern_index]

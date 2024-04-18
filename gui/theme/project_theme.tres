@@ -1,5 +1,6 @@
-[gd_resource type="Theme" load_steps=27 format=3 uid="uid://chpsnl8o0raaf"]
+[gd_resource type="Theme" load_steps=28 format=3 uid="uid://chpsnl8o0raaf"]
 
+[ext_resource type="Texture2D" uid="uid://d2aswndmtik56" path="res://assets/overlap-dither.png" id="1_4kypt"]
 [ext_resource type="FontFile" uid="uid://blsoavvmevh5x" path="res://assets/FFF Aquarius Bold Condensed Regular.ttf" id="1_q75co"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_rsq82"]
@@ -212,16 +213,21 @@ NavigationButton/styles/pressed = SubResource("StyleBoxFlat_llx58")
 NavigationLabel/base_type = &"Label"
 NavigationLabel/colors/font_shadow_color = Color(0, 0, 0, 0.784314)
 NavigationLabel/font_sizes/font_size = 20
+NoteMap/colors/active_note_bevel_color = Color(1, 0.72549, 0.372549, 1)
+NoteMap/colors/active_note_color = Color(1, 1, 0.752941, 1)
 NoteMap/colors/gutter_color = Color(0.427451, 0.521569, 0.552941, 1)
 NoteMap/colors/note_cursor_color = Color(1, 1, 1, 1)
 NoteMap/colors/octave_bar_color = Color(0.737255, 0.811765, 1, 1)
 NoteMap/colors/octave_bar_shadow_color = Color(0, 0, 0, 0.784314)
 NoteMap/colors/playback_cursor_bevel_color = Color(0.427451, 0.521569, 0.552941, 1)
 NoteMap/colors/playback_cursor_color = Color(1, 1, 1, 1)
+NoteMap/constants/active_note_bevel_width = 6
+NoteMap/constants/active_note_overlap_opacity = 40
 NoteMap/constants/border_width = 3
 NoteMap/constants/note_cursor_width = 3
 NoteMap/constants/note_height = 32
 NoteMap/constants/playback_cursor_width = 8
+NoteMap/icons/active_note_overlap = ExtResource("1_4kypt")
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_6ehto")
 PlaybackButton/base_type = &"Button"
 PlaybackButton/colors/icon_hover_color = Color(0.836327, 0.836327, 0.836327, 1)
