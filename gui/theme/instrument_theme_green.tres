@@ -1,0 +1,37 @@
+[gd_resource type="Theme" load_steps=5 format=3 uid="uid://c4sm8xgjinucy"]
+
+[ext_resource type="Texture2D" uid="uid://di3xykrb8awus" path="res://gui/theme/pad_slider_pattern.tres" id="1_16fbj"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iavd0"]
+content_margin_left = 16.0
+content_margin_top = 8.0
+content_margin_right = 16.0
+content_margin_bottom = 8.0
+bg_color = Color(0.12549, 0.498039, 0.0784314, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ujp86"]
+content_margin_left = 16.0
+content_margin_top = 4.0
+content_margin_right = 16.0
+content_margin_bottom = 4.0
+bg_color = Color(0.211765, 0.843137, 0.141176, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_2vm56"]
+texture = ExtResource("1_16fbj")
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+modulate_color = Color(0.251047, 0.758026, 0, 1)
+
+[resource]
+InstrumentSettingsPanel/base_type = &"PanelContainer"
+InstrumentSettingsPanel/styles/panel = SubResource("StyleBoxFlat_iavd0")
+InstrumentWidgetPanel/base_type = &"PanelContainer"
+InstrumentWidgetPanel/styles/panel = SubResource("StyleBoxFlat_ujp86")
+NoteMap/colors/border_color = Color(0.0352941, 0.231373, 0.0862745, 1)
+NoteMap/colors/border_dark_color = Color(0.0196078, 0.117647, 0.0470588, 1)
+NoteMap/colors/note_color = Color(0.211765, 0.843137, 0.141176, 1)
+NoteMap/colors/note_sharp_color = Color(0.12549, 0.498039, 0.0784314, 1)
+NoteMap/colors/octave_bar_color = Color(0.784314, 0.964706, 0.74902, 1)
+PadSlider/colors/cursor_color = Color(0.211765, 0.843137, 0.141176, 1)
+PadSlider/colors/cursor_outline_color = Color(0.12549, 0.498039, 0.0784314, 1)
+PadSlider/styles/background_pattern = SubResource("StyleBoxTexture_2vm56")

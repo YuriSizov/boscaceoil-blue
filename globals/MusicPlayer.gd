@@ -141,6 +141,9 @@ func get_pattern_time() -> int:
 
 
 func start_playback() -> void:
+	if _music_playing:
+		return
+
 	_driver.timer_interval.connect(_playback_step)
 	_music_playing = true
 	playback_started.emit()

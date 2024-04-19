@@ -1,6 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://dciyoa2wkbtfp"]
+[gd_scene load_steps=8 format=3 uid="uid://dciyoa2wkbtfp"]
 
-[ext_resource type="Script" path="res://gui/views/NoteMap.gd" id="1_opxc8"]
+[ext_resource type="Theme" uid="uid://dkb62tku7dpgs" path="res://gui/theme/instrument_theme_gray.tres" id="1_0bvov"]
+[ext_resource type="Script" path="res://gui/views/note_map/NoteMap.gd" id="1_opxc8"]
 [ext_resource type="Script" path="res://gui/views/note_map/NoteMapGutter.gd" id="2_3knao"]
 [ext_resource type="Script" path="res://gui/views/note_map/NoteMapScrollbar.gd" id="3_gs7e5"]
 [ext_resource type="Texture2D" uid="uid://bd6e6pu2tm4u3" path="res://gui/theme/up_arrow_small.tres" id="4_lvxl6"]
@@ -19,6 +20,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_vertical = 3
 mouse_default_cursor_shape = 2
+theme = ExtResource("1_0bvov")
 script = ExtResource("1_opxc8")
 
 [node name="NoteMapGutter" type="Control" parent="."]

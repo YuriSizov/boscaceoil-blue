@@ -1,4 +1,145 @@
-[gd_scene format=3 uid="uid://ggnvgntxytdg"]
+[gd_scene load_steps=3 format=3 uid="uid://ggnvgntxytdg"]
+
+[ext_resource type="Script" path="res://gui/views/AdvancedView.gd" id="1_lhikh"]
+[ext_resource type="PackedScene" uid="uid://d2peohvka6nmb" path="res://gui/widgets/Stepper.tscn" id="1_uibd1"]
 
 [node name="AdvancedView" type="MarginContainer"]
 auto_translate_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_lhikh")
+
+[node name="Layout" type="HBoxContainer" parent="."]
+auto_translate_mode = 1
+layout_mode = 2
+
+[node name="FillerStart" type="Control" parent="Layout"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Tuning" type="PanelContainer" parent="Layout"]
+auto_translate_mode = 1
+custom_minimum_size = Vector2(640, 0)
+layout_mode = 2
+
+[node name="Contents" type="VBoxContainer" parent="Layout/Tuning"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"VBoxSpaced"
+
+[node name="FilterSettings" type="PanelContainer" parent="Layout/Tuning/Contents"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_type_variation = &"WidgetPanel"
+
+[node name="Layout" type="HBoxContainer" parent="Layout/Tuning/Contents/FilterSettings"]
+auto_translate_mode = 1
+layout_mode = 2
+theme_type_variation = &"HBoxSpaced"
+alignment = 1
+
+[node name="Label" type="Label" parent="Layout/Tuning/Contents/FilterSettings/Layout"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 3
+text = "FILTER"
+uppercase = true
+
+[node name="SwingSettings" type="PanelContainer" parent="Layout/Tuning/Contents"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_type_variation = &"WidgetPanel"
+
+[node name="Layout" type="HBoxContainer" parent="Layout/Tuning/Contents/SwingSettings"]
+auto_translate_mode = 1
+layout_mode = 2
+theme_type_variation = &"HBoxSpaced"
+alignment = 1
+
+[node name="Label" type="Label" parent="Layout/Tuning/Contents/SwingSettings/Layout"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 3
+text = "SWING"
+uppercase = true
+
+[node name="SwingStepper" parent="Layout/Tuning/Contents/SwingSettings/Layout" instance=ExtResource("1_uibd1")]
+unique_name_in_owner = true
+auto_translate_mode = 1
+layout_mode = 2
+min_value = -10
+max_value = 10
+
+[node name="FillerMiddle" type="Control" parent="Layout"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ExtraControls" type="PanelContainer" parent="Layout"]
+auto_translate_mode = 1
+custom_minimum_size = Vector2(640, 0)
+layout_mode = 2
+
+[node name="Contents" type="VBoxContainer" parent="Layout/ExtraControls"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"VBoxSpaced"
+
+[node name="BufferSettings" type="PanelContainer" parent="Layout/ExtraControls/Contents"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_type_variation = &"WidgetPanel"
+
+[node name="Layout" type="HBoxContainer" parent="Layout/ExtraControls/Contents/BufferSettings"]
+auto_translate_mode = 1
+layout_mode = 2
+theme_type_variation = &"HBoxSpaced"
+alignment = 1
+
+[node name="Label" type="Label" parent="Layout/ExtraControls/Contents/BufferSettings/Layout"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 3
+text = "SOUND BUFFER"
+uppercase = true
+
+[node name="Row" type="HBoxContainer" parent="Layout/ExtraControls/Contents"]
+auto_translate_mode = 1
+layout_mode = 2
+theme_type_variation = &"HBoxSpaced"
+alignment = 1
+
+[node name="ScaleUp" type="Button" parent="Layout/ExtraControls/Contents/Row"]
+unique_name_in_owner = true
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+disabled = true
+text = "SCALE UP"
+
+[node name="ImportMid" type="Button" parent="Layout/ExtraControls/Contents/Row"]
+unique_name_in_owner = true
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+disabled = true
+text = "IMPORT .mid"
+
+[node name="FillerEnd" type="Control" parent="Layout"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 3

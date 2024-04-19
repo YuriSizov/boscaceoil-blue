@@ -71,6 +71,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
+disabled = true
 text = "CREDITS"
 
 [node name="Help" type="Button" parent="Layout/Introduction/Contents/Controls"]
@@ -79,6 +80,7 @@ auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
+disabled = true
 text = "HELP"
 
 [node name="Playback" type="PanelContainer" parent="Layout/Introduction/Contents/Controls"]
@@ -148,6 +150,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
+disabled = true
 text = "NEW SONG"
 
 [node name="ExportSong" type="Button" parent="Layout/BaseControls/Rows/CreateExport"]
@@ -155,6 +158,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
+disabled = true
 text = "EXPORT..."
 
 [node name="SaveLoad" type="HBoxContainer" parent="Layout/BaseControls/Rows"]
@@ -169,6 +173,7 @@ auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
+disabled = true
 text = "LOAD .ceol"
 
 [node name="SaveCeol" type="Button" parent="Layout/BaseControls/Rows/SaveLoad"]
@@ -177,6 +182,7 @@ auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
+disabled = true
 text = "SAVE .ceol"
 
 [node name="PatternSettings" type="PanelContainer" parent="Layout/BaseControls/Rows"]

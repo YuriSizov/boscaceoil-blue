@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://byfh0p3nqrosa"]
+[gd_scene load_steps=3 format=3 uid="uid://byfh0p3nqrosa"]
 
-[ext_resource type="PackedScene" uid="uid://dciyoa2wkbtfp" path="res://gui/views/NoteMap.tscn" id="1_jt24t"]
+[ext_resource type="Script" path="res://gui/views/PatternEditor.gd" id="1_eqswn"]
+[ext_resource type="PackedScene" uid="uid://dciyoa2wkbtfp" path="res://gui/views/note_map/NoteMap.tscn" id="1_jt24t"]
 
 [node name="PatternEditor" type="VBoxContainer"]
 auto_translate_mode = 1
@@ -10,6 +11,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_vertical = 3
+script = ExtResource("1_eqswn")
 
 [node name="NoteMap" parent="." instance=ExtResource("1_jt24t")]
 layout_mode = 2

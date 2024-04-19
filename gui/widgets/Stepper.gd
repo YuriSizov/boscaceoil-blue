@@ -22,6 +22,7 @@ var _button_holder: ButtonHolder = null
 
 
 func _ready() -> void:
+	_ensure_label_size()
 	_update_value_label()
 	_update_buttons()
 	
@@ -32,6 +33,22 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	_button_holder.process(delta)
+
+
+func _ensure_label_size() -> void:
+	if not is_inside_tree():
+		return
+	
+	var string_size := 0
+	for num : int in [ value, min_value, max_value ]:
+		var num_size: int = ("%d" % num).length()
+		if num_size > string_size:
+			string_size = num_size
+	
+	var label_font := _label.get_theme_font("font")
+	var label_font_size := _label.get_theme_font_size("font_size")
+	var target_size := label_font.get_string_size("0".repeat(string_size), HORIZONTAL_ALIGNMENT_CENTER, -1, label_font_size).x
+	_label.custom_minimum_size.x = target_size
 
 
 func _update_value_label() -> void:
@@ -74,6 +91,6 @@ func _change_value_on_hold(hold_button: Button) -> void:
 	_set_value(next_value)
 
 
-func _emit_changed_on_release(hold_button: Button) -> void:
+func _emit_changed_on_release(_hold_button: Button) -> void:
 	_update_buttons()
 	value_changed.emit()

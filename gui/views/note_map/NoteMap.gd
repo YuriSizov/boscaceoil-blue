@@ -7,10 +7,6 @@
 @tool
 class_name NoteMap extends Control
 
-const NOTE_BASE_COLOR := Color(0.23137255012989, 0.15294118225574, 0.93333333730698)
-const NOTE_SHARP_COLOR := Color(0.16862745583057, 0.1294117718935, 0.59215688705444)
-const BORDER_COLOR := Color(0.01960784383118, 0.0274509806186, 0.12549020349979)
-
 const OCTAVE_SIZE := 12
 
 enum DrawingMode {
@@ -34,9 +30,8 @@ var bar_size: int = 1
 
 ## Window-dependent horizontal size of a note, based on pattern_size.
 var _note_width: float = 0
-
 ## Offset, in number of note rows.
-var scroll_offset: int = 0
+var _scroll_offset: int = 0
 ## Window-size dependent limit, based on note_count
 var _max_scroll_offset: int = -1
 
@@ -110,29 +105,41 @@ func _draw() -> void:
 	var origin := Vector2(available_rect.position.x, available_rect.size.y)
 	var note_height := get_theme_constant("note_height", "NoteMap")
 	var border_width := get_theme_constant("border_width", "NoteMap")
+	
+	# Instrument-dependent colors.
+	var note_base_color := get_theme_color("note_color", "NoteMap")
+	var note_sharp_color := get_theme_color("note_sharp_color", "NoteMap")
+	var light_border_color := get_theme_color("border_color", "NoteMap")
+	var dark_border_color := get_theme_color("border_dark_color", "NoteMap")
 
 	# Draw the rows.
 	for note in _note_rows:
 		var note_position := note.grid_position - Vector2(0, note_height)
 		var note_size := Vector2(available_rect.size.x, note_height)
-		var note_color := NOTE_SHARP_COLOR if note.sharp else NOTE_BASE_COLOR
+		var note_color := note_sharp_color if note.sharp else note_base_color
 		draw_rect(Rect2(note_position, note_size), note_color)
 
 	# Draw horizontal lines.
 	for note in _note_rows:
 		var border_size := Vector2(available_rect.size.x, border_width)
-		draw_rect(Rect2(note.grid_position, border_size), BORDER_COLOR)
+		draw_rect(Rect2(note.grid_position, border_size), dark_border_color)
 
 	# Draw vertical lines.
 	var col_index := 0
-	var last_col_x := 0
+	var last_col_x := 0.0
 	while col_index < (pattern_size + 1):
 		var col_position := origin + Vector2(_note_width * col_index, -available_rect.size.y)
 		var border_size := Vector2(border_width, available_rect.size.y)
-		if col_index % bar_size == 0: # Draw bars twice as thick.
-			border_size.x = border_width * 2
 
-		draw_rect(Rect2(col_position, border_size), BORDER_COLOR)
+		var thick_bar := col_index % bar_size == 0
+		if thick_bar:
+			var border_thick_size := border_size + Vector2(border_width, 0)
+			var border_dark_position := col_position + Vector2(border_width, 0)
+			
+			draw_rect(Rect2(col_position, border_thick_size), light_border_color)
+			draw_rect(Rect2(border_dark_position, border_size), dark_border_color)
+		else:
+			draw_rect(Rect2(col_position, border_size), light_border_color)
 		
 		col_index += 1
 		last_col_x = col_position.x
@@ -142,7 +149,7 @@ func _draw() -> void:
 		var cover_position := Vector2(last_col_x, origin.y - available_rect.size.y)
 		var cover_size := Vector2(available_rect.end.x - last_col_x, available_rect.size.y)
 		var cover_alpha := float(get_theme_constant("border_cover_opacity", "NoteMap")) / 100.0
-		var cover_color := Color(BORDER_COLOR, cover_alpha)
+		var cover_color := Color(light_border_color, cover_alpha)
 		
 		draw_rect(Rect2(cover_position, cover_size), cover_color)
 
@@ -187,9 +194,9 @@ func _update_pattern_size() -> void:
 
 
 func _change_offset(delta: int) ->  void:
-	scroll_offset += delta
+	_scroll_offset += delta
 
-	scroll_offset = clamp(scroll_offset, 0, _max_scroll_offset)
+	_scroll_offset = clamp(_scroll_offset, 0, _max_scroll_offset)
 	_update_active_notes()
 	queue_redraw()
 	_gutter.queue_redraw()
@@ -198,14 +205,12 @@ func _change_offset(delta: int) ->  void:
 
 
 func _update_scroll_offset() -> void:
-	_max_scroll_offset = note_count
-
 	var available_rect := get_available_rect()
 	var note_height := get_theme_constant("note_height", "NoteMap")
 	var notes_on_screen := floori(available_rect.size.y / note_height)
-	_max_scroll_offset -= notes_on_screen - 1
+	_max_scroll_offset = note_count - notes_on_screen + 1
 
-	scroll_offset = clamp(scroll_offset, 0, _max_scroll_offset)
+	_scroll_offset = clamp(_scroll_offset, 0, _max_scroll_offset)
 	_update_active_notes()
 	queue_redraw()
 	_gutter.queue_redraw()
@@ -231,7 +236,7 @@ func _update_grid() -> void:
 	var first_octave_index := -1
 	var last_octave_index := -1
 	while filled_height < (available_rect.size.y + OCTAVE_SIZE * note_height): # Give it some buffer.
-		var note_index: int = index + scroll_offset
+		var note_index: int = index + _scroll_offset
 		if note_index > note_count:
 			break
 
@@ -244,7 +249,7 @@ func _update_grid() -> void:
 		note.label = note_names[note_normalized]
 		note.sharp = false
 		note.position = origin - Vector2(0, index * note_height)
-		note.grid_position = note.position + Vector2(available_rect.position.x, 0)
+		note.grid_position = note.position + available_rect.position
 		note.label_position = note.position + Vector2(0, -6)
 
 		if note.label.ends_with("#"):
@@ -260,7 +265,7 @@ func _update_grid() -> void:
 			if first_octave_index == -1:
 				first_octave_index = octave_index
 			
-			var octave_ref_note := (last_octave_index - first_octave_index + 1) * OCTAVE_SIZE - scroll_offset % 12 - 1
+			var octave_ref_note := (last_octave_index - first_octave_index + 1) * OCTAVE_SIZE - _scroll_offset % 12 - 1
 			
 			var octave := OctaveRow.new()
 			octave.octave_index = octave_index
@@ -325,7 +330,7 @@ func _update_active_notes() -> void:
 		var note_data := current_pattern.notes[i]
 		if note_data.x < 0 || note_data.y < 0 || note_data.y >= pattern_size || note_data.z < 1:
 			continue # Outside of the grid, or too short.
-		var note_value := note_data.x - scroll_offset
+		var note_value := note_data.x - _scroll_offset
 		
 		var note := ActiveNote.new()
 		note.note_value = note_data.x
@@ -400,6 +405,7 @@ func _edit_current_pattern() -> void:
 		return
 	
 	current_pattern = Controller.get_current_pattern()
+	theme = Controller.get_current_instrument_theme()
 	_update_active_notes()
 	queue_redraw()
 	_overlay.queue_redraw()
@@ -428,7 +434,7 @@ func _add_note_at_cursor() -> void:
 	if note_indexed.x < 0 || note_indexed.y < 0:
 		return
 	
-	var note_value := note_indexed.y + scroll_offset
+	var note_value := note_indexed.y + _scroll_offset
 	if current_pattern.has_note(note_value, note_indexed.x, true):
 		return # Space is already occupied.
 	
@@ -444,7 +450,7 @@ func _remove_note_at_cursor() -> void:
 	if note_indexed.x < 0 || note_indexed.y < 0:
 		return
 	
-	var note_value := note_indexed.y + scroll_offset
+	var note_value := note_indexed.y + _scroll_offset
 	current_pattern.remove_note(note_value, note_indexed.x, true)
 	_update_active_notes()
 	_overlay.queue_redraw()

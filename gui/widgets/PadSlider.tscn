@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3 uid="uid://dtvff0pavdph7"]
+
+[ext_resource type="Script" path="res://gui/widgets/PadSlider.gd" id="1_j35o1"]
+
+[node name="PadSlider" type="Control"]
+auto_translate_mode = 1
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_j35o1")

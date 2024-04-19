@@ -1,4 +1,24 @@
-[gd_scene format=3 uid="uid://cw48njslxrtsl"]
+[gd_scene load_steps=4 format=3 uid="uid://cw48njslxrtsl"]
+
+[ext_resource type="Script" path="res://gui/views/InstrumentView.gd" id="1_wchjl"]
+[ext_resource type="PackedScene" uid="uid://lj57mjqt7ce7" path="res://gui/views/instrument_view/InstrumentDock.tscn" id="2_rexoc"]
+[ext_resource type="PackedScene" uid="uid://1satggoreys0" path="res://gui/views/instrument_view/InstrumentSettings.tscn" id="3_88ydm"]
 
 [node name="InstrumentView" type="MarginContainer"]
 auto_translate_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_wchjl")
+
+[node name="Layout" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="InstrumentDock" parent="Layout" instance=ExtResource("2_rexoc")]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+
+[node name="InstrumentSettings" parent="Layout" instance=ExtResource("3_88ydm")]
+layout_mode = 2

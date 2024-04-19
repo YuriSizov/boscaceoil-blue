@@ -60,7 +60,7 @@ expand_icon = true
 
 [node name="Contents" type="PanelContainer" parent="."]
 auto_translate_mode = 1
-custom_minimum_size = Vector2(0, 300)
+custom_minimum_size = Vector2(1280, 300)
 layout_mode = 2
 theme_type_variation = &"MenuContentsPanel"
 

@@ -23,8 +23,11 @@ icon_alignment = 1
 expand_icon = true
 
 [node name="Label" type="Label" parent="."]
+custom_minimum_size = Vector2(18, 0)
 layout_mode = 2
 text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Increase" type="Button" parent="."]
 auto_translate_mode = 1
