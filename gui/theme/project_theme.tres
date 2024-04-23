@@ -341,6 +341,7 @@ OptionPicker/colors/option_hover_color = Color(0.858824, 0.886275, 0.898039, 0.5
 OptionPicker/colors/sublist_color = Color(1, 1, 1, 1)
 OptionPicker/colors/sublist_font_color = Color(0.101961, 0.129412, 0.137255, 1)
 OptionPicker/colors/sublist_hover_color = Color(0.572549, 0.639216, 0.666667, 0.627451)
+OptionPicker/colors/sublist_inactive_font_color = Color(0.101961, 0.129412, 0.137255, 0.392157)
 OptionPicker/colors/sublist_selected_color = Color(0.351146, 0.409792, 0.435427, 0.784314)
 OptionPicker/styles/item_margins = SubResource("StyleBoxEmpty_lgaqy")
 OptionPicker/styles/popup_panel = SubResource("StyleBoxFlat_wpor0")

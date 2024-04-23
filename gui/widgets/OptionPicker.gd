@@ -9,8 +9,18 @@ class_name OptionPicker extends MarginContainer
 
 signal selected()
 
+enum Pager {
+	NO_PAGER = -1,
+	PAGER_LEFT,
+	PAGER_RIGHT,
+}
+
 const POPUP_MIN_SIZE := Vector2(10, 10)
+const POPUP_MAX_ITEMS := 15 # TODO: Possibly make this adjustible to always fit the screen?
+
 const POPUP_EMPTY_LABEL := "No options."
+const PAGER_LEFT_LABEL := "<< Prev"
+const PAGER_RIGHT_LABEL := "Next >>"
 
 ## Expand direction for the popup with options. Should be read as "In the direction to <DIRECTION OPTION>".
 @export var direction: PopupManager.Direction = PopupManager.Direction.BOTTOM_RIGHT
@@ -85,6 +95,7 @@ func _draw_popup(popup: ItemPopup) -> void:
 
 	var option_font_color := get_theme_color("option_font_color", "OptionPicker")
 	var sublist_font_color := get_theme_color("sublist_font_color", "OptionPicker")
+	var sublist_inactive_font_color := get_theme_color("sublist_inactive_font_color", "OptionPicker")
 	var sublist_color := get_theme_color("sublist_color", "OptionPicker")
 	var option_hover_color := get_theme_color("option_hover_color", "OptionPicker")
 	var sublist_hover_color := get_theme_color("sublist_hover_color", "OptionPicker")
@@ -95,8 +106,19 @@ func _draw_popup(popup: ItemPopup) -> void:
 		var label_position := popup.item_origin + popup.label_position
 		popup.draw_string(font, label_position, POPUP_EMPTY_LABEL, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, empty_font_color)
 	else:
-		var item_index := 0
-		for item in popup.get_options():
+		var popup_options := popup.get_options()
+		# Either draw exactly POPUP_MAX_ITEMS + 1 items, or draw POPUP_MAX_ITEMS and then a pager.
+		var max_items := popup_options.size()
+		if popup.has_pager:
+			max_items = POPUP_MAX_ITEMS
+		
+		# Draw the items, up to the limit.
+		for item_index in max_items:
+			var item_adjusted_index := item_index + popup.current_page * POPUP_MAX_ITEMS
+			if item_adjusted_index >= popup_options.size():
+				break
+			var item := popup_options[item_adjusted_index]
+
 			var item_offset := Vector2(0, popup.item_size.y * item_index)
 			var item_position := popup.item_origin + item_offset
 			var label_position := popup.item_origin + popup.label_position + item_offset
@@ -115,7 +137,33 @@ func _draw_popup(popup: ItemPopup) -> void:
 			var item_font_color := sublist_font_color if item.is_sublist else option_font_color
 			popup.draw_string(font, label_position, item.get_option_text(), HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, item_font_color)
 
-			item_index += 1
+		# Draw the pager.
+		if popup.has_pager:
+			var popup_index := POPUP_MAX_ITEMS
+			var pager_offset := Vector2(0, popup.item_size.y * popup_index)
+			var pager_size := Vector2(popup.item_size.x / 2, popup.item_size.y)
+			
+			# Draw the left pager (previous page).
+			
+			var left_pager_position := popup.item_origin + pager_offset
+			popup.draw_rect(Rect2(left_pager_position, pager_size), sublist_color)
+			if popup.current_page != 0 && popup.hovered_item == popup_index && popup.hovered_pager == Pager.PAGER_LEFT:
+				popup.draw_rect(Rect2(left_pager_position, pager_size), sublist_hover_color)
+			
+			var left_pager_label_position := popup.item_origin + popup.pager_left_label_position + pager_offset
+			var left_pager_color := sublist_font_color if popup.current_page != 0 else sublist_inactive_font_color
+			popup.draw_string(font, left_pager_label_position, PAGER_LEFT_LABEL, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, left_pager_color)
+			
+			# Draw the right pager (next page).
+			
+			var right_pager_position := left_pager_position + Vector2(pager_size.x, 0)
+			popup.draw_rect(Rect2(right_pager_position, pager_size), sublist_color)
+			if popup.current_page != (popup.max_pages - 1) && popup.hovered_item == popup_index && popup.hovered_pager == Pager.PAGER_RIGHT:
+				popup.draw_rect(Rect2(right_pager_position, pager_size), sublist_hover_color)
+			
+			var right_pager_label_position := popup.item_origin + popup.pager_right_label_position + pager_offset
+			var right_pager_color := sublist_font_color if popup.current_page != (popup.max_pages - 1) else sublist_inactive_font_color
+			popup.draw_string(font, right_pager_label_position, PAGER_RIGHT_LABEL, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, right_pager_color)
 
 
 func _update_popup_size(popup: ItemPopup) -> void:
@@ -137,10 +185,20 @@ func _update_popup_size(popup: ItemPopup) -> void:
 			if text_size.x > longest_item:
 				longest_item = text_size.x
 
-		item_count = popup.get_options().size()
+		item_count = min(POPUP_MAX_ITEMS + 1, popup.get_options().size()) # Reserve one item slot for navigation.
 
-	# Use the minimum width and the height of a capital character, calculate the item size.
+	# Calculate final item size.
+	# Reference the minimum width from the above, the height of any capital character, and the minimum size
+	# needed by the pager.
+
 	var item_height := font.get_char_size("C".unicode_at(0), font_size).y
+
+	var left_label_size := font.get_string_size(PAGER_LEFT_LABEL, HORIZONTAL_ALIGNMENT_RIGHT, -1, font_size)
+	var right_label_size := font.get_string_size(PAGER_RIGHT_LABEL, HORIZONTAL_ALIGNMENT_RIGHT, -1, font_size)
+	if popup.has_pager:
+		var pager_min_width := maxf(left_label_size.x, right_label_size.x) * 2
+		longest_item = max(longest_item, pager_min_width)
+
 	var item_size := Vector2(
 		item_margins.get_margin(SIDE_LEFT) + item_margins.get_margin(SIDE_RIGHT) + longest_item,
 		item_margins.get_margin(SIDE_TOP) + item_margins.get_margin(SIDE_BOTTOM) + item_height
@@ -157,10 +215,17 @@ func _update_popup_size(popup: ItemPopup) -> void:
 	)
 	popup.item_origin = Vector2(popup_background.border_width_left, popup_background.border_width_top)
 
-	# TODO: Support limiting the list and showing a pager.
 	popup.size = Vector2(
 		max(POPUP_MIN_SIZE.x, item_size.x + border_size.x),
 		max(POPUP_MIN_SIZE.y, item_size.y * item_count + border_size.y)
+	)
+	
+	# Update pager sizes.
+	
+	popup.pager_left_label_position = popup.label_position
+	popup.pager_right_label_position = Vector2(
+		item_size.x - item_margins.get_margin(SIDE_LEFT) - right_label_size.x, # Right offset may be assymetrical.
+		item_size.y - item_margins.get_margin(SIDE_BOTTOM)
 	)
 
 
@@ -244,13 +309,12 @@ func _update_label() -> void:
 # Selection.
 
 func _accept_selected(item: Item) -> void:
-	if not item || item.is_sublist:
-		_selected_option = null
-	else:
-		_selected_option = item
-	
-	_update_label()
-	selected.emit()
+	var next_item := item if not item.is_sublist else null
+
+	if next_item != _selected_option:
+		_selected_option = next_item
+		_update_label()
+		selected.emit()
 	
 	if not item.is_sublist:
 		PopupManager.hide_popup(_popup_control)
@@ -353,9 +417,17 @@ class ItemPopup extends PopupManager.PopupControl:
 	var hovered_item: int = -1
 	var selected_item: int = -1
 
+	var has_pager: bool = false
+	var max_pages: int = 1
+	var current_page: int = 0
+	var hovered_pager: int = OptionPicker.Pager.NO_PAGER
+
 	var item_origin: Vector2 = Vector2.ZERO
 	var item_size: Vector2 = Vector2.ZERO
 	var label_position: Vector2 = Vector2.ZERO
+	
+	var pager_left_label_position: Vector2 = Vector2.ZERO
+	var pager_right_label_position: Vector2 = Vector2.ZERO
 
 
 	func _ready() -> void:
@@ -380,15 +452,34 @@ class ItemPopup extends PopupManager.PopupControl:
 				accept_event()
 
 				var item_index := _find_item_at_pos(mb.position)
-				if item_index >= 0:
-					var item := _option_list[item_index]
+				
+				# Clicked on a pager.
+				if has_pager && item_index == OptionPicker.POPUP_MAX_ITEMS:
+					var pager := _find_pager_at_pos(mb.position)
+					if pager == OptionPicker.Pager.PAGER_LEFT:
+						current_page -= 1
+					elif pager == OptionPicker.Pager.PAGER_RIGHT:
+						current_page += 1
+					current_page = clamp(current_page, 0, max_pages - 1)
+					
+					queue_redraw()
+					
+				# Clicked on an item.
+				elif item_index >= 0:
+					var item_adjusted_index := item_index + current_page * OptionPicker.POPUP_MAX_ITEMS
+					if item_adjusted_index >= _option_list.size():
+						return # Actually, clicked on an empty space.
+					var item := _option_list[item_adjusted_index]
 	
+					# It's a sublist, toggle it.
 					if item.is_sublist:
 						selected_item = item_index
 						
 						if _popup_map.has(item.id):
 							var sublist_position := Vector2(0, item_origin.y + item_size.y * item_index)
 							sublist_selected.emit(_popup_map[item.id], sublist_position)
+					
+					# It's a selectable item, select it.
 					else:
 						item_selected.emit(item)
 				return
@@ -402,14 +493,24 @@ class ItemPopup extends PopupManager.PopupControl:
 
 	func _check_hover_popup() -> void:
 		var next_item := hovered_item
+		var mouse_position := get_local_mouse_position()
 
 		if _option_list.size() == 0:
 			next_item = -1
 		else:
-			next_item = _find_item_at_pos(get_local_mouse_position())
+			next_item = _find_item_at_pos(mouse_position)
 
-		if next_item != hovered_item:
+		if has_pager && next_item == OptionPicker.POPUP_MAX_ITEMS:
 			hovered_item = next_item
+			
+			var next_pager := _find_pager_at_pos(mouse_position)
+			if next_pager != hovered_pager:
+				hovered_pager = next_pager
+				queue_redraw()
+		
+		elif next_item != hovered_item:
+			hovered_item = next_item
+			hovered_pager = OptionPicker.Pager.NO_PAGER
 			queue_redraw()
 
 
@@ -424,6 +525,7 @@ class ItemPopup extends PopupManager.PopupControl:
 		_hovering = false
 		hovered_item = -1
 		selected_item = -1
+		hovered_pager = OptionPicker.Pager.NO_PAGER
 		
 		for item_id: int in _popup_map:
 			var sub_popup: ItemPopup = _popup_map[item_id]
@@ -444,10 +546,23 @@ class ItemPopup extends PopupManager.PopupControl:
 		return -1
 
 
+	func _find_pager_at_pos(at_position: Vector2) -> OptionPicker.Pager:
+		return OptionPicker.Pager.PAGER_LEFT if at_position.x < (item_size.x / 2) else OptionPicker.Pager.PAGER_RIGHT
+
+
 	# Option list management.
 
 	func update_options(options: Array[Item]) -> Array[ItemPopup]:
 		_option_list = options
+		
+		# Update pager metadata.
+		current_page = 0
+		has_pager = _option_list.size() > (OptionPicker.POPUP_MAX_ITEMS + 1)
+		if has_pager:
+			max_pages = ceili(_option_list.size() / float(OptionPicker.POPUP_MAX_ITEMS))
+		else:
+			max_pages = 1
+		
 		if resize_callback.is_valid():
 			resize_callback.call(self)
 		
