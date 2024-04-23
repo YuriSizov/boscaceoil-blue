@@ -12,17 +12,53 @@ class_name VoiceManager extends Object
 var _preset_util: SiONVoicePresetUtil = SiONVoicePresetUtil.new()
 ## Collection of registered voice data.
 var _voices: Array[VoiceData] = []
+## Collection of categories for registered voices.
+var _categories: PackedStringArray = PackedStringArray()
+var _sub_categories: Array[SubCategory] = []
 
 
 func _init() -> void:
 	# NOTE: Order of registration is important, as it is used for the save data format.
 	# If we ever need to add more voices/instruments, this needs to be handled gracefully.
-
+	
+	_register_categories()
 	_register_voices()
 	_register_drumkits()
 
 
 # Initialization.
+
+func _register_categories() -> void:
+	_register_sub_category("MIDI", "Piano",    "midi.piano")
+	_register_sub_category("MIDI", "Bells",    "midi.chrom")
+	_register_sub_category("MIDI", "Organ",    "midi.organ")
+	_register_sub_category("MIDI", "Guitar",   "midi.guitar")
+	_register_sub_category("MIDI", "Bass",     "midi.bass")
+	_register_sub_category("MIDI", "Strings",  "midi.strings")
+	_register_sub_category("MIDI", "Ensemble", "midi.ensemble")
+	_register_sub_category("MIDI", "Brass",    "midi.brass")
+	_register_sub_category("MIDI", "Reed",     "midi.reed")
+	_register_sub_category("MIDI", "Pipe",     "midi.pipe")
+	_register_sub_category("MIDI", "Lead",     "midi.lead")
+	_register_sub_category("MIDI", "Pads",     "midi.pad")
+	_register_sub_category("MIDI", "Synth",    "midi.fx")
+	_register_sub_category("MIDI", "World",    "midi.world")
+	_register_sub_category("MIDI", "Drums",    "midi.percus")
+	_register_sub_category("MIDI", "Effects",  "midi.se")
+	
+	_register_sub_category("CHIPTUNE", "", "")
+	_register_sub_category("BASS",     "", "valsound.bass")
+	_register_sub_category("BRASS",    "", "valsound.brass")
+	_register_sub_category("BELL",     "", "valsound.bell")
+	_register_sub_category("GUITAR",   "", "valsound.guitar")
+	_register_sub_category("LEAD",     "", "valsound.lead")
+	_register_sub_category("PIANO",    "", "valsound.piano")
+	_register_sub_category("SPECIAL",  "", "valsound.s")
+	_register_sub_category("STRINGS",  "", "valsound.strpad")
+	_register_sub_category("WIND",     "", "valsound.wind")
+	_register_sub_category("WORLD",    "", "valsound.world")
+	_register_sub_category("DRUMKIT",  "", "drumkit")
+
 
 func _register_voices() -> void:
 	_register_single_voice("MIDI", "Grand Piano",       "midi.piano1",    ColorPalette.PALETTE_BLUE)
@@ -541,6 +577,8 @@ func _register_single_voice(category: String, name: String, voice_preset: String
 
 	voice_data.index = _voices.size()
 	_voices.push_back(voice_data)
+	_register_category(category)
+	_map_sub_category(voice_data)
 	return voice_data
 
 
@@ -554,6 +592,8 @@ func _register_drumkit_voice(category: String, name: String, voice_preset: Strin
 
 	voice_data.index = _voices.size()
 	_voices.push_back(voice_data)
+	_register_category(category)
+	_map_sub_category(voice_data)
 	return voice_data
 
 
@@ -569,7 +609,54 @@ func _register_drumkit_item(drumkit_data: DrumkitData, name: String, voice_prese
 	drumkit_data.items.push_back(item)
 
 
+func _register_category(category: String) -> void:
+	if _categories.has(category):
+		return
+	
+	_categories.push_back(category)
+
+
+func _register_sub_category(category: String, name: String, prefix: String) -> void:
+	var sub_category := SubCategory.new()
+	sub_category.category = category
+	sub_category.name = name
+	sub_category.prefix = prefix
+	
+	_sub_categories.push_back(sub_category)
+	_register_category(category)
+
+
+func _map_sub_category(voice_data: VoiceData) -> void:
+	for sub in _sub_categories:
+		if sub.category == voice_data.category && voice_data.voice_preset.begins_with(sub.prefix):
+			sub.voices.push_back(voice_data)
+			return
+
+
 # Public methods.
+
+func get_categories() -> PackedStringArray:
+	return _categories
+
+
+func get_sub_categories(category: String) -> Array[SubCategory]:
+	var subs: Array[SubCategory] = []
+	for sub in _sub_categories:
+		if sub.category == category:
+			subs.push_back(sub)
+	
+	return subs
+
+
+func get_first_voice_data(category: String) -> VoiceData:
+	for i in _voices.size():
+		var voice := _voices[i]
+		if voice.category == category:
+			return voice
+
+	printerr("VoiceManager: Invalid voice category (%s)." % [ category ])
+	return null
+
 
 func get_voice_data(category: String, name: String) -> VoiceData:
 	for i in _voices.size():
@@ -591,6 +678,17 @@ func get_voice_data_at(index: int) -> VoiceData:
 
 func get_voice_preset(name: String) -> SiONVoice:
 	return _preset_util.get_voice_preset(name)
+
+
+class SubCategory:
+	## Base category for the subcategory.
+	var category: String = ""
+	## Display name of the subcategory.
+	var name: String = ""
+	## Preset name prefix for mapping voices.
+	var prefix: String = ""
+	## Collection of mapped voice data.
+	var voices: Array[VoiceData] = []
 
 
 class VoiceData:

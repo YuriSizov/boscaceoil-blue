@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=40 format=3 uid="uid://chpsnl8o0raaf"]
+[gd_resource type="Theme" load_steps=42 format=3 uid="uid://chpsnl8o0raaf"]
 
 [ext_resource type="Texture2D" uid="uid://d2aswndmtik56" path="res://assets/overlap-dither.png" id="1_4kypt"]
 [ext_resource type="FontFile" uid="uid://blsoavvmevh5x" path="res://assets/FFF Aquarius Bold Condensed Regular.ttf" id="1_q75co"]
@@ -143,6 +143,27 @@ content_margin_top = 1.0
 content_margin_right = 24.0
 content_margin_bottom = 1.0
 bg_color = Color(0.313726, 0.396078, 0.415686, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_lgaqy"]
+content_margin_left = 8.0
+content_margin_top = 0.0
+content_margin_right = 12.0
+content_margin_bottom = 6.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wpor0"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.427451, 0.521569, 0.552941, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 1)
+shadow_color = Color(0, 0, 0, 0.392157)
+shadow_size = 2
+shadow_offset = Vector2(2, 1)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_rxqrq"]
 texture = ExtResource("2_ovmtp")
@@ -313,6 +334,18 @@ NoteMap/constants/note_cursor_width = 3
 NoteMap/constants/note_height = 32
 NoteMap/constants/playback_cursor_width = 8
 NoteMap/icons/active_note_overlap = ExtResource("1_4kypt")
+OptionPicker/base_type = &"MarginContainer"
+OptionPicker/colors/empty_font_color = Color(0.284934, 0.322112, 0.334212, 1)
+OptionPicker/colors/option_font_color = Color(1, 1, 1, 1)
+OptionPicker/colors/option_hover_color = Color(0.858824, 0.886275, 0.898039, 0.54902)
+OptionPicker/colors/sublist_color = Color(1, 1, 1, 1)
+OptionPicker/colors/sublist_font_color = Color(0.101961, 0.129412, 0.137255, 1)
+OptionPicker/colors/sublist_hover_color = Color(0.572549, 0.639216, 0.666667, 0.627451)
+OptionPicker/colors/sublist_selected_color = Color(0.351146, 0.409792, 0.435427, 0.784314)
+OptionPicker/styles/item_margins = SubResource("StyleBoxEmpty_lgaqy")
+OptionPicker/styles/popup_panel = SubResource("StyleBoxFlat_wpor0")
+OptionPickerBox/base_type = &"HBoxContainer"
+OptionPickerBox/constants/separation = 16
 PadSlider/colors/cursor_color = Color(0.54902, 0.54902, 0.54902, 1)
 PadSlider/colors/cursor_outline_color = Color(0.376471, 0.376471, 0.376471, 1)
 PadSlider/constants/cursor_outline_width = 3

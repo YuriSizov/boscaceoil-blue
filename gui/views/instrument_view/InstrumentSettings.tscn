@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://1satggoreys0"]
+[gd_scene load_steps=7 format=3 uid="uid://1satggoreys0"]
 
 [ext_resource type="Script" path="res://gui/views/instrument_view/InstrumentSettings.gd" id="1_vna7b"]
 [ext_resource type="Theme" uid="uid://dkb62tku7dpgs" path="res://gui/theme/instrument_theme_gray.tres" id="1_x4dqd"]
 [ext_resource type="Texture2D" uid="uid://dv8e841ktrh7e" path="res://gui/theme/minus_icon.tres" id="2_er56q"]
 [ext_resource type="PackedScene" uid="uid://dtvff0pavdph7" path="res://gui/widgets/PadSlider.tscn" id="2_misq6"]
 [ext_resource type="Texture2D" uid="uid://kqtm1ja12mjr" path="res://gui/theme/plus_icon.tres" id="3_0auup"]
+[ext_resource type="PackedScene" uid="uid://dpno0cpboqdm0" path="res://gui/widgets/OptionPicker.tscn" id="3_f80nj"]
 
 [node name="InstrumentSettings" type="PanelContainer"]
 auto_translate_mode = 1
@@ -38,15 +39,16 @@ auto_translate_mode = 1
 layout_mode = 2
 theme_type_variation = &"HBoxSpaced"
 
-[node name="TypeList" type="PanelContainer" parent="Layout/Metadata/Pickers"]
+[node name="CategoryList" type="PanelContainer" parent="Layout/Metadata/Pickers"]
 auto_translate_mode = 1
 layout_mode = 2
 theme_type_variation = &"InstrumentWidgetPanel"
 
-[node name="Label" type="Label" parent="Layout/Metadata/Pickers/TypeList"]
-auto_translate_mode = 1
+[node name="CategoryPicker" parent="Layout/Metadata/Pickers/CategoryList" instance=ExtResource("3_f80nj")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
-text = "TYPE"
+placeholder_text = "TYPE"
 
 [node name="InstrumentList" type="PanelContainer" parent="Layout/Metadata/Pickers"]
 auto_translate_mode = 1
@@ -58,10 +60,11 @@ auto_translate_mode = 1
 layout_mode = 2
 theme_type_variation = &"HBoxSpaced"
 
-[node name="Label" type="Label" parent="Layout/Metadata/Pickers/InstrumentList/Layout"]
-auto_translate_mode = 1
+[node name="InstrumentPicker" parent="Layout/Metadata/Pickers/InstrumentList/Layout" instance=ExtResource("3_f80nj")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
-text = "Instrument Name"
+placeholder_text = "Instrument Name"
 
 [node name="Buttons" type="HBoxContainer" parent="Layout/Metadata/Pickers/InstrumentList/Layout"]
 layout_mode = 2
@@ -101,6 +104,7 @@ size_flags_horizontal = 3
 theme_override_constants/separation = 12
 
 [node name="LowPassSlider" parent="Layout/Tuner/LowPass" instance=ExtResource("2_misq6")]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 0)
 layout_mode = 2
 size_flags_vertical = 3
@@ -120,6 +124,7 @@ layout_mode = 2
 theme_override_constants/separation = 12
 
 [node name="VolumeSlider" parent="Layout/Tuner/Volume" instance=ExtResource("2_misq6")]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 0)
 layout_mode = 2
 size_flags_horizontal = 4

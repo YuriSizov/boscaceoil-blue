@@ -69,6 +69,8 @@ func _ready() -> void:
 		Controller.song_loaded.connect(_update_pattern_size)
 		Controller.song_loaded.connect(_edit_current_pattern)
 		Controller.song_pattern_changed.connect(_update_pattern_size)
+		Controller.song_pattern_instrument_changed.connect(_update_pattern_instrument)
+		
 		Controller.music_player.playback_tick.connect(_update_playback_cursor)
 		Controller.music_player.playback_stopped.connect(_update_playback_cursor)
 
@@ -191,6 +193,17 @@ func _update_pattern_size() -> void:
 	bar_size = Controller.current_song.bar_size
 	_update_note_width()
 	_update_active_notes()
+
+
+func _update_pattern_instrument() -> void:
+	if Engine.is_editor_hint():
+		return
+	if not current_pattern:
+		return
+	
+	theme = Controller.get_current_instrument_theme()
+	queue_redraw()
+	_overlay.queue_redraw()
 
 
 func _change_offset(delta: int) ->  void:

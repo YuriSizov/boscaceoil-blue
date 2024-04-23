@@ -8,6 +8,8 @@ extends Node
 
 signal song_loaded()
 signal song_pattern_changed()
+signal song_pattern_instrument_changed()
+signal song_instrument_changed()
 
 var voice_manager: VoiceManager = null
 var music_player: MusicPlayer = null
@@ -84,6 +86,44 @@ func get_current_instrument() -> Instrument:
 		return null
 	
 	return current_song.instruments[current_instrument_index]
+
+
+func _set_current_instrument_by_voice(voice_data: VoiceManager.VoiceData) -> void:
+	if not voice_data:
+		return
+
+	var instrument: Instrument = null
+	if voice_data is VoiceManager.DrumkitData:
+		instrument = DrumkitInstrument.new(voice_data)
+	else:
+		instrument = SingleVoiceInstrument.new(voice_data)
+	
+	current_song.instruments[current_instrument_index] = instrument
+	song_instrument_changed.emit()
+	
+	var current_pattern := get_current_pattern()
+	if current_pattern && current_pattern.instrument_idx == current_instrument_index:
+		song_pattern_instrument_changed.emit()
+
+
+func set_current_instrument(category: String, instrument_name: String) -> void:
+	if not current_song:
+		return
+	if current_instrument_index < 0 || current_instrument_index >= current_song.instruments.size():
+		return
+	
+	var voice_data := Controller.voice_manager.get_voice_data(category, instrument_name)
+	_set_current_instrument_by_voice(voice_data)
+
+
+func set_current_instrument_by_category(category: String) -> void:
+	if not current_song:
+		return
+	if current_instrument_index < 0 || current_instrument_index >= current_song.instruments.size():
+		return
+	
+	var voice_data := Controller.voice_manager.get_first_voice_data(category)
+	_set_current_instrument_by_voice(voice_data)
 
 
 func get_current_instrument_theme() -> Theme:

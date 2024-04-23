@@ -1,0 +1,30 @@
+[gd_scene load_steps=3 format=3 uid="uid://dpno0cpboqdm0"]
+
+[ext_resource type="Script" path="res://gui/widgets/OptionPicker.gd" id="1_m580c"]
+[ext_resource type="Texture2D" uid="uid://bw1l2mvuxboun" path="res://gui/theme/down_arrow.tres" id="2_p6jtu"]
+
+[node name="OptionPicker" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"OptionPicker"
+script = ExtResource("1_m580c")
+
+[node name="Layout" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_type_variation = &"OptionPickerBox"
+
+[node name="Arrow" type="TextureRect" parent="Layout"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("2_p6jtu")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Layout"]
+layout_mode = 2
+size_flags_horizontal = 3
+vertical_alignment = 1
