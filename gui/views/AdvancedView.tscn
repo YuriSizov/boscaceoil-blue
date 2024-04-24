@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://ggnvgntxytdg"]
+[gd_scene load_steps=5 format=3 uid="uid://ggnvgntxytdg"]
 
 [ext_resource type="Script" path="res://gui/views/AdvancedView.gd" id="1_lhikh"]
 [ext_resource type="PackedScene" uid="uid://d2peohvka6nmb" path="res://gui/widgets/Stepper.tscn" id="1_uibd1"]
+[ext_resource type="PackedScene" uid="uid://dpno0cpboqdm0" path="res://gui/widgets/OptionPicker.tscn" id="3_ttw6g"]
+[ext_resource type="PackedScene" uid="uid://dtvff0pavdph7" path="res://gui/widgets/PadSlider.tscn" id="3_xr70i"]
 
 [node name="AdvancedView" type="MarginContainer"]
 auto_translate_mode = 1
@@ -32,6 +34,13 @@ layout_mode = 2
 size_flags_vertical = 4
 theme_type_variation = &"VBoxSpaced"
 
+[node name="Label" type="Label" parent="Layout/Tuning/Contents"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 3
+text = "SONG SETTINGS"
+uppercase = true
+
 [node name="FilterSettings" type="PanelContainer" parent="Layout/Tuning/Contents"]
 auto_translate_mode = 1
 layout_mode = 2
@@ -51,6 +60,14 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "FILTER"
 uppercase = true
+
+[node name="FilterPicker" parent="Layout/Tuning/Contents/FilterSettings/Layout" instance=ExtResource("3_ttw6g")]
+layout_mode = 2
+placeholder_text = "NAME"
+
+[node name="FilterValueSlider" parent="Layout/Tuning/Contents/FilterSettings/Layout" instance=ExtResource("3_xr70i")]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
 
 [node name="SwingSettings" type="PanelContainer" parent="Layout/Tuning/Contents"]
 auto_translate_mode = 1
@@ -95,6 +112,13 @@ layout_mode = 2
 size_flags_vertical = 4
 theme_type_variation = &"VBoxSpaced"
 
+[node name="Label" type="Label" parent="Layout/ExtraControls/Contents"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 3
+text = "APP SETTINGS"
+uppercase = true
+
 [node name="BufferSettings" type="PanelContainer" parent="Layout/ExtraControls/Contents"]
 auto_translate_mode = 1
 layout_mode = 2
@@ -115,29 +139,39 @@ size_flags_horizontal = 3
 text = "SOUND BUFFER"
 uppercase = true
 
-[node name="Row" type="HBoxContainer" parent="Layout/ExtraControls/Contents"]
+[node name="BufferPicker" parent="Layout/ExtraControls/Contents/BufferSettings/Layout" instance=ExtResource("3_ttw6g")]
+unique_name_in_owner = true
+layout_mode = 2
+direction = 1
+placeholder_text = "0000"
+
+[node name="GUIScaleSettings" type="PanelContainer" parent="Layout/ExtraControls/Contents"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_type_variation = &"WidgetPanel"
+
+[node name="Layout" type="HBoxContainer" parent="Layout/ExtraControls/Contents/GUIScaleSettings"]
 auto_translate_mode = 1
 layout_mode = 2
 theme_type_variation = &"HBoxSpaced"
 alignment = 1
 
-[node name="GUIToggleScale" type="Button" parent="Layout/ExtraControls/Contents/Row"]
-unique_name_in_owner = true
+[node name="Label" type="Label" parent="Layout/ExtraControls/Contents/GUIScaleSettings/Layout"]
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 4
-disabled = true
-text = "GUI SCALE UP"
+text = "GUI SCALE"
+uppercase = true
 
-[node name="ImportMid" type="Button" parent="Layout/ExtraControls/Contents/Row"]
+[node name="GUIScaleStepper" parent="Layout/ExtraControls/Contents/GUIScaleSettings/Layout" instance=ExtResource("1_uibd1")]
 unique_name_in_owner = true
 auto_translate_mode = 1
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
-disabled = true
-text = "IMPORT .mid"
+value = 1
+min_value = 1
+max_value = 2
 
 [node name="FillerEnd" type="Control" parent="Layout"]
 auto_translate_mode = 1

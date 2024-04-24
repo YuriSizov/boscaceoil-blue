@@ -8,6 +8,7 @@ extends PanelContainer
 
 var current_instrument: Instrument = null
 
+@onready var _instrument_label: Label = %InstrumentLabel
 @onready var _category_picker: OptionPicker = %CategoryPicker
 @onready var _instrument_picker: OptionPicker = %InstrumentPicker
 @onready var _prev_instrument_button: Button = %PrevInstrument
@@ -106,6 +107,9 @@ func _edit_current_instrument() -> void:
 	var next_instrument := Controller.get_current_instrument()
 	if next_instrument == current_instrument:
 		return
+	
+	# Update the label.
+	_instrument_label.text = "INSTRUMENT %d" % [ Controller.current_instrument_index + 1 ]
 	
 	# Update the instrument reference and pickers.
 	

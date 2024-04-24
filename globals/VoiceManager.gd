@@ -676,6 +676,11 @@ func get_voice_data_at(index: int) -> VoiceData:
 	return _voices[index]
 
 
+func get_random_voice_data() -> VoiceData:
+	var index := randi_range(0, _voices.size() - 1)
+	return _voices[index]
+
+
 func get_voice_preset(name: String) -> SiONVoice:
 	return _preset_util.get_voice_preset(name)
 

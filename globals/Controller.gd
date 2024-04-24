@@ -9,7 +9,6 @@ extends Node
 signal song_loaded()
 signal song_sizes_changed()
 signal song_pattern_changed()
-signal song_pattern_instrument_changed()
 signal song_instrument_changed()
 
 var voice_manager: VoiceManager = null
@@ -80,6 +79,74 @@ func get_current_pattern() -> Pattern:
 	return current_song.patterns[current_pattern_index]
 
 
+func create_instrument() -> void:
+	if not current_song:
+		return
+	if current_song.instruments.size() >= Song.MAX_INSTRUMENT_COUNT:
+		return
+	
+	var voice_data := Controller.voice_manager.get_random_voice_data()
+	var instrument: Instrument = null
+	if voice_data is VoiceManager.DrumkitData:
+		instrument = DrumkitInstrument.new(voice_data)
+	else:
+		instrument = SingleVoiceInstrument.new(voice_data)
+	
+	current_song.instruments.push_back(instrument)
+
+
+func create_and_edit_instrument() -> void:
+	if not current_song:
+		return
+	if current_song.instruments.size() >= Song.MAX_INSTRUMENT_COUNT:
+		return
+	
+	create_instrument()
+	current_instrument_index = current_song.instruments.size() - 1
+	song_instrument_changed.emit()
+
+
+func edit_instrument(instrument_index: int) -> void:
+	var instrument_index_ = ValueValidator.index(instrument_index, current_song.instruments.size())
+	if instrument_index != instrument_index_:
+		return
+	
+	current_instrument_index = instrument_index
+	song_instrument_changed.emit()
+
+
+func delete_instrument(instrument_index: int) -> void:
+	var instrument_index_ = ValueValidator.index(instrument_index, current_song.instruments.size())
+	if instrument_index != instrument_index_:
+		return
+	
+	current_song.instruments.remove_at(instrument_index)
+	if current_song.instruments.size() == 0: # There is nothing left, create a new one.
+		create_instrument()
+	
+	var current_pattern := get_current_pattern()
+	var current_pattern_affected := false
+	for pattern in current_song.patterns:
+		# If we delete this instrument, set the pattern to the first available.
+		if pattern.instrument_idx == instrument_index:
+			pattern.instrument_idx = 0
+			if pattern == current_pattern:
+				current_pattern_affected = true
+		
+		# If we delete an instrument before this one in the list, shift the index.
+		elif pattern.instrument_idx > instrument_index:
+			pattern.instrument_idx -= 1
+			if pattern == current_pattern:
+				current_pattern_affected = true
+	
+	if current_instrument_index >= current_song.instruments.size():
+		current_instrument_index = current_song.instruments.size() - 1
+	song_instrument_changed.emit()
+	
+	if current_pattern && current_pattern_affected:
+		current_pattern.instrument_changed.emit()
+
+
 func get_current_instrument() -> Instrument:
 	if not current_song:
 		return null
@@ -104,7 +171,7 @@ func _set_current_instrument_by_voice(voice_data: VoiceManager.VoiceData) -> voi
 	
 	var current_pattern := get_current_pattern()
 	if current_pattern && current_pattern.instrument_idx == current_instrument_index:
-		song_pattern_instrument_changed.emit()
+		current_pattern.instrument_changed.emit()
 
 
 func set_current_instrument(category: String, instrument_name: String) -> void:

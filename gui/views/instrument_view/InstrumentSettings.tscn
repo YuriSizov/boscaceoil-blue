@@ -28,7 +28,8 @@ theme_type_variation = &"VBoxSpaced"
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="Label" type="Label" parent="Layout/Metadata"]
+[node name="InstrumentLabel" type="Label" parent="Layout/Metadata"]
+unique_name_in_owner = true
 auto_translate_mode = 1
 layout_mode = 2
 text = "INSTRUMENT #"

@@ -72,7 +72,6 @@ func _ready() -> void:
 		Controller.song_loaded.connect(_edit_current_pattern)
 		Controller.song_sizes_changed.connect(_update_song_sizes)
 		Controller.song_pattern_changed.connect(_edit_current_pattern)
-		Controller.song_pattern_instrument_changed.connect(_update_pattern_instrument)
 		
 		Controller.music_player.playback_tick.connect(_update_playback_cursor)
 		Controller.music_player.playback_stopped.connect(_update_playback_cursor)
@@ -205,6 +204,7 @@ func _edit_current_pattern() -> void:
 	if current_pattern:
 		current_pattern.key_changed.disconnect(_update_whole_grid)
 		current_pattern.scale_changed.disconnect(_update_whole_grid_and_center)
+		current_pattern.instrument_changed.disconnect(_update_pattern_instrument)
 		current_pattern.notes_changed.disconnect(_update_active_notes)
 	
 	current_pattern = Controller.get_current_pattern()
@@ -212,9 +212,11 @@ func _edit_current_pattern() -> void:
 	if current_pattern:
 		current_pattern.key_changed.connect(_update_whole_grid)
 		current_pattern.scale_changed.connect(_update_whole_grid_and_center)
+		current_pattern.instrument_changed.connect(_update_pattern_instrument)
 		current_pattern.notes_changed.connect(_update_active_notes)
 
-	theme = Controller.get_current_instrument_theme()
+	var instrument := Controller.current_song.instruments[current_pattern.instrument_idx]
+	theme = Controller.get_instrument_theme(instrument)
 	_update_whole_grid_and_center()
 
 
@@ -280,10 +282,11 @@ func _update_whole_grid_and_center() -> void:
 func _update_pattern_instrument() -> void:
 	if Engine.is_editor_hint():
 		return
-	if not current_pattern:
+	if not Controller.current_song || not current_pattern:
 		return
 	
-	theme = Controller.get_current_instrument_theme()
+	var instrument := Controller.current_song.instruments[current_pattern.instrument_idx]
+	theme = Controller.get_instrument_theme(instrument)
 	
 	queue_redraw()
 	_overlay.queue_redraw()

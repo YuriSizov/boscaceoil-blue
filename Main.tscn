@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://byfh0p3nqrosa" path="res://gui/views/PatternEditor.tscn" id="2_nrw1o"]
 [ext_resource type="Script" path="res://globals/PopupManager.gd" id="4_kqdnh"]
 
-[node name="Main" type="VBoxContainer"]
+[node name="Main" type="MarginContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -13,11 +13,24 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_63yj5")
 
-[node name="Menu" parent="." instance=ExtResource("2_ljcdm")]
+[node name="Main" type="VBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="PatternEditor" parent="." instance=ExtResource("2_nrw1o")]
+[node name="Filler" type="Control" parent="Main"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 320)
 layout_mode = 2
+
+[node name="PatternEditor" parent="Main" instance=ExtResource("2_nrw1o")]
+unique_name_in_owner = true
+show_behind_parent = true
+layout_mode = 2
+
+[node name="Menu" parent="." instance=ExtResource("2_ljcdm")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 320)
+layout_mode = 2
+size_flags_vertical = 0
 
 [node name="PopupManager" type="CanvasLayer" parent="."]
 script = ExtResource("4_kqdnh")

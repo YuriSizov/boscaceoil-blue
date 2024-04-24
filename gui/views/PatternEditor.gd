@@ -32,7 +32,6 @@ func _ready() -> void:
 		Controller.song_loaded.connect(_edit_current_pattern)
 		Controller.song_pattern_changed.connect(_update_pattern_properties)
 		Controller.song_instrument_changed.connect(_update_pattern_instrument)
-		Controller.song_pattern_instrument_changed.connect(_update_pattern_instrument)
 
 
 func _update_scale_options() -> void:
@@ -77,7 +76,14 @@ func _edit_current_pattern() -> void:
 	if not Controller.current_song:
 		return
 	
+	if current_pattern:
+		current_pattern.instrument_changed.disconnect(_update_pattern_instrument)
+	
 	current_pattern = Controller.get_current_pattern()
+
+	if current_pattern:
+		current_pattern.instrument_changed.connect(_update_pattern_instrument)
+
 	_update_pattern_instrument()
 	
 	if current_pattern:
@@ -106,7 +112,7 @@ func _update_pattern_instrument() -> void:
 		item.id = instrument_index
 		item.text = "%d %s" % [ instrument_index + 1, instrument.name ]
 		var instrument_theme := Controller.get_instrument_theme(instrument)
-		item.background_color = instrument_theme.get_color("note_sharp_color", "NoteMap")
+		item.background_color = instrument_theme.get_color("item_color", "InstrumentDock")
 		
 		if current_pattern && current_pattern.instrument_idx == instrument_index:
 			selected_item = item
@@ -119,7 +125,13 @@ func _update_pattern_instrument() -> void:
 
 
 func _change_instrument() -> void:
-	pass
+	if not current_pattern:
+		return
+	
+	var selected_item := _instrument_picker.get_selected()
+	if not selected_item:
+		return
+	current_pattern.change_instrument(selected_item.id)
 
 
 func _change_scale() -> void:

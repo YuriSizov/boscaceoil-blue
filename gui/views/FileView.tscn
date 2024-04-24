@@ -140,12 +140,12 @@ layout_mode = 2
 size_flags_vertical = 4
 theme_type_variation = &"VBoxSpaced"
 
-[node name="CreateExport" type="HBoxContainer" parent="Layout/BaseControls/Rows"]
+[node name="SongFileActions" type="HBoxContainer" parent="Layout/BaseControls/Rows"]
 layout_mode = 2
 theme_type_variation = &"HBoxSpaced"
 alignment = 1
 
-[node name="CreateSong" type="Button" parent="Layout/BaseControls/Rows/CreateExport"]
+[node name="CreateSong" type="Button" parent="Layout/BaseControls/Rows/SongFileActions"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -153,37 +153,51 @@ size_flags_vertical = 4
 disabled = true
 text = "NEW SONG"
 
-[node name="ExportSong" type="Button" parent="Layout/BaseControls/Rows/CreateExport"]
+[node name="Layout" type="HBoxContainer" parent="Layout/BaseControls/Rows/SongFileActions"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"HBoxSpaced"
+
+[node name="LoadCeol" type="Button" parent="Layout/BaseControls/Rows/SongFileActions/Layout"]
+unique_name_in_owner = true
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+disabled = true
+text = "LOAD"
+
+[node name="SaveCeol" type="Button" parent="Layout/BaseControls/Rows/SongFileActions/Layout"]
+unique_name_in_owner = true
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+disabled = true
+text = "SAVE"
+
+[node name="ImportExport" type="HBoxContainer" parent="Layout/BaseControls/Rows"]
+auto_translate_mode = 1
+layout_mode = 2
+theme_type_variation = &"HBoxSpaced"
+alignment = 1
+
+[node name="ImportSong" type="Button" parent="Layout/BaseControls/Rows/ImportExport"]
+unique_name_in_owner = true
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+disabled = true
+text = "IMPORT..."
+
+[node name="ExportSong" type="Button" parent="Layout/BaseControls/Rows/ImportExport"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 disabled = true
 text = "EXPORT..."
-
-[node name="SaveLoad" type="HBoxContainer" parent="Layout/BaseControls/Rows"]
-auto_translate_mode = 1
-layout_mode = 2
-theme_type_variation = &"HBoxSpaced"
-alignment = 1
-
-[node name="LoadCeol" type="Button" parent="Layout/BaseControls/Rows/SaveLoad"]
-unique_name_in_owner = true
-auto_translate_mode = 1
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
-disabled = true
-text = "LOAD .ceol"
-
-[node name="SaveCeol" type="Button" parent="Layout/BaseControls/Rows/SaveLoad"]
-unique_name_in_owner = true
-auto_translate_mode = 1
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
-disabled = true
-text = "SAVE .ceol"
 
 [node name="PatternSettings" type="PanelContainer" parent="Layout/BaseControls/Rows"]
 layout_mode = 2

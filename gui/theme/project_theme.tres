@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=44 format=3 uid="uid://chpsnl8o0raaf"]
+[gd_resource type="Theme" load_steps=46 format=3 uid="uid://chpsnl8o0raaf"]
 
 [ext_resource type="Texture2D" uid="uid://d2aswndmtik56" path="res://assets/overlap-dither.png" id="1_4kypt"]
 [ext_resource type="FontFile" uid="uid://blsoavvmevh5x" path="res://assets/FFF Aquarius Bold Condensed Regular.ttf" id="1_q75co"]
@@ -46,6 +46,18 @@ shadow_color = Color(0, 0, 0, 1)
 shadow_size = 2
 shadow_offset = Vector2(2, 2)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lg4yk"]
+content_margin_left = 24.0
+content_margin_top = 3.0
+content_margin_right = 24.0
+content_margin_bottom = 3.0
+bg_color = Color(0.282353, 0, 0, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0, 0, 0, 1)
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cuba5"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_thvhp"]
@@ -86,6 +98,12 @@ content_margin_left = 2.0
 content_margin_top = 2.0
 content_margin_right = 2.0
 content_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_hnbok"]
+content_margin_left = 3.0
+content_margin_top = 3.0
+content_margin_right = 3.0
+content_margin_bottom = 3.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jn8kv"]
 content_margin_left = 16.0
@@ -296,6 +314,9 @@ Button/styles/pressed = SubResource("StyleBoxFlat_2x6kt")
 CreditsLabel/base_type = &"Label"
 CreditsLabel/colors/font_color = Color(0.737255, 0.784314, 0.8, 1)
 CreditsLabel/colors/font_shadow_color = Color(0, 0, 0, 1)
+DeleteArea/base_type = &"Label"
+DeleteArea/colors/hover_color = Color(0.890395, 0.382085, 0.507052, 0.235294)
+DeleteArea/styles/normal = SubResource("StyleBoxFlat_lg4yk")
 FullscreenButton/base_type = &"Button"
 FullscreenButton/styles/focus = SubResource("StyleBoxEmpty_cuba5")
 FullscreenButton/styles/hover = SubResource("StyleBoxFlat_thvhp")
@@ -308,6 +329,16 @@ IncrementButton/base_type = &"Button"
 IncrementButton/styles/hover = SubResource("StyleBoxEmpty_8fwph")
 IncrementButton/styles/normal = SubResource("StyleBoxEmpty_wnhx7")
 IncrementButton/styles/pressed = SubResource("StyleBoxEmpty_ebj3h")
+InstrumentDock/colors/cursor_color = Color(1, 1, 1, 1)
+InstrumentDock/colors/dock_color = Color(0.737255, 0.784314, 0.8, 1)
+InstrumentDock/colors/item_color = Color(0.376471, 0.376471, 0.376471, 1)
+InstrumentDock/colors/item_gutter_color = Color(0.54902, 0.54902, 0.54902, 1)
+InstrumentDock/colors/selected_color = Color(0.627451, 0, 0, 1)
+InstrumentDock/colors/selected_shadow_color = Color(0, 0, 0, 1)
+InstrumentDock/constants/cursor_width = 3
+InstrumentDock/constants/item_height = 36
+InstrumentDock/constants/pager_icon_width = 28
+InstrumentDock/styles/content_margins = SubResource("StyleBoxEmpty_hnbok")
 InstrumentSettingsPanel/base_type = &"PanelContainer"
 InstrumentSettingsPanel/styles/panel = SubResource("StyleBoxFlat_jn8kv")
 InstrumentWidgetPanel/base_type = &"PanelContainer"

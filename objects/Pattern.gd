@@ -9,6 +9,7 @@ class_name Pattern extends Resource
 
 signal key_changed()
 signal scale_changed()
+signal instrument_changed()
 signal notes_changed()
 
 const MAX_NOTE_NUMBER := 128
@@ -133,6 +134,11 @@ func shift_notes(offset: int) -> void:
 	
 	sort_notes()
 	notes_changed.emit()
+
+
+func change_instrument(new_instrument: int) -> void:
+	instrument_idx = new_instrument
+	instrument_changed.emit()
 
 
 # Note map.

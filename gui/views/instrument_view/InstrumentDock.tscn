@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://lj57mjqt7ce7"]
+[gd_scene load_steps=3 format=3 uid="uid://lj57mjqt7ce7"]
 
 [ext_resource type="Script" path="res://gui/views/instrument_view/InstrumentDock.gd" id="1_jfofd"]
+[ext_resource type="PackedScene" uid="uid://bgyn67pa8s3kd" path="res://gui/widgets/DeleteArea.tscn" id="2_8sqkb"]
 
 [node name="InstrumentDock" type="Control"]
 auto_translate_mode = 1
@@ -12,6 +13,16 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_jfofd")
+
+[node name="DeleteArea" parent="." instance=ExtResource("2_8sqkb")]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_right = -16.0
+offset_bottom = 0.0
 
 [node name="AddInstrument" type="Button" parent="."]
 unique_name_in_owner = true
@@ -30,5 +41,4 @@ grow_horizontal = 2
 grow_vertical = 0
 size_flags_horizontal = 3
 size_flags_vertical = 4
-disabled = true
 text = "ADD NEW INSTRUMENT"

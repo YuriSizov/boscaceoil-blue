@@ -27,7 +27,6 @@ gdscript/warnings/untyped_declaration=1
 
 window/size/viewport_width=1382
 window/size/viewport_height=1008
-window/stretch/scale_mode="integer"
 
 [editor]
 

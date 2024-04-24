@@ -23,6 +23,8 @@ axis_stretch_vertical = 1
 modulate_color = Color(0.941688, 0.627425, 0, 1)
 
 [resource]
+InstrumentDock/colors/item_color = Color(0.486275, 0.352941, 0.0901961, 1)
+InstrumentDock/colors/item_gutter_color = Color(0.823529, 0.6, 0.160784, 1)
 InstrumentSettingsPanel/base_type = &"PanelContainer"
 InstrumentSettingsPanel/styles/panel = SubResource("StyleBoxFlat_iavd4")
 InstrumentWidgetPanel/base_type = &"PanelContainer"

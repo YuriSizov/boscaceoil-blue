@@ -9,6 +9,9 @@
 class_name Song extends Resource
 
 const FILE_FORMAT := 3
+# These limits are arbitrary, but match the original implementation.
+const MAX_INSTRUMENT_COUNT := 16
+const MAX_PATTERN_COUNT := 4096
 
 # Metadata.
 
