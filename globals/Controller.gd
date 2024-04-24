@@ -7,6 +7,7 @@
 extends Node
 
 signal song_loaded()
+signal song_sizes_changed()
 signal song_pattern_changed()
 signal song_pattern_instrument_changed()
 signal song_instrument_changed()
@@ -146,7 +147,7 @@ func set_pattern_size(value: int) -> void:
 		return
 	
 	current_song.pattern_size = value
-	song_pattern_changed.emit()
+	song_sizes_changed.emit()
 
 
 func set_bar_size(value: int) -> void:
@@ -154,7 +155,7 @@ func set_bar_size(value: int) -> void:
 		return
 	
 	current_song.bar_size = value
-	song_pattern_changed.emit()
+	song_sizes_changed.emit()
 
 
 func set_bpm(value: int) -> void:

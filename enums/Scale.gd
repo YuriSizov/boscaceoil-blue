@@ -57,6 +57,38 @@ const _scale_name_map := {
 	CHORD_SUS2:               "Chord: sus2",
 }
 
+const _scale_layout_map := {
+	SCALE_NORMAL:             [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ],
+	SCALE_MAJOR:              [ 2, 2, 1, 2, 2, 2, 1 ],
+	SCALE_MINOR:              [ 2, 1, 2, 2, 2, 2, 1 ],
+	SCALE_BLUES:              [ 3, 2, 1, 1, 3, 2 ],
+	SCALE_HARMONIC_MINOR:     [ 2, 1, 2, 2, 1, 3, 1 ],
+	SCALE_PENTATONIC_MAJOR:   [ 2, 3, 2, 2, 3 ],
+	SCALE_PENTATONIC_MINOR:   [ 3, 2, 2, 3, 2 ],
+	SCALE_PENTATONIC_BLUES:   [ 3, 2, 1, 1, 3, 2 ],
+	SCALE_PENTATONIC_NEUTRAL: [ 2, 3, 2, 3, 2 ],
+	SCALE_ROMANIAN_FOLK:      [ 2, 1, 3, 1, 2, 1, 2 ],
+	SCALE_SPANISH_GYPSY:      [ 2, 1, 3, 1, 2, 1, 2 ],
+	SCALE_ARABIC_MAGAM:       [ 2, 2, 1, 1, 2, 2, 2 ],
+	SCALE_CHINESE:            [ 4, 2, 1, 4, 1 ],
+	SCALE_HUNGARIAN:          [ 2, 1, 3, 1, 1, 3, 1 ],
+	CHORD_MAJOR:              [ 4, 3, 5 ],
+	CHORD_MINOR:              [ 3, 4, 5 ],
+	CHORD_5TH:                [ 7, 5 ],
+	CHORD_DOM_7TH:            [ 4, 3, 3, 2 ],
+	CHORD_MAJOR_7TH:          [ 4, 3, 4, 1 ],
+	CHORD_MINOR_7TH:          [ 3, 4, 3, 2 ],
+	CHORD_MINOR_MAJOR_7TH:    [ 3, 4, 4, 1 ],
+	CHORD_SUS4:               [ 5, 2, 5 ],
+	CHORD_SUS2:               [ 2, 5, 5 ],
+}
+
 
 static func get_scale_name(scale: int) -> String:
 	return _scale_name_map[scale]
+
+
+static func get_scale_layout(scale: int) -> Array[int]:
+	var typed: Array[int] = []
+	typed.assign(_scale_layout_map[scale])
+	return typed

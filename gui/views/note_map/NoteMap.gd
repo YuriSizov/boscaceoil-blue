@@ -8,6 +8,7 @@
 class_name NoteMap extends Control
 
 const OCTAVE_SIZE := 12
+const CENTER_OCTAVE := 3
 
 enum DrawingMode {
 	DRAWING_OFF,
@@ -18,21 +19,22 @@ enum DrawingMode {
 
 ## Current edited pattern.
 var current_pattern: Pattern = null
-## Number of rows in the piano roll.
-var note_count: int = 128:
-	set(value):
-		note_count = value
-		_update_scroll_offset()
 ## Number of notes in a row.
 var pattern_size: int = 1
 ## Number of notes in a bar.
 var bar_size: int = 1
 
+## Current scale layout.
+var _scale_layout: Array[int] = []
+## Mapping between note values (in C key) and their row indices, based on the current scale.
+var _note_value_row_map: Dictionary = {}
+var _note_row_value_map: Dictionary = {}
+
 ## Window-dependent horizontal size of a note, based on pattern_size.
 var _note_width: float = 0
 ## Offset, in number of note rows.
 var _scroll_offset: int = 0
-## Window-size dependent limit, based on note_count
+## Window-size dependent limit, based on Pattern.MAX_NOTE_VALUE and the current scale.
 var _max_scroll_offset: int = -1
 
 var _note_rows: Array[NoteRow] = []
@@ -40,6 +42,7 @@ var _octave_rows: Array[OctaveRow] = []
 var _active_notes: Array[ActiveNote] = []
 var _note_cursor_visible: bool = false
 var _note_cursor_size: int = 1
+
 var _note_drawing_mode: DrawingMode = DrawingMode.DRAWING_OFF
 
 @onready var _gutter: Control = $NoteMapGutter
@@ -50,25 +53,25 @@ var _note_drawing_mode: DrawingMode = DrawingMode.DRAWING_OFF
 func _ready() -> void:
 	set_physics_process(false)
 	
-	_update_note_width()
-	_update_scroll_offset()
 	_update_playback_cursor()
-	resized.connect(_update_note_width)
-	resized.connect(_update_scroll_offset)
+	_update_song_sizes()
+	_edit_current_pattern()
+
 	resized.connect(_update_playback_cursor)
+	resized.connect(_update_song_sizes)
+	resized.connect(_update_whole_grid)
 	
 	mouse_entered.connect(_show_note_cursor)
 	mouse_exited.connect(_hide_note_cursor)
 
-	_scrollbar.shifted_up.connect(_change_offset.bind(1))
-	_scrollbar.shifted_down.connect(_change_offset.bind(-1))
+	_scrollbar.shifted_up.connect(_change_scroll_offset.bind(1))
+	_scrollbar.shifted_down.connect(_change_scroll_offset.bind(-1))
 	
-	_update_pattern_size()
-	_edit_current_pattern()
 	if not Engine.is_editor_hint():
-		Controller.song_loaded.connect(_update_pattern_size)
+		Controller.song_loaded.connect(_update_song_sizes)
 		Controller.song_loaded.connect(_edit_current_pattern)
-		Controller.song_pattern_changed.connect(_update_pattern_size)
+		Controller.song_sizes_changed.connect(_update_song_sizes)
+		Controller.song_pattern_changed.connect(_edit_current_pattern)
 		Controller.song_pattern_instrument_changed.connect(_update_pattern_instrument)
 		
 		Controller.music_player.playback_tick.connect(_update_playback_cursor)
@@ -95,13 +98,11 @@ func _gui_input(event: InputEvent) -> void:
 
 
 func _physics_process(_delta: float) -> void:
-	_update_note_cursor()
-	_draw_note()
+	_process_note_cursor()
+	_process_note_drawing()
 
 
 func _draw() -> void:
-	_update_grid()
-
 	var available_rect := get_available_rect()
 	# Point of origin is at the bottom.
 	var origin := Vector2(available_rect.position.x, available_rect.size.y)
@@ -156,8 +157,6 @@ func _draw() -> void:
 		draw_rect(Rect2(cover_position, cover_size), cover_color)
 
 
-# Drawables and visuals.
-
 func get_available_rect() -> Rect2:
 	var available_rect := Rect2(Vector2.ZERO, size)
 	if not is_inside_tree():
@@ -172,18 +171,79 @@ func get_available_rect() -> Rect2:
 	return available_rect
 
 
-func _update_note_width() -> void:
+# Scrolling.
+
+func _change_scroll_offset(delta: int) ->  void:
+	_scroll_offset = clampi(_scroll_offset + delta, 0, _max_scroll_offset)
+	_update_whole_grid()
+
+
+func _update_max_scroll_offset() -> void:
 	var available_rect := get_available_rect()
-	var effective_pattern_size := 16 if pattern_size <= 16 else 32
-	
-	_note_width = available_rect.size.x / effective_pattern_size
-	_overlay.note_unit_width = _note_width
-	
-	queue_redraw()
-	_overlay.queue_redraw()
+	var note_height := get_theme_constant("note_height", "NoteMap")
+	var notes_on_screen := floori(available_rect.size.y / note_height)
+	_max_scroll_offset = maxi(0, _note_row_value_map.size() - notes_on_screen)
+	_scroll_offset = clampi(_scroll_offset, 0, _max_scroll_offset)
 
 
-func _update_pattern_size() -> void:
+func _center_scroll_offset() -> void:
+	# TODO: Center on the content of the pattern if there are any notes.
+	
+	var scale_size := _scale_layout.size()
+	var note_offset := scale_size * CENTER_OCTAVE - 2
+	_scroll_offset = clampi(note_offset, 0, _max_scroll_offset)
+
+
+# Editing and state visualization.
+
+func _edit_current_pattern() -> void:
+	if Engine.is_editor_hint():
+		return
+	if not Controller.current_song:
+		return
+	
+	if current_pattern:
+		current_pattern.key_changed.disconnect(_update_whole_grid)
+		current_pattern.scale_changed.disconnect(_update_whole_grid_and_center)
+		current_pattern.notes_changed.disconnect(_update_active_notes)
+	
+	current_pattern = Controller.get_current_pattern()
+
+	if current_pattern:
+		current_pattern.key_changed.connect(_update_whole_grid)
+		current_pattern.scale_changed.connect(_update_whole_grid_and_center)
+		current_pattern.notes_changed.connect(_update_active_notes)
+
+	theme = Controller.get_current_instrument_theme()
+	_update_whole_grid_and_center()
+
+
+func _update_note_maps() -> void:
+	_note_value_row_map.clear()
+	_note_row_value_map.clear()
+
+	_scale_layout = Scale.get_scale_layout(current_pattern.scale if current_pattern else Scale.SCALE_NORMAL)
+	var scale_size := _scale_layout.size()
+	var scale_index := 0
+	var next_valid_note := 0
+	var row_index := 0
+
+	for note_value in Pattern.MAX_NOTE_VALUE:
+		if next_valid_note != note_value:
+			_note_value_row_map[note_value] = -1
+			continue
+		
+		_note_value_row_map[note_value] = row_index
+		_note_row_value_map[row_index] = note_value
+		
+		row_index += 1
+		next_valid_note += _scale_layout[scale_index]
+		scale_index += 1
+		if scale_index >= scale_size:
+			scale_index = 0
+
+
+func _update_song_sizes() -> void:
 	if Engine.is_editor_hint():
 		return
 	if not Controller.current_song:
@@ -191,7 +251,29 @@ func _update_pattern_size() -> void:
 	
 	pattern_size = Controller.current_song.pattern_size
 	bar_size = Controller.current_song.bar_size
-	_update_note_width()
+	
+	var available_rect := get_available_rect()
+	var effective_pattern_size := 16 if pattern_size <= 16 else 32
+	_note_width = available_rect.size.x / effective_pattern_size
+	_overlay.note_unit_width = _note_width
+	
+	_resize_note_cursor(0)
+	_update_active_notes()
+	queue_redraw()
+
+
+func _update_whole_grid() -> void:
+	_update_note_maps()
+	_update_max_scroll_offset()
+	_update_grid_layout()
+	_update_active_notes()
+
+
+func _update_whole_grid_and_center() -> void:
+	_update_note_maps()
+	_update_max_scroll_offset()
+	_center_scroll_offset()
+	_update_grid_layout()
 	_update_active_notes()
 
 
@@ -202,159 +284,9 @@ func _update_pattern_instrument() -> void:
 		return
 	
 	theme = Controller.get_current_instrument_theme()
+	
 	queue_redraw()
 	_overlay.queue_redraw()
-
-
-func _change_offset(delta: int) ->  void:
-	_scroll_offset += delta
-
-	_scroll_offset = clamp(_scroll_offset, 0, _max_scroll_offset)
-	_update_active_notes()
-	queue_redraw()
-	_gutter.queue_redraw()
-	_scrollbar.queue_redraw()
-	_overlay.queue_redraw()
-
-
-func _update_scroll_offset() -> void:
-	var available_rect := get_available_rect()
-	var note_height := get_theme_constant("note_height", "NoteMap")
-	var notes_on_screen := floori(available_rect.size.y / note_height)
-	_max_scroll_offset = note_count - notes_on_screen + 1
-
-	_scroll_offset = clamp(_scroll_offset, 0, _max_scroll_offset)
-	_update_active_notes()
-	queue_redraw()
-	_gutter.queue_redraw()
-	_scrollbar.queue_redraw()
-	_overlay.queue_redraw()
-
-
-func _update_grid() -> void:
-	# Reset collections.
-	_note_rows.clear()
-	_octave_rows.clear()
-
-	# Get reference data.
-	var available_rect := get_available_rect()
-	var scrollbar_available_rect: Rect2 = _scrollbar.get_available_rect()
-	var note_height := get_theme_constant("note_height", "NoteMap")
-	# Point of origin is at the bottom.
-	var origin := Vector2(0, available_rect.size.y)
-
-	# Iterate through all the notes and complete collections.
-	var filled_height := 0
-	var index := 0
-	var first_octave_index := -1
-	var last_octave_index := -1
-	while filled_height < (available_rect.size.y + OCTAVE_SIZE * note_height): # Give it some buffer.
-		var note_index: int = index + _scroll_offset
-		if note_index > note_count:
-			break
-
-		var note_normalized := note_index % OCTAVE_SIZE
-		var note_names := [ "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" ]
-
-		# Create note row data.
-		var note := NoteRow.new()
-		note.note_index = note_index
-		note.label = note_names[note_normalized]
-		note.sharp = false
-		note.position = origin - Vector2(0, index * note_height)
-		note.grid_position = note.position + available_rect.position
-		note.label_position = note.position + Vector2(0, -6)
-
-		if note.label.ends_with("#"):
-			note.sharp = true
-
-		_note_rows.push_back(note)
-		
-		# Create octave row data.
-		@warning_ignore("integer_division")
-		var octave_index := note_index / OCTAVE_SIZE
-		if octave_index != last_octave_index:
-			last_octave_index = octave_index
-			if first_octave_index == -1:
-				first_octave_index = octave_index
-			
-			var octave_ref_note := (last_octave_index - first_octave_index + 1) * OCTAVE_SIZE - _scroll_offset % 12 - 1
-			
-			var octave := OctaveRow.new()
-			octave.octave_index = octave_index
-			octave.position = origin - Vector2(0, octave_ref_note * note_height)
-			octave.label_position = octave.position
-			
-			# Make the label position sticky.
-			var prev_octave_position := origin - Vector2(0, (octave_ref_note - OCTAVE_SIZE) * note_height)
-			if (octave.position.y - note_height) < scrollbar_available_rect.position.y:
-				if (prev_octave_position.y - note_height) > (scrollbar_available_rect.position.y + note_height):
-					octave.label_position.y = scrollbar_available_rect.position.y + note_height
-				else:
-					octave.label_position.y = prev_octave_position.y - note_height
-			
-			octave.label_position += Vector2(0, -6)
-			
-			_octave_rows.push_back(octave)
-		
-		# Update counters.
-		filled_height += note_height
-		index += 1
-	
-	# Update children with the new data.
-	_gutter.note_rows = _note_rows
-	_scrollbar.octave_rows = _octave_rows
-	_overlay.octave_rows = _octave_rows
-
-
-func _get_note_at_cursor() -> Vector2i:
-	var available_rect: Rect2 = get_available_rect()
-	var note_height := get_theme_constant("note_height", "NoteMap")
-	
-	var mouse_position := get_local_mouse_position()
-	if available_rect.has_point(mouse_position):
-		var mouse_normalized := mouse_position - available_rect.position
-		var note_indexed := Vector2i(0,0)
-		note_indexed.x = clampi(floori(mouse_normalized.x / _note_width), 0, pattern_size - 1)
-		note_indexed.y = floori((available_rect.size.y - mouse_normalized.y) / note_height)
-		return note_indexed
-
-	return Vector2i(-1, -1)
-
-
-func _get_indexed_note_position(indexed: Vector2i) -> Vector2:
-	var available_rect := get_available_rect()
-	var note_height := get_theme_constant("note_height", "NoteMap")
-	
-	return Vector2(
-		available_rect.position.x + indexed.x * _note_width,
-		available_rect.size.y - (indexed.y + 1) * note_height + available_rect.position.y
-	)
-
-
-func _update_active_notes() -> void:
-	# Reset the collection
-	_active_notes.clear()
-	if not current_pattern:
-		_overlay.active_notes = _active_notes
-		return
-
-	for i in current_pattern.note_amount:
-		var note_data := current_pattern.notes[i]
-		if note_data.x < 0 || note_data.y < 0 || note_data.y >= pattern_size || note_data.z < 1:
-			continue # Outside of the grid, or too short.
-		var note_value := note_data.x - _scroll_offset
-		
-		var note := ActiveNote.new()
-		note.note_value = note_data.x
-		note.note_index = note_data.y
-		note.position = _get_indexed_note_position(Vector2i(note_data.y, note_value))
-		note.length = note_data.z
-		_active_notes.push_back(note)
-	
-	
-	# Update children with the new data.
-	_overlay.active_notes = _active_notes
 
 
 func _update_playback_cursor() -> void:
@@ -376,16 +308,171 @@ func _update_playback_cursor() -> void:
 	_overlay.queue_redraw()
 
 
+# Grid layout and coordinates.
+
+func _get_note_at_cursor() -> Vector2i:
+	var available_rect: Rect2 = get_available_rect()
+	var note_height := get_theme_constant("note_height", "NoteMap")
+	
+	var mouse_position := get_local_mouse_position()
+	if not available_rect.has_point(mouse_position):
+		return Vector2i(-1, -1)
+	
+	var mouse_normalized := mouse_position - available_rect.position
+	var note_indexed := Vector2i(0,0)
+	note_indexed.x = clampi(floori(mouse_normalized.x / _note_width), 0, pattern_size - 1)
+	note_indexed.y = floori((available_rect.size.y - mouse_normalized.y) / note_height)
+	return note_indexed
+
+
+func _get_indexed_note_position(indexed: Vector2i) -> Vector2:
+	var available_rect := get_available_rect()
+	var note_height := get_theme_constant("note_height", "NoteMap")
+	
+	return Vector2(
+		available_rect.position.x + indexed.x * _note_width,
+		available_rect.size.y - (indexed.y + 1) * note_height + available_rect.position.y
+	)
+
+
+func _update_grid_layout() -> void:
+	# Reset collections.
+	_note_rows.clear()
+	_octave_rows.clear()
+
+	# Get reference data.
+	var available_rect := get_available_rect()
+	var scrollbar_available_rect: Rect2 = _scrollbar.get_available_rect()
+	var note_height := get_theme_constant("note_height", "NoteMap")
+	# Point of origin is at the bottom.
+	var origin := Vector2(0, available_rect.size.y)
+
+	# TODO: Use drumkit item names instead of note names for drumkits.
+	# TODO: Limit drawn notes to scale-compatible and for drumkits to the number of items.
+	var scale_size := _scale_layout.size()
+	var current_key := current_pattern.key if current_pattern else 0
+
+	# Iterate through all the notes and complete collections.
+	
+	var filled_height := 0
+	var target_height := available_rect.size.y + OCTAVE_SIZE * note_height # Give it some buffer.
+	var row_index := 0
+	var first_octave_index := -1
+	var last_octave_index := -1
+	
+	# Keep rendering until we fill the screen, or reach the end of notes.
+	while (row_index + _scroll_offset) < _note_row_value_map.size() && filled_height < target_height:
+		var note_index: int = _note_row_value_map[row_index + _scroll_offset]
+		var note_in_key := note_index % OCTAVE_SIZE + current_key
+		if note_in_key < 0:
+			note_in_key = OCTAVE_SIZE + note_in_key
+		elif note_in_key >= OCTAVE_SIZE:
+			note_in_key = note_in_key - OCTAVE_SIZE
+
+		# Create data for a row of the grid, corresponding to one note value.
+		
+		var note := NoteRow.new()
+		note.note_index = note_index
+		note.label = Note.get_note_name(note_in_key)
+		note.sharp = false
+		note.position = origin - Vector2(0, row_index * note_height)
+		note.grid_position = note.position + available_rect.position
+		note.label_position = note.position + Vector2(0, -6)
+
+		# TODO: Color every even row as "sharp" in drumkits.
+		if note.label.ends_with("#"):
+			note.sharp = true
+
+		_note_rows.push_back(note)
+		
+		# Create data for octane rows that group spans of notes visually.
+		# We do this as we go through notes, so we only create octaves which have visible notes
+		# in them. Each unique octave is only created once.
+		
+		@warning_ignore("integer_division")
+		var octave_index := note_index / OCTAVE_SIZE
+		if octave_index != last_octave_index:
+			last_octave_index = octave_index
+			if first_octave_index == -1:
+				first_octave_index = octave_index
+			
+			var octave_ref_note := (last_octave_index - first_octave_index + 1) * scale_size - _scroll_offset % scale_size - 1
+			
+			var octave := OctaveRow.new()
+			octave.octave_index = octave_index
+			octave.position = origin - Vector2(0, octave_ref_note * note_height)
+			octave.label_position = octave.position
+			
+			# Make the label position sticky.
+			var prev_octave_position := origin - Vector2(0, (octave_ref_note - scale_size) * note_height)
+			if (octave.position.y - note_height) < scrollbar_available_rect.position.y:
+				if (prev_octave_position.y - note_height) > (scrollbar_available_rect.position.y + note_height):
+					octave.label_position.y = scrollbar_available_rect.position.y + note_height
+				else:
+					octave.label_position.y = prev_octave_position.y - note_height
+			
+			octave.label_position += Vector2(0, -6)
+			
+			_octave_rows.push_back(octave)
+		
+		# Update counters.
+		
+		filled_height += note_height
+		row_index += 1
+	
+	# Update children with the new data.
+	_gutter.note_rows = _note_rows
+	_scrollbar.octave_rows = _octave_rows
+	_overlay.octave_rows = _octave_rows
+	
+	queue_redraw()
+	_gutter.queue_redraw()
+	_scrollbar.queue_redraw()
+	_overlay.queue_redraw()
+
+
+func _update_active_notes() -> void:
+	# Reset the collection
+	_active_notes.clear()
+	if not current_pattern:
+		_overlay.active_notes = _active_notes
+		return
+
+	for i in current_pattern.note_amount:
+		var note_data := current_pattern.notes[i]
+		var note_value_normalized := note_data.x - current_pattern.key # Shift to its C-key equivalent.
+		if note_value_normalized < 0 || note_value_normalized >= _note_value_row_map.size() || note_data.y < 0 || note_data.y >= pattern_size || note_data.z < 1:
+			continue # Outside of the grid, or too short.
+		
+		var row_index: int = _note_value_row_map[note_value_normalized]
+		if row_index < 0:
+			continue # Doesn't fit the scale.
+		
+		var note := ActiveNote.new()
+		note.note_value = note_value_normalized
+		note.note_index = note_data.y
+		note.position = _get_indexed_note_position(Vector2i(note_data.y, row_index - _scroll_offset))
+		note.length = note_data.z
+		_active_notes.push_back(note)
+	
+	
+	# Update children with the new data.
+	_overlay.active_notes = _active_notes
+	_overlay.queue_redraw()
+
+
+# Note cursor and drawing.
+
 func _show_note_cursor() -> void:
 	_note_cursor_visible = true
-	_update_note_cursor()
+	_process_note_cursor()
 	set_physics_process(true)
 
 
 func _hide_note_cursor() -> void:
 	set_physics_process(false)
 	_note_cursor_visible = false
-	_update_note_cursor()
+	_process_note_cursor()
 
 
 func _resize_note_cursor(delta: int) -> void:
@@ -394,7 +481,7 @@ func _resize_note_cursor(delta: int) -> void:
 	_overlay.queue_redraw()
 
 
-func _update_note_cursor() -> void:
+func _process_note_cursor() -> void:
 	if not _note_cursor_visible:
 		_overlay.note_cursor_position = Vector2(-1, -1)
 		_overlay.queue_redraw()
@@ -409,31 +496,16 @@ func _update_note_cursor() -> void:
 	_overlay.queue_redraw()
 
 
-# Logic and editing.
-
-func _edit_current_pattern() -> void:
-	if Engine.is_editor_hint():
-		return
-	if not Controller.current_song:
-		return
-	
-	current_pattern = Controller.get_current_pattern()
-	theme = Controller.get_current_instrument_theme()
-	_update_active_notes()
-	queue_redraw()
-	_overlay.queue_redraw()
-
-
 func _start_drawing_notes(mode: int) -> void:
 	_note_drawing_mode = ValueValidator.index(mode, DrawingMode.MAX) as DrawingMode
-	_draw_note()
+	_process_note_drawing()
 
 
 func _stop_drawing_notes() -> void:
 	_note_drawing_mode = DrawingMode.DRAWING_OFF
 
 
-func _draw_note() -> void:
+func _process_note_drawing() -> void:
 	if _note_drawing_mode == DrawingMode.DRAWING_ADD:
 		_add_note_at_cursor()
 	elif _note_drawing_mode == DrawingMode.DRAWING_REMOVE:
@@ -443,30 +515,34 @@ func _draw_note() -> void:
 func _add_note_at_cursor() -> void:
 	if not current_pattern:
 		return
+
 	var note_indexed := _get_note_at_cursor()
 	if note_indexed.x < 0 || note_indexed.y < 0:
 		return
+	var note_value_index := note_indexed.y + _scroll_offset
+	if note_value_index >= _note_row_value_map.size():
+		return
 	
-	var note_value := note_indexed.y + _scroll_offset
+	var note_value: int = _note_row_value_map[note_value_index] + current_pattern.key
 	if current_pattern.has_note(note_value, note_indexed.x, true):
 		return # Space is already occupied.
 	
 	current_pattern.add_note(note_value, note_indexed.x, _note_cursor_size)
-	_update_active_notes()
-	_overlay.queue_redraw()
 
 
 func _remove_note_at_cursor() -> void:
 	if not current_pattern:
 		return
+
 	var note_indexed := _get_note_at_cursor()
 	if note_indexed.x < 0 || note_indexed.y < 0:
 		return
+	var note_value_index := note_indexed.y + _scroll_offset
+	if note_value_index >= _note_row_value_map.size():
+		return
 	
-	var note_value := note_indexed.y + _scroll_offset
+	var note_value: int = _note_row_value_map[note_value_index] + current_pattern.key
 	current_pattern.remove_note(note_value, note_indexed.x, true)
-	_update_active_notes()
-	_overlay.queue_redraw()
 
 
 class NoteRow:

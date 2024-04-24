@@ -100,6 +100,8 @@ func _set_instrument_options() -> void:
 func _edit_current_instrument() -> void:
 	if Engine.is_editor_hint():
 		return
+	if not Controller.current_song:
+		return
 	
 	var next_instrument := Controller.get_current_instrument()
 	if next_instrument == current_instrument:

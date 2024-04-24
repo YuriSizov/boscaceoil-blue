@@ -7,7 +7,12 @@
 ## A description of a single pattern contributing to the song's composition.
 class_name Pattern extends Resource
 
-const NOTE_NUMBER := 128
+signal key_changed()
+signal scale_changed()
+signal notes_changed()
+
+const MAX_NOTE_NUMBER := 128
+const MAX_NOTE_VALUE := 104
 const RECORD_FILTER_NUMBER := 16
 
 ## Key index.
@@ -21,12 +26,12 @@ const RECORD_FILTER_NUMBER := 16
 	set(value): instrument_idx = ValueValidator.index(value, Instrument.INSTRUMENT_NUMBER)
 
 ## Note values as triplets: note index in the piano roll, note position in the pattern,
-## note length. Middle C has the index of 60. There can be at most NOTE_NUMBER notes.
+## note length. Middle C has the index of 60. There can be at most MAX_NOTE_NUMBER notes.
 @export var notes: Array[Vector3i] = []
 ## Number of active notes. The note array is always allocated to its maximum. This
 ## tracks how many notes there actually are.
 @export var note_amount: int = 0:
-	set(value): note_amount = ValueValidator.range(value, 0, NOTE_NUMBER)
+	set(value): note_amount = ValueValidator.range(value, 0, MAX_NOTE_NUMBER)
 
 ## Flag whether the record filter is on.
 @export var record_filter_enabled: bool = false
@@ -43,27 +48,111 @@ var is_playing: bool = false
 
 
 func _init() -> void:
-	for i in NOTE_NUMBER:
+	for i in MAX_NOTE_NUMBER:
 		notes.push_back(Vector3i(-1, 0, 0))
 
 	for i in RECORD_FILTER_NUMBER:
 		record_filter_values.push_back(Vector3i(Instrument.VOLUME_MAX, Instrument.FILTER_CUTOFF_MAX, 0))
 
 
-func add_note(note: int, position: int, length: int, autosort: bool = true) -> void:
-	if note < 0 || position < 0:
-		printerr("Pattern: Cannot add a note %d at %d, values cannot be less than zero." % [ note, position ])
+# Properties.
+
+func _get_valid_note_values() -> Array[int]:
+	var valid_notes: Array[int] = []
+	
+	var next_valid_note := 0
+	var scale_layout := Scale.get_scale_layout(scale)
+	var scale_size := scale_layout.size()
+	var scale_index := 0
+
+	for note_value in MAX_NOTE_VALUE:
+		if next_valid_note != note_value:
+			continue
+		valid_notes.push_back(note_value)
+		
+		next_valid_note += scale_layout[scale_index]
+		scale_index += 1
+		if scale_index >= scale_size:
+			scale_index = 0
+	
+	return valid_notes
+
+
+func change_key(new_key: int) -> void:
+	var key_shift := new_key - key
+	key = new_key
+	
+	# Adjust note values to the new key, preserving the overall pattern.
+	
+	for i in note_amount:
+		notes[i].x += key_shift
+	
+	key_changed.emit()
+
+
+func change_scale(new_scale: int) -> void:
+	scale = new_scale
+	
+	# Delete notes that don't fit the new scale.
+	var valid_notes := _get_valid_note_values()
+	var i := 0
+	while i < note_amount:
+		if not valid_notes.has(notes[i].x):
+			remove_note_at(i)
+			i -= 1
+		i += 1
+	
+	scale_changed.emit()
+
+
+func shift_notes(offset: int) -> void:
+	# Adjust note values to move them higher or lower, within the same key and scale.
+	# Values reaching note range boundaries are kept at those boundary values.
+	
+	var valid_notes := _get_valid_note_values()
+	
+	# Notes are ordered by value, in the ascending order. We reverse the iterator
+	# when going up to avoid collisions.
+	var start_index := 0
+	var max_index := note_amount
+	var index_step := 1
+	if offset > 0:
+		start_index = note_amount - 1
+		max_index = -1
+		index_step = -1
+	
+	for i in range(start_index, max_index, index_step):
+		var note_index := valid_notes.find(notes[i].x)
+		var next_index := clampi(note_index + offset, 0, valid_notes.size() - 1)
+		if next_index == note_index:
+			continue
+		
+		# Don't move unless the space is unoccupied.
+		if not has_note(valid_notes[next_index], notes[i].y, true):
+			notes[i].x = valid_notes[next_index]
+	
+	sort_notes()
+	notes_changed.emit()
+
+
+# Note map.
+
+func add_note(value: int, position: int, length: int, autosort: bool = true) -> void:
+	if value < 0 || position < 0:
+		printerr("Pattern: Cannot add a note %d at %d, values cannot be less than zero." % [ value, position ])
 		return
-	if note_amount >= NOTE_NUMBER:
-		printerr("Pattern: Cannot add a new note, a pattern can only contain %d notes." % [ NOTE_NUMBER ])
+	if note_amount >= MAX_NOTE_NUMBER:
+		printerr("Pattern: Cannot add a new note, a pattern can only contain %d notes." % [ MAX_NOTE_NUMBER ])
 		return
 
-	notes[note_amount] = Vector3i(note, position, length)
-	_hash = (_hash + (note * length)) % 2147483647
+	notes[note_amount] = Vector3i(value, position, length)
+	_hash = (_hash + (value * length)) % 2147483647
 
 	if autosort: # Can be disabled and called manually when many notes are added quickly.
 		sort_notes()
+	
 	note_amount += 1
+	notes_changed.emit()
 
 
 func sort_notes() -> void:
@@ -80,12 +169,12 @@ func sort_notes() -> void:
 	)
 
 
-func has_note(note: int, position: int, exact: bool = false) -> bool:
-	if note < 0 || position < 0:
+func has_note(value: int, position: int, exact: bool = false) -> bool:
+	if value < 0 || position < 0:
 		return false
 
 	for i in note_amount:
-		if notes[i].x != note:
+		if notes[i].x != value:
 			continue
 
 		if exact && position == notes[i].y:
@@ -96,14 +185,14 @@ func has_note(note: int, position: int, exact: bool = false) -> bool:
 	return false
 
 
-func remove_note(note: int, position: int, exact: bool = false) -> void:
-	if note < 0 || position < 0:
-		printerr("Pattern: Cannot remove a note %d at %d, values cannot be less than zero." % [ note, position ])
+func remove_note(value: int, position: int, exact: bool = false) -> void:
+	if value < 0 || position < 0:
+		printerr("Pattern: Cannot remove a note %d at %d, values cannot be less than zero." % [ value, position ])
 		return
 
 	var i := 0
 	while i < note_amount:
-		if notes[i].x == note:
+		if notes[i].x == value:
 			if exact && position == notes[i].y:
 				remove_note_at(i)
 				i -= 1
@@ -111,8 +200,9 @@ func remove_note(note: int, position: int, exact: bool = false) -> void:
 			if not exact && position >= notes[i].y && position < (notes[i].y + notes[i].z):
 				remove_note_at(i)
 				i -= 1
-
 		i += 1
+	
+	notes_changed.emit()
 
 
 func remove_note_at(index: int) -> void:

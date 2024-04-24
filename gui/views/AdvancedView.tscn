@@ -121,14 +121,14 @@ layout_mode = 2
 theme_type_variation = &"HBoxSpaced"
 alignment = 1
 
-[node name="ScaleUp" type="Button" parent="Layout/ExtraControls/Contents/Row"]
+[node name="GUIToggleScale" type="Button" parent="Layout/ExtraControls/Contents/Row"]
 unique_name_in_owner = true
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 disabled = true
-text = "SCALE UP"
+text = "GUI SCALE UP"
 
 [node name="ImportMid" type="Button" parent="Layout/ExtraControls/Contents/Row"]
 unique_name_in_owner = true

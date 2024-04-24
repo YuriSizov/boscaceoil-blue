@@ -1,7 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://byfh0p3nqrosa"]
+[gd_scene load_steps=6 format=3 uid="uid://byfh0p3nqrosa"]
 
 [ext_resource type="Script" path="res://gui/views/PatternEditor.gd" id="1_eqswn"]
 [ext_resource type="PackedScene" uid="uid://dciyoa2wkbtfp" path="res://gui/views/note_map/NoteMap.tscn" id="1_jt24t"]
+[ext_resource type="PackedScene" uid="uid://dpno0cpboqdm0" path="res://gui/widgets/OptionPicker.tscn" id="3_g46lg"]
+[ext_resource type="Texture2D" uid="uid://dv8e841ktrh7e" path="res://gui/theme/minus_icon.tres" id="4_rpxm2"]
+[ext_resource type="Texture2D" uid="uid://kqtm1ja12mjr" path="res://gui/theme/plus_icon.tres" id="5_voaw7"]
 
 [node name="PatternEditor" type="VBoxContainer"]
 auto_translate_mode = 1
@@ -16,22 +19,75 @@ script = ExtResource("1_eqswn")
 [node name="NoteMap" parent="." instance=ExtResource("1_jt24t")]
 layout_mode = 2
 
-[node name="PropertyBar" type="HBoxContainer" parent="."]
-auto_translate_mode = 1
+[node name="PatternSettings" type="PanelContainer" parent="."]
 layout_mode = 2
+theme_type_variation = &"PatternSettingsPanel"
 
-[node name="InstrumentPicker" type="Control" parent="PropertyBar"]
+[node name="PropertyBar" type="HBoxContainer" parent="PatternSettings"]
 auto_translate_mode = 1
 layout_mode = 2
+theme_type_variation = &"PatternSettingsBar"
 
-[node name="NoteShifter" type="Control" parent="PropertyBar"]
-auto_translate_mode = 1
+[node name="PickerPanel" type="PanelContainer" parent="PatternSettings/PropertyBar"]
 layout_mode = 2
+theme_type_variation = &"PatternSettingsPickerPanel"
 
-[node name="ScalePicker" type="Control" parent="PropertyBar"]
-auto_translate_mode = 1
+[node name="InstrumentPicker" parent="PatternSettings/PropertyBar/PickerPanel" instance=ExtResource("3_g46lg")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(360, 0)
 layout_mode = 2
+direction = 2
+placeholder_text = "Instrument Name"
 
-[node name="KeyPicker" type="Control" parent="PropertyBar"]
+[node name="NoteShifterBar" type="HBoxContainer" parent="PatternSettings/PropertyBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"PatternSettingsBar"
+alignment = 2
+
+[node name="NoteShiftUp" type="Button" parent="PatternSettings/PropertyBar/NoteShifterBar"]
+unique_name_in_owner = true
+auto_translate_mode = 1
+custom_minimum_size = Vector2(40, 32)
+layout_mode = 2
+theme_type_variation = &"IncrementButton"
+icon = ExtResource("5_voaw7")
+flat = true
+icon_alignment = 1
+expand_icon = true
+
+[node name="NoteShiftDown" type="Button" parent="PatternSettings/PropertyBar/NoteShifterBar"]
+unique_name_in_owner = true
+auto_translate_mode = 1
+custom_minimum_size = Vector2(40, 32)
+layout_mode = 2
+theme_type_variation = &"IncrementButton"
+icon = ExtResource("4_rpxm2")
+flat = true
+icon_alignment = 1
+expand_icon = true
+
+[node name="PickerPanel2" type="PanelContainer" parent="PatternSettings/PropertyBar"]
+layout_mode = 2
+theme_type_variation = &"PatternSettingsPickerPanel"
+
+[node name="ScalePicker" parent="PatternSettings/PropertyBar/PickerPanel2" instance=ExtResource("3_g46lg")]
+unique_name_in_owner = true
+auto_translate_mode = 1
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+direction = 2
+placeholder_text = "Scale"
+
+[node name="PickerPanel3" type="PanelContainer" parent="PatternSettings/PropertyBar"]
 auto_translate_mode = 1
 layout_mode = 2
+theme_type_variation = &"PatternSettingsPickerPanel"
+
+[node name="KeyPicker" parent="PatternSettings/PropertyBar/PickerPanel3" instance=ExtResource("3_g46lg")]
+unique_name_in_owner = true
+auto_translate_mode = 1
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+direction = 2
+placeholder_text = "K"

@@ -76,11 +76,40 @@ func create_blocking_popup(popup: PopupControl, position: Vector2, direction: Di
 	# Apply smart adjustments if the desired position + size would put the popup out of screen.
 	# We trust the hardcoded direction, so the solution is be to nudge it back in.
 	var valid_position := position
-	if (valid_position.x + popup.size.x) > _click_catcher.size.x:
-		valid_position.x -= ((valid_position.x + popup.size.x) - _click_catcher.size.x)
-	if (valid_position.y + popup.size.y) > _click_catcher.size.y:
-		valid_position.y -= ((valid_position.y + popup.size.y) - _click_catcher.size.y)
 	
+	var effective_popup_rect := Rect2()
+	match direction:
+		Direction.BOTTOM_RIGHT:
+			effective_popup_rect.position.x = position.x
+			effective_popup_rect.position.y = position.y
+			effective_popup_rect.size.x = popup.size.x
+			effective_popup_rect.size.y = popup.size.y
+		Direction.BOTTOM_LEFT:
+			effective_popup_rect.position.x = position.x - popup.size.x
+			effective_popup_rect.position.y = position.y
+			effective_popup_rect.size.x = popup.size.x
+			effective_popup_rect.size.y = popup.size.y
+		Direction.TOP_RIGHT:
+			effective_popup_rect.position.x = position.x
+			effective_popup_rect.position.y = position.y - popup.size.y
+			effective_popup_rect.size.x = popup.size.x
+			effective_popup_rect.size.y = popup.size.y
+		Direction.TOP_LEFT:
+			effective_popup_rect.position.x = position.x - popup.size.x
+			effective_popup_rect.position.y = position.y
+			effective_popup_rect.size.x = popup.size.x
+			effective_popup_rect.size.y = popup.size.y - popup.size.y
+
+	if effective_popup_rect.position.x < 0:
+		valid_position.x -= effective_popup_rect.position.x
+	elif effective_popup_rect.end.x > _click_catcher.size.x:
+		valid_position.x -= effective_popup_rect.end.x - _click_catcher.size.x
+	
+	if effective_popup_rect.position.y < 0:
+		valid_position.y -= effective_popup_rect.position.y
+	elif effective_popup_rect.end.y > _click_catcher.size.y:
+		valid_position.y -= effective_popup_rect.end.y - _click_catcher.size.y
+
 	anchor.global_position = valid_position
 	
 	# Add the popup control itself and align it with anchors.
@@ -90,12 +119,20 @@ func create_blocking_popup(popup: PopupControl, position: Vector2, direction: Di
 	match direction:
 		Direction.BOTTOM_RIGHT:
 			popup.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT, Control.PRESET_MODE_KEEP_SIZE)
+			popup.grow_horizontal = Control.GROW_DIRECTION_END
+			popup.grow_vertical = Control.GROW_DIRECTION_END
 		Direction.BOTTOM_LEFT:
 			popup.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT, Control.PRESET_MODE_KEEP_SIZE)
+			popup.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+			popup.grow_vertical = Control.GROW_DIRECTION_END
 		Direction.TOP_RIGHT:
 			popup.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT, Control.PRESET_MODE_KEEP_SIZE)
+			popup.grow_horizontal = Control.GROW_DIRECTION_END
+			popup.grow_vertical = Control.GROW_DIRECTION_BEGIN
 		Direction.TOP_LEFT:
 			popup.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT, Control.PRESET_MODE_KEEP_SIZE)
+			popup.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+			popup.grow_vertical = Control.GROW_DIRECTION_BEGIN
 
 	popup.show()
 	popup.click_handled.connect(_handle_popup_clicked.bind(popup))

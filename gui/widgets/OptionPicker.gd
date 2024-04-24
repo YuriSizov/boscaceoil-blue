@@ -22,8 +22,14 @@ const POPUP_EMPTY_LABEL := "No options."
 const PAGER_LEFT_LABEL := "<< Prev"
 const PAGER_RIGHT_LABEL := "Next >>"
 
+const ARROW_DOWN := preload("res://gui/theme/down_arrow.tres")
+const ARROW_UP := preload("res://gui/theme/up_arrow.tres")
+
 ## Expand direction for the popup with options. Should be read as "In the direction to <DIRECTION OPTION>".
-@export var direction: PopupManager.Direction = PopupManager.Direction.BOTTOM_RIGHT
+@export var direction: PopupManager.Direction = PopupManager.Direction.BOTTOM_RIGHT:
+	set(value):
+		direction = value
+		_update_icon()
 ## Placeholder text for when the control is empty (mostly used for in-editor visualization).
 @export var placeholder_text: String = "":
 	set(value):
@@ -54,6 +60,7 @@ func _init() -> void:
 func _ready() -> void:
 	commit_options()
 	_update_label()
+	_update_icon()
 
 
 func _notification(what: int) -> void:
@@ -90,7 +97,7 @@ func _draw_popup(popup: ItemPopup) -> void:
 	# Draw options.
 
 	var font := get_theme_font("font", "Label")
-	var font_size := get_theme_font_size("font_size", "Label")
+	var option_font_size := get_theme_font_size("option_font_size", "OptionPicker")
 	var empty_font_color := get_theme_color("empty_font_color", "OptionPicker")
 
 	var option_font_color := get_theme_color("option_font_color", "OptionPicker")
@@ -104,7 +111,7 @@ func _draw_popup(popup: ItemPopup) -> void:
 	# Draw an empty placeholder if there are no options available.
 	if not popup.has_options():
 		var label_position := popup.item_origin + popup.label_position
-		popup.draw_string(font, label_position, POPUP_EMPTY_LABEL, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, empty_font_color)
+		popup.draw_string(font, label_position, POPUP_EMPTY_LABEL, HORIZONTAL_ALIGNMENT_LEFT, -1, option_font_size, empty_font_color)
 	else:
 		var popup_options := popup.get_options()
 		# Either draw exactly POPUP_MAX_ITEMS + 1 items, or draw POPUP_MAX_ITEMS and then a pager.
@@ -135,7 +142,7 @@ func _draw_popup(popup: ItemPopup) -> void:
 				popup.draw_rect(Rect2(item_position, popup.item_size), item_hover_color)
 
 			var item_font_color := sublist_font_color if item.is_sublist else option_font_color
-			popup.draw_string(font, label_position, item.get_option_text(), HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, item_font_color)
+			popup.draw_string(font, label_position, item.get_option_text(), HORIZONTAL_ALIGNMENT_LEFT, -1, option_font_size, item_font_color)
 
 		# Draw the pager.
 		if popup.has_pager:
@@ -152,7 +159,7 @@ func _draw_popup(popup: ItemPopup) -> void:
 			
 			var left_pager_label_position := popup.item_origin + popup.pager_left_label_position + pager_offset
 			var left_pager_color := sublist_font_color if popup.current_page != 0 else sublist_inactive_font_color
-			popup.draw_string(font, left_pager_label_position, PAGER_LEFT_LABEL, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, left_pager_color)
+			popup.draw_string(font, left_pager_label_position, PAGER_LEFT_LABEL, HORIZONTAL_ALIGNMENT_LEFT, -1, option_font_size, left_pager_color)
 			
 			# Draw the right pager (next page).
 			
@@ -163,25 +170,27 @@ func _draw_popup(popup: ItemPopup) -> void:
 			
 			var right_pager_label_position := popup.item_origin + popup.pager_right_label_position + pager_offset
 			var right_pager_color := sublist_font_color if popup.current_page != (popup.max_pages - 1) else sublist_inactive_font_color
-			popup.draw_string(font, right_pager_label_position, PAGER_RIGHT_LABEL, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, right_pager_color)
+			popup.draw_string(font, right_pager_label_position, PAGER_RIGHT_LABEL, HORIZONTAL_ALIGNMENT_LEFT, -1, option_font_size, right_pager_color)
 
 
 func _update_popup_size(popup: ItemPopup) -> void:
 	var font := get_theme_font("font", "Label")
-	var font_size := get_theme_font_size("font_size", "Label")
+	var option_font_size := get_theme_font_size("option_font_size", "OptionPicker")
 	var item_margins := get_theme_stylebox("item_margins", "OptionPicker")
+	# Our font contributes excessive height, and content margins cannot be negative, so this is how we fix it.
+	var item_height_adjustment := get_theme_constant("item_height_adjustment", "OptionPicker")
 	var popup_background: StyleBoxFlat = get_theme_stylebox("popup_panel", "OptionPicker")
 
 	# Calculate the minimum needed width using the longest option text.
 	var longest_item := 0.0
 	var item_count := 0
 	if not popup.has_options():
-		longest_item = font.get_string_size(POPUP_EMPTY_LABEL, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x
+		longest_item = font.get_string_size(POPUP_EMPTY_LABEL, HORIZONTAL_ALIGNMENT_LEFT, -1, option_font_size).x
 		item_count = 1
 	else:
 		for item in popup.get_options():
 			var text := item.get_option_text()
-			var text_size := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size)
+			var text_size := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, option_font_size)
 			if text_size.x > longest_item:
 				longest_item = text_size.x
 
@@ -191,17 +200,17 @@ func _update_popup_size(popup: ItemPopup) -> void:
 	# Reference the minimum width from the above, the height of any capital character, and the minimum size
 	# needed by the pager.
 
-	var item_height := font.get_char_size("C".unicode_at(0), font_size).y
+	var item_height := font.get_char_size("C".unicode_at(0), option_font_size).y
 
-	var left_label_size := font.get_string_size(PAGER_LEFT_LABEL, HORIZONTAL_ALIGNMENT_RIGHT, -1, font_size)
-	var right_label_size := font.get_string_size(PAGER_RIGHT_LABEL, HORIZONTAL_ALIGNMENT_RIGHT, -1, font_size)
+	var left_label_size := font.get_string_size(PAGER_LEFT_LABEL, HORIZONTAL_ALIGNMENT_RIGHT, -1, option_font_size)
+	var right_label_size := font.get_string_size(PAGER_RIGHT_LABEL, HORIZONTAL_ALIGNMENT_RIGHT, -1, option_font_size)
 	if popup.has_pager:
 		var pager_min_width := maxf(left_label_size.x, right_label_size.x) * 2
 		longest_item = max(longest_item, pager_min_width)
 
 	var item_size := Vector2(
 		item_margins.get_margin(SIDE_LEFT) + item_margins.get_margin(SIDE_RIGHT) + longest_item,
-		item_margins.get_margin(SIDE_TOP) + item_margins.get_margin(SIDE_BOTTOM) + item_height
+		item_margins.get_margin(SIDE_TOP) + item_margins.get_margin(SIDE_BOTTOM) + item_height + item_height_adjustment
 	)
 	popup.item_size = item_size
 	popup.label_position = Vector2(
@@ -304,6 +313,16 @@ func _update_label() -> void:
 		return
 
 	_value_label.text = _selected_option.get_label_text()
+
+
+func _update_icon() -> void:
+	if not is_inside_tree():
+		return
+
+	if direction == PopupManager.Direction.TOP_RIGHT || direction == PopupManager.Direction.TOP_LEFT:
+		_arrow_icon.texture = ARROW_UP
+	else:
+		_arrow_icon.texture = ARROW_DOWN
 
 
 # Selection.

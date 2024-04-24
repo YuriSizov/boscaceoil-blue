@@ -98,6 +98,8 @@ func _draw() -> void:
 			draw_string(label_font, shadow_position, cursor_label, HORIZONTAL_ALIGNMENT_LEFT, -1, label_font_size, label_font_color)
 			draw_string(label_font, string_position, cursor_label, HORIZONTAL_ALIGNMENT_LEFT, -1, label_font_size, label_shadow_color)
 	
+	# TODO: Add an indicator at the top/bottom for active notes beyond the visible area.
+	
 	# Draw the playback cursor.
 	
 	if playback_cursor_position >= 0:
