@@ -15,6 +15,8 @@ var voice: SiONVoice = SiONVoice.new()
 
 func set_voice_data(voice_data: VoiceManager.VoiceData) -> void:
 	super(voice_data)
+	type = InstrumentType.INSTRUMENT_SINGLE
+	
 	voice = Controller.voice_manager.get_voice_preset(_voice_data.voice_preset)
 
 

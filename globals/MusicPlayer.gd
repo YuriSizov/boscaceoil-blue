@@ -94,9 +94,8 @@ func _playback_step() -> void:
 			if not active_instrument.is_note_valid(note):
 				continue # Custom validation for different instrument types failed.
 
-			# Update the filter for single voice instruments and the first note of drumkit.
-			if active_instrument.type == Instrument.InstrumentType.INSTRUMENT_SINGLE || (active_instrument.type == Instrument.InstrumentType.INSTRUMENT_DRUMKIT && _pattern_time == 0):
-				active_instrument.update_filter()
+			# Update the filter.
+			active_instrument.update_filter()
 
 			# If pattern uses recorded filter values, set them directly.
 			if pattern.record_filter_enabled:

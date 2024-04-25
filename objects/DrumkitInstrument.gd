@@ -15,7 +15,8 @@ var voices: Array[SiONVoice] = []
 
 func set_voice_data(voice_data: VoiceManager.VoiceData) -> void:
 	super(voice_data)
-
+	type = InstrumentType.INSTRUMENT_DRUMKIT
+	
 	voices.clear()
 
 	var drumkit_data := _voice_data as VoiceManager.DrumkitData
@@ -36,6 +37,11 @@ func get_note_value(note: int) -> int:
 
 func get_note_voice(note: int) -> SiONVoice:
 	return voices[note]
+
+
+func get_note_name(note: int) -> String:
+	var drumkit_data := _voice_data as VoiceManager.DrumkitData
+	return drumkit_data.items[note].name
 
 
 # Filter state.

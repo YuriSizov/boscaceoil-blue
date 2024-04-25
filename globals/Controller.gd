@@ -144,7 +144,8 @@ func delete_instrument(instrument_index: int) -> void:
 	song_instrument_changed.emit()
 	
 	if current_pattern && current_pattern_affected:
-		current_pattern.instrument_changed.emit()
+		var instrument := current_song.instruments[current_pattern.instrument_idx]
+		current_pattern.change_instrument(current_pattern.instrument_idx, instrument)
 
 
 func get_current_instrument() -> Instrument:
@@ -171,7 +172,7 @@ func _set_current_instrument_by_voice(voice_data: VoiceManager.VoiceData) -> voi
 	
 	var current_pattern := get_current_pattern()
 	if current_pattern && current_pattern.instrument_idx == current_instrument_index:
-		current_pattern.instrument_changed.emit()
+		current_pattern.change_instrument(current_instrument_index, instrument)
 
 
 func set_current_instrument(category: String, instrument_name: String) -> void:

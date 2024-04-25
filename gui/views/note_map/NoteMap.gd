@@ -19,6 +19,8 @@ enum DrawingMode {
 
 ## Current edited pattern.
 var current_pattern: Pattern = null
+## Current instrument of the edited pattern.
+var current_instrument: Instrument = null
 ## Number of notes in a row.
 var pattern_size: int = 1
 ## Number of notes in a bar.
@@ -215,14 +217,24 @@ func _edit_current_pattern() -> void:
 		current_pattern.instrument_changed.connect(_update_pattern_instrument)
 		current_pattern.notes_changed.connect(_update_active_notes)
 
-	var instrument := Controller.current_song.instruments[current_pattern.instrument_idx]
-	theme = Controller.get_instrument_theme(instrument)
+	current_instrument = Controller.current_song.instruments[current_pattern.instrument_idx]
+	theme = Controller.get_instrument_theme(current_instrument)
 	_update_whole_grid_and_center()
 
 
 func _update_note_maps() -> void:
 	_note_value_row_map.clear()
 	_note_row_value_map.clear()
+	
+	if current_instrument && current_instrument.type == Instrument.InstrumentType.INSTRUMENT_DRUMKIT:
+		var drumkit_instrument := current_instrument as DrumkitInstrument
+		
+		# For drumkits scale has no effect.
+		for note_value in drumkit_instrument.voices.size():
+			_note_value_row_map[note_value] = note_value
+			_note_row_value_map[note_value] = note_value
+		
+		return
 
 	_scale_layout = Scale.get_scale_layout(current_pattern.scale if current_pattern else Scale.SCALE_NORMAL)
 	var scale_size := _scale_layout.size()
@@ -279,17 +291,31 @@ func _update_whole_grid_and_center() -> void:
 	_update_active_notes()
 
 
+func _update_whole_grid_and_reset_scroll() -> void:
+	_update_note_maps()
+	_update_max_scroll_offset()
+	_scroll_offset = 0
+	_update_grid_layout()
+	_update_active_notes()
+
+
 func _update_pattern_instrument() -> void:
 	if Engine.is_editor_hint():
 		return
 	if not Controller.current_song || not current_pattern:
 		return
 	
-	var instrument := Controller.current_song.instruments[current_pattern.instrument_idx]
-	theme = Controller.get_instrument_theme(instrument)
+	var old_instrument_type := current_instrument.type if current_instrument else -1
+	current_instrument = Controller.current_song.instruments[current_pattern.instrument_idx]
+	theme = Controller.get_instrument_theme(current_instrument)
 	
-	queue_redraw()
-	_overlay.queue_redraw()
+	if current_instrument.type == Instrument.InstrumentType.INSTRUMENT_DRUMKIT:
+		_update_whole_grid_and_reset_scroll()
+	elif old_instrument_type != current_instrument.type:
+		_update_whole_grid_and_center()
+	else:
+		queue_redraw()
+		_overlay.queue_redraw()
 
 
 func _update_playback_cursor() -> void:
@@ -343,6 +369,10 @@ func _update_grid_layout() -> void:
 	_note_rows.clear()
 	_octave_rows.clear()
 
+	var drumkit_instrument: DrumkitInstrument
+	if current_instrument && current_instrument.type == Instrument.InstrumentType.INSTRUMENT_DRUMKIT:
+		drumkit_instrument = current_instrument as DrumkitInstrument
+
 	# Get reference data.
 	var available_rect := get_available_rect()
 	var scrollbar_available_rect: Rect2 = _scrollbar.get_available_rect()
@@ -350,8 +380,6 @@ func _update_grid_layout() -> void:
 	# Point of origin is at the bottom.
 	var origin := Vector2(0, available_rect.size.y)
 
-	# TODO: Use drumkit item names instead of note names for drumkits.
-	# TODO: Limit drawn notes to scale-compatible and for drumkits to the number of items.
 	var scale_size := _scale_layout.size()
 	var current_key := current_pattern.key if current_pattern else 0
 
@@ -382,9 +410,11 @@ func _update_grid_layout() -> void:
 		note.grid_position = note.position + available_rect.position
 		note.label_position = note.position + Vector2(0, -6)
 
-		# TODO: Color every even row as "sharp" in drumkits.
 		if note.label.ends_with("#"):
 			note.sharp = true
+		if drumkit_instrument:
+			note.label = drumkit_instrument.get_note_name(note_index)
+			note.sharp = (note_index + 1) % 2
 
 		_note_rows.push_back(note)
 		
@@ -394,7 +424,7 @@ func _update_grid_layout() -> void:
 		
 		@warning_ignore("integer_division")
 		var octave_index := note_index / OCTAVE_SIZE
-		if octave_index != last_octave_index:
+		if not drumkit_instrument && octave_index != last_octave_index:
 			last_octave_index = octave_index
 			if first_octave_index == -1:
 				first_octave_index = octave_index

@@ -107,6 +107,7 @@ func _update_pattern_instrument() -> void:
 	
 	var instrument_index := 0
 	var selected_item: OptionPicker.Item = null
+	var selected_instrument: Instrument = null
 	for instrument in Controller.current_song.instruments:
 		var item := OptionPicker.Item.new()
 		item.id = instrument_index
@@ -116,22 +117,28 @@ func _update_pattern_instrument() -> void:
 		
 		if current_pattern && current_pattern.instrument_idx == instrument_index:
 			selected_item = item
+			selected_instrument = instrument
 		
 		_instrument_picker.options.push_back(item)
 		instrument_index += 1
 	
 	_instrument_picker.commit_options()
-	_instrument_picker.set_selected(selected_item)
+	if selected_item:
+		_instrument_picker.set_selected(selected_item)
+
+	if selected_instrument:
+		_scale_picker.get_parent().visible = selected_instrument.type != Instrument.InstrumentType.INSTRUMENT_DRUMKIT
+		_key_picker.get_parent().visible = selected_instrument.type != Instrument.InstrumentType.INSTRUMENT_DRUMKIT
 
 
 func _change_instrument() -> void:
-	if not current_pattern:
+	if not Controller.current_song || not current_pattern:
 		return
 	
 	var selected_item := _instrument_picker.get_selected()
 	if not selected_item:
 		return
-	current_pattern.change_instrument(selected_item.id)
+	current_pattern.change_instrument(selected_item.id, Controller.current_song.instruments[selected_item.id])
 
 
 func _change_scale() -> void:

@@ -136,8 +136,19 @@ func shift_notes(offset: int) -> void:
 	notes_changed.emit()
 
 
-func change_instrument(new_instrument: int) -> void:
-	instrument_idx = new_instrument
+func change_instrument(new_idx: int, instrument: Instrument) -> void:
+	instrument_idx = new_idx
+	
+	# Delete notes that don't fit the new instrument.
+	if instrument.type == Instrument.InstrumentType.INSTRUMENT_DRUMKIT:
+		var drumkit_instrument := instrument as DrumkitInstrument
+		var i := 0
+		while i < note_amount:
+			if notes[i].x >= drumkit_instrument.voices.size():
+				remove_note_at(i)
+				i -= 1
+			i += 1
+	
 	instrument_changed.emit()
 
 
