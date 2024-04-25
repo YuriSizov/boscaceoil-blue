@@ -53,10 +53,51 @@ func _draw() -> void:
 	var last_active_value := -1
 	var spanning_active_indices := PackedInt32Array()
 	for active_note in active_notes:
-		# Make sure we don't track notes from other rows.
+		# Make sure we don't track notes from other rows when considering overlaps.
 		if last_active_value != active_note.note_value:
 			last_active_value = active_note.note_value
 			spanning_active_indices.clear()
+		
+		# Draw indicators for active notes beyond the screen, instead of notes themselves.
+		
+		var indicator_horn_height := note_height / 3.0
+		
+		if (active_note.position.y + note_height) < 0: # Note is beyond the visible area, to the top.
+			var indicator_position := Vector2(active_note.position.x, 0)
+			var indicator_size := Vector2(note_unit_width * active_note.length, border_width)
+			var indicator_bevel_size := Vector2(note_unit_width * active_note.length, note_bevel_width)
+			
+			draw_rect(Rect2(indicator_position, indicator_bevel_size), note_bevel_color)
+			draw_rect(Rect2(indicator_position, indicator_size), note_color)
+			
+			var left_horn_position := indicator_position
+			var left_horn_size := Vector2(border_width, indicator_horn_height)
+			draw_rect(Rect2(left_horn_position, left_horn_size), note_color)
+			var right_horn_position := indicator_position + Vector2(indicator_size.x, 0)
+			var right_horn_size := Vector2(border_width, indicator_horn_height)
+			draw_rect(Rect2(right_horn_position, right_horn_size), note_color)
+			
+			continue
+		elif (active_note.position.y + note_height > size.y): # Note is beyond the visible area, to the bottom.
+			var indicator_position := Vector2(active_note.position.x, size.y - border_width)
+			var indicator_size := Vector2(note_unit_width * active_note.length, border_width)
+			var indicator_bevel_position := Vector2(active_note.position.x, size.y - note_bevel_width)
+			var indicator_bevel_size := Vector2(note_unit_width * active_note.length, note_bevel_width)
+			
+			draw_rect(Rect2(indicator_bevel_position, indicator_bevel_size), note_bevel_color)
+			draw_rect(Rect2(indicator_position, indicator_size), note_color)
+			
+			var horn_position := Vector2(active_note.position.x, size.y)
+			var left_horn_position := horn_position + Vector2(0, -indicator_horn_height)
+			var left_horn_size := Vector2(border_width, indicator_horn_height)
+			draw_rect(Rect2(left_horn_position, left_horn_size), note_color)
+			var right_horn_position := horn_position + Vector2(indicator_size.x, -indicator_horn_height)
+			var right_horn_size := Vector2(border_width, indicator_horn_height)
+			draw_rect(Rect2(right_horn_position, right_horn_size), note_color)
+			
+			continue
+		
+		# Draw the note itself, when it's on screen.
 		
 		var note_bevel_position := active_note.position + Vector2(half_border_width, half_border_width)
 		var note_bevel_size := Vector2(note_unit_width * active_note.length, note_height)
@@ -87,8 +128,7 @@ func _draw() -> void:
 		if active_note.length > 1:
 			spanning_active_indices.push_back(active_note.note_index + active_note.length)
 		
-		
-		# Draw the size in the box if it goes off screen.
+		# Draw the note length in the box if it goes off screen.
 		if (note_position.x + note_size.x) >= size.x:
 			var string_position := note_position + Vector2(8, note_height - 8)
 			var shadow_position := string_position + label_shadow_size
@@ -97,8 +137,6 @@ func _draw() -> void:
 			# Colors are inverted on purpose, because the background is light here.
 			draw_string(label_font, shadow_position, cursor_label, HORIZONTAL_ALIGNMENT_LEFT, -1, label_font_size, label_font_color)
 			draw_string(label_font, string_position, cursor_label, HORIZONTAL_ALIGNMENT_LEFT, -1, label_font_size, label_shadow_color)
-	
-	# TODO: Add an indicator at the top/bottom for active notes beyond the visible area.
 	
 	# Draw the playback cursor.
 	

@@ -473,9 +473,12 @@ func _update_active_notes() -> void:
 
 	for i in current_pattern.note_amount:
 		var note_data := current_pattern.notes[i]
+		if note_data.y < 0 || note_data.y >= pattern_size || note_data.z < 1:
+			continue # Outside of the pattern row, or too short to play.
+		
 		var note_value_normalized := note_data.x - current_pattern.key # Shift to its C-key equivalent.
-		if note_value_normalized < 0 || note_value_normalized >= _note_value_row_map.size() || note_data.y < 0 || note_data.y >= pattern_size || note_data.z < 1:
-			continue # Outside of the grid, or too short.
+		if note_value_normalized < 0 || note_value_normalized >= _note_value_row_map.size():
+			continue # Outside of the valid note range.
 		
 		var row_index: int = _note_value_row_map[note_value_normalized]
 		if row_index < 0:
