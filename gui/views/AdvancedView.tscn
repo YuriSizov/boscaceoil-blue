@@ -68,6 +68,9 @@ placeholder_text = "NAME"
 [node name="FilterValueSlider" parent="Layout/Tuning/Contents/FilterSettings/Layout" instance=ExtResource("3_xr70i")]
 custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
+axis_mode = 1
+horizontal_range = Vector2i(0, 100)
+vertical_range = Vector2i(0, 0)
 
 [node name="SwingSettings" type="PanelContainer" parent="Layout/Tuning/Contents"]
 auto_translate_mode = 1

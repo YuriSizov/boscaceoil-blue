@@ -106,9 +106,11 @@ theme_override_constants/separation = 12
 
 [node name="LowPassSlider" parent="Layout/Tuner/LowPass" instance=ExtResource("2_misq6")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 0)
 layout_mode = 2
 size_flags_vertical = 3
+default_value = Vector2i(128, 0)
+horizontal_range = Vector2i(0, 128)
+vertical_range = Vector2i(0, 9)
 
 [node name="Label" type="Label" parent="Layout/Tuner/LowPass"]
 auto_translate_mode = 1
@@ -126,10 +128,13 @@ theme_override_constants/separation = 12
 
 [node name="VolumeSlider" parent="Layout/Tuner/Volume" instance=ExtResource("2_misq6")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 3
+default_value = Vector2i(0, 256)
+axis_mode = 2
+horizontal_range = Vector2i(0, 0)
+vertical_range = Vector2i(256, 0)
 
 [node name="Label" type="Label" parent="Layout/Tuner/Volume"]
 auto_translate_mode = 1

@@ -170,7 +170,7 @@ func _draw_item(on_control: Control, instrument_index: int, item_rect: Rect2, it
 	
 	var string_position := item_rect.position + Vector2(8, item_rect.size.y - 10)
 	var shadow_position := string_position + shadow_size
-	var gutter_string = "%d" % [ instrument_index + 1 ]
+	var gutter_string := "%d" % [ instrument_index + 1 ]
 	on_control.draw_string(font, shadow_position, gutter_string, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, shadow_color)
 	on_control.draw_string(font, string_position, gutter_string, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, font_color)
 
@@ -282,13 +282,13 @@ func _get_drag_data(at_position: Vector2) -> Variant:
 	return null
 
 
-func _can_drop_data_fw(at_position: Vector2, data: Variant) -> bool:
+func _can_drop_data_fw(_at_position: Vector2, data: Variant) -> bool:
 	if data is InstrumentDragData:
 		return true
 	return false
 
 
-func _drop_data_fw(at_position: Vector2, data: Variant) -> void:
+func _drop_data_fw(_at_position: Vector2, data: Variant) -> void:
 	if data is InstrumentDragData:
 		var instrument_data := data as InstrumentDragData
 		_delete_instrument(instrument_data.instrument_index)
@@ -305,7 +305,7 @@ func _add_new_instrument() -> void:
 	Controller.create_and_edit_instrument()
 
 
-func _delete_instrument(instrument_index) -> void:
+func _delete_instrument(instrument_index: int) -> void:
 	if Engine.is_editor_hint():
 		return
 	if not Controller.current_song:

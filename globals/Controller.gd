@@ -107,7 +107,7 @@ func create_and_edit_instrument() -> void:
 
 
 func edit_instrument(instrument_index: int) -> void:
-	var instrument_index_ = ValueValidator.index(instrument_index, current_song.instruments.size())
+	var instrument_index_ := ValueValidator.index(instrument_index, current_song.instruments.size())
 	if instrument_index != instrument_index_:
 		return
 	
@@ -116,7 +116,7 @@ func edit_instrument(instrument_index: int) -> void:
 
 
 func delete_instrument(instrument_index: int) -> void:
-	var instrument_index_ = ValueValidator.index(instrument_index, current_song.instruments.size())
+	var instrument_index_ := ValueValidator.index(instrument_index, current_song.instruments.size())
 	if instrument_index != instrument_index_:
 		return
 	

@@ -13,6 +13,8 @@ var current_instrument: Instrument = null
 @onready var _instrument_picker: OptionPicker = %InstrumentPicker
 @onready var _prev_instrument_button: Button = %PrevInstrument
 @onready var _next_instrument_button: Button = %NextInstrument
+@onready var _lowpass_slider: PadSlider = %LowPassSlider
+@onready var _volume_slider: PadSlider = %VolumeSlider
 
 
 func _ready() -> void:
@@ -22,6 +24,9 @@ func _ready() -> void:
 	_instrument_picker.selected.connect(_instrument_selected)
 	_prev_instrument_button.pressed.connect(_instrument_picker.select_previous)
 	_next_instrument_button.pressed.connect(_instrument_picker.select_next)
+	
+	_lowpass_slider.changed.connect(_instrument_filter_changed)
+	_volume_slider.changed.connect(_instrument_volume_changed)
 	
 	_edit_current_instrument()
 	if not Engine.is_editor_hint():
@@ -123,7 +128,9 @@ func _edit_current_instrument() -> void:
 	if category_changed:
 		_set_instrument_options()
 	
-	# TODO: Update sliders.
+	# Update sliders.
+	_lowpass_slider.set_current_value(Vector2i(current_instrument.lp_cutoff, current_instrument.lp_resonance))
+	_volume_slider.set_current_value(Vector2i(0, current_instrument.volume))
 
 
 func _category_selected() -> void:
@@ -141,3 +148,20 @@ func _instrument_selected() -> void:
 	var category_name := _category_picker.get_selected().text
 	var instrument_name := _instrument_picker.get_selected().text
 	Controller.set_current_instrument(category_name, instrument_name)
+
+
+func _instrument_filter_changed() -> void:
+	if not current_instrument:
+		return
+	
+	var slider_value := _lowpass_slider.get_current_value()
+	current_instrument.lp_cutoff = slider_value.x
+	current_instrument.lp_resonance = slider_value.y
+
+
+func _instrument_volume_changed() -> void:
+	if not current_instrument:
+		return
+	
+	var slider_value := _volume_slider.get_current_value()
+	current_instrument.volume = slider_value.y
