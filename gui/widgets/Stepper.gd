@@ -9,7 +9,9 @@ class_name Stepper extends HBoxContainer
 
 signal value_changed()
 
+var _value: int = 0
 @export var value: int = 0:
+	get = _get_value,
 	set = _set_value
 @export var min_value: int = 0
 @export var max_value: int = 1
@@ -40,7 +42,7 @@ func _ensure_label_size() -> void:
 		return
 	
 	var string_size := 0
-	for num : int in [ value, min_value, max_value ]:
+	for num : int in [ _value, min_value, max_value ]:
 		var num_size: int = ("%d" % num).length()
 		if num_size > string_size:
 			string_size = num_size
@@ -55,22 +57,31 @@ func _update_value_label() -> void:
 	if not is_inside_tree():
 		return
 	
-	_label.text = "%d" % value
+	_label.text = "%d" % _value
 
 
 func _update_buttons() -> void:
 	if not is_inside_tree():
 		return
 	
-	_increment_button.disabled = (value == max_value)
-	_decrement_button.disabled = (value == min_value)
+	_increment_button.disabled = (_value == max_value)
+	_decrement_button.disabled = (_value == min_value)
+
+
+func _get_value() -> int:
+	return _value
 
 
 func _set_value(next_value: int) -> void:
-	if value == next_value:
+	_set_value_silent(next_value)
+	_update_buttons()
+
+
+func _set_value_silent(next_value: int) -> void:
+	if _value == next_value:
 		return
 	
-	value = next_value
+	_value = next_value
 	_update_value_label()
 
 
@@ -84,11 +95,11 @@ func _change_value_on_hold(hold_button: Button) -> void:
 	if delta_sign == 0:
 		return
 	
-	var raw_value := value + delta_sign * step
+	var raw_value := _value + delta_sign * step
 	# Round to the closest step value, then clamp into the limit.
 	@warning_ignore("integer_division")
 	var next_value := clampi((raw_value / step) * step, min_value, max_value)
-	_set_value(next_value)
+	_set_value_silent(next_value)
 
 
 func _emit_changed_on_release(_hold_button: Button) -> void:
