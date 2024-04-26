@@ -14,13 +14,13 @@ const CHANNEL_NUMBER := 8
 
 ## Maximum length of the timeline in timeline bars.
 @export var timeline_length: int = 1:
-	set(value): loop_start = ValueValidator.positive(value)
+	set(value): timeline_length = ValueValidator.positive(value)
 ## Start bar on the timeline.
 @export var loop_start: int = 0:
 	set(value): loop_start = ValueValidator.posizero(value)
 ## End bar on the timeline.
 @export var loop_end: int = 1:
-	set(value): loop_start = ValueValidator.posizero(value)
+	set(value): loop_end = ValueValidator.posizero(value)
 
 ## Pattern indices, grouped by timeline bars. The packed array is exactly
 ## CHANNEL_NUMBER long.

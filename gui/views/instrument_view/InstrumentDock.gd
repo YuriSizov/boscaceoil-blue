@@ -34,6 +34,7 @@ func _ready() -> void:
 	_add_button.pressed.connect(_add_new_instrument)
 	
 	if not Engine.is_editor_hint():
+		Controller.song_loaded.connect(queue_redraw)
 		Controller.song_instrument_changed.connect(queue_redraw)
 
 

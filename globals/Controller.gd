@@ -7,6 +7,8 @@
 extends Node
 
 signal song_loaded()
+signal song_saved()
+
 signal song_sizes_changed()
 signal song_pattern_changed()
 signal song_instrument_changed()
@@ -31,6 +33,8 @@ var instrument_themes: Dictionary = {
 	ColorPalette.PALETTE_GRAY:   preload("res://gui/theme/instrument_theme_gray.tres"),
 }
 
+var _file_dialog: FileDialog = null
+
 
 func _init() -> void:
 	voice_manager = VoiceManager.new()
@@ -39,9 +43,34 @@ func _init() -> void:
 
 func _ready() -> void:
 	# Driver must be ready by this time.
-
 	music_player.initialize()
 	create_new_song()
+
+
+# File dialog management.
+
+func _get_file_dialog() -> FileDialog:
+	if not _file_dialog:
+		_file_dialog = FileDialog.new()
+		_file_dialog.use_native_dialog = true
+		_file_dialog.access = FileDialog.ACCESS_FILESYSTEM
+		
+		_file_dialog.file_selected.connect(_unparent_file_dialog.unbind(1))
+		_file_dialog.canceled.connect(_clear_file_dialog_connections)
+		_file_dialog.canceled.connect(_unparent_file_dialog)
+	
+	return _file_dialog
+
+
+func _clear_file_dialog_connections() -> void:
+	var connections := _file_dialog.file_selected.get_connections()
+	for connection : Dictionary in connections:
+		if connection["callable"] != _unparent_file_dialog:
+			_file_dialog.file_selected.disconnect(connection["callable"])
+
+
+func _unparent_file_dialog() -> void:
+	_file_dialog.get_parent().remove_child(_file_dialog)
 
 
 # Song management.
@@ -60,12 +89,63 @@ func create_new_song() -> void:
 	song_loaded.emit()
 
 
+func create_new_song_safe() -> void:
+	if current_song && current_song.is_dirty():
+		# TODO: First ask to save the current one.
+		pass
+	
+	create_new_song()
+
+
 func load_ceol_song() -> void:
-	pass
+	var load_dialog := _get_file_dialog()
+	load_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
+	load_dialog.add_filter("*.ceol", "Bosca Ceoil Song")
+	load_dialog.file_selected.connect(_load_ceol_song_confirmed, CONNECT_ONE_SHOT)
+	
+	get_tree().root.add_child(load_dialog)
+	load_dialog.popup_centered()
+
+
+func _load_ceol_song_confirmed(path: String) -> void:
+	var loaded_song: Song = SongLoader.load(path)
+	if not loaded_song:
+		# TODO: Show an error message.
+		return
+	print("Successfully loaded song from %s:\n  %s" % [ path, loaded_song ])
+	
+	if music_player.is_playing():
+		music_player.stop_playback()
+	
+	current_song = loaded_song
+	current_pattern_index = 0
+	current_instrument_index = 0
+	
+	music_player.reset_driver()
+	music_player.start_playback()
+	
+	song_loaded.emit()
 
 
 func save_ceol_song() -> void:
-	pass
+	var load_dialog := _get_file_dialog()
+	load_dialog.file_mode = FileDialog.FILE_MODE_SAVE_FILE
+	load_dialog.add_filter("*.ceol", "Bosca Ceoil Song")
+	load_dialog.file_selected.connect(_save_ceol_song_confirmed, CONNECT_ONE_SHOT)
+	
+	get_tree().root.add_child(load_dialog)
+	load_dialog.popup_centered()
+
+
+func _save_ceol_song_confirmed(path: String) -> void:
+	var success := SongSaver.save(current_song, path)
+	if not success:
+		# TODO: Show an error message.
+		return
+	print("Successfully saved song to %s." % [ path ])
+	
+	current_song.mark_clean()
+	song_saved.emit()
 
 
 # Song editing.
@@ -79,20 +159,27 @@ func get_current_pattern() -> Pattern:
 	return current_song.patterns[current_pattern_index]
 
 
+func instance_instrument_by_voice(voice_data: VoiceManager.VoiceData) -> Instrument:
+	var instrument: Instrument = null
+	
+	if voice_data is VoiceManager.DrumkitData:
+		instrument = DrumkitInstrument.new(voice_data)
+	else:
+		instrument = SingleVoiceInstrument.new(voice_data)
+	
+	return instrument
+
+
 func create_instrument() -> void:
 	if not current_song:
 		return
 	if current_song.instruments.size() >= Song.MAX_INSTRUMENT_COUNT:
 		return
 	
-	var voice_data := Controller.voice_manager.get_random_voice_data()
-	var instrument: Instrument = null
-	if voice_data is VoiceManager.DrumkitData:
-		instrument = DrumkitInstrument.new(voice_data)
-	else:
-		instrument = SingleVoiceInstrument.new(voice_data)
-	
+	var voice_data := voice_manager.get_random_voice_data()
+	var instrument := instance_instrument_by_voice(voice_data)
 	current_song.instruments.push_back(instrument)
+	current_song.mark_dirty()
 
 
 func create_and_edit_instrument() -> void:
@@ -146,6 +233,8 @@ func delete_instrument(instrument_index: int) -> void:
 	if current_pattern && current_pattern_affected:
 		var instrument := current_song.instruments[current_pattern.instrument_idx]
 		current_pattern.change_instrument(current_pattern.instrument_idx, instrument)
+	
+	current_song.mark_dirty()
 
 
 func get_current_instrument() -> Instrument:
@@ -160,19 +249,16 @@ func get_current_instrument() -> Instrument:
 func _set_current_instrument_by_voice(voice_data: VoiceManager.VoiceData) -> void:
 	if not voice_data:
 		return
-
-	var instrument: Instrument = null
-	if voice_data is VoiceManager.DrumkitData:
-		instrument = DrumkitInstrument.new(voice_data)
-	else:
-		instrument = SingleVoiceInstrument.new(voice_data)
 	
+	var instrument := instance_instrument_by_voice(voice_data)
 	current_song.instruments[current_instrument_index] = instrument
 	song_instrument_changed.emit()
 	
 	var current_pattern := get_current_pattern()
 	if current_pattern && current_pattern.instrument_idx == current_instrument_index:
 		current_pattern.change_instrument(current_instrument_index, instrument)
+	
+	current_song.mark_dirty()
 
 
 func set_current_instrument(category: String, instrument_name: String) -> void:
@@ -215,6 +301,7 @@ func set_pattern_size(value: int) -> void:
 		return
 	
 	current_song.pattern_size = value
+	current_song.mark_dirty()
 	song_sizes_changed.emit()
 
 
@@ -223,6 +310,7 @@ func set_bar_size(value: int) -> void:
 		return
 	
 	current_song.bar_size = value
+	current_song.mark_dirty()
 	song_sizes_changed.emit()
 
 
@@ -231,4 +319,5 @@ func set_bpm(value: int) -> void:
 		return
 	
 	current_song.bpm = value
+	current_song.mark_dirty()
 	music_player.update_driver_bpm()

@@ -8,10 +8,18 @@
 ## Bosca Ceoil song.
 class_name Song extends Resource
 
+signal song_changed()
+
 const FILE_FORMAT := 3
+const FILE_EXTENSION := "ceol"
+
 # These limits are arbitrary, but match the original implementation.
 const MAX_INSTRUMENT_COUNT := 16
 const MAX_PATTERN_COUNT := 4096
+
+const DEFAULT_PATTERN_SIZE := 16
+const DEFAULT_BAR_SIZE := 4
+const DEFAULT_BPM := 120
 
 # Metadata.
 
@@ -25,13 +33,13 @@ const MAX_PATTERN_COUNT := 4096
 # Base settings.
 
 ## Length of each pattern in notes.
-@export var pattern_size: int = 16:
+@export var pattern_size: int = DEFAULT_PATTERN_SIZE:
 	set(value): pattern_size = ValueValidator.range(value, 1, 32)
 ## Length of a bar in notes, purely visual.
-@export var bar_size: int = 4:
+@export var bar_size: int = DEFAULT_BAR_SIZE:
 	set(value): bar_size = ValueValidator.range(value, 1, 32)
 ## Beats per minute.
-@export var bpm: int = 120:
+@export var bpm: int = DEFAULT_BPM:
 	set(value): bpm = ValueValidator.range(value, 10, 220)
 
 # Advanced settings.
@@ -54,6 +62,14 @@ const MAX_PATTERN_COUNT := 4096
 @export var patterns: Array[Pattern] = []
 ## Arrangement of the song.
 @export var arrangement: Arrangement = Arrangement.new()
+
+# Runtime properties.
+
+var _dirty: bool = false
+
+
+func _to_string() -> String:
+	return "Song <v%d, %d/%d/%d, inst:%d, pat:%d, arr:%d>" % [ format_version, bpm, pattern_size, bar_size, instruments.size(), patterns.size(), arrangement.timeline_length ]
 
 
 static func create_default_song() -> Song:
@@ -98,3 +114,18 @@ func get_current_arrangement_bar() -> PackedInt32Array:
 func reset_playing_patterns() -> void:
 	for pattern in patterns:
 		pattern.is_playing = false
+
+
+# Runtime.
+
+func mark_dirty() -> void:
+	_dirty = true
+	song_changed.emit()
+
+
+func mark_clean() -> void:
+	_dirty = false
+
+
+func is_dirty() -> bool:
+	return _dirty

@@ -150,7 +150,6 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
-disabled = true
 text = "NEW SONG"
 
 [node name="Layout" type="HBoxContainer" parent="Layout/BaseControls/Rows/SongFileActions"]
@@ -158,22 +157,20 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"HBoxSpaced"
 
-[node name="LoadCeol" type="Button" parent="Layout/BaseControls/Rows/SongFileActions/Layout"]
+[node name="LoadSong" type="Button" parent="Layout/BaseControls/Rows/SongFileActions/Layout"]
 unique_name_in_owner = true
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
-disabled = true
 text = "LOAD"
 
-[node name="SaveCeol" type="Button" parent="Layout/BaseControls/Rows/SongFileActions/Layout"]
+[node name="SaveSong" type="Button" parent="Layout/BaseControls/Rows/SongFileActions/Layout"]
 unique_name_in_owner = true
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
-disabled = true
 text = "SAVE"
 
 [node name="ImportExport" type="HBoxContainer" parent="Layout/BaseControls/Rows"]

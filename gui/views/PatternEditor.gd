@@ -30,7 +30,7 @@ func _ready() -> void:
 	_edit_current_pattern()
 	if not Engine.is_editor_hint():
 		Controller.song_loaded.connect(_edit_current_pattern)
-		Controller.song_pattern_changed.connect(_update_pattern_properties)
+		Controller.song_pattern_changed.connect(_edit_current_pattern)
 		Controller.song_instrument_changed.connect(_update_pattern_instrument)
 
 
@@ -94,10 +94,6 @@ func _edit_current_pattern() -> void:
 		_key_picker.clear_selected()
 
 
-func _update_pattern_properties() -> void:
-	pass
-
-
 func _update_pattern_instrument() -> void:
 	_instrument_picker.options = []
 	_instrument_picker.clear_selected()
@@ -139,30 +135,34 @@ func _change_instrument() -> void:
 	if not selected_item:
 		return
 	current_pattern.change_instrument(selected_item.id, Controller.current_song.instruments[selected_item.id])
+	Controller.current_song.mark_dirty()
 
 
 func _change_scale() -> void:
-	if not current_pattern:
+	if not Controller.current_song || not current_pattern:
 		return
 	
 	var selected_item := _scale_picker.get_selected()
 	if not selected_item:
 		return
 	current_pattern.change_scale(selected_item.id)
+	Controller.current_song.mark_dirty()
 
 
 func _change_key() -> void:
-	if not current_pattern:
+	if not Controller.current_song || not current_pattern:
 		return
 	
 	var selected_item := _key_picker.get_selected()
 	if not selected_item:
 		return
 	current_pattern.change_key(selected_item.id)
+	Controller.current_song.mark_dirty()
 
 
 func _shift_notes(offset: int) -> void:
-	if not current_pattern:
+	if not Controller.current_song || not current_pattern:
 		return
 	
 	current_pattern.shift_notes(offset)
+	Controller.current_song.mark_dirty()

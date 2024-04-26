@@ -549,7 +549,7 @@ func _process_note_drawing() -> void:
 
 
 func _add_note_at_cursor() -> void:
-	if not current_pattern:
+	if not Controller.current_song || not current_pattern:
 		return
 
 	var note_indexed := _get_note_at_cursor()
@@ -564,10 +564,11 @@ func _add_note_at_cursor() -> void:
 		return # Space is already occupied.
 	
 	current_pattern.add_note(note_value, note_indexed.x, _note_cursor_size)
+	Controller.current_song.mark_dirty()
 
 
 func _remove_note_at_cursor() -> void:
-	if not current_pattern:
+	if not Controller.current_song || not current_pattern:
 		return
 
 	var note_indexed := _get_note_at_cursor()
@@ -579,6 +580,7 @@ func _remove_note_at_cursor() -> void:
 	
 	var note_value: int = _note_row_value_map[note_value_index] + current_pattern.key
 	current_pattern.remove_note(note_value, note_indexed.x, true)
+	Controller.current_song.mark_dirty()
 
 
 class NoteRow:

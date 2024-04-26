@@ -151,17 +151,19 @@ func _instrument_selected() -> void:
 
 
 func _instrument_filter_changed() -> void:
-	if not current_instrument:
+	if not Controller.current_song || not current_instrument:
 		return
 	
 	var slider_value := _lowpass_slider.get_current_value()
 	current_instrument.lp_cutoff = slider_value.x
 	current_instrument.lp_resonance = slider_value.y
+	Controller.current_song.mark_dirty()
 
 
 func _instrument_volume_changed() -> void:
-	if not current_instrument:
+	if not Controller.current_song || not current_instrument:
 		return
 	
 	var slider_value := _volume_slider.get_current_value()
 	current_instrument.volume = slider_value.y
+	Controller.current_song.mark_dirty()

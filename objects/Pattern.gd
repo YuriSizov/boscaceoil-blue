@@ -14,7 +14,7 @@ signal notes_changed()
 
 const MAX_NOTE_NUMBER := 128
 const MAX_NOTE_VALUE := 104
-const RECORD_FILTER_NUMBER := 16
+const RECORD_FILTER_NUMBER := 32
 
 ## Key index.
 @export var key: int = 0:
