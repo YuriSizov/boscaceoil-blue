@@ -98,7 +98,7 @@ func change_scale(new_scale: int) -> void:
 	var valid_notes := _get_valid_note_values()
 	var i := 0
 	while i < note_amount:
-		if not valid_notes.has(notes[i].x):
+		if not valid_notes.has(notes[i].x - key):
 			remove_note_at(i)
 			i -= 1
 		i += 1
@@ -123,14 +123,14 @@ func shift_notes(offset: int) -> void:
 		index_step = -1
 	
 	for i in range(start_index, max_index, index_step):
-		var note_index := valid_notes.find(notes[i].x)
+		var note_index := valid_notes.find(notes[i].x - key)
 		var next_index := clampi(note_index + offset, 0, valid_notes.size() - 1)
 		if next_index == note_index:
 			continue
 		
 		# Don't move unless the space is unoccupied.
-		if not has_note(valid_notes[next_index], notes[i].y, true):
-			notes[i].x = valid_notes[next_index]
+		if not has_note(valid_notes[next_index] + key, notes[i].y, true):
+			notes[i].x = valid_notes[next_index] + key
 	
 	sort_notes()
 	notes_changed.emit()
