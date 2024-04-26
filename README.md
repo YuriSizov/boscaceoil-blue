@@ -29,15 +29,15 @@ A general-purpose game engine like Godot gives the project means to run on Linux
 
 _Bosca Ceoil Blue_ is still in active development, with several major features implemented, and several more still being worked on.
 
-[x] Pattern editing, scale and key adjustments.
-[x] Instrument management and tuning.
-[ ] Composition and arrangement editing.
-[ ] Advanced settings (swing, filters).
-[ ] Advanced instrument filter recording per note.
-[x] Saving and loading.
-[ ] Export and import in external formats.
-[ ] Keyboard shortcuts.
-[ ] Help, credits.
+- [x] Pattern editing, scale and key adjustments.
+- [x] Instrument management and tuning.
+- [ ] Composition and arrangement editing.
+- [ ] Advanced settings (swing, filters).
+- [ ] Advanced instrument filter recording per note.
+- [x] Saving and loading.
+- [ ] Export and import in external formats.
+- [ ] Keyboard shortcuts.
+- [ ] Help, credits.
 
 A significant part of the port involves recreation of the [SiON software synthesizer](https://github.com/keim/SiON), which the original _Bosca Ceoil_ is based on, as a GDExtension. The progress on that is tracked in a separate project, [GDSiON](https://github.com/YuriSizov/gdsion). This includes platform support, specifically for the Web platform.
 
