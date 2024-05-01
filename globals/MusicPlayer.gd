@@ -56,13 +56,34 @@ func update_driver_bpm() -> void:
 
 # Output and streaming control.
 
+func _play_note(pattern: Pattern, instrument: Instrument, note_data: Vector3i, current_time: int) -> void:
+	if note_data.x < 0 || note_data.y < 0 || note_data.y != current_time || note_data.z < 1:
+		# X — note number is invalid.
+		# Y — note position in the pattern is invalid or doesn't match current time.
+		# Z — note length is shorter than 1 unit of length.
+		return
+	if not instrument.is_note_valid(note_data):
+		return # Custom validation for different instrument types failed.
+
+	# Update the filter.
+	instrument.update_filter()
+
+	# If pattern uses recorded filter values, set them directly.
+	if pattern.record_filter_enabled:
+		instrument.change_filter_to(pattern.cutoff_graph[current_time], pattern.resonance_graph[current_time], pattern.volume_graph[current_time])
+
+	var note_value := instrument.get_note_value(note_data.x)
+	var note_voice := instrument.get_note_voice(note_data.x)
+	_driver.note_on(note_value, note_voice, note_data.z)
+
+
 ## Called automatically by the driver's timer.
 func _playback_step() -> void:
 	if not _driver || not _music_playing:
 		return
 
 	var song := Controller.current_song
-	if song.instruments.is_empty() || song.patterns.is_empty() || not song.arrangement:
+	if not song || song.instruments.is_empty() || song.patterns.is_empty() || not song.arrangement:
 		return
 
 	# Prepare the next timeline bar in the arrangement.
@@ -85,25 +106,7 @@ func _playback_step() -> void:
 
 		var active_instrument := song.instruments[pattern.instrument_idx]
 		for note_idx in pattern.note_amount:
-			var note := pattern.notes[note_idx]
-			if note.x < 0 || note.y < 0 || note.y != _pattern_time || note.z < 1:
-				# X — note number is invalid.
-				# Y — note position in the pattern is invalid or doesn't match current time.
-				# Z — note length is shorter than 1 unit of length.
-				continue
-			if not active_instrument.is_note_valid(note):
-				continue # Custom validation for different instrument types failed.
-
-			# Update the filter.
-			active_instrument.update_filter()
-
-			# If pattern uses recorded filter values, set them directly.
-			if pattern.record_filter_enabled:
-				active_instrument.change_filter_to(pattern.cutoff_graph[_pattern_time], pattern.resonance_graph[_pattern_time], pattern.volume_graph[_pattern_time])
-
-			var note_value := active_instrument.get_note_value(note.x)
-			var note_voice := active_instrument.get_note_voice(note.x)
-			_driver.note_on(note_value, note_voice, note.z)
+			_play_note(pattern, active_instrument, pattern.notes[note_idx], _pattern_time)
 
 	# Finalize the step
 	_pattern_time += 1
@@ -164,3 +167,12 @@ func stop_playback() -> void:
 	
 	_pattern_time = 0
 	playback_stopped.emit()
+
+
+func play_note(pattern: Pattern, note_data: Vector3i) -> void:
+	var song := Controller.current_song
+	if not song || song.instruments.is_empty() || song.patterns.is_empty():
+		return
+	
+	var active_instrument := song.instruments[pattern.instrument_idx]
+	_play_note(pattern, active_instrument, note_data, note_data.y)

@@ -10,6 +10,7 @@ class_name Pattern extends Resource
 signal key_changed()
 signal scale_changed()
 signal instrument_changed()
+signal note_added(note_data: Vector3i)
 signal notes_changed()
 
 const MAX_NOTE_NUMBER := 128
@@ -162,13 +163,15 @@ func add_note(value: int, position: int, length: int, autosort: bool = true) -> 
 		printerr("Pattern: Cannot add a new note, a pattern can only contain %d notes." % [ MAX_NOTE_NUMBER ])
 		return
 
-	notes[note_amount] = Vector3i(value, position, length)
+	var note_data := Vector3i(value, position, length)
+	notes[note_amount] = note_data
 	_hash = (_hash + (value * length)) % 2147483647
 
 	if autosort: # Can be disabled and called manually when many notes are added quickly.
 		sort_notes()
 	
 	note_amount += 1
+	note_added.emit(note_data)
 	notes_changed.emit()
 
 

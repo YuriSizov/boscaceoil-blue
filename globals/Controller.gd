@@ -47,6 +47,11 @@ func _ready() -> void:
 	create_new_song()
 
 
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_CLOSE_REQUEST:
+		_check_song_on_exit()
+
+
 # File dialog management.
 
 func _get_file_dialog() -> FileDialog:
@@ -80,8 +85,8 @@ func create_new_song() -> void:
 		music_player.stop_playback()
 	
 	current_song = Song.create_default_song()
-	current_pattern_index = 0
-	current_instrument_index = 0
+	_change_current_pattern(0, false)
+	_change_current_instrument(0, false)
 	
 	music_player.reset_driver()
 	music_player.start_playback()
@@ -98,6 +103,10 @@ func create_new_song_safe() -> void:
 
 
 func load_ceol_song() -> void:
+	if current_song && current_song.is_dirty():
+		# TODO: First ask to save the current one.
+		pass
+	
 	var load_dialog := _get_file_dialog()
 	load_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
 	load_dialog.add_filter("*.ceol", "Bosca Ceoil Song")
@@ -118,8 +127,8 @@ func _load_ceol_song_confirmed(path: String) -> void:
 		music_player.stop_playback()
 	
 	current_song = loaded_song
-	current_pattern_index = 0
-	current_instrument_index = 0
+	_change_current_pattern(0, false)
+	_change_current_instrument(0, false)
 	
 	music_player.reset_driver()
 	music_player.start_playback()
@@ -148,7 +157,48 @@ func _save_ceol_song_confirmed(path: String) -> void:
 	song_saved.emit()
 
 
-# Song editing.
+func _check_song_on_exit() -> void:
+	if current_song && current_song.is_dirty():
+		# TODO: Ask to save the current song.
+		pass
+
+
+# Pattern editing.
+
+func _change_current_pattern(pattern_index: int, notify: bool = true) -> void:
+	if current_pattern_index == pattern_index:
+		return
+	
+	if current_song && current_pattern_index < current_song.patterns.size():
+		var current_pattern := current_song.patterns[current_pattern_index]
+		if current_pattern.note_added.is_connected(_handle_pattern_note_added):
+			current_pattern.note_added.disconnect(_handle_pattern_note_added)
+	
+	current_pattern_index = pattern_index
+	
+	if current_song && current_pattern_index < current_song.patterns.size():
+		var current_pattern := current_song.patterns[current_pattern_index]
+		current_pattern.note_added.connect(_handle_pattern_note_added)
+
+	if notify:
+		song_pattern_changed.emit()
+
+
+func create_pattern() -> void:
+	pass
+
+
+func create_and_edit_pattern() -> void:
+	pass
+
+
+func edit_pattern(pattern_index: int) -> void:
+	var pattern_index_ := ValueValidator.index(pattern_index, current_song.patterns.size())
+	if pattern_index != pattern_index_:
+		return
+	
+	_change_current_pattern(pattern_index)
+
 
 func get_current_pattern() -> Pattern:
 	if not current_song:
@@ -157,6 +207,28 @@ func get_current_pattern() -> Pattern:
 		return null
 	
 	return current_song.patterns[current_pattern_index]
+
+
+func _handle_pattern_note_added(note_data: Vector3) -> void:
+	# Play the added note immediately if the song is not playing.
+	if music_player.is_playing():
+		return
+	
+	var current_pattern := get_current_pattern()
+	if current_pattern:
+		music_player.play_note(current_pattern, note_data)
+
+
+# Instrument editing.
+
+func _change_current_instrument(instrument_index: int, notify: bool = true) -> void:
+	if current_instrument_index == instrument_index:
+		return
+	
+	current_instrument_index = instrument_index
+	
+	if notify:
+		song_instrument_changed.emit()
 
 
 func instance_instrument_by_voice(voice_data: VoiceManager.VoiceData) -> Instrument:
@@ -189,8 +261,7 @@ func create_and_edit_instrument() -> void:
 		return
 	
 	create_instrument()
-	current_instrument_index = current_song.instruments.size() - 1
-	song_instrument_changed.emit()
+	_change_current_instrument(current_song.instruments.size() - 1)
 
 
 func edit_instrument(instrument_index: int) -> void:
@@ -198,8 +269,7 @@ func edit_instrument(instrument_index: int) -> void:
 	if instrument_index != instrument_index_:
 		return
 	
-	current_instrument_index = instrument_index
-	song_instrument_changed.emit()
+	_change_current_instrument(instrument_index)
 
 
 func delete_instrument(instrument_index: int) -> void:
@@ -227,7 +297,7 @@ func delete_instrument(instrument_index: int) -> void:
 				current_pattern_affected = true
 	
 	if current_instrument_index >= current_song.instruments.size():
-		current_instrument_index = current_song.instruments.size() - 1
+		_change_current_instrument(current_song.instruments.size() - 1, false)
 	song_instrument_changed.emit()
 	
 	if current_pattern && current_pattern_affected:
@@ -295,6 +365,8 @@ func get_instrument_theme(instrument: Instrument) -> Theme:
 	
 	return instrument_themes[instrument.color_palette]
 
+
+# Song properties editing.
 
 func set_pattern_size(value: int) -> void:
 	if not current_song:
