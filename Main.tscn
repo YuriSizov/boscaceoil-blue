@@ -18,7 +18,7 @@ layout_mode = 2
 
 [node name="Filler" type="Control" parent="Main"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 320)
+custom_minimum_size = Vector2(0, 330)
 layout_mode = 2
 
 [node name="PatternEditor" parent="Main" instance=ExtResource("2_nrw1o")]
@@ -28,7 +28,7 @@ layout_mode = 2
 
 [node name="Menu" parent="." instance=ExtResource("2_ljcdm")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 320)
+custom_minimum_size = Vector2(0, 330)
 layout_mode = 2
 size_flags_vertical = 0
 

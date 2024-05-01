@@ -19,7 +19,7 @@ var _swing_active: bool = false
 
 ## Playback step of current patterns within the active timeline bar, in notes.
 ## Caps a current song's pattern size.
-var _pattern_time: int = 0
+var _pattern_time: int = -1
 
 ## Driver's buffer size.
 var buffer_size: int = 2048
@@ -146,8 +146,11 @@ func start_playback() -> void:
 	if _music_playing:
 		return
 
-	_driver.timer_interval.connect(_playback_step)
+	if _pattern_time == -1:
+		_pattern_time = 0
 	_music_playing = true
+
+	_driver.timer_interval.connect(_playback_step)
 	playback_started.emit()
 
 
@@ -155,17 +158,17 @@ func pause_playback() -> void:
 	if not _music_playing:
 		return
 
-	_driver.timer_interval.disconnect(_playback_step)
 	_music_playing = false
+	_driver.timer_interval.disconnect(_playback_step)
 	playback_paused.emit()
 
 
 func stop_playback() -> void:
 	if _music_playing:
-		_driver.timer_interval.disconnect(_playback_step)
 		_music_playing = false
+		_driver.timer_interval.disconnect(_playback_step)
 	
-	_pattern_time = 0
+	_pattern_time = -1
 	playback_stopped.emit()
 
 

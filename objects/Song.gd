@@ -82,7 +82,6 @@ static func create_default_song() -> Song:
 
 	# There must be at least one pattern in the song.
 	var default_pattern := Pattern.new()
-	default_pattern.instrument_idx = 0
 	song.patterns.push_back(default_pattern)
 	
 	# By default make the first pattern active on the timeline.

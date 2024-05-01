@@ -44,36 +44,6 @@ grow_horizontal = 0
 grow_vertical = 2
 script = ExtResource("3_gs7e5")
 
-[node name="UpButton" type="Button" parent="NoteMapScrollbar"]
-z_index = 1
-custom_minimum_size = Vector2(0, 28)
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_bottom = 8.0
-grow_horizontal = 2
-theme_type_variation = &"ScrollbarButton"
-icon = ExtResource("4_lvxl6")
-icon_alignment = 1
-expand_icon = true
-
-[node name="DownButton" type="Button" parent="NoteMapScrollbar"]
-auto_translate_mode = 1
-z_index = 1
-custom_minimum_size = Vector2(0, 28)
-layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -8.0
-grow_horizontal = 2
-grow_vertical = 0
-theme_type_variation = &"ScrollbarButton"
-icon = ExtResource("5_cu2vu")
-icon_alignment = 1
-expand_icon = true
-
 [node name="NoteMapOverlay" type="Control" parent="."]
 layout_mode = 1
 anchors_preset = 15
@@ -83,3 +53,45 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("6_20i0e")
+
+[node name="NoteMapScrollButtons" type="Control" parent="."]
+auto_translate_mode = 1
+custom_minimum_size = Vector2(42, 0)
+layout_mode = 1
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -42.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="UpButton" type="Button" parent="NoteMapScrollButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 28)
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 28.0
+grow_horizontal = 2
+theme_type_variation = &"ScrollbarButton"
+icon = ExtResource("4_lvxl6")
+icon_alignment = 1
+expand_icon = true
+
+[node name="DownButton" type="Button" parent="NoteMapScrollButtons"]
+unique_name_in_owner = true
+auto_translate_mode = 1
+custom_minimum_size = Vector2(0, 28)
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -28.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_type_variation = &"ScrollbarButton"
+icon = ExtResource("5_cu2vu")
+icon_alignment = 1
+expand_icon = true

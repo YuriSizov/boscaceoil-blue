@@ -55,12 +55,12 @@ var _note_drawing_mode: DrawingMode = DrawingMode.DRAWING_OFF
 func _ready() -> void:
 	set_physics_process(false)
 	
-	_update_playback_cursor()
 	_update_song_sizes()
+	_update_playback_cursor()
 	_edit_current_pattern()
 
-	resized.connect(_update_playback_cursor)
 	resized.connect(_update_song_sizes)
+	resized.connect(_update_playback_cursor)
 	resized.connect(_update_whole_grid)
 	
 	mouse_entered.connect(_show_note_cursor)
@@ -188,10 +188,19 @@ func _update_max_scroll_offset() -> void:
 
 
 func _center_scroll_offset() -> void:
-	# TODO: Center on the content of the pattern if there are any notes.
+	var note_offset := _scroll_offset
 	
-	var scale_size := _scale_layout.size()
-	var note_offset := scale_size * CENTER_OCTAVE - 2
+	if current_pattern && current_pattern.note_amount > 0:
+		var available_rect := get_available_rect()
+		var note_height := get_theme_constant("note_height", "NoteMap")
+		var notes_on_screen := floori(available_rect.size.y / note_height)
+	
+		var central_note_index := current_pattern.active_note_span[0] + roundi(current_pattern.get_active_note_span_size() / 2.0)
+		note_offset = _note_value_row_map[central_note_index] - roundi(notes_on_screen / 2.0)
+	else:
+		var scale_size := _scale_layout.size()
+		note_offset = scale_size * CENTER_OCTAVE - 2
+	
 	_scroll_offset = clampi(note_offset, 0, _max_scroll_offset)
 
 
@@ -220,6 +229,7 @@ func _edit_current_pattern() -> void:
 	current_instrument = Controller.current_song.instruments[current_pattern.instrument_idx]
 	theme = Controller.get_instrument_theme(current_instrument)
 	_update_whole_grid_and_center()
+	_update_playback_cursor()
 
 
 func _update_note_maps() -> void:
@@ -324,15 +334,22 @@ func _update_playback_cursor() -> void:
 	
 	var available_rect := get_available_rect()
 	
-	# If the player is paused or stopped, park the cursor on the leftmost bar.
-	# This is normally unreachable for normal playback, as at index 0 we want
-	# to display the cursor to the right of the first note.
-	if not Controller.music_player.is_playing():
-		_overlay.playback_cursor_position = available_rect.position.x
+	# Only display the cursor when it's the current pattern that's playing.
+	if not current_pattern || not current_pattern.is_playing:
+		_overlay.playback_cursor_position = -1
 		_overlay.queue_redraw()
 		return
 	
 	var playback_note_index := Controller.music_player.get_pattern_time()
+	
+	# If the player is stopped, park the cursor on the leftmost bar.
+	# This is normally unreachable for normal playback, as at index 0 we want
+	# to display the cursor to the right of the first note.
+	if playback_note_index < 0:
+		_overlay.playback_cursor_position = available_rect.position.x
+		_overlay.queue_redraw()
+		return
+	
 	_overlay.playback_cursor_position = available_rect.position.x + playback_note_index * _note_width
 	_overlay.queue_redraw()
 

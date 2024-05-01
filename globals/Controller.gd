@@ -185,11 +185,25 @@ func _change_current_pattern(pattern_index: int, notify: bool = true) -> void:
 
 
 func create_pattern() -> void:
-	pass
+	if not current_song:
+		return
+	if current_song.patterns.size() >= Song.MAX_PATTERN_COUNT:
+		return
+	
+	var pattern := Pattern.new()
+	pattern.instrument_idx = current_instrument_index
+	current_song.patterns.push_back(pattern)
+	current_song.mark_dirty()
 
 
 func create_and_edit_pattern() -> void:
-	pass
+	if not current_song:
+		return
+	if current_song.patterns.size() >= Song.MAX_PATTERN_COUNT:
+		return
+	
+	create_pattern()
+	_change_current_pattern(current_song.patterns.size() - 1)
 
 
 func edit_pattern(pattern_index: int) -> void:
@@ -198,6 +212,35 @@ func edit_pattern(pattern_index: int) -> void:
 		return
 	
 	_change_current_pattern(pattern_index)
+
+
+func delete_pattern(pattern_index: int) -> void:
+	var pattern_index_ := ValueValidator.index(pattern_index, current_song.patterns.size())
+	if pattern_index != pattern_index_:
+		return
+	
+	current_song.patterns.remove_at(pattern_index)
+	if current_song.patterns.size() == 0: # There is nothing left, create a new one.
+		create_pattern()
+	
+	# Validate the arrangement.
+	
+	for bar in current_song.arrangement.timeline_bars:
+		for i in Arrangement.CHANNEL_NUMBER:
+			# If we delete this pattern, clear the channel.
+			if bar[i] == pattern_index:
+				bar[i] = -1
+			
+			# If we delete a pattern before this one in the list, shift the index. 
+			elif bar[i] > pattern_index:
+				bar[i] = bar[i] - 1
+	
+	# Make sure the edited pattern is valid.
+	if current_pattern_index >= current_song.patterns.size():
+		_change_current_pattern(current_song.patterns.size() - 1, false)
+	song_pattern_changed.emit()
+	
+	current_song.mark_dirty()
 
 
 func get_current_pattern() -> Pattern:
@@ -281,6 +324,8 @@ func delete_instrument(instrument_index: int) -> void:
 	if current_song.instruments.size() == 0: # There is nothing left, create a new one.
 		create_instrument()
 	
+	# Validate instruments in available patterns.
+	
 	var current_pattern := get_current_pattern()
 	var current_pattern_affected := false
 	for pattern in current_song.patterns:
@@ -296,10 +341,12 @@ func delete_instrument(instrument_index: int) -> void:
 			if pattern == current_pattern:
 				current_pattern_affected = true
 	
+	# Make sure the edited instrument is valid.
 	if current_instrument_index >= current_song.instruments.size():
 		_change_current_instrument(current_song.instruments.size() - 1, false)
 	song_instrument_changed.emit()
 	
+	# Properly signal that the instrument has changed for the edited pattern.
 	if current_pattern && current_pattern_affected:
 		var instrument := current_song.instruments[current_pattern.instrument_idx]
 		current_pattern.change_instrument(current_pattern.instrument_idx, instrument)
@@ -337,7 +384,7 @@ func set_current_instrument(category: String, instrument_name: String) -> void:
 	if current_instrument_index < 0 || current_instrument_index >= current_song.instruments.size():
 		return
 	
-	var voice_data := Controller.voice_manager.get_voice_data(category, instrument_name)
+	var voice_data := voice_manager.get_voice_data(category, instrument_name)
 	_set_current_instrument_by_voice(voice_data)
 
 
@@ -347,7 +394,7 @@ func set_current_instrument_by_category(category: String) -> void:
 	if current_instrument_index < 0 || current_instrument_index >= current_song.instruments.size():
 		return
 	
-	var voice_data := Controller.voice_manager.get_first_voice_data(category)
+	var voice_data := voice_manager.get_first_voice_data(category)
 	_set_current_instrument_by_voice(voice_data)
 
 

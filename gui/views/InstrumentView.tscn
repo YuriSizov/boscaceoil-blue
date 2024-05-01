@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://cw48njslxrtsl"]
+[gd_scene load_steps=5 format=3 uid="uid://cw48njslxrtsl"]
 
 [ext_resource type="Script" path="res://gui/views/InstrumentView.gd" id="1_wchjl"]
-[ext_resource type="PackedScene" uid="uid://lj57mjqt7ce7" path="res://gui/views/instrument_view/InstrumentDock.tscn" id="2_rexoc"]
+[ext_resource type="PackedScene" uid="uid://bbbxnaw4cute2" path="res://gui/widgets/ItemDock.tscn" id="2_qebn0"]
+[ext_resource type="Script" path="res://gui/views/instrument_view/InstrumentDock.gd" id="3_6nc7o"]
 [ext_resource type="PackedScene" uid="uid://1satggoreys0" path="res://gui/views/instrument_view/InstrumentSettings.tscn" id="3_88ydm"]
 
 [node name="InstrumentView" type="MarginContainer"]
@@ -16,9 +17,10 @@ script = ExtResource("1_wchjl")
 [node name="Layout" type="HBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="InstrumentDock" parent="Layout" instance=ExtResource("2_rexoc")]
-custom_minimum_size = Vector2(400, 0)
+[node name="InstrumentDock" parent="Layout" instance=ExtResource("2_qebn0")]
 layout_mode = 2
+script = ExtResource("3_6nc7o")
+add_button_text = "ADD NEW INSTRUMENT"
 
 [node name="InstrumentSettings" parent="Layout" instance=ExtResource("3_88ydm")]
 layout_mode = 2

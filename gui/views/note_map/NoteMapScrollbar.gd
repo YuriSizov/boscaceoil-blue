@@ -13,8 +13,8 @@ signal shifted_down()
 var octave_rows: Array[NoteMap.OctaveRow] = []
 
 var _button_holder: ButtonHolder = null
-@onready var _up_button: Button = $UpButton
-@onready var _down_button: Button = $DownButton
+@onready var _up_button: Button = %UpButton
+@onready var _down_button: Button = %DownButton
 
 
 func _ready() -> void:

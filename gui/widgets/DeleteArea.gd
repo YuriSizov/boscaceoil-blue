@@ -6,7 +6,7 @@
 
 class_name DeleteArea extends Label
 
-const FADE_DURATION := 0.12
+const FADE_DURATION := 0.06
 
 var _hovered: bool = false
 var _tween: Tween = null
@@ -14,6 +14,7 @@ var _tween: Tween = null
 
 func _ready() -> void:
 	offset_top = -size.y
+	mouse_filter = MOUSE_FILTER_IGNORE
 	
 	mouse_entered.connect(func() -> void:
 		_hovered = true
@@ -39,6 +40,7 @@ func fade_in() -> void:
 	
 	_tween = get_tree().create_tween()
 	_tween.tween_property(self, "offset_top", 0, FADE_DURATION)
+	_tween.tween_callback(set_mouse_filter.bind(MOUSE_FILTER_STOP))
 
 
 func fade_out() -> void:
@@ -47,3 +49,4 @@ func fade_out() -> void:
 	
 	_tween = get_tree().create_tween()
 	_tween.tween_property(self, "offset_top", -size.y, FADE_DURATION)
+	_tween.tween_callback(set_mouse_filter.bind(MOUSE_FILTER_IGNORE))

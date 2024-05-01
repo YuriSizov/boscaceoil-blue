@@ -7,8 +7,14 @@
 @tool
 class_name PatternMap extends Control
 
-## Control size-dependent vertical size of a pattern.
+const PATTERN_WIDTH_MIN := 0.5
+const PATTERN_WIDTH_MAX := 1.0
+const PATTERN_WIDTH_STEP := 0.05
+
+## Control-size-dependent vertical size of a pattern.
 var _pattern_height: float = 0
+## Controllable scale for the horizontal size of a pattern.
+var _pattern_width_scale: float = 1.0
 ## Offset, in number of timeline bars/pattern columns.
 var _scroll_offset: int = 0
 ## Window-size dependent limit.
@@ -29,6 +35,17 @@ func _ready() -> void:
 	_update_scroll_offset()
 	resized.connect(_update_pattern_height)
 	resized.connect(_update_scroll_offset)
+
+
+func _gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		var mb := event as InputEventMouseButton
+		
+		if event.is_pressed():
+			if mb.button_index == MOUSE_BUTTON_WHEEL_UP:
+				_resize_pattern_width(1)
+			elif mb.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+				_resize_pattern_width(-1)
 
 
 func _physics_process(_delta: float) -> void:
@@ -65,6 +82,14 @@ func _draw() -> void:
 
 # Drawables and visuals.
 
+func _resize_pattern_width(value_sign: int) -> void:
+	_pattern_width_scale = clampf(_pattern_width_scale + value_sign * PATTERN_WIDTH_STEP, PATTERN_WIDTH_MIN, PATTERN_WIDTH_MAX)
+	_update_scroll_offset()
+	
+	queue_redraw()
+	_track.queue_redraw()
+
+
 func get_available_rect() -> Rect2:
 	var available_rect := Rect2(Vector2.ZERO, size)
 	if not is_inside_tree():
@@ -87,7 +112,7 @@ func _update_pattern_height() -> void:
 
 func _update_scroll_offset() -> void:
 	var available_rect := get_available_rect()
-	var pattern_width := get_theme_constant("pattern_width", "PatternMap")
+	var pattern_width := get_theme_constant("pattern_width", "PatternMap") * _pattern_width_scale
 	var patterns_on_screen := floori(available_rect.size.x / pattern_width)
 	_max_scroll_offset = Arrangement.BAR_NUMBER - patterns_on_screen + 1
 
@@ -102,10 +127,10 @@ func _update_grid() -> void:
 
 	# Get reference data.
 	var available_rect := get_available_rect()
-	var pattern_width := get_theme_constant("pattern_width", "PatternMap")
+	var pattern_width := get_theme_constant("pattern_width", "PatternMap") * _pattern_width_scale
 
 	# Iterate through all the patterns and complete collections.
-	var filled_width := 0
+	var filled_width := 0.0
 	var index := 0
 	while filled_width < (available_rect.size.x + 2 * pattern_width): # Give it some buffer.
 		var pattern_index: int = index + _scroll_offset

@@ -47,6 +47,9 @@ const RECORD_FILTER_NUMBER := 32
 var _hash: int = 0
 ## Flag whether the pattern is being played on this step.
 var is_playing: bool = false
+## Index of used unique note values, used when drawing a mini note map.
+var active_note_span: PackedInt32Array = PackedInt32Array()
+var _active_note_counts: Dictionary = {}
 
 
 func _init() -> void:
@@ -89,6 +92,7 @@ func change_key(new_key: int) -> void:
 	for i in note_amount:
 		notes[i].x += key_shift
 	
+	_reindex_active_notes()
 	key_changed.emit()
 
 
@@ -104,6 +108,7 @@ func change_scale(new_scale: int) -> void:
 			i -= 1
 		i += 1
 	
+	_reindex_active_notes()
 	scale_changed.emit()
 
 
@@ -134,6 +139,7 @@ func shift_notes(offset: int) -> void:
 			notes[i].x = valid_notes[next_index] + key
 	
 	sort_notes()
+	_reindex_active_notes()
 	notes_changed.emit()
 
 
@@ -155,6 +161,48 @@ func change_instrument(new_idx: int, instrument: Instrument) -> void:
 
 # Note map.
 
+func _reindex_active_notes() -> void:
+	active_note_span.clear()
+	_active_note_counts.clear()
+	
+	for i in note_amount:
+		var note_value := notes[i].x
+		if not active_note_span.has(note_value):
+			active_note_span.push_back(note_value)
+			_active_note_counts[note_value] = 0
+		
+		_active_note_counts[note_value] += 1
+	
+	active_note_span.sort()
+
+
+func _index_note(note_value: int) -> void:
+	if not active_note_span.has(note_value):
+		active_note_span.push_back(note_value)
+		active_note_span.sort()
+		_active_note_counts[note_value] = 0
+	
+	_active_note_counts[note_value] += 1
+
+
+func _unindex_note(note_value: int) -> void:
+	if not active_note_span.has(note_value):
+		return
+	
+	_active_note_counts[note_value] -= 1
+	if _active_note_counts[note_value] <= 0:
+		var span_idx := active_note_span.find(note_value)
+		active_note_span.remove_at(span_idx)
+		_active_note_counts.erase(note_value)
+
+
+func get_active_note_span_size() -> int:
+	if note_amount <= 0:
+		return 0
+	
+	return active_note_span[active_note_span.size() - 1] - active_note_span[0] + 1
+
+
 func add_note(value: int, position: int, length: int, autosort: bool = true) -> void:
 	if value < 0 || position < 0:
 		printerr("Pattern: Cannot add a note %d at %d, values cannot be less than zero." % [ value, position ])
@@ -169,6 +217,7 @@ func add_note(value: int, position: int, length: int, autosort: bool = true) -> 
 
 	if autosort: # Can be disabled and called manually when many notes are added quickly.
 		sort_notes()
+	_index_note(value)
 	
 	note_amount += 1
 	note_added.emit(note_data)
@@ -209,7 +258,7 @@ func remove_note(value: int, position: int, exact: bool = false) -> void:
 	if value < 0 || position < 0:
 		printerr("Pattern: Cannot remove a note %d at %d, values cannot be less than zero." % [ value, position ])
 		return
-
+	
 	var i := 0
 	while i < note_amount:
 		if notes[i].x == value:
@@ -229,9 +278,11 @@ func remove_note_at(index: int) -> void:
 	var index_ := ValueValidator.index(index, note_amount, "Pattern: Cannot remove a note at index %d, index is outside of the valid range [%d, %d]." % [ index, 0, note_amount - 1 ])
 	if index_ != index:
 		return
-
+	
+	_unindex_note(notes[index].x)
+	
 	# Erase the note by shifting the array.
 	for i in range(index, note_amount):
 		notes[i] = notes[i + 1] # Copy by value.
-
+	
 	note_amount -= 1

@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://cee0lffxnyap0"]
+[gd_scene load_steps=6 format=3 uid="uid://cee0lffxnyap0"]
 
 [ext_resource type="Script" path="res://gui/views/pattern_map/PatternMap.gd" id="1_a0jjr"]
 [ext_resource type="Script" path="res://gui/views/pattern_map/PatternMapOverlay.gd" id="2_207q8"]
-[ext_resource type="Script" path="res://gui/views/pattern_map/PatternMapDock.gd" id="2_a4bax"]
 [ext_resource type="Script" path="res://gui/views/pattern_map/PatternMapTrack.gd" id="2_wby5k"]
+[ext_resource type="PackedScene" uid="uid://bbbxnaw4cute2" path="res://gui/widgets/ItemDock.tscn" id="4_icej2"]
+[ext_resource type="Script" path="res://gui/views/pattern_map/PatternMapDock.gd" id="5_kq8wj"]
 
 [node name="PatternMap" type="Control"]
 auto_translate_mode = 1
@@ -36,34 +37,12 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("2_207q8")
 
-[node name="PatternMapDock" type="Control" parent="."]
-auto_translate_mode = 1
+[node name="PatternMapDock" parent="." instance=ExtResource("4_icej2")]
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 1
 anchors_preset = 11
 anchor_left = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
 grow_horizontal = 0
-grow_vertical = 2
-script = ExtResource("2_a4bax")
-
-[node name="AddPattern" type="Button" parent="PatternMapDock"]
-unique_name_in_owner = true
-auto_translate_mode = 1
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -84.0
-offset_top = -36.0
-offset_right = 84.0
-offset_bottom = -8.0
-grow_horizontal = 2
-grow_vertical = 0
-size_flags_horizontal = 3
-size_flags_vertical = 4
-disabled = true
-text = "ADD NEW"
+script = ExtResource("5_kq8wj")
+add_button_text = "ADD NEW"
+drop_alignment = 2

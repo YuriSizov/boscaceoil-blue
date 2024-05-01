@@ -94,7 +94,6 @@ func set_pattern(bar_idx: int, channel_idx: int, value: int) -> void:
 	if bar_index_ != bar_idx || channel_index_ != channel_idx:
 		return
 
-	# TODO: Check if this does actually modify the original Packed*Array.
 	timeline_bars[bar_idx][channel_idx] = value
 	if bar_idx >= timeline_length:
 		timeline_length = bar_idx + 1
@@ -106,7 +105,6 @@ func clear_pattern(bar_idx: int, channel_idx: int) -> void:
 	if bar_index_ != bar_idx || channel_index_ != channel_idx:
 		return
 
-	# TODO: Check if this does actually modify the original Packed*Array.
 	timeline_bars[bar_idx][channel_idx] = -1
 
 	var length_check := 0
