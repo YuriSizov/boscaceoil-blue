@@ -91,7 +91,7 @@ func _playback_step() -> void:
 		_pattern_time = 0
 		_update_swing()
 
-		song.progress_arrangement()
+		song.arrangement.progress_loop()
 		song.reset_playing_patterns()
 
 	# Play everything in the current timeline bar.

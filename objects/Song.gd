@@ -92,16 +92,6 @@ static func create_default_song() -> Song:
 
 # Composition.
 
-func progress_arrangement() -> bool:
-	var next_bar := arrangement.current_bar_idx + 1
-	if next_bar >= arrangement.loop_end:
-		arrangement.current_bar_idx = arrangement.loop_start
-		return true # Looped.
-	else:
-		arrangement.current_bar_idx = next_bar
-		return false # Didn't loop.
-
-
 func reset_arrangement() -> void:
 	arrangement.current_bar_idx = arrangement.loop_start
 

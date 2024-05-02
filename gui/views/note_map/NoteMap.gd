@@ -195,7 +195,7 @@ func _center_scroll_offset() -> void:
 		var note_height := get_theme_constant("note_height", "NoteMap")
 		var notes_on_screen := floori(available_rect.size.y / note_height)
 	
-		var central_note_index := current_pattern.active_note_span[0] + roundi(current_pattern.get_active_note_span_size() / 2.0)
+		var central_note_index := current_pattern.active_note_span[roundi(current_pattern.active_note_span.size() / 2.0)]
 		note_offset = _note_value_row_map[central_note_index] - roundi(notes_on_screen / 2.0)
 	else:
 		var scale_size := _scale_layout.size()
@@ -332,18 +332,17 @@ func _update_playback_cursor() -> void:
 	if Engine.is_editor_hint():
 		return
 	
-	var available_rect := get_available_rect()
-	
 	# Only display the cursor when it's the current pattern that's playing.
 	if not current_pattern || not current_pattern.is_playing:
 		_overlay.playback_cursor_position = -1
 		_overlay.queue_redraw()
 		return
 	
+	var available_rect := get_available_rect()
 	var playback_note_index := Controller.music_player.get_pattern_time()
 	
-	# If the player is stopped, park the cursor on the leftmost bar.
-	# This is normally unreachable for normal playback, as at index 0 we want
+	# If the player is stopped, park the cursor all the way to the left.
+	# This is normally unreachable by playback, as when playing at index 0 we want
 	# to display the cursor to the right of the first note.
 	if playback_note_index < 0:
 		_overlay.playback_cursor_position = available_rect.position.x
@@ -356,7 +355,7 @@ func _update_playback_cursor() -> void:
 
 # Grid layout and coordinates.
 
-func _get_note_at_cursor() -> Vector2i:
+func _get_cell_at_cursor() -> Vector2i:
 	var available_rect: Rect2 = get_available_rect()
 	var note_height := get_theme_constant("note_height", "NoteMap")
 	
@@ -365,19 +364,19 @@ func _get_note_at_cursor() -> Vector2i:
 		return Vector2i(-1, -1)
 	
 	var mouse_normalized := mouse_position - available_rect.position
-	var note_indexed := Vector2i(0,0)
-	note_indexed.x = clampi(floori(mouse_normalized.x / _note_width), 0, pattern_size - 1)
-	note_indexed.y = floori((available_rect.size.y - mouse_normalized.y) / note_height)
-	return note_indexed
+	var cell_indexed := Vector2i(0, 0)
+	cell_indexed.x = clampi(floori(mouse_normalized.x / _note_width), 0, pattern_size - 1)
+	cell_indexed.y = floori((available_rect.size.y - mouse_normalized.y) / note_height)
+	return cell_indexed
 
 
-func _get_indexed_note_position(indexed: Vector2i) -> Vector2:
+func _get_cell_position(cell_indexed: Vector2i) -> Vector2:
 	var available_rect := get_available_rect()
 	var note_height := get_theme_constant("note_height", "NoteMap")
 	
 	return Vector2(
-		available_rect.position.x + indexed.x * _note_width,
-		available_rect.size.y - (indexed.y + 1) * note_height + available_rect.position.y
+		available_rect.position.x + cell_indexed.x * _note_width,
+		available_rect.size.y - (cell_indexed.y + 1) * note_height + available_rect.position.y
 	)
 
 
@@ -504,7 +503,7 @@ func _update_active_notes() -> void:
 		var note := ActiveNote.new()
 		note.note_value = note_value_normalized
 		note.note_index = note_data.y
-		note.position = _get_indexed_note_position(Vector2i(note_data.y, row_index - _scroll_offset))
+		note.position = _get_cell_position(Vector2i(note_data.y, row_index - _scroll_offset))
 		note.length = note_data.z
 		_active_notes.push_back(note)
 	
@@ -540,9 +539,9 @@ func _process_note_cursor() -> void:
 		_overlay.queue_redraw()
 		return
 	
-	var note_indexed := _get_note_at_cursor()
+	var note_indexed := _get_cell_at_cursor()
 	if note_indexed.x >= 0 && note_indexed.y >= 0:
-		_overlay.note_cursor_position = _get_indexed_note_position(note_indexed)
+		_overlay.note_cursor_position = _get_cell_position(note_indexed)
 	else:
 		_overlay.note_cursor_position = Vector2(-1, -1)
 	
@@ -569,7 +568,7 @@ func _add_note_at_cursor() -> void:
 	if not Controller.current_song || not current_pattern:
 		return
 
-	var note_indexed := _get_note_at_cursor()
+	var note_indexed := _get_cell_at_cursor()
 	if note_indexed.x < 0 || note_indexed.y < 0:
 		return
 	var note_value_index := note_indexed.y + _scroll_offset
@@ -588,7 +587,7 @@ func _remove_note_at_cursor() -> void:
 	if not Controller.current_song || not current_pattern:
 		return
 
-	var note_indexed := _get_note_at_cursor()
+	var note_indexed := _get_cell_at_cursor()
 	if note_indexed.x < 0 || note_indexed.y < 0:
 		return
 	var note_value_index := note_indexed.y + _scroll_offset

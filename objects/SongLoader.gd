@@ -21,6 +21,8 @@ static func load(path: String) -> Song:
 	var file_contents := file.get_as_text()
 	var reader := SongFileReader.new(path, file_contents)
 	
+	# TODO: Add a validation step after loading, to update song data and remove invalid bits.
+	
 	if reader.get_version() == 1:
 		return _load_v1(reader)
 	if reader.get_version() == 2:
@@ -72,12 +74,16 @@ static func _load_v1(reader: SongFileReader) -> Song:
 		pattern.instrument_idx = reader.read_int()
 		reader.read_int() # Empty read, we can determine the color palette by the instrument.
 		
-		pattern.note_amount = reader.read_int()
-		for j in pattern.note_amount:
-			pattern.notes[j].x = reader.read_int() # Note value
-			pattern.notes[j].z = reader.read_int() # Note length
-			pattern.notes[j].y = reader.read_int() # Note position
+		var note_amount := reader.read_int()
+		for j in note_amount:
+			var note_value := reader.read_int()
+			var note_length := reader.read_int()
+			var note_position := reader.read_int()
 			reader.read_int() # Empty read, this value is unused.
+			pattern.add_note(note_value, note_position, note_length, false)
+		
+		pattern.sort_notes()
+		pattern.reindex_active_notes()
 		
 		pattern.record_filter_enabled = (reader.read_int() == 1)
 		if pattern.record_filter_enabled:
@@ -149,12 +155,16 @@ static func _load_v2(reader: SongFileReader) -> Song:
 		pattern.instrument_idx = reader.read_int()
 		reader.read_int() # Empty read, we can determine the color palette by the instrument.
 		
-		pattern.note_amount = reader.read_int()
-		for j in pattern.note_amount:
-			pattern.notes[j].x = reader.read_int() # Note value
-			pattern.notes[j].z = reader.read_int() # Note length
-			pattern.notes[j].y = reader.read_int() # Note position
+		var note_amount := reader.read_int()
+		for j in note_amount:
+			var note_value := reader.read_int()
+			var note_length := reader.read_int()
+			var note_position := reader.read_int()
 			reader.read_int() # Empty read, this value is unused.
+			pattern.add_note(note_value, note_position, note_length, false)
+		
+		pattern.sort_notes()
+		pattern.reindex_active_notes()
 		
 		pattern.record_filter_enabled = (reader.read_int() == 1)
 		if pattern.record_filter_enabled:
@@ -229,12 +239,16 @@ static func _load_v3(reader: SongFileReader) -> Song:
 		pattern.instrument_idx = reader.read_int()
 		reader.read_int() # Empty read, we can determine the color palette by the instrument.
 		
-		pattern.note_amount = reader.read_int()
-		for j in pattern.note_amount:
-			pattern.notes[j].x = reader.read_int() # Note value
-			pattern.notes[j].z = reader.read_int() # Note length
-			pattern.notes[j].y = reader.read_int() # Note position
+		var note_amount := reader.read_int()
+		for j in note_amount:
+			var note_value := reader.read_int()
+			var note_length := reader.read_int()
+			var note_position := reader.read_int()
 			reader.read_int() # Empty read, this value is unused.
+			pattern.add_note(note_value, note_position, note_length, false)
+		
+		pattern.sort_notes()
+		pattern.reindex_active_notes()
 		
 		pattern.record_filter_enabled = (reader.read_int() == 1)
 		if pattern.record_filter_enabled:

@@ -30,6 +30,9 @@ func _ready() -> void:
 	
 	_edit_current_pattern()
 	
+	_update_theme()
+	theme_changed.connect(_update_theme)
+	
 	if not Engine.is_editor_hint():
 		item_created.connect(Controller.create_and_edit_pattern)
 		item_selected.connect(Controller.edit_pattern)
@@ -38,11 +41,6 @@ func _ready() -> void:
 		Controller.song_loaded.connect(_edit_current_pattern)
 		Controller.song_pattern_changed.connect(_edit_current_pattern)
 		Controller.song_instrument_changed.connect(queue_redraw)
-
-
-func _notification(what: int) -> void:
-	if what == NOTIFICATION_THEME_CHANGED:
-		_update_theme()
 
 
 func _update_theme() -> void:
@@ -142,12 +140,16 @@ func _edit_current_pattern() -> void:
 		return
 	
 	if current_pattern:
+		current_pattern.key_changed.disconnect(queue_redraw)
+		current_pattern.scale_changed.disconnect(queue_redraw)
 		current_pattern.instrument_changed.disconnect(queue_redraw)
 		current_pattern.notes_changed.disconnect(queue_redraw)
 	
 	current_pattern = Controller.get_current_pattern()
 
 	if current_pattern:
+		current_pattern.key_changed.connect(queue_redraw)
+		current_pattern.scale_changed.connect(queue_redraw)
 		current_pattern.instrument_changed.connect(queue_redraw)
 		current_pattern.notes_changed.connect(queue_redraw)
 	

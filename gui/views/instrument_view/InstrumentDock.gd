@@ -22,6 +22,9 @@ var _item_gutter_size: Vector2 = Vector2.ZERO
 func _ready() -> void:
 	super()
 	
+	_update_theme()
+	theme_changed.connect(_update_theme)
+	
 	if not Engine.is_editor_hint():
 		item_created.connect(Controller.create_and_edit_instrument)
 		item_selected.connect(Controller.edit_instrument)
@@ -29,11 +32,6 @@ func _ready() -> void:
 
 		Controller.song_loaded.connect(queue_redraw)
 		Controller.song_instrument_changed.connect(queue_redraw)
-
-
-func _notification(what: int) -> void:
-	if what == NOTIFICATION_THEME_CHANGED:
-		_update_theme()
 
 
 func _update_theme() -> void:

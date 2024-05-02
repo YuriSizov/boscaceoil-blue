@@ -7,6 +7,8 @@
 ## A container for the song's timeline, and the pattern arrangement on it.
 class_name Arrangement extends Resource
 
+signal loop_changed()
+
 ## Maximum number of bars (the limit is arbitrary).
 const BAR_NUMBER := 1000
 ## Maximum number of channels.
@@ -138,3 +140,25 @@ func paste_pattern_range(at_index: int) -> void:
 
 	for i in range(at_index, at_index + copy_buffer.size()):
 		timeline_bars[i] = copy_buffer[i - at_index] # Copy by value.
+
+
+# Loop.
+
+func set_loop(start_idx: int, end_idx: int) -> void:
+	loop_start = start_idx
+	loop_end = end_idx
+	
+	if current_bar_idx < loop_start || current_bar_idx >= loop_end:
+		current_bar_idx = loop_start
+	
+	loop_changed.emit()
+
+
+func progress_loop() -> bool:
+	var next_bar := current_bar_idx + 1
+	if next_bar >= loop_end:
+		current_bar_idx = loop_start
+		return true # Looped.
+	else:
+		current_bar_idx = next_bar
+		return false # Didn't loop.

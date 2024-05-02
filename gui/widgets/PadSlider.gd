@@ -59,10 +59,7 @@ func _notification(what: int) -> void:
 
 
 func _physics_process(_delta: float) -> void:
-	if not _hovering && not _dragging:
-		return
-	
-	_process_hovering()
+	_process_dragging()
 
 
 func _gui_input(event: InputEvent) -> void:
@@ -123,7 +120,7 @@ func _stop_hovering() -> void:
 	set_physics_process(_hovering || _dragging)
 
 
-func _process_hovering() -> void:
+func _process_dragging() -> void:
 	if not _dragging:
 		return
 	

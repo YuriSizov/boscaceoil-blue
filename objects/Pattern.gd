@@ -92,7 +92,7 @@ func change_key(new_key: int) -> void:
 	for i in note_amount:
 		notes[i].x += key_shift
 	
-	_reindex_active_notes()
+	reindex_active_notes()
 	key_changed.emit()
 
 
@@ -108,7 +108,7 @@ func change_scale(new_scale: int) -> void:
 			i -= 1
 		i += 1
 	
-	_reindex_active_notes()
+	reindex_active_notes()
 	scale_changed.emit()
 
 
@@ -139,7 +139,7 @@ func shift_notes(offset: int) -> void:
 			notes[i].x = valid_notes[next_index] + key
 	
 	sort_notes()
-	_reindex_active_notes()
+	reindex_active_notes()
 	notes_changed.emit()
 
 
@@ -161,7 +161,7 @@ func change_instrument(new_idx: int, instrument: Instrument) -> void:
 
 # Note map.
 
-func _reindex_active_notes() -> void:
+func reindex_active_notes() -> void:
 	active_note_span.clear()
 	_active_note_counts.clear()
 	
@@ -203,7 +203,7 @@ func get_active_note_span_size() -> int:
 	return active_note_span[active_note_span.size() - 1] - active_note_span[0] + 1
 
 
-func add_note(value: int, position: int, length: int, autosort: bool = true) -> void:
+func add_note(value: int, position: int, length: int, full_update: bool = true) -> void:
 	if value < 0 || position < 0:
 		printerr("Pattern: Cannot add a note %d at %d, values cannot be less than zero." % [ value, position ])
 		return
@@ -215,13 +215,15 @@ func add_note(value: int, position: int, length: int, autosort: bool = true) -> 
 	notes[note_amount] = note_data
 	_hash = (_hash + (value * length)) % 2147483647
 
-	if autosort: # Can be disabled and called manually when many notes are added quickly.
+	if full_update: # Can be disabled and called manually when many notes are added quickly.
 		sort_notes()
-	_index_note(value)
+		_index_note(value)
 	
 	note_amount += 1
-	note_added.emit(note_data)
-	notes_changed.emit()
+	
+	if full_update:
+		note_added.emit(note_data)
+		notes_changed.emit()
 
 
 func sort_notes() -> void:

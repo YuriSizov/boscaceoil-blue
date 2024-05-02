@@ -66,6 +66,10 @@ func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton && event.is_pressed():
 		var mb := event as InputEventMouseButton
 		
+		if mb.button_index != MOUSE_BUTTON_LEFT:
+			accept_event()
+			return
+		
 		var item_index := 0
 		for item_rect in _item_rects:
 			if item_rect.has_point(mb.position):
@@ -75,6 +79,8 @@ func _gui_input(event: InputEvent) -> void:
 					_change_scroll_offset(1)
 				else:
 					item_selected.emit(item_index + _scroll_offset)
+				
+				accept_event()
 				break
 			
 			item_index += 1
