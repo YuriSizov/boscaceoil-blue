@@ -17,8 +17,6 @@ func _draw() -> void:
 	var border_width := get_theme_constant("border_width", "PatternMap")
 	var half_border_width := float(border_width) / 2.0
 	
-	# Draw active patterns.
-	
 	# Draw the playback cursor.
 	
 	if playback_cursor_position >= 0:

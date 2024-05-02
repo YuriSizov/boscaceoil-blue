@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://cee0lffxnyap0"]
+[gd_scene load_steps=7 format=3 uid="uid://cee0lffxnyap0"]
 
 [ext_resource type="Script" path="res://gui/views/pattern_map/PatternMap.gd" id="1_a0jjr"]
 [ext_resource type="Script" path="res://gui/views/pattern_map/PatternMapOverlay.gd" id="2_207q8"]
 [ext_resource type="Script" path="res://gui/views/pattern_map/PatternMapTrack.gd" id="2_wby5k"]
+[ext_resource type="Script" path="res://gui/views/pattern_map/PatternMapItems.gd" id="3_8l50s"]
 [ext_resource type="PackedScene" uid="uid://bbbxnaw4cute2" path="res://gui/widgets/ItemDock.tscn" id="4_icej2"]
 [ext_resource type="Script" path="res://gui/views/pattern_map/PatternMapDock.gd" id="5_kq8wj"]
 
@@ -28,6 +29,16 @@ grow_horizontal = 2
 grow_vertical = 0
 mouse_default_cursor_shape = 2
 script = ExtResource("2_wby5k")
+
+[node name="PatternMapItems" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("3_8l50s")
 
 [node name="PatternMapOverlay" type="Control" parent="."]
 layout_mode = 1

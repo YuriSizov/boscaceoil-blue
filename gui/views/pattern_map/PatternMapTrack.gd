@@ -9,7 +9,7 @@ extends Control
 
 signal loop_changed(starts_at: int, ends_at: int)
 
-var pattern_cols: Array[PatternMap.PatternCol] = []
+var arrangement_bars: Array[PatternMap.ArrangementBar] = []
 var pattern_width: float = 0
 var loop_start_index: int = -1
 var loop_end_index: int = -1
@@ -24,7 +24,7 @@ var _dragging: bool = false
 var _hovered_col: int = -1
 
 ## Range of the drag span.
-var _drag_span_range: Vector2 = Vector2(-1, -1)
+var _drag_span_range: Vector2i = Vector2i(-1, -1)
 ## Position of the drag span.
 var _drag_span_position: Vector2 = Vector2(-1, -1)
 ## Size of the drag span.
@@ -86,14 +86,14 @@ func _draw() -> void:
 	
 	# Draw bar lines and labels.
 	
-	for pattern in pattern_cols:
-		var col_position := pattern.grid_position
+	for bar in arrangement_bars:
+		var col_position := bar.grid_position
 		var border_size := Vector2(border_width, available_rect.size.y)
 		draw_rect(Rect2(col_position, border_size), border_color)
 		
 		var label_position := col_position + Vector2(12, available_rect.size.y - 4)
 		var shadow_position := label_position + shadow_size
-		var label_text := "%d" % [ pattern.pattern_index + 1 ]
+		var label_text := "%d" % [ bar.bar_index + 1 ]
 		
 		draw_string(font, shadow_position, label_text, HORIZONTAL_ALIGNMENT_LEFT, -1, label_font_size, label_shadow_color)
 		draw_string(font, label_position, label_text, HORIZONTAL_ALIGNMENT_LEFT, -1, label_font_size, label_font_color)
@@ -115,7 +115,7 @@ func _draw() -> void:
 		elif _loop_cursor_position.x >= 0 && _loop_cursor_position.y >= 0:
 			var cursor_position := _loop_cursor_position + Vector2(half_border_width, half_border_width)
 			var cursor_size := Vector2(pattern_width, available_rect.size.y) - Vector2(border_width, border_width)
-			cursor_label_text = "%d" % [ pattern_cols[_hovered_col].pattern_index + 1 ]
+			cursor_label_text = "%d" % [ arrangement_bars[_hovered_col].bar_index + 1 ]
 			
 			draw_rect(Rect2(cursor_position, cursor_size), cursor_color, false, cursor_width)
 		
@@ -131,8 +131,8 @@ func _draw() -> void:
 	
 	if loop_start_index >= 0 && loop_end_index > loop_start_index:
 		var loop_end_normalized := loop_end_index - 1
-		var first_visible_col := pattern_cols[0].pattern_index
-		var last_visible_col := pattern_cols[pattern_cols.size() - 1].pattern_index
+		var first_visible_col := arrangement_bars[0].bar_index
+		var last_visible_col := arrangement_bars[arrangement_bars.size() - 1].bar_index
 		
 		# Skip if loop is outside of the visible range.
 		if loop_start_index <= last_visible_col && loop_end_normalized >= first_visible_col:
@@ -144,11 +144,11 @@ func _draw() -> void:
 			var loop_end_position := Vector2(available_rect.size.x + loop_width, loop_y)
 		
 			if loop_start_index >= first_visible_col:
-				var loop_start_col := pattern_cols[loop_start_index - first_visible_col]
+				var loop_start_col := arrangement_bars[loop_start_index - first_visible_col]
 				loop_start_position.x = loop_start_col.grid_position.x
 			
 			if loop_end_normalized <= last_visible_col:
-				var loop_end_col := pattern_cols[loop_end_normalized - first_visible_col]
+				var loop_end_col := arrangement_bars[loop_end_normalized - first_visible_col]
 				loop_end_position.x = loop_end_col.grid_position.x + pattern_width
 			
 			var loop_size := Vector2(loop_end_position.x - loop_start_position.x, loop_width)
@@ -222,7 +222,7 @@ func _process_loop_cursor() -> void:
 		queue_redraw()
 		return
 	
-	var projected_position = get_local_mouse_position()
+	var projected_position := get_local_mouse_position()
 	projected_position.y = 0
 	var cell_indexed := _get_cell_at_position(projected_position)
 	if cell_indexed.x >= 0 && cell_indexed.y >= 0:

@@ -18,9 +18,7 @@ var _font_color: Color = Color.WHITE
 var _shadow_color: Color = Color.WHITE
 var _shadow_size: Vector2 = Vector2.ZERO
 
-var _item_height: int = -1
-var _item_gutter_size: Vector2 = Vector2.ZERO
-
+var _item_gutter_width: float = 0.0
 var _note_border_width: int = 0
 var _note_color: Color = Color.WHITE
 
@@ -50,9 +48,8 @@ func _update_theme() -> void:
 	_shadow_color = get_theme_color("shadow_color", "Label")
 	_shadow_size = Vector2(get_theme_constant("shadow_offset_x", "Label"), get_theme_constant("shadow_offset_y", "Label"))
 	
-	_item_height = get_theme_constant("item_height", "ItemDock")
-	_item_gutter_size = _font.get_string_size("00", HORIZONTAL_ALIGNMENT_LEFT, -1, _font_size) + Vector2(20, 0)
-	_item_gutter_size.y = _item_height
+	var item_gutter_size := _font.get_string_size("00", HORIZONTAL_ALIGNMENT_LEFT, -1, _font_size) + Vector2(20, 0)
+	_item_gutter_width = item_gutter_size.x
 	
 	_note_border_width = get_theme_constant("note_border_width", "PatternMap")
 	_note_color = get_theme_color("active_note_color", "NoteMap")
@@ -63,8 +60,8 @@ func _draw_item(on_control: Control, item_index: int, item_rect: Rect2) -> void:
 	var instrument := Controller.current_song.instruments[pattern.instrument_idx]
 
 	var note_area := Rect2(
-		item_rect.position + Vector2(_item_gutter_size.x + _note_border_width, _note_border_width),
-		Vector2(item_rect.size.x - _item_gutter_size.x - 2 * _note_border_width, item_rect.size.y - 2 * _note_border_width)
+		item_rect.position + Vector2(_item_gutter_width + _note_border_width, _note_border_width),
+		Vector2(item_rect.size.x - _item_gutter_width - 2 * _note_border_width, item_rect.size.y - 2 * _note_border_width)
 	)
 	
 	# Draw instrument-themed background and gutter.
@@ -77,8 +74,8 @@ func _draw_item(on_control: Control, item_index: int, item_rect: Rect2) -> void:
 	on_control.draw_rect(note_area, item_color)
 	
 	var label_underline := Rect2(
-		item_rect.position + Vector2(0, 3.0 * _item_height / 5.0),
-		Vector2(_item_gutter_size.x - _note_border_width, 2.0 * _item_height / 5.0)
+		item_rect.position + Vector2(0, 3.0 * item_rect.size.y / 5.0),
+		Vector2(_item_gutter_width - _note_border_width, 2.0 * item_rect.size.y / 5.0)
 	)
 	on_control.draw_rect(label_underline, item_color)
 
