@@ -16,6 +16,8 @@ var current_pattern: Pattern = null
 ## Currently edited arrangement for the song.
 var current_arrangement: Arrangement = null
 
+var _hovering: bool = false
+
 ## Control-size-dependent vertical size of a pattern.
 var _pattern_height: float = 0
 ## Controllable scale for the horizontal size of a pattern.
@@ -25,8 +27,6 @@ var _pattern_width: float = 0
 var _scroll_offset: int = 0
 ## Window-size dependent limit.
 var _max_scroll_offset: int = -1
-## Flag whether the cursor for drawing patterns is visible.
-var _pattern_cursor_visible: bool = false
 
 var _arrangement_channels: Array[ArrangementChannel] = []
 var _arrangement_bars: Array[ArrangementBar] = []
@@ -43,15 +43,18 @@ var _pattern_base_width: int = 0
 var _item_gutter_width: float = 0.0
 var _note_border_width: int = 0
 
-@onready var _track: Control = $PatternMapTrack
-@onready var _items: Control = $PatternMapItems
-@onready var _overlay: Control = $PatternMapOverlay
-@onready var _dock: Control = $PatternMapDock
+@onready var _track: Control = %PatternMapTrack
+@onready var _timeline: Control = %PatternMapTimeline
+@onready var _items: Control = %PatternMapItems
+@onready var _overlay: Control = %PatternMapOverlay
+@onready var _scrollbar: Control = %PatternMapScrollbar
+@onready var _dock: Control = %PatternMapDock
 
 
 func _ready() -> void:
 	set_physics_process(false)
 	
+	_scrollbar.set_button_offset(_timeline.size.y, -_track.size.y)
 	_update_theme()
 
 	theme_changed.connect(_update_theme)
@@ -67,12 +70,14 @@ func _ready() -> void:
 	resized.connect(_update_playback_cursor)
 	resized.connect(_update_whole_grid)
 	
-	mouse_entered.connect(_show_pattern_cursor)
-	mouse_exited.connect(_hide_pattern_cursor)
-	
-	_track.loop_changed.connect(_change_arrangement_loop)
+	mouse_entered.connect(_start_hovering)
+	mouse_exited.connect(_stop_hovering)
 	
 	if not Engine.is_editor_hint():
+		_track.loop_changed.connect(_change_arrangement_loop)
+		_scrollbar.shifted_right.connect(_change_scroll_offset.bind(1))
+		_scrollbar.shifted_left.connect(_change_scroll_offset.bind(-1))
+		
 		Controller.song_loaded.connect(_edit_current_arrangement)
 		Controller.song_pattern_changed.connect(_edit_current_pattern)
 		
@@ -89,7 +94,7 @@ func _update_theme() -> void:
 	_pattern_base_width = get_theme_constant("pattern_width", "PatternMap")
 	
 	var font := get_theme_default_font()
-	var font_size := get_theme_default_font_size()
+	var font_size := get_theme_font_size("pattern_font_size", "PatternMap")
 	var item_gutter_size := font.get_string_size("00", HORIZONTAL_ALIGNMENT_LEFT, -1, font_size) + Vector2(20, 0)
 	_item_gutter_width = item_gutter_size.x
 	
@@ -109,6 +114,7 @@ func _gui_input(event: InputEvent) -> void:
 
 func _physics_process(_delta: float) -> void:
 	_process_pattern_cursor()
+	_process_scrollbar_hover()
 
 
 func _draw() -> void:
@@ -137,19 +143,31 @@ func get_available_rect() -> Rect2:
 		return available_rect
 
 	if _dock:
-		available_rect.size.x -= _dock.size.x
+		available_rect.size.x -= _dock.get_minimum_size().x
 	if _track:
 		available_rect.size.y -= _track.size.y
+	if _timeline:
+		available_rect.size.y -= _timeline.size.y
+		available_rect.position.y += _timeline.size.y
 
 	return available_rect
 
 
 # Scrolling.
 
+func _change_scroll_offset(delta: int) ->  void:
+	_scroll_offset = clampi(_scroll_offset + delta, 0, _max_scroll_offset)
+	
+	_timeline.scroll_offset = _scroll_offset
+	
+	_update_playback_cursor()
+	_update_whole_grid()
+
+
 func _update_max_scroll_offset() -> void:
 	var available_rect := get_available_rect()
-	var patterns_on_screen := floori(available_rect.size.x / _pattern_width)
-	_max_scroll_offset = Arrangement.BAR_NUMBER - patterns_on_screen + 1
+	var bars_on_screen := floori(available_rect.size.x / _pattern_width)
+	_max_scroll_offset = Arrangement.BAR_NUMBER - bars_on_screen + 1
 
 	_scroll_offset = clamp(_scroll_offset, 0, _max_scroll_offset)
 	queue_redraw()
@@ -205,12 +223,13 @@ func _update_playback_cursor() -> void:
 	# This is normally unreachable by playback, as when playing at index 0 we want
 	# to display the cursor to the right of the first note.
 	if playback_note_index < 0:
-		_overlay.playback_cursor_position = available_rect.position.x + (current_arrangement.loop_start * pattern_size) * note_width
+		var visible_bar_index := current_arrangement.loop_start - _scroll_offset
+		_overlay.playback_cursor_position = available_rect.position.x + (visible_bar_index * pattern_size) * note_width
 		_overlay.queue_redraw()
-		return
-	
-	_overlay.playback_cursor_position = available_rect.position.x + (current_arrangement.current_bar_idx * pattern_size + playback_note_index) * note_width
-	_overlay.queue_redraw()
+	else:
+		var visible_bar_index := current_arrangement.current_bar_idx - _scroll_offset
+		_overlay.playback_cursor_position = available_rect.position.x + (visible_bar_index * pattern_size + playback_note_index) * note_width
+		_overlay.queue_redraw()
 
 
 # Grid layout and coordinates.
@@ -246,6 +265,7 @@ func _resize_pattern_width(value_sign: int) -> void:
 	_pattern_width = _pattern_base_width * _pattern_width_scale
 
 	_track.pattern_width = _pattern_width
+	_timeline.pattern_width = _pattern_width
 	_overlay.pattern_width = _pattern_width
 	
 	_update_playback_cursor()
@@ -283,7 +303,7 @@ func _update_grid_layout() -> void:
 	for i in Arrangement.CHANNEL_NUMBER:
 		var channel := ArrangementChannel.new()
 		channel.channel_index = i
-		channel.position = Vector2(0, available_rect.position.y + i * _pattern_height)
+		channel.position = Vector2(0, i * _pattern_height)
 		channel.grid_position = channel.position + available_rect.position
 		channel.label_position = channel.position + Vector2(0, -6)
 		
@@ -294,6 +314,7 @@ func _update_grid_layout() -> void:
 	
 	queue_redraw()
 	_track.queue_redraw()
+	_timeline.queue_redraw()
 	_items.queue_redraw()
 	_overlay.queue_redraw()
 
@@ -301,10 +322,12 @@ func _update_grid_layout() -> void:
 func _update_active_patterns() -> void:
 	if Engine.is_editor_hint():
 		return
-
+	
 	_active_patterns.clear()
 	
 	if Controller.current_song:
+		var available_rect := get_available_rect()
+		
 		for i in Controller.current_song.patterns.size():
 			var active_pattern := ActivePattern.new()
 			active_pattern.pattern_index = i
@@ -364,10 +387,11 @@ func _update_active_patterns() -> void:
 					if pattern_index < 0:
 						continue
 					
-					# TODO: Account for scroll offset (and potentially optimize by avoiding bars outside of view).
-					
 					var active_pattern := _active_patterns[pattern_index]
-					var pattern_position := _get_cell_position(Vector2i(i, j))
+					var pattern_position := _get_cell_position(Vector2i(i - _scroll_offset, j))
+					if pattern_position.x < 0 || (pattern_position.x + _pattern_width) > available_rect.size.x:
+						continue # Skip patterns outside of the visible area.
+					
 					active_pattern.grid_positions.push_back(pattern_position)
 	
 	_items.active_patterns = _active_patterns
@@ -386,22 +410,30 @@ func _update_active_loop() -> void:
 	_track.queue_redraw()
 
 
-# Pattern cursor and drawing.
+# Hovering.
 
-func _show_pattern_cursor() -> void:
-	_pattern_cursor_visible = true
+func _start_hovering() -> void:
+	_hovering = true
 	_process_pattern_cursor()
+	_process_scrollbar_hover()
 	set_physics_process(true)
 
 
-func _hide_pattern_cursor() -> void:
+func _stop_hovering() -> void:
+	_hovering = false
 	set_physics_process(false)
-	_pattern_cursor_visible = false
 	_process_pattern_cursor()
+	_process_scrollbar_hover()
 
+
+func _process_scrollbar_hover() -> void:
+	_scrollbar.test_mouse_position()
+
+
+# Pattern cursor and drawing.
 
 func _process_pattern_cursor() -> void:
-	if not _pattern_cursor_visible:
+	if not _hovering:
 		_overlay.pattern_cursor_position = Vector2(-1, -1)
 		_overlay.queue_redraw()
 		return

@@ -87,7 +87,7 @@ func _draw() -> void:
 	# Draw bar lines and labels.
 	
 	for bar in arrangement_bars:
-		var col_position := bar.grid_position
+		var col_position := bar.position
 		var border_size := Vector2(border_width, available_rect.size.y)
 		draw_rect(Rect2(col_position, border_size), border_color)
 		
@@ -106,8 +106,8 @@ func _draw() -> void:
 	
 		# Draw drag cursor.
 		if _drag_span_position.x >= 0 && _drag_span_position.y >= 0:
-			# TODO: Account for scroll offset.
-			cursor_label_text = "%d:%d" % [ _drag_span_range.x + 1, _drag_span_range.y + 1 ]
+			var scroll_offset := arrangement_bars[0].bar_index
+			cursor_label_text = "%d:%d" % [ scroll_offset + _drag_span_range.x + 1, scroll_offset + _drag_span_range.y + 1 ]
 			
 			draw_rect(Rect2(_drag_span_position, _drag_span_size), cursor_color)
 		
@@ -238,8 +238,6 @@ func _process_loop_cursor() -> void:
 func _update_drag_span() -> void:
 	var available_rect: Rect2 = get_available_rect()
 	
-	# TODO: Account for scroll offset.
-	
 	if _dragged_from_col < 0 || _dragged_to_col < 0:
 		_drag_span_position = Vector2(-1, -1)
 		_drag_span_size = Vector2(-1, -1)
@@ -272,9 +270,8 @@ func _start_dragging() -> void:
 func _stop_dragging() -> void:
 	_dragging = false
 	
-	# TODO: Account for scroll offset.
-	
-	loop_changed.emit(_drag_span_range.x, _drag_span_range.y + 1) # In song metadata the end is exclusive.
+	var scroll_offset := arrangement_bars[0].bar_index
+	loop_changed.emit(scroll_offset + _drag_span_range.x, scroll_offset + _drag_span_range.y + 1) # In song metadata the end is exclusive.
 	
 	_dragged_from_col = -1
 	_dragged_to_col = -1
@@ -284,8 +281,6 @@ func _stop_dragging() -> void:
 func _process_dragging() -> void:
 	if not _dragging:
 		return
-	
-	# TODO: Account for scroll offset.
 	
 	if _hovered_col == -1:
 		return

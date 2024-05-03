@@ -8,6 +8,13 @@
 ## composition data.
 class_name MusicPlayer extends Object
 
+const BEATS_PER_NOTE := 0.0625 # Beat is split into 16 intervals.
+const NOTE_LENGTH := 4.0 # In 1/16ths of a beat.
+const NOTE_SWING_THRESHOLD := 0.2 # In percent of NOTE_LENGTH.
+
+const NOTE_SWING_MIN := NOTE_SWING_THRESHOLD * NOTE_LENGTH
+const NOTE_SWING_MAX := 2 * NOTE_LENGTH - NOTE_SWING_THRESHOLD * NOTE_LENGTH
+
 signal playback_started()
 signal playback_tick()
 signal playback_paused()
@@ -33,8 +40,8 @@ func _init(controller: Node) -> void:
 # Initialization.
 
 func initialize() -> void:
-	_driver.set_beat_callback_interval(1)
-	_driver.set_timer_interval(1)
+	_driver.set_beat_callback_interval(1) # In 1/16ths of a beat, can only be one of: 1, 2, 4, 8, 16.
+	_driver.set_timer_interval(NOTE_LENGTH)
 	print("Driver initialized.")
 
 
@@ -74,7 +81,7 @@ func _play_note(pattern: Pattern, instrument: Instrument, note_data: Vector3i, c
 
 	var note_value := instrument.get_note_value(note_data.x)
 	var note_voice := instrument.get_note_voice(note_data.x)
-	_driver.note_on(note_value, note_voice, note_data.z)
+	_driver.note_on(note_value, note_voice, note_data.z * NOTE_LENGTH)
 
 
 ## Called automatically by the driver's timer.
@@ -120,18 +127,18 @@ func _update_swing() -> void:
 
 	if Controller.current_song.swing == 0:
 		if _swing_active:
-			_driver.set_timer_interruption(1)
+			_driver.set_timer_interval(NOTE_LENGTH)
 			_swing_active = false
 		return
 
 	_swing_active = true
 
 	# Swing goes from -10 to 10, F-Swing goes from 0.2 to 1.8
-	var fswing: float = 0.2 + (Controller.current_song.swing + 10.0) * (1.8 - 0.2) / 20.0
+	var fswing: float = NOTE_SWING_MIN + (Controller.current_song.swing + 10.0) * (NOTE_SWING_MAX - NOTE_SWING_MIN) / 20.0
 	if _pattern_time % 2 == 0:
-		_driver.set_timer_interruption(fswing)
+		_driver.set_timer_interval(fswing)
 	else:
-		_driver.set_timer_interruption(2 - fswing)
+		_driver.set_timer_interval(2 - fswing)
 
 
 func is_playing() -> bool:
@@ -140,6 +147,14 @@ func is_playing() -> bool:
 
 func get_pattern_time() -> int:
 	return _pattern_time
+
+
+func get_note_time_length() -> float:
+	if not Controller.current_song:
+		return 0.0
+	
+	var beat_length_in_sec := 60.0 / Controller.current_song.bpm
+	return beat_length_in_sec * NOTE_LENGTH * BEATS_PER_NOTE
 
 
 func start_playback() -> void:
