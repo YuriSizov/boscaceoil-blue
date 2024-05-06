@@ -48,13 +48,11 @@ var _note_border_width: int = 0
 @onready var _items: Control = %PatternMapItems
 @onready var _overlay: Control = %PatternMapOverlay
 @onready var _scrollbar: Control = %PatternMapScrollbar
-@onready var _dock: Control = %PatternMapDock
 
 
 func _ready() -> void:
 	set_physics_process(false)
 	
-	_scrollbar.set_button_offset(_timeline.size.y, -_track.size.y)
 	_update_theme()
 
 	theme_changed.connect(_update_theme)
@@ -74,9 +72,18 @@ func _ready() -> void:
 	mouse_exited.connect(_stop_hovering)
 	
 	if not Engine.is_editor_hint():
+		_scrollbar.set_button_offset(_timeline.size.y, -_track.size.y)
+		
 		_track.loop_changed.connect(_change_arrangement_loop)
+		_track.bar_inserted.connect(_insert_timeline_bar)
+		_track.bar_removed.connect(_remove_timeline_bar)
+		_track.bars_copied.connect(_copy_timeline_bars)
+		_track.bars_pasted.connect(_paste_timeline_bars)
+		
 		_scrollbar.shifted_right.connect(_change_scroll_offset.bind(1))
 		_scrollbar.shifted_left.connect(_change_scroll_offset.bind(-1))
+		_track.shifted_right.connect(_change_scroll_offset.bind(1))
+		_track.shifted_left.connect(_change_scroll_offset.bind(-1))
 		
 		Controller.song_loaded.connect(_edit_current_arrangement)
 		Controller.song_pattern_changed.connect(_edit_current_pattern)
@@ -110,6 +117,12 @@ func _gui_input(event: InputEvent) -> void:
 				_resize_pattern_width(1)
 			elif mb.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 				_resize_pattern_width(-1)
+			elif mb.button_index == MOUSE_BUTTON_LEFT:
+				_select_pattern_at_cursor()
+			elif mb.button_index == MOUSE_BUTTON_RIGHT:
+				_clear_pattern_at_cursor()
+			elif mb.button_index == MOUSE_BUTTON_MIDDLE:
+				_clone_pattern_at_cursor()
 
 
 func _physics_process(_delta: float) -> void:
@@ -141,9 +154,7 @@ func get_available_rect() -> Rect2:
 	var available_rect := Rect2(Vector2.ZERO, size)
 	if not is_inside_tree():
 		return available_rect
-
-	if _dock:
-		available_rect.size.x -= _dock.get_minimum_size().x
+	
 	if _track:
 		available_rect.size.y -= _track.size.y
 	if _timeline:
@@ -160,6 +171,7 @@ func _change_scroll_offset(delta: int) ->  void:
 	
 	_timeline.scroll_offset = _scroll_offset
 	
+	_update_scrollbar()
 	_update_playback_cursor()
 	_update_whole_grid()
 
@@ -169,8 +181,23 @@ func _update_max_scroll_offset() -> void:
 	var bars_on_screen := floori(available_rect.size.x / _pattern_width)
 	_max_scroll_offset = Arrangement.BAR_NUMBER - bars_on_screen + 1
 
-	_scroll_offset = clamp(_scroll_offset, 0, _max_scroll_offset)
+	_scroll_offset = clampi(_scroll_offset, 0, _max_scroll_offset)
+	_update_scrollbar()
 	queue_redraw()
+
+
+func _update_scrollbar() -> void:
+	if not is_inside_tree():
+		return
+	
+	_scrollbar.can_scroll_left = _scroll_offset > 0
+	_scrollbar.can_scroll_right = _scroll_offset < _max_scroll_offset
+	
+	_track.can_scroll_left = _scrollbar.can_scroll_left
+	_track.can_scroll_right = _scrollbar.can_scroll_right
+	
+	_scrollbar.queue_redraw()
+	_track.queue_redraw()
 
 
 # State visualization.
@@ -389,7 +416,7 @@ func _update_active_patterns() -> void:
 					
 					var active_pattern := _active_patterns[pattern_index]
 					var pattern_position := _get_cell_position(Vector2i(i - _scroll_offset, j))
-					if pattern_position.x < 0 || (pattern_position.x + _pattern_width) > available_rect.size.x:
+					if pattern_position.x < 0 || pattern_position.x > available_rect.size.x:
 						continue # Skip patterns outside of the visible area.
 					
 					active_pattern.grid_positions.push_back(pattern_position)
@@ -447,6 +474,43 @@ func _process_pattern_cursor() -> void:
 	_overlay.queue_redraw()
 
 
+func _get_drag_data(_at_position: Vector2) -> Variant:
+	var pattern_idx := _get_pattern_at_cursor()
+	if pattern_idx < 0:
+		return null
+	
+	var drag_data := DraggedPattern.new()
+	drag_data.pattern_index = pattern_idx
+	
+	var pattern := _active_patterns[pattern_idx]
+	var preview := Control.new()
+	preview.size = pattern.item_size
+	preview.draw.connect(_items.draw_item.bind(preview, pattern, Vector2.ZERO, true))
+	set_drag_preview(preview)
+	
+	return drag_data
+
+
+func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
+	if data is ItemDock.ItemDragData && (data as ItemDock.ItemDragData).source_id == Controller.DragSources.PATTERN_DOCK:
+		return true
+	
+	if data is DraggedPattern:
+		return true
+	
+	return false
+
+
+func _drop_data(_at_position: Vector2, data: Variant) -> void:
+	if data is ItemDock.ItemDragData && (data as ItemDock.ItemDragData).source_id == Controller.DragSources.PATTERN_DOCK:
+		var item_data := data as ItemDock.ItemDragData
+		_set_pattern_at_cursor(item_data.item_index)
+	
+	if data is DraggedPattern:
+		var pattern_data := data as DraggedPattern
+		_set_pattern_at_cursor(pattern_data.pattern_index)
+
+
 # Editing.
 
 func _edit_current_arrangement() -> void:
@@ -456,8 +520,10 @@ func _edit_current_arrangement() -> void:
 		return
 	
 	if current_arrangement:
+		current_arrangement.patterns_changed.disconnect(_update_active_patterns)
 		current_arrangement.loop_changed.disconnect(_update_active_loop)
 		current_arrangement.loop_changed.disconnect(_update_playback_cursor)
+	
 	if current_pattern:
 		current_pattern.key_changed.disconnect(_update_active_patterns)
 		current_pattern.scale_changed.disconnect(_update_active_patterns)
@@ -468,8 +534,10 @@ func _edit_current_arrangement() -> void:
 	current_pattern = Controller.get_current_pattern()
 
 	if current_arrangement:
+		current_arrangement.patterns_changed.connect(_update_active_patterns)
 		current_arrangement.loop_changed.connect(_update_active_loop)
 		current_arrangement.loop_changed.connect(_update_playback_cursor)
+	
 	if current_pattern:
 		current_pattern.key_changed.connect(_update_active_patterns)
 		current_pattern.scale_changed.connect(_update_active_patterns)
@@ -502,11 +570,116 @@ func _edit_current_pattern() -> void:
 	
 	_update_active_patterns()
 
+
+func _get_pattern_at_cursor() -> int:
+	if not current_arrangement:
+		return -1
+	
+	var cell := _get_cell_at_cursor()
+	var bar_index := cell.x + _scroll_offset
+	if bar_index < 0 || bar_index >= current_arrangement.timeline_length:
+		return -1
+	if cell.y < 0 || cell.y >= Arrangement.CHANNEL_NUMBER:
+		return -1
+	
+	return current_arrangement.timeline_bars[bar_index][cell.y]
+
+
+func _set_pattern_at_cursor(pattern_idx: int) -> void:
+	if not current_arrangement || not Controller.current_song:
+		return
+	
+	var cell := _get_cell_at_cursor()
+	var bar_index := cell.x + _scroll_offset
+	if bar_index < 0 || bar_index >= Arrangement.BAR_NUMBER:
+		return
+	if cell.y < 0 || cell.y >= Arrangement.CHANNEL_NUMBER:
+		return
+	
+	current_arrangement.set_pattern(bar_index, cell.y, pattern_idx)
+	Controller.current_song.mark_dirty()
+
+
+func _select_pattern_at_cursor() -> void:
+	if not current_arrangement || not Controller.current_song:
+		return
+	
+	var pattern_idx := _get_pattern_at_cursor()
+	if pattern_idx < 0:
+		return
+	
+	Controller.edit_pattern(pattern_idx)
+
+
+func _clear_pattern_at_cursor() -> void:
+	if not current_arrangement || not Controller.current_song:
+		return
+	
+	var pattern_idx := _get_pattern_at_cursor()
+	if pattern_idx < 0:
+		return
+	
+	var cell := _get_cell_at_cursor()
+	var bar_index := cell.x + _scroll_offset
+	current_arrangement.clear_pattern(bar_index, cell.y)
+	Controller.current_song.mark_dirty()
+
+
+func _clone_pattern_at_cursor() -> void:
+	if not current_arrangement || not Controller.current_song:
+		return
+	
+	var pattern_idx := _get_pattern_at_cursor()
+	if pattern_idx < 0:
+		return
+	var variation_idx := Controller.clone_pattern(pattern_idx)
+	if variation_idx < 0:
+		return
+	
+	var cell := _get_cell_at_cursor()
+	var bar_index := cell.x + _scroll_offset
+	current_arrangement.set_pattern(bar_index, cell.y, variation_idx)
+	Controller.current_song.mark_dirty()
+
+
 func _change_arrangement_loop(starts_at: int, ends_at: int) -> void:
 	if not current_arrangement:
 		return
 	
 	current_arrangement.set_loop(starts_at, ends_at)
+	Controller.current_song.mark_dirty()
+
+
+func _insert_timeline_bar(at_index: int) -> void:
+	if not current_arrangement:
+		return
+	
+	current_arrangement.insert_bar(at_index + _scroll_offset)
+	Controller.current_song.mark_dirty()
+
+
+func _remove_timeline_bar(at_index: int) -> void:
+	if not current_arrangement:
+		return
+	if current_arrangement.timeline_length <= 0:
+		return
+	
+	current_arrangement.remove_bar(at_index + _scroll_offset)
+	Controller.current_song.mark_dirty()
+
+
+func _copy_timeline_bars() -> void:
+	if not current_arrangement:
+		return
+	
+	current_arrangement.copy_bar_range(current_arrangement.loop_start, current_arrangement.loop_end)
+
+
+func _paste_timeline_bars(at_index: int) -> void:
+	if not current_arrangement:
+		return
+	
+	current_arrangement.paste_bar_range(at_index + _scroll_offset)
 	Controller.current_song.mark_dirty()
 
 
@@ -536,3 +709,7 @@ class ActivePattern:
 	var notes: Array[Rect2] = []
 	
 	var grid_positions: PackedVector2Array = PackedVector2Array()
+
+
+class DraggedPattern:
+	var pattern_index: int = -1

@@ -13,6 +13,11 @@ signal song_sizes_changed()
 signal song_pattern_changed()
 signal song_instrument_changed()
 
+enum DragSources {
+	PATTERN_DOCK,
+	INSTRUMENT_DOCK,
+}
+
 var voice_manager: VoiceManager = null
 var music_player: MusicPlayer = null
 
@@ -50,6 +55,15 @@ func _ready() -> void:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
 		_check_song_on_exit()
+
+
+func _shortcut_input(event: InputEvent) -> void:
+	if event.is_action_pressed("bosca_pause"):
+		if music_player.is_playing():
+			music_player.pause_playback()
+		else:
+			music_player.start_playback()
+		get_viewport().set_input_as_handled()
 
 
 # File dialog management.
@@ -207,11 +221,32 @@ func create_and_edit_pattern() -> void:
 
 
 func edit_pattern(pattern_index: int) -> void:
+	if not current_song:
+		return
+	
 	var pattern_index_ := ValueValidator.index(pattern_index, current_song.patterns.size())
 	if pattern_index != pattern_index_:
 		return
 	
 	_change_current_pattern(pattern_index)
+
+
+func clone_pattern(pattern_index: int) -> int:
+	if not current_song:
+		return -1
+	if current_song.patterns.size() >= Song.MAX_PATTERN_COUNT:
+		return -1
+	
+	var pattern_index_ := ValueValidator.index(pattern_index, current_song.patterns.size())
+	if pattern_index != pattern_index_:
+		return -1
+	
+	var cloned_index := current_song.patterns.size()
+	var pattern := current_song.patterns[pattern_index].clone()
+	current_song.patterns.push_back(pattern)
+
+	_change_current_pattern(cloned_index)
+	return cloned_index
 
 
 func delete_pattern(pattern_index: int) -> void:

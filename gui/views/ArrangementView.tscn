@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://c1oriajgloul5"]
+[gd_scene load_steps=5 format=3 uid="uid://c1oriajgloul5"]
 
 [ext_resource type="Script" path="res://gui/views/ArrangementView.gd" id="1_j5oys"]
 [ext_resource type="PackedScene" uid="uid://cee0lffxnyap0" path="res://gui/views/pattern_map/PatternMap.tscn" id="2_m5ovh"]
+[ext_resource type="PackedScene" uid="uid://bbbxnaw4cute2" path="res://gui/widgets/ItemDock.tscn" id="3_16dfn"]
+[ext_resource type="Script" path="res://gui/views/pattern_map/PatternDock.gd" id="4_pbhaf"]
 
 [node name="ArrangementView" type="MarginContainer"]
 auto_translate_mode = 1
@@ -12,5 +14,18 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_j5oys")
 
-[node name="PatternMap" parent="." instance=ExtResource("2_m5ovh")]
+[node name="Layout" type="HBoxContainer" parent="."]
 layout_mode = 2
+
+[node name="PatternMap" parent="Layout" instance=ExtResource("2_m5ovh")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PatternDock" parent="Layout" instance=ExtResource("3_16dfn")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+script = ExtResource("4_pbhaf")
+add_button_text = "ADD NEW"
+drop_alignment = 2

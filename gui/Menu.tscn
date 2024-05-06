@@ -25,6 +25,7 @@ layout_mode = 2
 [node name="FileTab" parent="Navigation" instance=ExtResource("2_l3q7q")]
 layout_mode = 2
 size_flags_horizontal = 3
+focus_mode = 0
 button_pressed = true
 button_group = ExtResource("3_kmmx3")
 label_text = "FILE"
@@ -33,6 +34,7 @@ label_text = "FILE"
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 3
+focus_mode = 0
 button_group = ExtResource("3_kmmx3")
 label_text = "ARRANGEMENT"
 
@@ -40,6 +42,7 @@ label_text = "ARRANGEMENT"
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 3
+focus_mode = 0
 button_group = ExtResource("3_kmmx3")
 label_text = "INSTRUMENT"
 
@@ -47,12 +50,14 @@ label_text = "INSTRUMENT"
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 3
+focus_mode = 0
 button_group = ExtResource("3_kmmx3")
 label_text = "ADVANCED"
 
 [node name="FullscreenToggle" type="Button" parent="Navigation"]
 custom_minimum_size = Vector2(64, 28)
 layout_mode = 2
+focus_mode = 0
 theme_type_variation = &"FullscreenButton"
 icon = ExtResource("2_kmlcb")
 icon_alignment = 1

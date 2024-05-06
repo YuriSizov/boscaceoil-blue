@@ -71,6 +71,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
+focus_mode = 0
 disabled = true
 text = "CREDITS"
 
@@ -80,6 +81,7 @@ auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
+focus_mode = 0
 disabled = true
 text = "HELP"
 
@@ -97,6 +99,7 @@ alignment = 1
 unique_name_in_owner = true
 custom_minimum_size = Vector2(48, 32)
 layout_mode = 2
+focus_mode = 0
 theme_type_variation = &"PlaybackButton"
 icon = ExtResource("3_jbhik")
 flat = true
@@ -108,6 +111,7 @@ unique_name_in_owner = true
 auto_translate_mode = 1
 custom_minimum_size = Vector2(48, 32)
 layout_mode = 2
+focus_mode = 0
 theme_type_variation = &"PlaybackButton"
 icon = ExtResource("4_np651")
 flat = true
@@ -119,6 +123,7 @@ unique_name_in_owner = true
 auto_translate_mode = 1
 custom_minimum_size = Vector2(48, 32)
 layout_mode = 2
+focus_mode = 0
 theme_type_variation = &"PlaybackButton"
 icon = ExtResource("5_7b7gn")
 flat = true
@@ -150,6 +155,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
+focus_mode = 0
 text = "NEW SONG"
 
 [node name="Layout" type="HBoxContainer" parent="Layout/BaseControls/Rows/SongFileActions"]
@@ -163,6 +169,7 @@ auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
+focus_mode = 0
 text = "LOAD"
 
 [node name="SaveSong" type="Button" parent="Layout/BaseControls/Rows/SongFileActions/Layout"]
@@ -171,6 +178,7 @@ auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
+focus_mode = 0
 text = "SAVE"
 
 [node name="ImportExport" type="HBoxContainer" parent="Layout/BaseControls/Rows"]
@@ -185,6 +193,7 @@ auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
+focus_mode = 0
 disabled = true
 text = "IMPORT..."
 
@@ -193,6 +202,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
+focus_mode = 0
 disabled = true
 text = "EXPORT..."
 

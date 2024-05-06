@@ -21,6 +21,7 @@ var _item_gutter_size: Vector2 = Vector2.ZERO
 
 func _ready() -> void:
 	super()
+	drag_source_id = Controller.DragSources.INSTRUMENT_DOCK
 	
 	_update_theme()
 	theme_changed.connect(_update_theme)

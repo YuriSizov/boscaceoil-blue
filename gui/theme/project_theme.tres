@@ -415,6 +415,7 @@ PatternMap/constants/border_width = 3
 PatternMap/constants/note_border_width = 3
 PatternMap/constants/pattern_width = 164
 PatternMap/constants/track_loop_width = 3
+PatternMap/constants/track_scroll_area_width = 64
 PatternMap/font_sizes/pattern_font_size = 18
 PatternMap/font_sizes/track_font_size = 12
 PatternSettingsBar/base_type = &"HBoxContainer"

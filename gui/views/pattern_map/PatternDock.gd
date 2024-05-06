@@ -25,6 +25,7 @@ var _note_color: Color = Color.WHITE
 
 func _ready() -> void:
 	super()
+	drag_source_id = Controller.DragSources.PATTERN_DOCK
 	
 	_edit_current_pattern()
 	

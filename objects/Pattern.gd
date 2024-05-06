@@ -60,6 +60,26 @@ func _init() -> void:
 		record_filter_values.push_back(Vector3i(Instrument.VOLUME_MAX, Instrument.FILTER_CUTOFF_MAX, 0))
 
 
+func clone() -> Pattern:
+	var cloned := Pattern.new()
+	cloned.key = key
+	cloned.scale = scale
+	cloned.instrument_idx = instrument_idx
+	
+	for note_index in note_amount:
+		var note := notes[note_index]
+		cloned.add_note(note.x, note.y, note.z, false)
+	cloned.reindex_active_notes()
+	
+	cloned.record_filter_enabled = record_filter_enabled
+	var filter_index := 0
+	for filter_value in record_filter_values:
+		cloned.record_filter_values[filter_index] = Vector3i(filter_value.x, filter_value.y, filter_value.z)
+		filter_index += 1
+	
+	return cloned
+
+
 # Properties.
 
 func _get_valid_note_values() -> Array[int]:

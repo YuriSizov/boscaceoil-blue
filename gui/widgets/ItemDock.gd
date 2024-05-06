@@ -39,14 +39,14 @@ var _has_next_pager: bool = false
 
 var _hovering: bool = false
 var _hovered_item: int = -1
-var _drag_unique_hash: int = -1
+var drag_source_id: int = -1
 
 @onready var _add_button: Button = %AddItem
 @onready var _delete_area: DeleteArea = %DeleteArea
 
 
 func _init() -> void:
-	_drag_unique_hash = hash(get_canvas_item().get_id())
+	drag_source_id = hash(get_canvas_item().get_id())
 
 
 func _ready() -> void:
@@ -54,11 +54,13 @@ func _ready() -> void:
 	_update_button_label()
 	_update_delete_area()
 	
-	_delete_area.set_drag_forwarding(Callable(), _can_drop_data_fw, _drop_data_fw)
+	_update_max_item_amount()
+	resized.connect(_update_max_item_amount)
 	
 	mouse_entered.connect(_start_hovering)
 	mouse_exited.connect(_stop_hovering)
 	
+	_delete_area.set_drag_forwarding(Callable(), _can_drop_data_fw, _drop_data_fw)
 	_add_button.pressed.connect(item_created.emit)
 
 
@@ -114,13 +116,13 @@ func _draw() -> void:
 	# Draw item blocks.
 	
 	_item_rects.clear()
+	_validate_scroll_offset()
 
 	var item_height := get_theme_constant("item_height", "ItemDock")
 	var content_margins := get_theme_stylebox("content_margins", "ItemDock")
 	var item_origin := Vector2(content_margins.get_margin(SIDE_LEFT), content_margins.get_margin(SIDE_TOP))
 	
 	var total_item_amount := _get_total_item_amount()
-	_max_item_amount = floori(available_size.y / float(item_height))
 	_has_prev_pager = (total_item_amount > _max_item_amount && _scroll_offset > 0)
 	_has_next_pager = (total_item_amount > _max_item_amount && _scroll_offset < (total_item_amount - _max_item_amount))
 	
@@ -176,6 +178,7 @@ func _draw() -> void:
 		draw_rect(hovered_rect, cursor_color, false, cursor_width)
 
 
+## Virtual.
 func _draw_item(_on_control: Control, _item_index: int, _item_rect: Rect2) -> void:
 	pass
 
@@ -207,6 +210,14 @@ func _draw_selected_cursor(on_control: Control, item_rect: Rect2) -> void:
 	
 	on_control.draw_rect(item_rect, selected_color, false, cursor_width)
 	on_control.draw_rect(Rect2(cursor_shadow_position, cursor_shadow_size), selected_shadow_color, false, cursor_width)
+
+
+func _update_max_item_amount() -> void:
+	var available_size := get_available_size()
+	var item_height := get_theme_constant("item_height", "ItemDock")
+
+	_max_item_amount = floori(available_size.y / float(item_height))
+	queue_redraw()
 
 
 func _update_button_label() -> void:
@@ -248,10 +259,12 @@ func get_available_size() -> Vector2:
 
 # Data.
 
+## Virtual.
 func _get_total_item_amount() -> int:
 	return 0
 
 
+## Virtual.
 func _get_current_item_index() -> int:
 	return -1
 
@@ -260,8 +273,15 @@ func _get_current_item_index() -> int:
 
 func _change_scroll_offset(delta: int) -> void:
 	var total_item_amount := _get_total_item_amount()
-	_scroll_offset = clampi(_scroll_offset + delta, 0, total_item_amount - _max_item_amount)
+	var max_scroll_offset := maxi(0, total_item_amount - _max_item_amount)
+	_scroll_offset = clampi(_scroll_offset + delta, 0, max_scroll_offset)
 	queue_redraw()
+
+
+func _validate_scroll_offset() -> void:
+	var total_item_amount := _get_total_item_amount()
+	var max_scroll_offset := maxi(0, total_item_amount - _max_item_amount)
+	_scroll_offset = clampi(_scroll_offset, 0, max_scroll_offset)
 
 
 func _start_hovering() -> void:
@@ -292,7 +312,7 @@ func _get_drag_data(at_position: Vector2) -> Variant:
 			var item_index := visual_index + _scroll_offset
 			
 			var drag_data := ItemDragData.new()
-			drag_data.unique_hash = _drag_unique_hash
+			drag_data.source_id = drag_source_id
 			drag_data.item_index = item_index
 			
 			var preview := ItemDragPreview.new()
@@ -310,20 +330,20 @@ func _get_drag_data(at_position: Vector2) -> Variant:
 
 
 func _can_drop_data_fw(_at_position: Vector2, data: Variant) -> bool:
-	if data is ItemDragData && (data as ItemDragData).unique_hash == _drag_unique_hash:
+	if data is ItemDragData && (data as ItemDragData).source_id == drag_source_id:
 		return true
 	return false
 
 
 func _drop_data_fw(_at_position: Vector2, data: Variant) -> void:
-	if data is ItemDragData && (data as ItemDragData).unique_hash == _drag_unique_hash:
+	if data is ItemDragData && (data as ItemDragData).source_id == drag_source_id:
 		var item_data := data as ItemDragData
 		item_deleted.emit(item_data.item_index)
 
 
 class ItemDragData:
 	## Helps to identify own drag data.
-	var unique_hash: int = -1
+	var source_id: int = -1
 	var item_index: int = -1
 
 

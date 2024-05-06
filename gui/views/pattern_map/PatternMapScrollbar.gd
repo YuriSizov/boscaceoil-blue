@@ -4,12 +4,16 @@
 # Provided under MIT                              #
 ###################################################
 
+@tool
 extends Control
 
 signal shifted_right()
 signal shifted_left()
 
 const FADE_DURATION := 0.06
+
+var can_scroll_left: bool = false
+var can_scroll_right: bool = false
 
 var _button_holder: ButtonHolder = null
 var _tween: Tween = null
@@ -27,16 +31,16 @@ func _ready() -> void:
 	_button_holder = ButtonHolder.new(self, _right_button, _left_button)
 	_button_holder.set_press_callback(_emit_hold_signal)
 	
-	_left_default_size = _left_button.size.x
-	_right_default_size = _right_button.size.x
+	_left_default_size = _left_button.get_combined_minimum_size().x
+	_right_default_size = _right_button.get_combined_minimum_size().x
 	
 	_left_button.offset_left = -_left_default_size
 	_left_button.offset_right = 0
 	_right_button.offset_left = 0
 	_right_button.offset_right = _right_default_size
 	
-	_left_button.mouse_exited.connect(test_mouse_position)
-	_right_button.mouse_exited.connect(test_mouse_position)
+	_left_button.mouse_exited.connect(_update_button_visibility)
+	_right_button.mouse_exited.connect(_update_button_visibility)
 
 
 func _process(delta: float) -> void:
@@ -53,14 +57,19 @@ func set_button_offset(top_offset: float, bottom_offset: float) -> void:
 
 
 func test_mouse_position() -> void:
+	_update_button_visibility()
+
+
+func _update_button_visibility() -> void:
 	var mouse_position := get_local_mouse_position()
+	# Only consider spaces that buttons themselves would take when visible.
 	var left_area := Rect2(Vector2(0, _left_button.position.y), Vector2(_left_default_size, _left_button.size.y))
 	var right_area := Rect2(Vector2(size.x - _right_default_size, _right_button.position.y), Vector2(_right_default_size, _right_button.size.y))
 
-	if not _left_visible && left_area.has_point(mouse_position):
+	if can_scroll_left && not _left_visible && left_area.has_point(mouse_position):
 		_left_visible = true
 		_right_visible = false
-	elif not _right_visible && right_area.has_point(mouse_position):
+	elif can_scroll_right && not _right_visible && right_area.has_point(mouse_position):
 		_left_visible = false
 		_right_visible = true
 	elif (_left_visible || _right_visible) && (not left_area.has_point(mouse_position) && not right_area.has_point(mouse_position)):
