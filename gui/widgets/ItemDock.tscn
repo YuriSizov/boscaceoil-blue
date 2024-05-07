@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://bbbxnaw4cute2"]
+[gd_scene load_steps=4 format=3 uid="uid://bbbxnaw4cute2"]
 
 [ext_resource type="Script" path="res://gui/widgets/ItemDock.gd" id="1_cdtng"]
 [ext_resource type="PackedScene" uid="uid://bgyn67pa8s3kd" path="res://gui/widgets/DeleteArea.tscn" id="2_gogr1"]
+[ext_resource type="PackedScene" uid="uid://71sw1mddco3" path="res://gui/widgets/SquishyButton.tscn" id="3_g3e56"]
 
 [node name="ItemDock" type="Control"]
 auto_translate_mode = 1
@@ -24,9 +25,8 @@ offset_left = 16.0
 offset_right = -16.0
 offset_bottom = 0.0
 
-[node name="AddItem" type="Button" parent="."]
+[node name="AddItem" parent="." instance=ExtResource("3_g3e56")]
 unique_name_in_owner = true
-auto_translate_mode = 1
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
@@ -39,7 +39,4 @@ offset_right = 84.0
 offset_bottom = -8.0
 grow_horizontal = 2
 grow_vertical = 0
-size_flags_horizontal = 3
-size_flags_vertical = 4
-focus_mode = 0
 text = "ADD ITEM"

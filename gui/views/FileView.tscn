@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://d0lne8svx0ysl"]
+[gd_scene load_steps=8 format=3 uid="uid://d0lne8svx0ysl"]
 
 [ext_resource type="PackedScene" uid="uid://jjkaxpgl6mmu" path="res://gui/widgets/AnimatedLogo.tscn" id="1_cb5p1"]
 [ext_resource type="Script" path="res://gui/views/FileView.gd" id="1_i5se4"]
+[ext_resource type="PackedScene" uid="uid://71sw1mddco3" path="res://gui/widgets/SquishyButton.tscn" id="3_6fmtw"]
 [ext_resource type="Texture2D" uid="uid://b4pqq6culbr6a" path="res://gui/theme/right_arrow.tres" id="3_jbhik"]
 [ext_resource type="Texture2D" uid="uid://ck1durkyp2j8a" path="res://gui/theme/pause_icon.tres" id="4_np651"]
 [ext_resource type="Texture2D" uid="uid://c152mlked4d1i" path="res://gui/theme/stop_icon.tres" id="5_7b7gn"]
@@ -66,22 +67,21 @@ text = "Created by Terry Cavanagh & Yuri Sizov"
 layout_mode = 2
 theme_type_variation = &"HBoxSpaced"
 
-[node name="Credits" type="Button" parent="Layout/Introduction/Contents/Controls"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
-focus_mode = 0
-disabled = true
-text = "CREDITS"
-
-[node name="Help" type="Button" parent="Layout/Introduction/Contents/Controls"]
+[node name="Credits" parent="Layout/Introduction/Contents/Controls" instance=ExtResource("3_6fmtw")]
 unique_name_in_owner = true
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
-focus_mode = 0
+disabled = true
+text = "CREDITS"
+
+[node name="Help" parent="Layout/Introduction/Contents/Controls" instance=ExtResource("3_6fmtw")]
+unique_name_in_owner = true
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
 disabled = true
 text = "HELP"
 
@@ -97,7 +97,7 @@ alignment = 1
 
 [node name="Play" type="Button" parent="Layout/Introduction/Contents/Controls/Playback/Layout"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(48, 32)
+custom_minimum_size = Vector2(48, 30)
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"PlaybackButton"
@@ -109,7 +109,7 @@ expand_icon = true
 [node name="Pause" type="Button" parent="Layout/Introduction/Contents/Controls/Playback/Layout"]
 unique_name_in_owner = true
 auto_translate_mode = 1
-custom_minimum_size = Vector2(48, 32)
+custom_minimum_size = Vector2(48, 30)
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"PlaybackButton"
@@ -121,7 +121,7 @@ expand_icon = true
 [node name="Stop" type="Button" parent="Layout/Introduction/Contents/Controls/Playback/Layout"]
 unique_name_in_owner = true
 auto_translate_mode = 1
-custom_minimum_size = Vector2(48, 32)
+custom_minimum_size = Vector2(48, 30)
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"PlaybackButton"
@@ -150,12 +150,12 @@ layout_mode = 2
 theme_type_variation = &"HBoxSpaced"
 alignment = 1
 
-[node name="CreateSong" type="Button" parent="Layout/BaseControls/Rows/SongFileActions"]
+[node name="CreateSong" parent="Layout/BaseControls/Rows/SongFileActions" instance=ExtResource("3_6fmtw")]
 unique_name_in_owner = true
+auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
-focus_mode = 0
 text = "NEW SONG"
 
 [node name="Layout" type="HBoxContainer" parent="Layout/BaseControls/Rows/SongFileActions"]
@@ -163,22 +163,20 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"HBoxSpaced"
 
-[node name="LoadSong" type="Button" parent="Layout/BaseControls/Rows/SongFileActions/Layout"]
+[node name="LoadSong" parent="Layout/BaseControls/Rows/SongFileActions/Layout" instance=ExtResource("3_6fmtw")]
 unique_name_in_owner = true
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
-focus_mode = 0
 text = "LOAD"
 
-[node name="SaveSong" type="Button" parent="Layout/BaseControls/Rows/SongFileActions/Layout"]
+[node name="SaveSong" parent="Layout/BaseControls/Rows/SongFileActions/Layout" instance=ExtResource("3_6fmtw")]
 unique_name_in_owner = true
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
-focus_mode = 0
 text = "SAVE"
 
 [node name="ImportExport" type="HBoxContainer" parent="Layout/BaseControls/Rows"]
@@ -187,22 +185,21 @@ layout_mode = 2
 theme_type_variation = &"HBoxSpaced"
 alignment = 1
 
-[node name="ImportSong" type="Button" parent="Layout/BaseControls/Rows/ImportExport"]
+[node name="ImportSong" parent="Layout/BaseControls/Rows/ImportExport" instance=ExtResource("3_6fmtw")]
 unique_name_in_owner = true
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
-focus_mode = 0
 disabled = true
 text = "IMPORT..."
 
-[node name="ExportSong" type="Button" parent="Layout/BaseControls/Rows/ImportExport"]
+[node name="ExportSong" parent="Layout/BaseControls/Rows/ImportExport" instance=ExtResource("3_6fmtw")]
 unique_name_in_owner = true
+auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
-focus_mode = 0
 disabled = true
 text = "EXPORT..."
 

@@ -303,9 +303,14 @@ spacing_glyph = 1
 [resource]
 default_font = SubResource("FontVariation_ktmxc")
 default_font_size = 20
+Button/colors/font_color = Color(1, 1, 1, 1)
+Button/colors/font_disabled_color = Color(0.568627, 0.6, 0.607843, 1)
+Button/colors/font_shadow_color = Color(0, 0, 0, 1)
 Button/colors/icon_disabled_color = Color(0.329412, 0.360784, 0.329412, 0.470588)
 Button/colors/icon_hover_color = Color(0.835294, 0.835294, 0.835294, 1)
 Button/colors/icon_pressed_color = Color(0.517647, 0.517647, 0.517647, 1)
+Button/constants/font_shadow_offset_x = 2
+Button/constants/font_shadow_offset_y = 1
 Button/styles/disabled = SubResource("StyleBoxFlat_a0spi")
 Button/styles/focus = SubResource("StyleBoxEmpty_rsq82")
 Button/styles/hover = SubResource("StyleBoxFlat_bd2w5")

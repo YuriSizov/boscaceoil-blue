@@ -24,7 +24,7 @@ size_flags_horizontal = 3
 
 [node name="PatternDock" parent="Layout" instance=ExtResource("3_16dfn")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(180, 0)
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 script = ExtResource("4_pbhaf")
 add_button_text = "ADD NEW"

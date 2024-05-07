@@ -41,7 +41,7 @@ var _hovering: bool = false
 var _hovered_item: int = -1
 var drag_source_id: int = -1
 
-@onready var _add_button: Button = %AddItem
+@onready var _add_button: SquishyButton = %AddItem
 @onready var _delete_area: DeleteArea = %DeleteArea
 
 

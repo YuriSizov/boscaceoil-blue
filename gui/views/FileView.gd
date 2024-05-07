@@ -10,9 +10,9 @@ extends MarginContainer
 @onready var _pause_button: Button = %Pause
 @onready var _stop_button: Button = %Stop
 
-@onready var _create_song_button: Button = %CreateSong
-@onready var _load_song_button: Button = %LoadSong
-@onready var _save_song_button: Button = %SaveSong
+@onready var _create_song_button: SquishyButton = %CreateSong
+@onready var _load_song_button: SquishyButton = %LoadSong
+@onready var _save_song_button: SquishyButton = %SaveSong
 
 @onready var _pattern_size_stepper: Stepper = %PatternStepper
 @onready var _bar_size_stepper: Stepper = %BarStepper
