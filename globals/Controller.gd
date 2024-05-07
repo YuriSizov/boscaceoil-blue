@@ -13,6 +13,8 @@ signal song_sizes_changed()
 signal song_pattern_changed()
 signal song_instrument_changed()
 
+const INFO_POPUP_SCENE := preload("res://gui/widgets/InfoPopup.tscn")
+
 enum DragSources {
 	PATTERN_DOCK,
 	INSTRUMENT_DOCK,
@@ -29,16 +31,17 @@ var current_pattern_index: int = -1
 var current_instrument_index: int = -1
 
 var instrument_themes: Dictionary = {
-	ColorPalette.PALETTE_BLUE:   preload("res://gui/theme/instrument_theme_blue.tres"),
-	ColorPalette.PALETTE_PURPLE: preload("res://gui/theme/instrument_theme_purple.tres"),
-	ColorPalette.PALETTE_RED:    preload("res://gui/theme/instrument_theme_red.tres"),
-	ColorPalette.PALETTE_ORANGE: preload("res://gui/theme/instrument_theme_orange.tres"),
-	ColorPalette.PALETTE_GREEN:  preload("res://gui/theme/instrument_theme_green.tres"),
-	ColorPalette.PALETTE_CYAN:   preload("res://gui/theme/instrument_theme_cyan.tres"),
-	ColorPalette.PALETTE_GRAY:   preload("res://gui/theme/instrument_theme_gray.tres"),
+	ColorPalette.PALETTE_BLUE:   preload("res://gui/theme/instruments/instrument_theme_blue.tres"),
+	ColorPalette.PALETTE_PURPLE: preload("res://gui/theme/instruments/instrument_theme_purple.tres"),
+	ColorPalette.PALETTE_RED:    preload("res://gui/theme/instruments/instrument_theme_red.tres"),
+	ColorPalette.PALETTE_ORANGE: preload("res://gui/theme/instruments/instrument_theme_orange.tres"),
+	ColorPalette.PALETTE_GREEN:  preload("res://gui/theme/instruments/instrument_theme_green.tres"),
+	ColorPalette.PALETTE_CYAN:   preload("res://gui/theme/instruments/instrument_theme_cyan.tres"),
+	ColorPalette.PALETTE_GRAY:   preload("res://gui/theme/instruments/instrument_theme_gray.tres"),
 }
 
 var _file_dialog: FileDialog = null
+var _info_popup: InfoPopup = null
 
 
 func _init() -> void:
@@ -47,6 +50,8 @@ func _init() -> void:
 
 
 func _ready() -> void:
+	get_tree().set_auto_accept_quit(false)
+	
 	# Driver must be ready by this time.
 	music_player.initialize()
 	create_new_song()
@@ -55,6 +60,11 @@ func _ready() -> void:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
 		_check_song_on_exit()
+	elif what == NOTIFICATION_PREDELETE:
+		if is_instance_valid(_file_dialog):
+			_file_dialog.queue_free()
+		if is_instance_valid(_info_popup):
+			_info_popup.queue_free()
 
 
 func _shortcut_input(event: InputEvent) -> void:
@@ -66,7 +76,7 @@ func _shortcut_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 
-# File dialog management.
+# Dialog management.
 
 func _get_file_dialog() -> FileDialog:
 	if not _file_dialog:
@@ -92,6 +102,14 @@ func _unparent_file_dialog() -> void:
 	_file_dialog.get_parent().remove_child(_file_dialog)
 
 
+func _get_info_popup() -> InfoPopup:
+	if not _info_popup:
+		_info_popup = INFO_POPUP_SCENE.instantiate()
+	
+	_info_popup.clear()
+	return _info_popup
+
+
 # Song management.
 
 func create_new_song() -> void:
@@ -110,17 +128,43 @@ func create_new_song() -> void:
 
 func create_new_song_safe() -> void:
 	if current_song && current_song.is_dirty():
-		# TODO: First ask to save the current one.
-		pass
+		var unsaved_warning := _get_info_popup()
+		
+		unsaved_warning.title = "WARNING — Unsaved changes"
+		unsaved_warning.content = "Current song has [accent]UNSAVED CHANGES[/accent].\n\nAre you sure you want to create a new one?"
+		unsaved_warning.add_button("Cancel", unsaved_warning.close_popup)
+		unsaved_warning.add_button("I'm sure!", func():
+			unsaved_warning.close_popup()
+			create_new_song()
+		)
+		
+		unsaved_warning.size = Vector2(640, 220)
+		unsaved_warning.popup(get_window().size / 2)
+		return
 	
 	create_new_song()
 
 
-func load_ceol_song() -> void:
+func load_ceol_song_safe() -> void:
 	if current_song && current_song.is_dirty():
-		# TODO: First ask to save the current one.
-		pass
+		var unsaved_warning := _get_info_popup()
+		
+		unsaved_warning.title = "WARNING — Unsaved changes"
+		unsaved_warning.content = "Current song has [accent]UNSAVED CHANGES[/accent].\n\nAre you sure you want to load a different one?"
+		unsaved_warning.add_button("Cancel", unsaved_warning.close_popup)
+		unsaved_warning.add_button("I'm sure!", func():
+			unsaved_warning.close_popup()
+			load_ceol_song()
+		)
+		
+		unsaved_warning.size = Vector2(660, 220)
+		unsaved_warning.popup(get_window().size / 2)
+		return
 	
+	load_ceol_song()
+
+
+func load_ceol_song() -> void:
 	var load_dialog := _get_file_dialog()
 	load_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
 	load_dialog.add_filter("*.ceol", "Bosca Ceoil Song")
@@ -173,8 +217,20 @@ func _save_ceol_song_confirmed(path: String) -> void:
 
 func _check_song_on_exit() -> void:
 	if current_song && current_song.is_dirty():
-		# TODO: Ask to save the current song.
-		pass
+		var unsaved_warning := _get_info_popup()
+		
+		unsaved_warning.title = "WARNING — Unsaved changes"
+		unsaved_warning.content = "Current song has [accent]UNSAVED CHANGES[/accent].\n\nAre you sure you want to quit?"
+		unsaved_warning.add_button("Cancel", unsaved_warning.close_popup)
+		unsaved_warning.add_button("I'm sure!", func():
+			get_tree().quit()
+		)
+		
+		unsaved_warning.size = Vector2(600, 220)
+		unsaved_warning.popup(get_window().size / 2)
+		return
+	
+	get_tree().quit()
 
 
 # Pattern editing.

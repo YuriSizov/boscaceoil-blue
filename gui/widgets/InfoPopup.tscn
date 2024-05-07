@@ -1,0 +1,72 @@
+[gd_scene load_steps=3 format=3 uid="uid://pte0alxv2p77"]
+
+[ext_resource type="Script" path="res://gui/widgets/InfoPopup.gd" id="1_id2ld"]
+[ext_resource type="Texture2D" uid="uid://bya1184uqykfm" path="res://gui/theme/icons/cross_icon.tres" id="2_7no5d"]
+
+[node name="InfoPopup" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -782.0
+offset_bottom = -608.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_id2ld")
+
+[node name="Layout" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TitleBar" type="MarginContainer" parent="Layout"]
+layout_mode = 2
+theme_type_variation = &"InfoPopupTitleBar"
+
+[node name="TitleBox" type="HBoxContainer" parent="Layout/TitleBar"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="Layout/TitleBar/TitleBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Information"
+vertical_alignment = 1
+text_overrun_behavior = 3
+
+[node name="CloseButton" type="Button" parent="Layout/TitleBar/TitleBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"InfoPopupTitleButton"
+icon = ExtResource("2_7no5d")
+flat = true
+icon_alignment = 1
+expand_icon = true
+
+[node name="Content" type="MarginContainer" parent="Layout"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"InfoPopupContent"
+
+[node name="ContentBox" type="VBoxContainer" parent="Layout/Content"]
+layout_mode = 2
+theme_type_variation = &"InfoPopupContentBox"
+
+[node name="ContentLabel" type="RichTextLabel" parent="Layout/Content/ContentBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+bbcode_enabled = true
+
+[node name="ButtonBar" type="HBoxContainer" parent="Layout/Content/ContentBox"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_type_variation = &"HBoxSpaced"
+alignment = 2

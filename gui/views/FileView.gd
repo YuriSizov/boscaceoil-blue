@@ -25,7 +25,7 @@ func _ready() -> void:
 	_stop_button.pressed.connect(Controller.music_player.stop_playback)
 	
 	_create_song_button.pressed.connect(Controller.create_new_song_safe)
-	_load_song_button.pressed.connect(Controller.load_ceol_song)
+	_load_song_button.pressed.connect(Controller.load_ceol_song_safe)
 	_save_song_button.pressed.connect(Controller.save_ceol_song)
 	
 	_pattern_size_stepper.value_changed.connect(_change_pattern_size)

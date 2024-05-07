@@ -11,9 +11,6 @@ signal item_created()
 signal item_selected(item_index: int)
 signal item_deleted(item_index: int)
 
-const UP_ARROW := preload("res://gui/theme/up_arrow_small.tres")
-const DOWN_ARROW := preload("res://gui/theme/down_arrow_small.tres")
-
 const DROP_OFFSET := 16
 enum DropAlignment {
 	CENTER,
@@ -117,7 +114,10 @@ func _draw() -> void:
 	
 	_item_rects.clear()
 	_validate_scroll_offset()
-
+	
+	var up_arrow := get_theme_icon("up_arrow", "ItemDock")
+	var down_arrow := get_theme_icon("down_arrow", "ItemDock")
+	
 	var item_height := get_theme_constant("item_height", "ItemDock")
 	var content_margins := get_theme_stylebox("content_margins", "ItemDock")
 	var item_origin := Vector2(content_margins.get_margin(SIDE_LEFT), content_margins.get_margin(SIDE_TOP))
@@ -140,7 +140,7 @@ func _draw() -> void:
 		
 		# Draw the pager instead of the first item.
 		if visible_index == 0 && _has_prev_pager:
-			_draw_pager(item_rect, UP_ARROW)
+			_draw_pager(item_rect, up_arrow)
 			if visible_index == _hovered_item:
 				hovered_rect = item_rect
 			
@@ -150,7 +150,7 @@ func _draw() -> void:
 
 		# Draw the pager instead of the last item.
 		if visible_index == (_max_item_amount - 1) && _has_next_pager:
-			_draw_pager(item_rect, DOWN_ARROW)
+			_draw_pager(item_rect, down_arrow)
 			if visible_index == _hovered_item:
 				hovered_rect = item_rect
 			

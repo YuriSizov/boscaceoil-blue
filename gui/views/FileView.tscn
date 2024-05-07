@@ -3,9 +3,9 @@
 [ext_resource type="PackedScene" uid="uid://jjkaxpgl6mmu" path="res://gui/widgets/AnimatedLogo.tscn" id="1_cb5p1"]
 [ext_resource type="Script" path="res://gui/views/FileView.gd" id="1_i5se4"]
 [ext_resource type="PackedScene" uid="uid://71sw1mddco3" path="res://gui/widgets/SquishyButton.tscn" id="3_6fmtw"]
-[ext_resource type="Texture2D" uid="uid://b4pqq6culbr6a" path="res://gui/theme/right_arrow.tres" id="3_jbhik"]
-[ext_resource type="Texture2D" uid="uid://ck1durkyp2j8a" path="res://gui/theme/pause_icon.tres" id="4_np651"]
-[ext_resource type="Texture2D" uid="uid://c152mlked4d1i" path="res://gui/theme/stop_icon.tres" id="5_7b7gn"]
+[ext_resource type="Texture2D" uid="uid://b4pqq6culbr6a" path="res://gui/theme/icons/right_arrow.tres" id="3_jbhik"]
+[ext_resource type="Texture2D" uid="uid://ck1durkyp2j8a" path="res://gui/theme/icons/pause_icon.tres" id="4_np651"]
+[ext_resource type="Texture2D" uid="uid://c152mlked4d1i" path="res://gui/theme/icons/stop_icon.tres" id="5_7b7gn"]
 [ext_resource type="PackedScene" uid="uid://d2peohvka6nmb" path="res://gui/widgets/Stepper.tscn" id="6_8p7iu"]
 
 [node name="FileView" type="MarginContainer"]
@@ -69,7 +69,6 @@ theme_type_variation = &"HBoxSpaced"
 
 [node name="Credits" parent="Layout/Introduction/Contents/Controls" instance=ExtResource("3_6fmtw")]
 unique_name_in_owner = true
-auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -78,7 +77,6 @@ text = "CREDITS"
 
 [node name="Help" parent="Layout/Introduction/Contents/Controls" instance=ExtResource("3_6fmtw")]
 unique_name_in_owner = true
-auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -152,7 +150,6 @@ alignment = 1
 
 [node name="CreateSong" parent="Layout/BaseControls/Rows/SongFileActions" instance=ExtResource("3_6fmtw")]
 unique_name_in_owner = true
-auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -165,7 +162,6 @@ theme_type_variation = &"HBoxSpaced"
 
 [node name="LoadSong" parent="Layout/BaseControls/Rows/SongFileActions/Layout" instance=ExtResource("3_6fmtw")]
 unique_name_in_owner = true
-auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -173,7 +169,6 @@ text = "LOAD"
 
 [node name="SaveSong" parent="Layout/BaseControls/Rows/SongFileActions/Layout" instance=ExtResource("3_6fmtw")]
 unique_name_in_owner = true
-auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -187,7 +182,6 @@ alignment = 1
 
 [node name="ImportSong" parent="Layout/BaseControls/Rows/ImportExport" instance=ExtResource("3_6fmtw")]
 unique_name_in_owner = true
-auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -196,7 +190,6 @@ text = "IMPORT..."
 
 [node name="ExportSong" parent="Layout/BaseControls/Rows/ImportExport" instance=ExtResource("3_6fmtw")]
 unique_name_in_owner = true
-auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4

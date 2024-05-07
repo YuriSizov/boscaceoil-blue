@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://d2peohvka6nmb"]
 
-[ext_resource type="Texture2D" uid="uid://c2pre5wtyjchp" path="res://gui/theme/left_arrow.tres" id="1_1pona"]
+[ext_resource type="Texture2D" uid="uid://c2pre5wtyjchp" path="res://gui/theme/icons/left_arrow.tres" id="1_1pona"]
 [ext_resource type="Script" path="res://gui/widgets/Stepper.gd" id="1_ng8l4"]
-[ext_resource type="Texture2D" uid="uid://b4pqq6culbr6a" path="res://gui/theme/right_arrow.tres" id="2_14366"]
+[ext_resource type="Texture2D" uid="uid://b4pqq6culbr6a" path="res://gui/theme/icons/right_arrow.tres" id="2_14366"]
 
 [node name="Stepper" type="HBoxContainer"]
 offset_right = 82.0

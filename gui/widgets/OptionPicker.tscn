@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://dpno0cpboqdm0"]
 
 [ext_resource type="Script" path="res://gui/widgets/OptionPicker.gd" id="1_m580c"]
-[ext_resource type="Texture2D" uid="uid://bw1l2mvuxboun" path="res://gui/theme/down_arrow.tres" id="2_p6jtu"]
+[ext_resource type="Texture2D" uid="uid://bw1l2mvuxboun" path="res://gui/theme/icons/down_arrow.tres" id="2_p6jtu"]
 
 [node name="OptionPicker" type="MarginContainer"]
 anchors_preset = 15

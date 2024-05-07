@@ -1,8 +1,12 @@
-[gd_resource type="Theme" load_steps=46 format=3 uid="uid://chpsnl8o0raaf"]
+[gd_resource type="Theme" load_steps=54 format=3 uid="uid://chpsnl8o0raaf"]
 
 [ext_resource type="Texture2D" uid="uid://d2aswndmtik56" path="res://assets/overlap-dither.png" id="1_4kypt"]
+[ext_resource type="Texture2D" uid="uid://dsaf8rh2mger7" path="res://gui/theme/icons/down_arrow_small.tres" id="1_a2jy6"]
 [ext_resource type="FontFile" uid="uid://blsoavvmevh5x" path="res://assets/FFF Aquarius Bold Condensed Regular.ttf" id="1_q75co"]
+[ext_resource type="Texture2D" uid="uid://bd6e6pu2tm4u3" path="res://gui/theme/icons/up_arrow_small.tres" id="2_exvkf"]
 [ext_resource type="Texture2D" uid="uid://di3xykrb8awus" path="res://gui/theme/pad_slider_pattern.tres" id="2_ovmtp"]
+[ext_resource type="Texture2D" uid="uid://bw1l2mvuxboun" path="res://gui/theme/icons/down_arrow.tres" id="4_l7eih"]
+[ext_resource type="Texture2D" uid="uid://cpckledy6ji3n" path="res://gui/theme/icons/up_arrow.tres" id="5_65g4b"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a0spi"]
 content_margin_left = 24.0
@@ -98,6 +102,30 @@ content_margin_left = 2.0
 content_margin_top = 2.0
 content_margin_right = 2.0
 content_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ltu87"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_i6yl7"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_d1541"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1k2ot"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jn8kv"]
 content_margin_left = 16.0
@@ -334,6 +362,32 @@ IncrementButton/base_type = &"Button"
 IncrementButton/styles/hover = SubResource("StyleBoxEmpty_8fwph")
 IncrementButton/styles/normal = SubResource("StyleBoxEmpty_wnhx7")
 IncrementButton/styles/pressed = SubResource("StyleBoxEmpty_ebj3h")
+InfoPopup/colors/accent_color = Color(1, 1, 0, 1)
+InfoPopup/colors/border_color = Color(0, 0, 0, 1)
+InfoPopup/colors/content_color = Color(0.427451, 0.521569, 0.552941, 1)
+InfoPopup/colors/shadow_color = Color(0, 0, 0, 1)
+InfoPopup/colors/title_color = Color(0.313726, 0.396078, 0.415686, 1)
+InfoPopup/constants/border_width = 8
+InfoPopup/constants/shadow_offset_x = 16
+InfoPopup/constants/shadow_offset_y = 16
+InfoPopup/constants/title_height = 36
+InfoPopupContent/base_type = &"MarginContainer"
+InfoPopupContent/constants/margin_bottom = 12
+InfoPopupContent/constants/margin_left = 16
+InfoPopupContent/constants/margin_right = 16
+InfoPopupContent/constants/margin_top = 12
+InfoPopupContentBox/base_type = &"VBoxContainer"
+InfoPopupContentBox/constants/separation = 10
+InfoPopupTitleBar/base_type = &"MarginContainer"
+InfoPopupTitleBar/constants/margin_bottom = 0
+InfoPopupTitleBar/constants/margin_left = 12
+InfoPopupTitleBar/constants/margin_right = 4
+InfoPopupTitleBar/constants/margin_top = 0
+InfoPopupTitleButton/base_type = &"Button"
+InfoPopupTitleButton/styles/focus = SubResource("StyleBoxEmpty_ltu87")
+InfoPopupTitleButton/styles/hover = SubResource("StyleBoxEmpty_i6yl7")
+InfoPopupTitleButton/styles/normal = SubResource("StyleBoxEmpty_d1541")
+InfoPopupTitleButton/styles/pressed = SubResource("StyleBoxEmpty_1k2ot")
 InstrumentDock/colors/item_color = Color(0.376471, 0.376471, 0.376471, 1)
 InstrumentDock/colors/item_gutter_color = Color(0.54902, 0.54902, 0.54902, 1)
 InstrumentSettingsPanel/base_type = &"PanelContainer"
@@ -347,6 +401,8 @@ ItemDock/colors/selected_shadow_color = Color(0, 0, 0, 1)
 ItemDock/constants/cursor_width = 3
 ItemDock/constants/item_height = 36
 ItemDock/constants/pager_icon_width = 28
+ItemDock/icons/down_arrow = ExtResource("1_a2jy6")
+ItemDock/icons/up_arrow = ExtResource("2_exvkf")
 ItemDock/styles/content_margins = SubResource("StyleBoxEmpty_hnbok")
 Label/colors/font_color = Color(1, 1, 1, 1)
 Label/colors/font_shadow_color = Color(0, 0, 0, 1)
@@ -395,6 +451,8 @@ OptionPicker/colors/sublist_inactive_font_color = Color(0.101961, 0.129412, 0.13
 OptionPicker/colors/sublist_selected_color = Color(0.351146, 0.409792, 0.435427, 0.784314)
 OptionPicker/constants/item_height_adjustment = -3
 OptionPicker/font_sizes/option_font_size = 22
+OptionPicker/icons/down_arrow = ExtResource("4_l7eih")
+OptionPicker/icons/up_arrow = ExtResource("5_65g4b")
 OptionPicker/styles/item_margins = SubResource("StyleBoxEmpty_lgaqy")
 OptionPicker/styles/popup_panel = SubResource("StyleBoxFlat_wpor0")
 OptionPickerBox/base_type = &"HBoxContainer"
@@ -433,6 +491,10 @@ PlaybackButton/base_type = &"Button"
 PlaybackButton/styles/hover = SubResource("StyleBoxEmpty_n7tc4")
 PlaybackButton/styles/normal = SubResource("StyleBoxEmpty_ywx6j")
 PlaybackButton/styles/pressed = SubResource("StyleBoxEmpty_7loji")
+RichTextLabel/colors/default_color = Color(1, 1, 1, 1)
+RichTextLabel/colors/font_shadow_color = Color(0, 0, 0, 1)
+RichTextLabel/constants/shadow_offset_x = 2
+RichTextLabel/constants/shadow_offset_y = 1
 ScrollbarButton/base_type = &"Button"
 ScrollbarButton/styles/focus = SubResource("StyleBoxEmpty_3fj3y")
 ScrollbarButton/styles/hover = SubResource("StyleBoxFlat_7qnyx")

@@ -3,8 +3,8 @@
 [ext_resource type="Script" path="res://gui/views/PatternEditor.gd" id="1_eqswn"]
 [ext_resource type="PackedScene" uid="uid://dciyoa2wkbtfp" path="res://gui/views/note_map/NoteMap.tscn" id="1_jt24t"]
 [ext_resource type="PackedScene" uid="uid://dpno0cpboqdm0" path="res://gui/widgets/OptionPicker.tscn" id="3_g46lg"]
-[ext_resource type="Texture2D" uid="uid://dv8e841ktrh7e" path="res://gui/theme/minus_icon.tres" id="4_rpxm2"]
-[ext_resource type="Texture2D" uid="uid://kqtm1ja12mjr" path="res://gui/theme/plus_icon.tres" id="5_voaw7"]
+[ext_resource type="Texture2D" uid="uid://dv8e841ktrh7e" path="res://gui/theme/icons/minus_icon.tres" id="4_rpxm2"]
+[ext_resource type="Texture2D" uid="uid://kqtm1ja12mjr" path="res://gui/theme/icons/plus_icon.tres" id="5_voaw7"]
 
 [node name="PatternEditor" type="VBoxContainer"]
 auto_translate_mode = 1

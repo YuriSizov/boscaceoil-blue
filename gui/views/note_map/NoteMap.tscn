@@ -1,11 +1,11 @@
 [gd_scene load_steps=8 format=3 uid="uid://dciyoa2wkbtfp"]
 
-[ext_resource type="Theme" uid="uid://dkb62tku7dpgs" path="res://gui/theme/instrument_theme_gray.tres" id="1_0bvov"]
+[ext_resource type="Theme" uid="uid://dkb62tku7dpgs" path="res://gui/theme/instruments/instrument_theme_gray.tres" id="1_0bvov"]
 [ext_resource type="Script" path="res://gui/views/note_map/NoteMap.gd" id="1_opxc8"]
 [ext_resource type="Script" path="res://gui/views/note_map/NoteMapGutter.gd" id="2_3knao"]
 [ext_resource type="Script" path="res://gui/views/note_map/NoteMapScrollbar.gd" id="3_gs7e5"]
-[ext_resource type="Texture2D" uid="uid://bd6e6pu2tm4u3" path="res://gui/theme/up_arrow_small.tres" id="4_lvxl6"]
-[ext_resource type="Texture2D" uid="uid://dsaf8rh2mger7" path="res://gui/theme/down_arrow_small.tres" id="5_cu2vu"]
+[ext_resource type="Texture2D" uid="uid://bd6e6pu2tm4u3" path="res://gui/theme/icons/up_arrow_small.tres" id="4_lvxl6"]
+[ext_resource type="Texture2D" uid="uid://dsaf8rh2mger7" path="res://gui/theme/icons/down_arrow_small.tres" id="5_cu2vu"]
 [ext_resource type="Script" path="res://gui/views/note_map/NoteMapOverlay.gd" id="6_20i0e"]
 
 [node name="NoteMap" type="Control"]

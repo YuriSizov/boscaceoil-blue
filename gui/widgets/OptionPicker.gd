@@ -22,9 +22,6 @@ const POPUP_EMPTY_LABEL := "No options."
 const PAGER_LEFT_LABEL := "<< Prev"
 const PAGER_RIGHT_LABEL := "Next >>"
 
-const ARROW_DOWN := preload("res://gui/theme/down_arrow.tres")
-const ARROW_UP := preload("res://gui/theme/up_arrow.tres")
-
 ## Expand direction for the popup with options. Should be read as "In the direction to <DIRECTION OPTION>".
 @export var direction: PopupManager.Direction = PopupManager.Direction.BOTTOM_RIGHT:
 	set(value):
@@ -320,9 +317,9 @@ func _update_icon() -> void:
 		return
 
 	if direction == PopupManager.Direction.TOP_RIGHT || direction == PopupManager.Direction.TOP_LEFT:
-		_arrow_icon.texture = ARROW_UP
+		_arrow_icon.texture = get_theme_icon("up_arrow", "OptionPicker")
 	else:
-		_arrow_icon.texture = ARROW_DOWN
+		_arrow_icon.texture = get_theme_icon("down_arrow", "OptionPicker")
 
 
 # Selection.
