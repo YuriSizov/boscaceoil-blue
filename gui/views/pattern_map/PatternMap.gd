@@ -27,6 +27,8 @@ var _pattern_width: float = 0
 var _scroll_offset: int = 0
 ## Window-size dependent limit.
 var _max_scroll_offset: int = -1
+## Whether to follow the playback cursor with scroll or not.
+var _following_playback_cursor: bool = false
 
 var _arrangement_channels: Array[ArrangementChannel] = []
 var _arrangement_bars: Array[ArrangementBar] = []
@@ -90,6 +92,8 @@ func _ready() -> void:
 		
 		Controller.music_player.playback_tick.connect(_update_playback_cursor)
 		Controller.music_player.playback_stopped.connect(_update_playback_cursor)
+		Controller.music_player.export_started.connect(func() -> void: _following_playback_cursor = true)
+		Controller.music_player.export_ended.connect(func() -> void: _following_playback_cursor = false)
 
 
 func _update_theme() -> void:
@@ -243,20 +247,42 @@ func _update_playback_cursor() -> void:
 	
 	var available_rect := get_available_rect()
 	var playback_note_index := Controller.music_player.get_pattern_time()
+	var reference_bar := -1
+	var extra_notes := 0
+	
+	if playback_note_index < 0:
+		# If the player is stopped, park the cursor on the left end of the loop range.
+		# This is normally unreachable by playback, as when playing at index 0 we want
+		# to display the cursor to the right of the first note.
+		reference_bar = current_arrangement.loop_start
+	
+	elif Controller.music_player.is_playing_residue():
+		# When exporting and playing residual notes, continue moving the cursor beyond
+		# the last bar.
+		reference_bar = current_arrangement.loop_end
+		extra_notes = Controller.music_player.get_residue_time()
+	
+	else:
+		reference_bar = current_arrangement.current_bar_idx
+		extra_notes = playback_note_index
+	
+	# If following cursor enabled, update scroll offset when passing roughly 3/4ths
+	# of the visible bar.
+	if _following_playback_cursor:
+		var bars_on_screen := floori(available_rect.size.x / _pattern_width)
+		var threshold_bar := int(bars_on_screen * 3.0 / 4.0)
+		
+		if reference_bar < _scroll_offset || reference_bar > (_scroll_offset + threshold_bar):
+			_scroll_offset = reference_bar
+			_update_scrollbar()
+			_update_whole_grid()
+	
 	var pattern_size := Controller.current_song.pattern_size
 	var note_width := _pattern_width / float(pattern_size)
+	var note_count := (reference_bar - _scroll_offset) * pattern_size + extra_notes
 	
-	# If the player is stopped, park the cursor on the left end of the loop range.
-	# This is normally unreachable by playback, as when playing at index 0 we want
-	# to display the cursor to the right of the first note.
-	if playback_note_index < 0:
-		var visible_bar_index := current_arrangement.loop_start - _scroll_offset
-		_overlay.playback_cursor_position = available_rect.position.x + (visible_bar_index * pattern_size) * note_width
-		_overlay.queue_redraw()
-	else:
-		var visible_bar_index := current_arrangement.current_bar_idx - _scroll_offset
-		_overlay.playback_cursor_position = available_rect.position.x + (visible_bar_index * pattern_size + playback_note_index) * note_width
-		_overlay.queue_redraw()
+	_overlay.playback_cursor_position = available_rect.position.x + note_count * note_width
+	_overlay.queue_redraw()
 
 
 # Grid layout and coordinates.

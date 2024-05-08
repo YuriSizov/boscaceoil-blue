@@ -13,6 +13,8 @@ extends MarginContainer
 @onready var _create_song_button: SquishyButton = %CreateSong
 @onready var _load_song_button: SquishyButton = %LoadSong
 @onready var _save_song_button: SquishyButton = %SaveSong
+@onready var _import_song_button: SquishyButton = %ImportSong
+@onready var _export_song_button: SquishyButton = %ExportSong
 
 @onready var _pattern_size_stepper: Stepper = %PatternStepper
 @onready var _bar_size_stepper: Stepper = %BarStepper
@@ -24,9 +26,11 @@ func _ready() -> void:
 	_pause_button.pressed.connect(Controller.music_player.pause_playback)
 	_stop_button.pressed.connect(Controller.music_player.stop_playback)
 	
-	_create_song_button.pressed.connect(Controller.create_new_song_safe)
-	_load_song_button.pressed.connect(Controller.load_ceol_song_safe)
-	_save_song_button.pressed.connect(Controller.save_ceol_song)
+	_create_song_button.pressed.connect(Controller.io_manager.create_new_song_safe)
+	_load_song_button.pressed.connect(Controller.io_manager.load_ceol_song_safe)
+	_save_song_button.pressed.connect(Controller.io_manager.save_ceol_song)
+	
+	_export_song_button.pressed.connect(Controller.io_manager.export_wav_song)
 	
 	_pattern_size_stepper.value_changed.connect(_change_pattern_size)
 	_bar_size_stepper.value_changed.connect(_change_bar_size)

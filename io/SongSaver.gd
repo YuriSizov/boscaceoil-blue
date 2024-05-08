@@ -34,7 +34,6 @@ static func save(song: Song, path: String) -> bool:
 	return true
 
 
-
 static func _write(writer: SongFileWriter, song: Song) -> void:
 	# Basic information.
 	

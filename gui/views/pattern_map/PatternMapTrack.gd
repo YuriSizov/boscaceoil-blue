@@ -91,7 +91,7 @@ func _gui_input(event: InputEvent) -> void:
 
 
 func _shortcut_input(event: InputEvent) -> void:
-	if not _hovering:
+	if not _hovering || Controller.is_song_editing_locked():
 		return
 	
 	if event.is_action_pressed("ui_copy"):

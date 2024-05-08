@@ -1,0 +1,42 @@
+[gd_scene load_steps=4 format=3 uid="uid://lnyrbw2vvjwl"]
+
+[ext_resource type="Script" path="res://gui/views/LockedIndicator.gd" id="1_4bdb1"]
+[ext_resource type="Shader" path="res://gui/views/LockedIndicator.gdshader" id="1_yxryj"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ml4mo"]
+shader = ExtResource("1_yxryj")
+shader_parameter/base_color = Color(0.101961, 0.129412, 0.137255, 1)
+shader_parameter/stripe_color = Color(0.203922, 0.258824, 0.27451, 1)
+shader_parameter/speed = 6.0
+shader_parameter/speed_factor = -1.0
+shader_parameter/frequency = 50.0
+shader_parameter/ratio = 1.49012e-08
+shader_parameter/angle = 1.0
+
+[node name="LockedIndicator" type="Control"]
+auto_translate_mode = 1
+material = SubResource("ShaderMaterial_ml4mo")
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_4bdb1")
+
+[node name="MessageLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -14.0
+offset_right = 20.0
+offset_bottom = 14.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "PLEASE WAIT"
+horizontal_alignment = 1
+vertical_alignment = 1

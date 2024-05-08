@@ -23,6 +23,7 @@ auto_translate_mode = 1
 layout_mode = 2
 
 [node name="FileTab" parent="Navigation" instance=ExtResource("2_l3q7q")]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 0
@@ -31,6 +32,7 @@ button_group = ExtResource("3_kmmx3")
 label_text = "FILE"
 
 [node name="ArrangementTab" parent="Navigation" instance=ExtResource("2_l3q7q")]
+unique_name_in_owner = true
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 3
@@ -39,6 +41,7 @@ button_group = ExtResource("3_kmmx3")
 label_text = "ARRANGEMENT"
 
 [node name="InstrumentTab" parent="Navigation" instance=ExtResource("2_l3q7q")]
+unique_name_in_owner = true
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 3
@@ -47,6 +50,7 @@ button_group = ExtResource("3_kmmx3")
 label_text = "INSTRUMENT"
 
 [node name="AdvancedTab" parent="Navigation" instance=ExtResource("2_l3q7q")]
+unique_name_in_owner = true
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 3
@@ -55,6 +59,7 @@ button_group = ExtResource("3_kmmx3")
 label_text = "ADVANCED"
 
 [node name="FullscreenToggle" type="Button" parent="Navigation"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(64, 28)
 layout_mode = 2
 focus_mode = 0
@@ -71,16 +76,20 @@ size_flags_vertical = 3
 theme_type_variation = &"MenuContentsPanel"
 
 [node name="FileView" parent="Contents" instance=ExtResource("5_6f3ft")]
+unique_name_in_owner = true
 layout_mode = 2
 
 [node name="ArrangementView" parent="Contents" instance=ExtResource("6_0weha")]
+unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
 [node name="InstrumentView" parent="Contents" instance=ExtResource("7_32hp6")]
+unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
 [node name="AdvancedView" parent="Contents" instance=ExtResource("8_b5sqt")]
+unique_name_in_owner = true
 visible = false
 layout_mode = 2

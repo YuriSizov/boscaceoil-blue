@@ -13,6 +13,9 @@ signal song_sizes_changed()
 signal song_pattern_changed()
 signal song_instrument_changed()
 
+signal controls_locked(message: String)
+signal controls_unlocked()
+
 const INFO_POPUP_SCENE := preload("res://gui/widgets/InfoPopup.tscn")
 
 enum DragSources {
@@ -22,6 +25,7 @@ enum DragSources {
 
 var voice_manager: VoiceManager = null
 var music_player: MusicPlayer = null
+var io_manager: IOManager = null
 
 ## Current edited song.
 var current_song: Song = null
@@ -42,11 +46,15 @@ var instrument_themes: Dictionary = {
 
 var _file_dialog: FileDialog = null
 var _info_popup: InfoPopup = null
+var _controls_blocker: PopupManager.PopupControl = null
+
+var _controls_locked: bool = false
 
 
 func _init() -> void:
 	voice_manager = VoiceManager.new()
 	music_player = MusicPlayer.new(self)
+	io_manager = IOManager.new()
 
 
 func _ready() -> void:
@@ -54,12 +62,12 @@ func _ready() -> void:
 	
 	# Driver must be ready by this time.
 	music_player.initialize()
-	create_new_song()
+	io_manager.create_new_song()
 
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
-		_check_song_on_exit()
+		io_manager.check_song_on_exit()
 	elif what == NOTIFICATION_PREDELETE:
 		if is_instance_valid(_file_dialog):
 			_file_dialog.queue_free()
@@ -68,6 +76,9 @@ func _notification(what: int) -> void:
 
 
 func _shortcut_input(event: InputEvent) -> void:
+	if _controls_locked:
+		return
+	
 	if event.is_action_pressed("bosca_pause"):
 		if music_player.is_playing():
 			music_player.pause_playback()
@@ -76,9 +87,9 @@ func _shortcut_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 
-# Dialog management.
+# Dialog and popup management.
 
-func _get_file_dialog() -> FileDialog:
+func get_file_dialog() -> FileDialog:
 	if not _file_dialog:
 		_file_dialog = FileDialog.new()
 		_file_dialog.use_native_dialog = true
@@ -88,7 +99,13 @@ func _get_file_dialog() -> FileDialog:
 		_file_dialog.canceled.connect(_clear_file_dialog_connections)
 		_file_dialog.canceled.connect(_unparent_file_dialog)
 	
+	_file_dialog.clear_filters()
 	return _file_dialog
+
+
+func show_file_dialog(dialog: FileDialog) -> void:
+	get_tree().root.add_child(dialog)
+	dialog.popup_centered()
 
 
 func _clear_file_dialog_connections() -> void:
@@ -102,7 +119,7 @@ func _unparent_file_dialog() -> void:
 	_file_dialog.get_parent().remove_child(_file_dialog)
 
 
-func _get_info_popup() -> InfoPopup:
+func get_info_popup() -> InfoPopup:
 	if not _info_popup:
 		_info_popup = INFO_POPUP_SCENE.instantiate()
 	
@@ -110,13 +127,30 @@ func _get_info_popup() -> InfoPopup:
 	return _info_popup
 
 
-# Song management.
+func show_info_popup(popup: InfoPopup, popup_size: Vector2) -> void:
+	popup.size = popup_size
+	popup.popup(get_window().size / 2)
 
-func create_new_song() -> void:
-	if music_player.is_playing():
-		music_player.stop_playback()
+
+func show_blocker() -> void:
+	if not _controls_blocker:
+		_controls_blocker = PopupManager.PopupControl.new()
 	
-	current_song = Song.create_default_song()
+	_controls_blocker.size = get_window().size
+	PopupManager.show_popup(_controls_blocker, Vector2.ZERO, PopupManager.Direction.BOTTOM_RIGHT)
+
+
+func hide_blocker() -> void:
+	if not _controls_blocker:
+		return
+	
+	PopupManager.hide_popup(_controls_blocker)
+
+
+# Song editing.
+
+func set_current_song(song: Song) -> void:
+	current_song = song
 	_change_current_pattern(0, false)
 	_change_current_instrument(0, false)
 	
@@ -126,111 +160,25 @@ func create_new_song() -> void:
 	song_loaded.emit()
 
 
-func create_new_song_safe() -> void:
-	if current_song && current_song.is_dirty():
-		var unsaved_warning := _get_info_popup()
-		
-		unsaved_warning.title = "WARNING — Unsaved changes"
-		unsaved_warning.content = "Current song has [accent]UNSAVED CHANGES[/accent].\n\nAre you sure you want to create a new one?"
-		unsaved_warning.add_button("Cancel", unsaved_warning.close_popup)
-		unsaved_warning.add_button("I'm sure!", func():
-			unsaved_warning.close_popup()
-			create_new_song()
-		)
-		
-		unsaved_warning.size = Vector2(640, 220)
-		unsaved_warning.popup(get_window().size / 2)
-		return
-	
-	create_new_song()
-
-
-func load_ceol_song_safe() -> void:
-	if current_song && current_song.is_dirty():
-		var unsaved_warning := _get_info_popup()
-		
-		unsaved_warning.title = "WARNING — Unsaved changes"
-		unsaved_warning.content = "Current song has [accent]UNSAVED CHANGES[/accent].\n\nAre you sure you want to load a different one?"
-		unsaved_warning.add_button("Cancel", unsaved_warning.close_popup)
-		unsaved_warning.add_button("I'm sure!", func():
-			unsaved_warning.close_popup()
-			load_ceol_song()
-		)
-		
-		unsaved_warning.size = Vector2(660, 220)
-		unsaved_warning.popup(get_window().size / 2)
-		return
-	
-	load_ceol_song()
-
-
-func load_ceol_song() -> void:
-	var load_dialog := _get_file_dialog()
-	load_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
-	load_dialog.add_filter("*.ceol", "Bosca Ceoil Song")
-	load_dialog.file_selected.connect(_load_ceol_song_confirmed, CONNECT_ONE_SHOT)
-	
-	get_tree().root.add_child(load_dialog)
-	load_dialog.popup_centered()
-
-
-func _load_ceol_song_confirmed(path: String) -> void:
-	var loaded_song: Song = SongLoader.load(path)
-	if not loaded_song:
-		# TODO: Show an error message.
-		return
-	print("Successfully loaded song from %s:\n  %s" % [ path, loaded_song ])
-	
-	if music_player.is_playing():
-		music_player.stop_playback()
-	
-	current_song = loaded_song
-	_change_current_pattern(0, false)
-	_change_current_instrument(0, false)
-	
-	music_player.reset_driver()
-	music_player.start_playback()
-	
-	song_loaded.emit()
-
-
-func save_ceol_song() -> void:
-	var load_dialog := _get_file_dialog()
-	load_dialog.file_mode = FileDialog.FILE_MODE_SAVE_FILE
-	load_dialog.add_filter("*.ceol", "Bosca Ceoil Song")
-	load_dialog.file_selected.connect(_save_ceol_song_confirmed, CONNECT_ONE_SHOT)
-	
-	get_tree().root.add_child(load_dialog)
-	load_dialog.popup_centered()
-
-
-func _save_ceol_song_confirmed(path: String) -> void:
-	var success := SongSaver.save(current_song, path)
-	if not success:
-		# TODO: Show an error message.
-		return
-	print("Successfully saved song to %s." % [ path ])
-	
+func mark_song_saved() -> void:
 	current_song.mark_clean()
 	song_saved.emit()
 
 
-func _check_song_on_exit() -> void:
-	if current_song && current_song.is_dirty():
-		var unsaved_warning := _get_info_popup()
-		
-		unsaved_warning.title = "WARNING — Unsaved changes"
-		unsaved_warning.content = "Current song has [accent]UNSAVED CHANGES[/accent].\n\nAre you sure you want to quit?"
-		unsaved_warning.add_button("Cancel", unsaved_warning.close_popup)
-		unsaved_warning.add_button("I'm sure!", func():
-			get_tree().quit()
-		)
-		
-		unsaved_warning.size = Vector2(600, 220)
-		unsaved_warning.popup(get_window().size / 2)
-		return
-	
-	get_tree().quit()
+func lock_song_editing() -> void:
+	_controls_locked = true
+	show_blocker()
+	controls_locked.emit("NOW EXPORTING AS WAV, PLEASE WAIT")
+
+
+func unlock_song_editing() -> void:
+	_controls_locked = false
+	hide_blocker()
+	controls_unlocked.emit()
+
+
+func is_song_editing_locked() -> bool:
+	return _controls_locked
 
 
 # Pattern editing.
