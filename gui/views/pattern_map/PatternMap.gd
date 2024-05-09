@@ -699,6 +699,7 @@ func _copy_timeline_bars() -> void:
 		return
 	
 	current_arrangement.copy_bar_range(current_arrangement.loop_start, current_arrangement.loop_end)
+	Controller.update_status("SELECTED BARS COPIED", Controller.StatusLevel.INFO)
 
 
 func _paste_timeline_bars(at_index: int) -> void:

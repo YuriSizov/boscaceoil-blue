@@ -17,6 +17,7 @@ func create_new_song() -> void:
 	
 	var new_song := Song.create_default_song()
 	Controller.set_current_song(new_song)
+	Controller.update_status("NEW SONG CREATED", Controller.StatusLevel.SUCCESS)
 
 
 func create_new_song_safe() -> void:
@@ -70,15 +71,15 @@ func load_ceol_song_safe() -> void:
 func _load_ceol_song_confirmed(path: String) -> void:
 	var loaded_song: Song = SongLoader.load(path)
 	if not loaded_song:
-		# TODO: Show an error message.
+		Controller.update_status("FAILED TO LOAD SONG", Controller.StatusLevel.ERROR)
 		return
-	
-	print("Successfully loaded song from %s:\n  %s" % [ path, loaded_song ])
 	
 	if Controller.music_player.is_playing():
 		Controller.music_player.stop_playback()
 	
 	Controller.set_current_song(loaded_song)
+	Controller.update_status("SONG LOADED", Controller.StatusLevel.SUCCESS)
+	print("Successfully loaded song from %s:\n  %s" % [ path, loaded_song ])
 
 
 func save_ceol_song() -> void:
@@ -94,11 +95,12 @@ func save_ceol_song() -> void:
 func _save_ceol_song_confirmed(path: String) -> void:
 	var success := SongSaver.save(Controller.current_song, path)
 	if not success:
-		# TODO: Show an error message.
+		Controller.update_status("FAILED TO SAVE SONG", Controller.StatusLevel.ERROR)
 		return
 	
-	print("Successfully saved song to %s." % [ path ])
 	Controller.mark_song_saved()
+	Controller.update_status("SONG SAVED", Controller.StatusLevel.SUCCESS)
+	print("Successfully saved song to %s." % [ path ])
 
 
 func check_song_on_exit() -> void:
@@ -137,7 +139,7 @@ func _export_wav_song_confirmed(path: String) -> void:
 	var exporter := WavExporter.new()
 	var path_valid := exporter.set_export_path(path)
 	if not path_valid:
-		# TODO: Show an error message.
+		Controller.update_status("FAILED TO EXPORT SONG: INVALID FILENAME", Controller.StatusLevel.ERROR)
 		return
 	
 	Controller.lock_song_editing()
@@ -157,9 +159,10 @@ func _process_wav_song(event: SiONEvent, exporter: WavExporter) -> void:
 func _save_wav_song(exporter: WavExporter) -> void:
 	var success := exporter.save()
 	if not success:
-		# TODO: Show an error message.
+		Controller.update_status("FAILED TO EXPORT SONG", Controller.StatusLevel.ERROR)
 		Controller.unlock_song_editing()
 		return
 	
-	print("Successfully exported song to %s." % [ exporter.get_export_path() ])
 	Controller.unlock_song_editing()
+	Controller.update_status("SONG EXPORTED AS WAV", Controller.StatusLevel.SUCCESS)
+	print("Successfully exported song to %s." % [ exporter.get_export_path() ])

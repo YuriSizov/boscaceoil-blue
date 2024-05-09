@@ -8,15 +8,22 @@ extends Node
 
 signal song_loaded()
 signal song_saved()
-
 signal song_sizes_changed()
 signal song_pattern_changed()
 signal song_instrument_changed()
 
 signal controls_locked(message: String)
 signal controls_unlocked()
+signal status_updated(level: StatusLevel, message: String)
 
 const INFO_POPUP_SCENE := preload("res://gui/widgets/InfoPopup.tscn")
+
+enum StatusLevel {
+	INFO,
+	SUCCESS,
+	WARNING,
+	ERROR,
+}
 
 enum DragSources {
 	PATTERN_DOCK,
@@ -45,6 +52,7 @@ var instrument_themes: Dictionary = {
 }
 
 var _file_dialog: FileDialog = null
+var _file_dialog_unparent_callable: Callable = Callable()
 var _info_popup: InfoPopup = null
 var _controls_blocker: PopupManager.PopupControl = null
 
@@ -95,7 +103,11 @@ func get_file_dialog() -> FileDialog:
 		_file_dialog.use_native_dialog = true
 		_file_dialog.access = FileDialog.ACCESS_FILESYSTEM
 		
-		_file_dialog.file_selected.connect(_unparent_file_dialog.unbind(1))
+		# While it should be possible to compare this _unparent_file_dialog.unbind(1) with
+		# another _unparent_file_dialog.unbind(1) later on, in actuality the check in the engine
+		# is faulty and explicitly returns NOT EQUAL for two equal custom callables. So we do this.
+		_file_dialog_unparent_callable = _unparent_file_dialog.unbind(1)
+		_file_dialog.file_selected.connect(_file_dialog_unparent_callable)
 		_file_dialog.canceled.connect(_clear_file_dialog_connections)
 		_file_dialog.canceled.connect(_unparent_file_dialog)
 	
@@ -111,7 +123,7 @@ func show_file_dialog(dialog: FileDialog) -> void:
 func _clear_file_dialog_connections() -> void:
 	var connections := _file_dialog.file_selected.get_connections()
 	for connection : Dictionary in connections:
-		if connection["callable"] != _unparent_file_dialog:
+		if connection["callable"] != _file_dialog_unparent_callable:
 			_file_dialog.file_selected.disconnect(connection["callable"])
 
 
@@ -146,6 +158,9 @@ func hide_blocker() -> void:
 	
 	PopupManager.hide_popup(_controls_blocker)
 
+
+func update_status(message: String, level: StatusLevel = StatusLevel.INFO) -> void:
+	status_updated.emit(level, message)
 
 # Song editing.
 
