@@ -192,9 +192,9 @@ bg_color = Color(0.313726, 0.396078, 0.415686, 1)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_lgaqy"]
 content_margin_left = 8.0
-content_margin_top = 0.0
+content_margin_top = 3.0
 content_margin_right = 12.0
-content_margin_bottom = 6.0
+content_margin_bottom = 3.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wpor0"]
 content_margin_left = 0.0
@@ -470,21 +470,20 @@ NoteMap/constants/note_cursor_width = 3
 NoteMap/constants/note_height = 32
 NoteMap/constants/playback_cursor_width = 8
 NoteMap/icons/active_note_overlap = ExtResource("1_4kypt")
+OptionListPopup/colors/empty_font_color = Color(0.284934, 0.322112, 0.334212, 1)
+OptionListPopup/colors/option_font_color = Color(1, 1, 1, 1)
+OptionListPopup/colors/option_hover_color = Color(0.858824, 0.886275, 0.898039, 0.54902)
+OptionListPopup/colors/sublist_color = Color(1, 1, 1, 1)
+OptionListPopup/colors/sublist_font_color = Color(0.101961, 0.129412, 0.137255, 1)
+OptionListPopup/colors/sublist_hover_color = Color(0.572549, 0.639216, 0.666667, 0.627451)
+OptionListPopup/colors/sublist_inactive_font_color = Color(0.101961, 0.129412, 0.137255, 0.392157)
+OptionListPopup/colors/sublist_selected_color = Color(0.351146, 0.409792, 0.435427, 0.784314)
+OptionListPopup/font_sizes/option_font_size = 22
+OptionListPopup/styles/item_margins = SubResource("StyleBoxEmpty_lgaqy")
+OptionListPopup/styles/popup_panel = SubResource("StyleBoxFlat_wpor0")
 OptionPicker/base_type = &"MarginContainer"
-OptionPicker/colors/empty_font_color = Color(0.284934, 0.322112, 0.334212, 1)
-OptionPicker/colors/option_font_color = Color(1, 1, 1, 1)
-OptionPicker/colors/option_hover_color = Color(0.858824, 0.886275, 0.898039, 0.54902)
-OptionPicker/colors/sublist_color = Color(1, 1, 1, 1)
-OptionPicker/colors/sublist_font_color = Color(0.101961, 0.129412, 0.137255, 1)
-OptionPicker/colors/sublist_hover_color = Color(0.572549, 0.639216, 0.666667, 0.627451)
-OptionPicker/colors/sublist_inactive_font_color = Color(0.101961, 0.129412, 0.137255, 0.392157)
-OptionPicker/colors/sublist_selected_color = Color(0.351146, 0.409792, 0.435427, 0.784314)
-OptionPicker/constants/item_height_adjustment = -3
-OptionPicker/font_sizes/option_font_size = 22
 OptionPicker/icons/down_arrow = ExtResource("4_l7eih")
 OptionPicker/icons/up_arrow = ExtResource("5_65g4b")
-OptionPicker/styles/item_margins = SubResource("StyleBoxEmpty_lgaqy")
-OptionPicker/styles/popup_panel = SubResource("StyleBoxFlat_wpor0")
 OptionPickerBox/base_type = &"HBoxContainer"
 OptionPickerBox/constants/separation = 16
 PadSlider/colors/cursor_color = Color(1, 1, 1, 1)

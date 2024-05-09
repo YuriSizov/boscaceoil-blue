@@ -38,7 +38,7 @@ func _set_category_options() -> void:
 	var categories := Controller.voice_manager.get_categories()
 	var category_id := 0
 	for category in categories:
-		var item := OptionPicker.Item.new()
+		var item := OptionListPopup.Item.new()
 		item.id = category_id
 		item.text = category
 		
@@ -67,11 +67,11 @@ func _set_instrument_options() -> void:
 	
 	var sub_categories := Controller.voice_manager.get_sub_categories(current_instrument.category)
 	var sub_category_id := 1000000
-	var selected_item: OptionPicker.Item = null
+	var selected_item: OptionListPopup.Item = null
 	for subcat in sub_categories:
 		if subcat.name.is_empty(): # This is a top-level subcategory.
 			for instrument in subcat.voices:
-				var item := OptionPicker.Item.new()
+				var item := OptionListPopup.Item.new()
 				item.id = instrument.index
 				item.text = instrument.name
 				
@@ -80,9 +80,9 @@ func _set_instrument_options() -> void:
 				_instrument_picker.options.push_back(item)
 		
 		else: # And this is an actual sublist.
-			var sublist_options: Array[OptionPicker.Item] = []
+			var sublist_options: Array[OptionListPopup.Item] = []
 			for instrument in subcat.voices:
-				var item := OptionPicker.Item.new()
+				var item := OptionListPopup.Item.new()
 				item.id = instrument.index
 				item.text = instrument.name
 				
@@ -90,7 +90,7 @@ func _set_instrument_options() -> void:
 					selected_item = item
 				sublist_options.push_back(item)
 			
-			var sublist := OptionPicker.Item.new()
+			var sublist := OptionListPopup.Item.new()
 			sublist.id = sub_category_id
 			sublist.text = subcat.name
 			sublist.is_sublist = true

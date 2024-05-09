@@ -37,9 +37,9 @@ func _ready() -> void:
 func _update_scale_options() -> void:
 	_scale_picker.options = []
 	
-	var selected_item: OptionPicker.Item = null
+	var selected_item: OptionListPopup.Item = null
 	for i in Scale.MAX:
-		var item := OptionPicker.Item.new()
+		var item := OptionListPopup.Item.new()
 		item.id = i
 		item.text = Scale.get_scale_name(i)
 
@@ -55,9 +55,9 @@ func _update_scale_options() -> void:
 func _update_key_options() -> void:
 	_key_picker.options = []
 	
-	var selected_item: OptionPicker.Item = null
+	var selected_item: OptionListPopup.Item = null
 	for i in Note.MAX:
-		var item := OptionPicker.Item.new()
+		var item := OptionListPopup.Item.new()
 		item.id = i
 		item.text = Note.get_note_name(i)
 
@@ -102,10 +102,10 @@ func _update_pattern_instrument() -> void:
 		return
 	
 	var instrument_index := 0
-	var selected_item: OptionPicker.Item = null
+	var selected_item: OptionListPopup.Item = null
 	var selected_instrument: Instrument = null
 	for instrument in Controller.current_song.instruments:
-		var item := OptionPicker.Item.new()
+		var item := OptionListPopup.Item.new()
 		item.id = instrument_index
 		item.text = "%d %s" % [ instrument_index + 1, instrument.name ]
 		var instrument_theme := Controller.get_instrument_theme(instrument)
