@@ -7,14 +7,25 @@
 @tool
 class_name SquishyButton extends BaseButton
 
+signal option_pressed(item: OptionListPopup.Item)
+
 const PRESS_FADE_DURATION := 0.1
 const UNPRESS_FADE_DURATION := 0.04
 
+enum OperationMode {
+	ACTIVATE,
+	OPTION_LIST,
+}
+
 @export var text: String = "":
 	set = set_text
+@export var operation_mode: OperationMode = OperationMode.ACTIVATE:
+	set = set_operation_mode
 
 var _text_shaped: bool = true
 var _text_buffer: TextLine = TextLine.new()
+
+var options: Array[OptionListPopup.Item] = []
 
 var _tween: Tween = null
 var _is_currently_pressed: bool = false
@@ -22,6 +33,7 @@ var _panel_position: Vector2 = Vector2.ZERO:
 	set(value):
 		_panel_position = value
 		queue_redraw()
+var _popup_control: OptionListPopup = null
 
 # Theme cache.
 
@@ -40,6 +52,11 @@ var _hover_style: StyleBox = null
 var _disabled_style: StyleBox = null
 
 
+func _init() -> void:
+	_popup_control = OptionListPopup.new()
+	_popup_control.item_selected.connect(_handle_option_selected)
+
+
 func _enter_tree() -> void:
 	_update_theme()
 	
@@ -48,6 +65,13 @@ func _enter_tree() -> void:
 
 func _ready() -> void:
 	theme_changed.connect(_update_theme)
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_PREDELETE:
+		# Clean up popups which are not currently mounted to the tree.
+		if is_instance_valid(_popup_control):
+			_popup_control.queue_free()
 
 
 func _update_theme() -> void:
@@ -145,6 +169,40 @@ func _shape_text() -> void:
 	_text_buffer.clear()
 	_text_buffer.add_string(text, _font, _font_size)
 	_text_shaped = true
+
+
+# Operation modes.
+
+func set_operation_mode(mode: OperationMode) -> void:
+	if operation_mode == mode:
+		return
+	
+	if operation_mode == OperationMode.OPTION_LIST:
+		pressed.disconnect(_show_options_popup)
+	
+	operation_mode = mode
+	
+	if operation_mode == OperationMode.OPTION_LIST:
+		pressed.connect(_show_options_popup)
+
+
+func _show_options_popup() -> void:
+	if operation_mode != OperationMode.OPTION_LIST:
+		return
+	
+	_popup_control.show_popup(global_position, size)
+
+
+func commit_options() -> void:
+	_popup_control.update_options(options)
+
+
+func _handle_option_selected(item: OptionListPopup.Item) -> void:
+	if item.is_sublist:
+		return
+	
+	option_pressed.emit(item)
+	PopupManager.hide_popup(_popup_control)
 
 
 # Interactions.

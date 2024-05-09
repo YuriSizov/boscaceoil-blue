@@ -79,6 +79,7 @@ func _ready() -> void:
 	theme_changed.connect(_update_theme)
 	mouse_entered.connect(_hover_popup)
 	mouse_exited.connect(_unhover_popup)
+	about_to_popup.connect(_update_popup_size)
 	about_to_hide.connect(_propagate_hide_popup)
 
 

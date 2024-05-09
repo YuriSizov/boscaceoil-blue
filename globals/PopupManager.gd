@@ -67,11 +67,19 @@ func create_blocking_popup(popup: PopupControl, position: Vector2, direction: Di
 		printerr("PopupManager: Popup %s must be unparented before it can be shown." % [ popup ])
 		return
 	
-	# Add a note to align the position against.
+	# Add a node to align the popup against and the popup itself.
 	var anchor := Control.new()
 	anchor.name = "PopupAnchor"
 	anchor.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(anchor)
+	
+	popup.hide() # Avoid showing it until positioned.
+	popup.click_handled.connect(_handle_popup_clicked.bind(popup))
+	anchor.add_child(popup)
+	_active_popups.push_back(popup)
+	
+	# Emit this after the node has been added to the tree, so theme is accessible.
+	popup.about_to_popup.emit()
 	
 	# Apply smart adjustments if the desired position + size would put the popup out of screen.
 	# We trust the hardcoded direction, so the solution is be to nudge it back in.
@@ -99,7 +107,7 @@ func create_blocking_popup(popup: PopupControl, position: Vector2, direction: Di
 			effective_popup_rect.position.y = position.y
 			effective_popup_rect.size.x = popup.size.x
 			effective_popup_rect.size.y = popup.size.y - popup.size.y
-
+	
 	if effective_popup_rect.position.x < 0:
 		valid_position.x -= effective_popup_rect.position.x
 	elif effective_popup_rect.end.x > _click_catcher.size.x:
@@ -109,13 +117,11 @@ func create_blocking_popup(popup: PopupControl, position: Vector2, direction: Di
 		valid_position.y -= effective_popup_rect.position.y
 	elif effective_popup_rect.end.y > _click_catcher.size.y:
 		valid_position.y -= effective_popup_rect.end.y - _click_catcher.size.y
-
+	
+	# Set the popup to an acceptable position.
 	anchor.global_position = valid_position
 	
-	# Add the popup control itself and align it with anchors.
-	popup.hide()
-	anchor.add_child(popup)
-	
+	# Align the popup to the anchor point.
 	match direction:
 		Direction.BOTTOM_RIGHT:
 			popup.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT, Control.PRESET_MODE_KEEP_SIZE)
@@ -133,10 +139,9 @@ func create_blocking_popup(popup: PopupControl, position: Vector2, direction: Di
 			popup.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT, Control.PRESET_MODE_KEEP_SIZE)
 			popup.grow_horizontal = Control.GROW_DIRECTION_BEGIN
 			popup.grow_vertical = Control.GROW_DIRECTION_BEGIN
-
+	
+	# Finally, show everything.
 	popup.show()
-	popup.click_handled.connect(_handle_popup_clicked.bind(popup))
-	_active_popups.push_back(popup)
 	_click_catcher.visible = true
 
 
@@ -184,6 +189,7 @@ static func hide_all_popups() -> void:
 
 class PopupControl extends Control:
 	signal click_handled()
+	signal about_to_popup()
 	signal about_to_hide()
 	
 	
