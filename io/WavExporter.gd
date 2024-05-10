@@ -81,7 +81,6 @@ func save() -> bool:
 
 	# Try to write the file with the new contents.
 	
-	file.big_endian = false
 	file.store_buffer(_file)
 	error = file.get_error()
 	if error != OK:
@@ -103,47 +102,31 @@ func _precalculate_size() -> int:
 	return size
 
 
-func _write_string(value: String) -> void:
-	_file.append_array(value.to_utf8_buffer())
-
-
-func _write_int32(value: int) -> void:
-	var offset := _file.size()
-	_file.resize(offset + 4)
-	_file.encode_s32(offset, value)
-
-
-func _write_int16(value: int) -> void:
-	var offset := _file.size()
-	_file.resize(offset + 2)
-	_file.encode_s16(offset, value)
-
-
 func _write_wav_header() -> void:
-	_write_string("RIFF") # WAV is a RIFF document.
+	ByteArrayUtil.write_string(_file, "RIFF") # WAV is a RIFF document.
 	var total_size := _precalculate_size()
-	_write_int32(total_size)
-	_write_string("WAVE") # Wave file description.
+	ByteArrayUtil.write_int32(_file, total_size)
+	ByteArrayUtil.write_string(_file, "WAVE") # Wave file description.
 
 
 func _write_format_chunk() -> void:
-	_write_string("fmt ")
-	_write_int32(_fmt_chunk_size)
+	ByteArrayUtil.write_string(_file, "fmt ")
+	ByteArrayUtil.write_int32(_file, _fmt_chunk_size)
 	
 	# WAVE_FORMAT_PCM format is assumed here.
-	_write_int16(_wave_format)
-	_write_int16(_channel_number)
-	_write_int32(_sampling_rate)
+	ByteArrayUtil.write_int16(_file, _wave_format)
+	ByteArrayUtil.write_int16(_file, _channel_number)
+	ByteArrayUtil.write_int32(_file, _sampling_rate)
 	@warning_ignore("integer_division")
-	_write_int32((_sampling_rate * _channel_number * _bits_per_sample) / 8) # Data rate (bytes/sec).
+	ByteArrayUtil.write_int32(_file, (_sampling_rate * _channel_number * _bits_per_sample) / 8) # Data rate (bytes/sec).
 	@warning_ignore("integer_division")
-	_write_int16((_channel_number * _bits_per_sample) / 8) # Data block alignment.
-	_write_int16(_bits_per_sample)
+	ByteArrayUtil.write_int16(_file, (_channel_number * _bits_per_sample) / 8) # Data block alignment.
+	ByteArrayUtil.write_int16(_file, _bits_per_sample)
 
 
 func _write_data_chunk() -> void:
-	_write_string("data")
-	_write_int32(_data.size())
+	ByteArrayUtil.write_string(_file, "data")
+	ByteArrayUtil.write_int32(_file, _data.size())
 	
 	_file.append_array(_data)
 	# If data size is odd, a padding byte should be added. But it cannot be odd in our case.

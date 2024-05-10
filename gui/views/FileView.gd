@@ -101,5 +101,7 @@ func _handle_export_option(item: OptionListPopup.Item) -> void:
 	match item.id:
 		ExportOptions.EXPORT_WAV:
 			Controller.io_manager.export_wav_song()
+		ExportOptions.EXPORT_MID:
+			Controller.io_manager.export_mid_song()
 		_:
 			Controller.update_status("FORMAT NOT SUPPORTED (YET)", Controller.StatusLevel.WARNING)

@@ -13,7 +13,8 @@ signal song_changed()
 const FILE_FORMAT := 3
 const FILE_EXTENSION := "ceol"
 
-# These limits are arbitrary, but match the original implementation.
+# These numbers are probably limited by the MIDI specification. For example, instruments
+# are translated into MIDI channels, and there can be only up to 16 channels (half a byte).
 const MAX_INSTRUMENT_COUNT := 16
 const MAX_PATTERN_COUNT := 4096
 

@@ -44,6 +44,11 @@ func get_note_name(note: int) -> String:
 	return drumkit_data.items[note].name
 
 
+func get_midi_note(note: int) -> int:
+	var drumkit_data := _voice_data as VoiceManager.DrumkitData
+	return drumkit_data.items[note].midi_note
+
+
 # Filter state.
 
 func update_filter() -> void:

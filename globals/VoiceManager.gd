@@ -61,151 +61,151 @@ func _register_categories() -> void:
 
 
 func _register_voices() -> void:
-	_register_single_voice("MIDI", "Grand Piano",       "midi.piano1",    ColorPalette.PALETTE_BLUE)
-	_register_single_voice("MIDI", "Bright Piano",      "midi.piano2",    ColorPalette.PALETTE_PURPLE)
-	_register_single_voice("MIDI", "Electric Grand",    "midi.piano3",    ColorPalette.PALETTE_RED)
-	_register_single_voice("MIDI", "Honky Tonk",        "midi.piano4",    ColorPalette.PALETTE_ORANGE)
-	_register_single_voice("MIDI", "Electric Piano 1",  "midi.piano5",    ColorPalette.PALETTE_GREEN)
-	_register_single_voice("MIDI", "Electric Piano 2",  "midi.piano6",    ColorPalette.PALETTE_CYAN)
-	_register_single_voice("MIDI", "Harpsichord",       "midi.piano7",    ColorPalette.PALETTE_BLUE)
-	_register_single_voice("MIDI", "Clavi",             "midi.piano8",    ColorPalette.PALETTE_PURPLE)
-	_register_single_voice("MIDI", "Celesta",           "midi.chrom1",    ColorPalette.PALETTE_RED)
-	_register_single_voice("MIDI", "Glockenspiel",      "midi.chrom2",    ColorPalette.PALETTE_ORANGE)
-	_register_single_voice("MIDI", "Music Box",         "midi.chrom3",    ColorPalette.PALETTE_GREEN)
-	_register_single_voice("MIDI", "Vibraphone",        "midi.chrom4",    ColorPalette.PALETTE_CYAN)
-	_register_single_voice("MIDI", "Marimba",           "midi.chrom5",    ColorPalette.PALETTE_BLUE)
-	_register_single_voice("MIDI", "Xylophone",         "midi.chrom6",    ColorPalette.PALETTE_PURPLE)
-	_register_single_voice("MIDI", "Tubular Bells",     "midi.chrom7",    ColorPalette.PALETTE_RED)
-	_register_single_voice("MIDI", "Dulcimer",          "midi.chrom8",    ColorPalette.PALETTE_ORANGE)
-	_register_single_voice("MIDI", "Drawbar Organ",     "midi.organ1",    ColorPalette.PALETTE_GREEN)
-	_register_single_voice("MIDI", "Percussive Organ",  "midi.organ2",    ColorPalette.PALETTE_CYAN)
-	_register_single_voice("MIDI", "Rock Organ",        "midi.organ3",    ColorPalette.PALETTE_BLUE)
-	_register_single_voice("MIDI", "Church Organ",      "midi.organ4",    ColorPalette.PALETTE_PURPLE)
-	_register_single_voice("MIDI", "Reed Organ",        "midi.organ5",    ColorPalette.PALETTE_RED)
-	_register_single_voice("MIDI", "Accordion",         "midi.organ6",    ColorPalette.PALETTE_ORANGE)
-	_register_single_voice("MIDI", "Harmonica",         "midi.organ7",    ColorPalette.PALETTE_GREEN)
-	_register_single_voice("MIDI", "Tango Accordion",   "midi.organ8",    ColorPalette.PALETTE_CYAN)
-	_register_single_voice("MIDI", "Nylon Guitar",      "midi.guitar1",   ColorPalette.PALETTE_BLUE)
-	_register_single_voice("MIDI", "Steel Guitar",      "midi.guitar2",   ColorPalette.PALETTE_PURPLE)
-	_register_single_voice("MIDI", "Jazz Guitar",       "midi.guitar3",   ColorPalette.PALETTE_RED)
-	_register_single_voice("MIDI", "Electric Guitar",   "midi.guitar4",   ColorPalette.PALETTE_ORANGE)
-	_register_single_voice("MIDI", "Muted Guitar",      "midi.guitar5",   ColorPalette.PALETTE_GREEN)
-	_register_single_voice("MIDI", "Overdrive Guitar",  "midi.guitar6",   ColorPalette.PALETTE_CYAN)
-	_register_single_voice("MIDI", "Distorted Guitar",  "midi.guitar7",   ColorPalette.PALETTE_BLUE)
-	_register_single_voice("MIDI", "Guitar harmonics",  "midi.guitar8",   ColorPalette.PALETTE_PURPLE)
-	_register_single_voice("MIDI", "Acoustic Bass",     "midi.bass1",     ColorPalette.PALETTE_RED)
-	_register_single_voice("MIDI", "Finger Bass",       "midi.bass2",     ColorPalette.PALETTE_ORANGE)
-	_register_single_voice("MIDI", "Pick Bass",         "midi.bass3",     ColorPalette.PALETTE_GREEN)
-	_register_single_voice("MIDI", "Fretless Bass",     "midi.bass4",     ColorPalette.PALETTE_CYAN)
-	_register_single_voice("MIDI", "Slap Bass 1",       "midi.bass5",     ColorPalette.PALETTE_BLUE)
-	_register_single_voice("MIDI", "Slap Bass 2",       "midi.bass6",     ColorPalette.PALETTE_PURPLE)
-	_register_single_voice("MIDI", "Synth Bass 1",      "midi.bass7",     ColorPalette.PALETTE_RED)
-	_register_single_voice("MIDI", "Synth Bass 2",      "midi.bass8",     ColorPalette.PALETTE_ORANGE)
-	_register_single_voice("MIDI", "Violin",            "midi.strings1",  ColorPalette.PALETTE_GREEN)
-	_register_single_voice("MIDI", "Viola",             "midi.strings2",  ColorPalette.PALETTE_CYAN)
-	_register_single_voice("MIDI", "Cello",             "midi.strings3",  ColorPalette.PALETTE_BLUE)
-	_register_single_voice("MIDI", "Contrabass",        "midi.strings4",  ColorPalette.PALETTE_PURPLE)
-	_register_single_voice("MIDI", "Tremolo Strings",   "midi.strings5",  ColorPalette.PALETTE_RED)
-	_register_single_voice("MIDI", "Pizzicato Strings", "midi.strings6",  ColorPalette.PALETTE_ORANGE)
-	_register_single_voice("MIDI", "Harp",              "midi.strings7",  ColorPalette.PALETTE_GREEN)
-	_register_single_voice("MIDI", "Timpani",           "midi.strings8",  ColorPalette.PALETTE_CYAN)
-	_register_single_voice("MIDI", "String Ensemble 1", "midi.ensemble1", ColorPalette.PALETTE_BLUE)
-	_register_single_voice("MIDI", "String Ensemble 2", "midi.ensemble2", ColorPalette.PALETTE_PURPLE)
-	_register_single_voice("MIDI", "Synth Strings 1",   "midi.ensemble3", ColorPalette.PALETTE_RED)
-	_register_single_voice("MIDI", "Synth Strings 2",   "midi.ensemble4", ColorPalette.PALETTE_ORANGE)
-	_register_single_voice("MIDI", "Choir Aahs",        "midi.ensemble5", ColorPalette.PALETTE_GREEN)
-	_register_single_voice("MIDI", "Voice Oohs",        "midi.ensemble6", ColorPalette.PALETTE_CYAN)
-	_register_single_voice("MIDI", "Synth Voice",       "midi.ensemble7", ColorPalette.PALETTE_BLUE)
-	_register_single_voice("MIDI", "Orchestra Hit",     "midi.ensemble8", ColorPalette.PALETTE_PURPLE)
-	_register_single_voice("MIDI", "Trumpet",           "midi.brass1",    ColorPalette.PALETTE_RED)
-	_register_single_voice("MIDI", "Trombone",          "midi.brass2",    ColorPalette.PALETTE_ORANGE)
-	_register_single_voice("MIDI", "Tuba",              "midi.brass3",    ColorPalette.PALETTE_GREEN)
-	_register_single_voice("MIDI", "Muted Trumpet",     "midi.brass4",    ColorPalette.PALETTE_CYAN)
-	_register_single_voice("MIDI", "French Horn",       "midi.brass5",    ColorPalette.PALETTE_BLUE)
-	_register_single_voice("MIDI", "Brass Section",     "midi.brass6",    ColorPalette.PALETTE_PURPLE)
-	_register_single_voice("MIDI", "Synth Brass 1",     "midi.brass7",    ColorPalette.PALETTE_RED)
-	_register_single_voice("MIDI", "Synth Brass 2",     "midi.brass8",    ColorPalette.PALETTE_ORANGE)
-	_register_single_voice("MIDI", "Soprano Sax",       "midi.reed1",     ColorPalette.PALETTE_GREEN)
-	_register_single_voice("MIDI", "Alto Sax",          "midi.reed2",     ColorPalette.PALETTE_CYAN)
-	_register_single_voice("MIDI", "Tenor Sax",         "midi.reed3",     ColorPalette.PALETTE_BLUE)
-	_register_single_voice("MIDI", "Baritone Sax",      "midi.reed4",     ColorPalette.PALETTE_PURPLE)
-	_register_single_voice("MIDI", "Oboe",              "midi.reed5",     ColorPalette.PALETTE_RED)
-	_register_single_voice("MIDI", "English Horn",      "midi.reed6",     ColorPalette.PALETTE_ORANGE)
-	_register_single_voice("MIDI", "Bassoon",           "midi.reed7",     ColorPalette.PALETTE_GREEN)
-	_register_single_voice("MIDI", "Clarinet",          "midi.reed8",     ColorPalette.PALETTE_CYAN)
-	_register_single_voice("MIDI", "Piccolo",           "midi.pipe1",     ColorPalette.PALETTE_BLUE)
-	_register_single_voice("MIDI", "Flute",             "midi.pipe2",     ColorPalette.PALETTE_PURPLE)
-	_register_single_voice("MIDI", "Recorder",          "midi.pipe3",     ColorPalette.PALETTE_RED)
-	_register_single_voice("MIDI", "Pan Flute",         "midi.pipe4",     ColorPalette.PALETTE_ORANGE)
-	_register_single_voice("MIDI", "Bottle",            "midi.pipe5",     ColorPalette.PALETTE_GREEN)
-	_register_single_voice("MIDI", "Shakuhachi",        "midi.pipe6",     ColorPalette.PALETTE_CYAN)
-	_register_single_voice("MIDI", "Whistle",           "midi.pipe7",     ColorPalette.PALETTE_BLUE)
-	_register_single_voice("MIDI", "Ocarina",           "midi.pipe8",     ColorPalette.PALETTE_PURPLE)
-	_register_single_voice("MIDI", "Square Lead",       "midi.lead1",     ColorPalette.PALETTE_RED)
-	_register_single_voice("MIDI", "Saw Lead",          "midi.lead2",     ColorPalette.PALETTE_ORANGE)
-	_register_single_voice("MIDI", "Calliope Lead",     "midi.lead3",     ColorPalette.PALETTE_GREEN)
-	_register_single_voice("MIDI", "Chiff Lead",        "midi.lead4",     ColorPalette.PALETTE_CYAN)
-	_register_single_voice("MIDI", "Charang Lead",      "midi.lead5",     ColorPalette.PALETTE_BLUE)
-	_register_single_voice("MIDI", "Voice Lead",        "midi.lead6",     ColorPalette.PALETTE_PURPLE)
-	_register_single_voice("MIDI", "Fifths Lead",       "midi.lead7",     ColorPalette.PALETTE_RED)
-	_register_single_voice("MIDI", "Bass and Lead",     "midi.lead8",     ColorPalette.PALETTE_ORANGE)
-	_register_single_voice("MIDI", "New Age Pad",       "midi.pad1",      ColorPalette.PALETTE_GREEN)
-	_register_single_voice("MIDI", "Warm Pad",          "midi.pad2",      ColorPalette.PALETTE_CYAN)
-	_register_single_voice("MIDI", "Polysynth Pad",     "midi.pad3",      ColorPalette.PALETTE_BLUE)
-	_register_single_voice("MIDI", "Choir Pad",         "midi.pad4",      ColorPalette.PALETTE_PURPLE)
-	_register_single_voice("MIDI", "Bowed Pad",         "midi.pad5",      ColorPalette.PALETTE_RED)
-	_register_single_voice("MIDI", "Metallic Pad",      "midi.pad6",      ColorPalette.PALETTE_ORANGE)
-	_register_single_voice("MIDI", "Halo Pad",          "midi.pad7",      ColorPalette.PALETTE_GREEN)
-	_register_single_voice("MIDI", "Sweep Pad",         "midi.pad8",      ColorPalette.PALETTE_CYAN)
-	_register_single_voice("MIDI", "Rain",              "midi.fx1",       ColorPalette.PALETTE_BLUE)
-	_register_single_voice("MIDI", "Soundtrack",        "midi.fx2",       ColorPalette.PALETTE_PURPLE)
-	_register_single_voice("MIDI", "Crystal",           "midi.fx3",       ColorPalette.PALETTE_RED)
-	_register_single_voice("MIDI", "Atmosphere",        "midi.fx4",       ColorPalette.PALETTE_ORANGE)
-	_register_single_voice("MIDI", "Bright",            "midi.fx5",       ColorPalette.PALETTE_GREEN)
-	_register_single_voice("MIDI", "Goblins",           "midi.fx6",       ColorPalette.PALETTE_CYAN)
-	_register_single_voice("MIDI", "Echoes",            "midi.fx7",       ColorPalette.PALETTE_BLUE)
-	_register_single_voice("MIDI", "Sci-Fi",            "midi.fx8",       ColorPalette.PALETTE_PURPLE)
-	_register_single_voice("MIDI", "Sitar",             "midi.world1",    ColorPalette.PALETTE_RED)
-	_register_single_voice("MIDI", "Banjo",             "midi.world2",    ColorPalette.PALETTE_ORANGE)
-	_register_single_voice("MIDI", "Shamisen",          "midi.world3",    ColorPalette.PALETTE_GREEN)
-	_register_single_voice("MIDI", "Koto",              "midi.world4",    ColorPalette.PALETTE_CYAN)
-	_register_single_voice("MIDI", "Kalimba",           "midi.world5",    ColorPalette.PALETTE_BLUE)
-	_register_single_voice("MIDI", "Bagpipe",           "midi.world6",    ColorPalette.PALETTE_PURPLE)
-	_register_single_voice("MIDI", "Fiddle",            "midi.world7",    ColorPalette.PALETTE_RED)
-	_register_single_voice("MIDI", "Shanai",            "midi.world8",    ColorPalette.PALETTE_ORANGE)
-	_register_single_voice("MIDI", "Tinkle Bell",       "midi.percus1",   ColorPalette.PALETTE_GREEN)
-	_register_single_voice("MIDI", "Agogo",             "midi.percus2",   ColorPalette.PALETTE_CYAN)
-	_register_single_voice("MIDI", "Steel Drums",       "midi.percus3",   ColorPalette.PALETTE_BLUE)
-	_register_single_voice("MIDI", "Wood Block",        "midi.percus4",   ColorPalette.PALETTE_PURPLE)
-	_register_single_voice("MIDI", "Taiko Drum",        "midi.percus5",   ColorPalette.PALETTE_RED)
-	_register_single_voice("MIDI", "Melodic Tom",       "midi.percus6",   ColorPalette.PALETTE_ORANGE)
-	_register_single_voice("MIDI", "Synth Drum",        "midi.percus7",   ColorPalette.PALETTE_GREEN)
-	_register_single_voice("MIDI", "Reverse Cymbal",    "midi.percus8",   ColorPalette.PALETTE_CYAN)
-	_register_single_voice("MIDI", "Fret Noise",        "midi.se1",       ColorPalette.PALETTE_BLUE)
-	_register_single_voice("MIDI", "Breath Noise",      "midi.se2",       ColorPalette.PALETTE_PURPLE)
-	_register_single_voice("MIDI", "Seashore",          "midi.se3",       ColorPalette.PALETTE_RED)
-	_register_single_voice("MIDI", "Tweet",             "midi.se4",       ColorPalette.PALETTE_ORANGE)
-	_register_single_voice("MIDI", "Telephone",         "midi.se5",       ColorPalette.PALETTE_GREEN)
-	_register_single_voice("MIDI", "Helicopter",        "midi.se6",       ColorPalette.PALETTE_CYAN)
-	_register_single_voice("MIDI", "Applause",          "midi.se7",       ColorPalette.PALETTE_BLUE)
-	_register_single_voice("MIDI", "Gunshot",           "midi.se8",       ColorPalette.PALETTE_PURPLE)
-
-	_register_single_voice("CHIPTUNE", "Square Wave",    "square",     ColorPalette.PALETTE_BLUE,    6)
-	_register_single_voice("CHIPTUNE", "Saw Wave",       "saw",        ColorPalette.PALETTE_PURPLE,  81)
-	_register_single_voice("CHIPTUNE", "Triangle Wave",  "triangle",   ColorPalette.PALETTE_RED,     80)
-	_register_single_voice("CHIPTUNE", "Sine Wave",      "sine",       ColorPalette.PALETTE_ORANGE,  102)
-	_register_single_voice("CHIPTUNE", "Noise",          "noise",      ColorPalette.PALETTE_GRAY,    127)
-	_register_single_voice("CHIPTUNE", "Dual Square",    "dualsquare", ColorPalette.PALETTE_BLUE,    4)
-	_register_single_voice("CHIPTUNE", "Dual Saw",       "dualsaw",    ColorPalette.PALETTE_PURPLE,  7)
-	_register_single_voice("CHIPTUNE", "Triangle LO-FI", "triangle8",  ColorPalette.PALETTE_RED,     72)
-	_register_single_voice("CHIPTUNE", "Konami Wave",    "konami",     ColorPalette.PALETTE_GREEN,   3)
-	_register_single_voice("CHIPTUNE", "Ramp Wave",      "ramp",       ColorPalette.PALETTE_GREEN,   18)
-	_register_single_voice("CHIPTUNE", "Pulse Wave",     "beep",       ColorPalette.PALETTE_GREEN,   29)
-	_register_single_voice("CHIPTUNE", "MA3 Wave",       "ma1",        ColorPalette.PALETTE_GREEN,   25)
-	_register_single_voice("CHIPTUNE", "Noise (Bass)",   "bassdrumm",  ColorPalette.PALETTE_GRAY,    115)
-	_register_single_voice("CHIPTUNE", "Noise (Snare)",  "snare",      ColorPalette.PALETTE_GRAY,    118)
-	_register_single_voice("CHIPTUNE", "Noise (Hi-Hat)", "closedhh",   ColorPalette.PALETTE_GRAY,    126)
-
+	_register_single_voice("MIDI", "Grand Piano",       "midi.piano1",    ColorPalette.PALETTE_BLUE,   0)
+	_register_single_voice("MIDI", "Bright Piano",      "midi.piano2",    ColorPalette.PALETTE_PURPLE, 1)
+	_register_single_voice("MIDI", "Electric Grand",    "midi.piano3",    ColorPalette.PALETTE_RED,    2)
+	_register_single_voice("MIDI", "Honky Tonk",        "midi.piano4",    ColorPalette.PALETTE_ORANGE, 3)
+	_register_single_voice("MIDI", "Electric Piano 1",  "midi.piano5",    ColorPalette.PALETTE_GREEN,  4)
+	_register_single_voice("MIDI", "Electric Piano 2",  "midi.piano6",    ColorPalette.PALETTE_CYAN,   5)
+	_register_single_voice("MIDI", "Harpsichord",       "midi.piano7",    ColorPalette.PALETTE_BLUE,   6)
+	_register_single_voice("MIDI", "Clavi",             "midi.piano8",    ColorPalette.PALETTE_PURPLE, 7)
+	_register_single_voice("MIDI", "Celesta",           "midi.chrom1",    ColorPalette.PALETTE_RED,    8)
+	_register_single_voice("MIDI", "Glockenspiel",      "midi.chrom2",    ColorPalette.PALETTE_ORANGE, 9)
+	_register_single_voice("MIDI", "Music Box",         "midi.chrom3",    ColorPalette.PALETTE_GREEN,  10)
+	_register_single_voice("MIDI", "Vibraphone",        "midi.chrom4",    ColorPalette.PALETTE_CYAN,   11)
+	_register_single_voice("MIDI", "Marimba",           "midi.chrom5",    ColorPalette.PALETTE_BLUE,   12)
+	_register_single_voice("MIDI", "Xylophone",         "midi.chrom6",    ColorPalette.PALETTE_PURPLE, 13)
+	_register_single_voice("MIDI", "Tubular Bells",     "midi.chrom7",    ColorPalette.PALETTE_RED,    14)
+	_register_single_voice("MIDI", "Dulcimer",          "midi.chrom8",    ColorPalette.PALETTE_ORANGE, 15)
+	_register_single_voice("MIDI", "Drawbar Organ",     "midi.organ1",    ColorPalette.PALETTE_GREEN,  16)
+	_register_single_voice("MIDI", "Percussive Organ",  "midi.organ2",    ColorPalette.PALETTE_CYAN,   17)
+	_register_single_voice("MIDI", "Rock Organ",        "midi.organ3",    ColorPalette.PALETTE_BLUE,   18)
+	_register_single_voice("MIDI", "Church Organ",      "midi.organ4",    ColorPalette.PALETTE_PURPLE, 19)
+	_register_single_voice("MIDI", "Reed Organ",        "midi.organ5",    ColorPalette.PALETTE_RED,    20)
+	_register_single_voice("MIDI", "Accordion",         "midi.organ6",    ColorPalette.PALETTE_ORANGE, 21)
+	_register_single_voice("MIDI", "Harmonica",         "midi.organ7",    ColorPalette.PALETTE_GREEN,  22)
+	_register_single_voice("MIDI", "Tango Accordion",   "midi.organ8",    ColorPalette.PALETTE_CYAN,   23)
+	_register_single_voice("MIDI", "Nylon Guitar",      "midi.guitar1",   ColorPalette.PALETTE_BLUE,   24)
+	_register_single_voice("MIDI", "Steel Guitar",      "midi.guitar2",   ColorPalette.PALETTE_PURPLE, 25)
+	_register_single_voice("MIDI", "Jazz Guitar",       "midi.guitar3",   ColorPalette.PALETTE_RED,    26)
+	_register_single_voice("MIDI", "Electric Guitar",   "midi.guitar4",   ColorPalette.PALETTE_ORANGE, 27)
+	_register_single_voice("MIDI", "Muted Guitar",      "midi.guitar5",   ColorPalette.PALETTE_GREEN,  28)
+	_register_single_voice("MIDI", "Overdrive Guitar",  "midi.guitar6",   ColorPalette.PALETTE_CYAN,   29)
+	_register_single_voice("MIDI", "Distorted Guitar",  "midi.guitar7",   ColorPalette.PALETTE_BLUE,   30)
+	_register_single_voice("MIDI", "Guitar harmonics",  "midi.guitar8",   ColorPalette.PALETTE_PURPLE, 31)
+	_register_single_voice("MIDI", "Acoustic Bass",     "midi.bass1",     ColorPalette.PALETTE_RED,    32)
+	_register_single_voice("MIDI", "Finger Bass",       "midi.bass2",     ColorPalette.PALETTE_ORANGE, 33)
+	_register_single_voice("MIDI", "Pick Bass",         "midi.bass3",     ColorPalette.PALETTE_GREEN,  34)
+	_register_single_voice("MIDI", "Fretless Bass",     "midi.bass4",     ColorPalette.PALETTE_CYAN,   35)
+	_register_single_voice("MIDI", "Slap Bass 1",       "midi.bass5",     ColorPalette.PALETTE_BLUE,   36)
+	_register_single_voice("MIDI", "Slap Bass 2",       "midi.bass6",     ColorPalette.PALETTE_PURPLE, 37)
+	_register_single_voice("MIDI", "Synth Bass 1",      "midi.bass7",     ColorPalette.PALETTE_RED,    38)
+	_register_single_voice("MIDI", "Synth Bass 2",      "midi.bass8",     ColorPalette.PALETTE_ORANGE, 39)
+	_register_single_voice("MIDI", "Violin",            "midi.strings1",  ColorPalette.PALETTE_GREEN,  40)
+	_register_single_voice("MIDI", "Viola",             "midi.strings2",  ColorPalette.PALETTE_CYAN,   41)
+	_register_single_voice("MIDI", "Cello",             "midi.strings3",  ColorPalette.PALETTE_BLUE,   42)
+	_register_single_voice("MIDI", "Contrabass",        "midi.strings4",  ColorPalette.PALETTE_PURPLE, 43)
+	_register_single_voice("MIDI", "Tremolo Strings",   "midi.strings5",  ColorPalette.PALETTE_RED,    44)
+	_register_single_voice("MIDI", "Pizzicato Strings", "midi.strings6",  ColorPalette.PALETTE_ORANGE, 45)
+	_register_single_voice("MIDI", "Harp",              "midi.strings7",  ColorPalette.PALETTE_GREEN,  46)
+	_register_single_voice("MIDI", "Timpani",           "midi.strings8",  ColorPalette.PALETTE_CYAN,   47)
+	_register_single_voice("MIDI", "String Ensemble 1", "midi.ensemble1", ColorPalette.PALETTE_BLUE,   48)
+	_register_single_voice("MIDI", "String Ensemble 2", "midi.ensemble2", ColorPalette.PALETTE_PURPLE, 49)
+	_register_single_voice("MIDI", "Synth Strings 1",   "midi.ensemble3", ColorPalette.PALETTE_RED,    50)
+	_register_single_voice("MIDI", "Synth Strings 2",   "midi.ensemble4", ColorPalette.PALETTE_ORANGE, 51)
+	_register_single_voice("MIDI", "Choir Aahs",        "midi.ensemble5", ColorPalette.PALETTE_GREEN,  52)
+	_register_single_voice("MIDI", "Voice Oohs",        "midi.ensemble6", ColorPalette.PALETTE_CYAN,   53)
+	_register_single_voice("MIDI", "Synth Voice",       "midi.ensemble7", ColorPalette.PALETTE_BLUE,   54)
+	_register_single_voice("MIDI", "Orchestra Hit",     "midi.ensemble8", ColorPalette.PALETTE_PURPLE, 55)
+	_register_single_voice("MIDI", "Trumpet",           "midi.brass1",    ColorPalette.PALETTE_RED,    56)
+	_register_single_voice("MIDI", "Trombone",          "midi.brass2",    ColorPalette.PALETTE_ORANGE, 57)
+	_register_single_voice("MIDI", "Tuba",              "midi.brass3",    ColorPalette.PALETTE_GREEN,  58)
+	_register_single_voice("MIDI", "Muted Trumpet",     "midi.brass4",    ColorPalette.PALETTE_CYAN,   59)
+	_register_single_voice("MIDI", "French Horn",       "midi.brass5",    ColorPalette.PALETTE_BLUE,   60)
+	_register_single_voice("MIDI", "Brass Section",     "midi.brass6",    ColorPalette.PALETTE_PURPLE, 61)
+	_register_single_voice("MIDI", "Synth Brass 1",     "midi.brass7",    ColorPalette.PALETTE_RED,    62)
+	_register_single_voice("MIDI", "Synth Brass 2",     "midi.brass8",    ColorPalette.PALETTE_ORANGE, 63)
+	_register_single_voice("MIDI", "Soprano Sax",       "midi.reed1",     ColorPalette.PALETTE_GREEN,  64)
+	_register_single_voice("MIDI", "Alto Sax",          "midi.reed2",     ColorPalette.PALETTE_CYAN,   65)
+	_register_single_voice("MIDI", "Tenor Sax",         "midi.reed3",     ColorPalette.PALETTE_BLUE,   66)
+	_register_single_voice("MIDI", "Baritone Sax",      "midi.reed4",     ColorPalette.PALETTE_PURPLE, 67)
+	_register_single_voice("MIDI", "Oboe",              "midi.reed5",     ColorPalette.PALETTE_RED,    68)
+	_register_single_voice("MIDI", "English Horn",      "midi.reed6",     ColorPalette.PALETTE_ORANGE, 69)
+	_register_single_voice("MIDI", "Bassoon",           "midi.reed7",     ColorPalette.PALETTE_GREEN,  70)
+	_register_single_voice("MIDI", "Clarinet",          "midi.reed8",     ColorPalette.PALETTE_CYAN,   71)
+	_register_single_voice("MIDI", "Piccolo",           "midi.pipe1",     ColorPalette.PALETTE_BLUE,   72)
+	_register_single_voice("MIDI", "Flute",             "midi.pipe2",     ColorPalette.PALETTE_PURPLE, 73)
+	_register_single_voice("MIDI", "Recorder",          "midi.pipe3",     ColorPalette.PALETTE_RED,    74)
+	_register_single_voice("MIDI", "Pan Flute",         "midi.pipe4",     ColorPalette.PALETTE_ORANGE, 75)
+	_register_single_voice("MIDI", "Bottle",            "midi.pipe5",     ColorPalette.PALETTE_GREEN,  76)
+	_register_single_voice("MIDI", "Shakuhachi",        "midi.pipe6",     ColorPalette.PALETTE_CYAN,   77)
+	_register_single_voice("MIDI", "Whistle",           "midi.pipe7",     ColorPalette.PALETTE_BLUE,   78)
+	_register_single_voice("MIDI", "Ocarina",           "midi.pipe8",     ColorPalette.PALETTE_PURPLE, 79)
+	_register_single_voice("MIDI", "Square Lead",       "midi.lead1",     ColorPalette.PALETTE_RED,    80)
+	_register_single_voice("MIDI", "Saw Lead",          "midi.lead2",     ColorPalette.PALETTE_ORANGE, 81)
+	_register_single_voice("MIDI", "Calliope Lead",     "midi.lead3",     ColorPalette.PALETTE_GREEN,  82)
+	_register_single_voice("MIDI", "Chiff Lead",        "midi.lead4",     ColorPalette.PALETTE_CYAN,   83)
+	_register_single_voice("MIDI", "Charang Lead",      "midi.lead5",     ColorPalette.PALETTE_BLUE,   84)
+	_register_single_voice("MIDI", "Voice Lead",        "midi.lead6",     ColorPalette.PALETTE_PURPLE, 85)
+	_register_single_voice("MIDI", "Fifths Lead",       "midi.lead7",     ColorPalette.PALETTE_RED,    86)
+	_register_single_voice("MIDI", "Bass and Lead",     "midi.lead8",     ColorPalette.PALETTE_ORANGE, 87)
+	_register_single_voice("MIDI", "New Age Pad",       "midi.pad1",      ColorPalette.PALETTE_GREEN,  88)
+	_register_single_voice("MIDI", "Warm Pad",          "midi.pad2",      ColorPalette.PALETTE_CYAN,   89)
+	_register_single_voice("MIDI", "Polysynth Pad",     "midi.pad3",      ColorPalette.PALETTE_BLUE,   90)
+	_register_single_voice("MIDI", "Choir Pad",         "midi.pad4",      ColorPalette.PALETTE_PURPLE, 91)
+	_register_single_voice("MIDI", "Bowed Pad",         "midi.pad5",      ColorPalette.PALETTE_RED,    92)
+	_register_single_voice("MIDI", "Metallic Pad",      "midi.pad6",      ColorPalette.PALETTE_ORANGE, 93)
+	_register_single_voice("MIDI", "Halo Pad",          "midi.pad7",      ColorPalette.PALETTE_GREEN,  94)
+	_register_single_voice("MIDI", "Sweep Pad",         "midi.pad8",      ColorPalette.PALETTE_CYAN,   95)
+	_register_single_voice("MIDI", "Rain",              "midi.fx1",       ColorPalette.PALETTE_BLUE,   96)
+	_register_single_voice("MIDI", "Soundtrack",        "midi.fx2",       ColorPalette.PALETTE_PURPLE, 97)
+	_register_single_voice("MIDI", "Crystal",           "midi.fx3",       ColorPalette.PALETTE_RED,    98)
+	_register_single_voice("MIDI", "Atmosphere",        "midi.fx4",       ColorPalette.PALETTE_ORANGE, 99)
+	_register_single_voice("MIDI", "Bright",            "midi.fx5",       ColorPalette.PALETTE_GREEN,  100)
+	_register_single_voice("MIDI", "Goblins",           "midi.fx6",       ColorPalette.PALETTE_CYAN,   101)
+	_register_single_voice("MIDI", "Echoes",            "midi.fx7",       ColorPalette.PALETTE_BLUE,   102)
+	_register_single_voice("MIDI", "Sci-Fi",            "midi.fx8",       ColorPalette.PALETTE_PURPLE, 103)
+	_register_single_voice("MIDI", "Sitar",             "midi.world1",    ColorPalette.PALETTE_RED,    104)
+	_register_single_voice("MIDI", "Banjo",             "midi.world2",    ColorPalette.PALETTE_ORANGE, 105)
+	_register_single_voice("MIDI", "Shamisen",          "midi.world3",    ColorPalette.PALETTE_GREEN,  106)
+	_register_single_voice("MIDI", "Koto",              "midi.world4",    ColorPalette.PALETTE_CYAN,   107)
+	_register_single_voice("MIDI", "Kalimba",           "midi.world5",    ColorPalette.PALETTE_BLUE,   108)
+	_register_single_voice("MIDI", "Bagpipe",           "midi.world6",    ColorPalette.PALETTE_PURPLE, 109)
+	_register_single_voice("MIDI", "Fiddle",            "midi.world7",    ColorPalette.PALETTE_RED,    110)
+	_register_single_voice("MIDI", "Shanai",            "midi.world8",    ColorPalette.PALETTE_ORANGE, 111)
+	_register_single_voice("MIDI", "Tinkle Bell",       "midi.percus1",   ColorPalette.PALETTE_GREEN,  112)
+	_register_single_voice("MIDI", "Agogo",             "midi.percus2",   ColorPalette.PALETTE_CYAN,   113)
+	_register_single_voice("MIDI", "Steel Drums",       "midi.percus3",   ColorPalette.PALETTE_BLUE,   114)
+	_register_single_voice("MIDI", "Wood Block",        "midi.percus4",   ColorPalette.PALETTE_PURPLE, 115)
+	_register_single_voice("MIDI", "Taiko Drum",        "midi.percus5",   ColorPalette.PALETTE_RED,    116)
+	_register_single_voice("MIDI", "Melodic Tom",       "midi.percus6",   ColorPalette.PALETTE_ORANGE, 117)
+	_register_single_voice("MIDI", "Synth Drum",        "midi.percus7",   ColorPalette.PALETTE_GREEN,  118)
+	_register_single_voice("MIDI", "Reverse Cymbal",    "midi.percus8",   ColorPalette.PALETTE_CYAN,   119)
+	_register_single_voice("MIDI", "Fret Noise",        "midi.se1",       ColorPalette.PALETTE_BLUE,   120)
+	_register_single_voice("MIDI", "Breath Noise",      "midi.se2",       ColorPalette.PALETTE_PURPLE, 121)
+	_register_single_voice("MIDI", "Seashore",          "midi.se3",       ColorPalette.PALETTE_RED,    122)
+	_register_single_voice("MIDI", "Tweet",             "midi.se4",       ColorPalette.PALETTE_ORANGE, 123)
+	_register_single_voice("MIDI", "Telephone",         "midi.se5",       ColorPalette.PALETTE_GREEN,  124)
+	_register_single_voice("MIDI", "Helicopter",        "midi.se6",       ColorPalette.PALETTE_CYAN,   125)
+	_register_single_voice("MIDI", "Applause",          "midi.se7",       ColorPalette.PALETTE_BLUE,   126)
+	_register_single_voice("MIDI", "Gunshot",           "midi.se8",       ColorPalette.PALETTE_PURPLE, 127)
+	
+	_register_single_voice("CHIPTUNE", "Square Wave",    "square",     ColorPalette.PALETTE_BLUE,   6)
+	_register_single_voice("CHIPTUNE", "Saw Wave",       "saw",        ColorPalette.PALETTE_PURPLE, 81)
+	_register_single_voice("CHIPTUNE", "Triangle Wave",  "triangle",   ColorPalette.PALETTE_RED,    80)
+	_register_single_voice("CHIPTUNE", "Sine Wave",      "sine",       ColorPalette.PALETTE_ORANGE, 102)
+	_register_single_voice("CHIPTUNE", "Noise",          "noise",      ColorPalette.PALETTE_GRAY,   127)
+	_register_single_voice("CHIPTUNE", "Dual Square",    "dualsquare", ColorPalette.PALETTE_BLUE,   4)
+	_register_single_voice("CHIPTUNE", "Dual Saw",       "dualsaw",    ColorPalette.PALETTE_PURPLE, 7)
+	_register_single_voice("CHIPTUNE", "Triangle LO-FI", "triangle8",  ColorPalette.PALETTE_RED,    72)
+	_register_single_voice("CHIPTUNE", "Konami Wave",    "konami",     ColorPalette.PALETTE_GREEN,  3)
+	_register_single_voice("CHIPTUNE", "Ramp Wave",      "ramp",       ColorPalette.PALETTE_GREEN,  18)
+	_register_single_voice("CHIPTUNE", "Pulse Wave",     "beep",       ColorPalette.PALETTE_GREEN,  29)
+	_register_single_voice("CHIPTUNE", "MA3 Wave",       "ma1",        ColorPalette.PALETTE_GREEN,  25)
+	_register_single_voice("CHIPTUNE", "Noise (Bass)",   "bassdrumm",  ColorPalette.PALETTE_GRAY,   115)
+	_register_single_voice("CHIPTUNE", "Noise (Snare)",  "snare",      ColorPalette.PALETTE_GRAY,   118)
+	_register_single_voice("CHIPTUNE", "Noise (Hi-Hat)", "closedhh",   ColorPalette.PALETTE_GRAY,   126)
+	
 	_register_single_voice("BASS", "Analog Bass",          "valsound.bass1",  ColorPalette.PALETTE_RED, 32)
 	_register_single_voice("BASS", "Analog Bass #2",       "valsound.bass2",  ColorPalette.PALETTE_RED, 33)
 	_register_single_voice("BASS", "Analog Bass #2 (q2)",  "valsound.bass3",  ColorPalette.PALETTE_RED, 34)
@@ -260,7 +260,7 @@ func _register_voices() -> void:
 	_register_single_voice("BASS", "W.Bass bright",        "valsound.bass52", ColorPalette.PALETTE_RED, 35)
 	_register_single_voice("BASS", "W.Bass x2 bow",        "valsound.bass53", ColorPalette.PALETTE_RED, 36)
 	_register_single_voice("BASS", "Wood Bass 3",          "valsound.bass54", ColorPalette.PALETTE_RED, 37)
-
+	
 	_register_single_voice("BRASS", "Brass strings",        "valsound.brass1",  ColorPalette.PALETTE_BLUE,   56)
 	_register_single_voice("BRASS", "E.mute Trampet",       "valsound.brass2",  ColorPalette.PALETTE_PURPLE, 57)
 	_register_single_voice("BRASS", "HORN 2",               "valsound.brass3",  ColorPalette.PALETTE_RED,    58)
@@ -281,7 +281,7 @@ func _register_voices() -> void:
 	_register_single_voice("BRASS", "Trumpet",              "valsound.brass18", ColorPalette.PALETTE_CYAN,   57)
 	_register_single_voice("BRASS", "Trumpet 2",            "valsound.brass19", ColorPalette.PALETTE_BLUE,   58)
 	_register_single_voice("BRASS", "Twin Horn (or OL=25)", "valsound.brass20", ColorPalette.PALETTE_PURPLE, 59)
-
+	
 	_register_single_voice("BELL", "Calm Bell",         "valsound.bell1",  ColorPalette.PALETTE_PURPLE, 8)
 	_register_single_voice("BELL", "China Bell Double", "valsound.bell2",  ColorPalette.PALETTE_RED,    9)
 	_register_single_voice("BELL", "Church Bell",       "valsound.bell3",  ColorPalette.PALETTE_ORANGE, 10)
@@ -300,7 +300,7 @@ func _register_voices() -> void:
 	_register_single_voice("BELL", "Viberaphone",       "valsound.bell16", ColorPalette.PALETTE_GREEN,  15)
 	_register_single_voice("BELL", "Twin Marinba",      "valsound.bell17", ColorPalette.PALETTE_CYAN,   8)
 	_register_single_voice("BELL", "Bellend",           "valsound.bell18", ColorPalette.PALETTE_BLUE,   9)
-
+	
 	_register_single_voice("GUITAR", "Guitar VeloLow",        "valsound.guitar1",  ColorPalette.PALETTE_BLUE,   24)
 	_register_single_voice("GUITAR", "Guitar VeloHigh",       "valsound.guitar2",  ColorPalette.PALETTE_PURPLE, 25)
 	_register_single_voice("GUITAR", "A.Guitar #3",           "valsound.guitar3",  ColorPalette.PALETTE_RED,    26)
@@ -319,7 +319,7 @@ func _register_voices() -> void:
 	_register_single_voice("GUITAR", "Overdrive.G. (AL=013)", "valsound.guitar16", ColorPalette.PALETTE_ORANGE, 31)
 	_register_single_voice("GUITAR", "METAL",                 "valsound.guitar17", ColorPalette.PALETTE_GREEN,  24)
 	_register_single_voice("GUITAR", "Soft Dis.Guitar",       "valsound.guitar18", ColorPalette.PALETTE_CYAN,   25)
-
+	
 	_register_single_voice("LEAD", "Aco code",               "valsound.lead1",  ColorPalette.PALETTE_BLUE,   80)
 	_register_single_voice("LEAD", "Analog synthe 1",        "valsound.lead2",  ColorPalette.PALETTE_PURPLE, 81)
 	_register_single_voice("LEAD", "Bosco-lead",             "valsound.lead3",  ColorPalette.PALETTE_RED,    82)
@@ -362,7 +362,7 @@ func _register_voices() -> void:
 	_register_single_voice("LEAD", "Synth PSG 4",            "valsound.lead40", ColorPalette.PALETTE_ORANGE, 81)
 	_register_single_voice("LEAD", "Synth PSG 5",            "valsound.lead41", ColorPalette.PALETTE_GREEN,  82)
 	_register_single_voice("LEAD", "Sin water synth",        "valsound.lead42", ColorPalette.PALETTE_CYAN,   83)
-
+	
 	_register_single_voice("PIANO", "Aco Piano2 (Attack)",   "valsound.piano1",  ColorPalette.PALETTE_RED,    0)
 	_register_single_voice("PIANO", "Backing 1 (Clav.)",     "valsound.piano2",  ColorPalette.PALETTE_ORANGE, 1)
 	_register_single_voice("PIANO", "Clav. coad",            "valsound.piano3",  ColorPalette.PALETTE_GREEN,  2)
@@ -383,7 +383,7 @@ func _register_voices() -> void:
 	_register_single_voice("PIANO", "Piano 6 High-tone",     "valsound.piano18", ColorPalette.PALETTE_PURPLE, 1)
 	_register_single_voice("PIANO", "Panning Harpci",        "valsound.piano19", ColorPalette.PALETTE_RED,    2)
 	_register_single_voice("PIANO", "Yam Harpci chord",      "valsound.piano20", ColorPalette.PALETTE_ORANGE, 3)
-
+	
 	_register_single_voice("SPECIAL", "S.E.(Detune is needed o2c)", "valsound.se1",      ColorPalette.PALETTE_GREEN,  120)
 	_register_single_voice("SPECIAL", "S.E. 2 o0-1-2",              "valsound.se2",      ColorPalette.PALETTE_CYAN,   121)
 	_register_single_voice("SPECIAL", "S.E. 3(Feedin /noise add.)", "valsound.se3",      ColorPalette.PALETTE_BLUE,   122)
@@ -392,7 +392,7 @@ func _register_voices() -> void:
 	_register_single_voice("SPECIAL", "Digital[BAS] 3 o2-o3",       "valsound.special3", ColorPalette.PALETTE_ORANGE, 125)
 	_register_single_voice("SPECIAL", "Digital[GTR] 3 o2-o3",       "valsound.special4", ColorPalette.PALETTE_GREEN,  126)
 	_register_single_voice("SPECIAL", "Digital 4 o4a",              "valsound.special5", ColorPalette.PALETTE_CYAN,   127)
-
+	
 	_register_single_voice("STRINGS", "Accordion1",          "valsound.strpad1",  ColorPalette.PALETTE_BLUE,   21)
 	_register_single_voice("STRINGS", "Accordion2",          "valsound.strpad2",  ColorPalette.PALETTE_PURPLE, 22)
 	_register_single_voice("STRINGS", "Accordion3",          "valsound.strpad3",  ColorPalette.PALETTE_RED,    23)
@@ -418,7 +418,7 @@ func _register_voices() -> void:
 	_register_single_voice("STRINGS", "Vocoder voice1",      "valsound.strpad23", ColorPalette.PALETTE_GREEN,  43)
 	_register_single_voice("STRINGS", "Voice o3-o5",         "valsound.strpad24", ColorPalette.PALETTE_CYAN,   44)
 	_register_single_voice("STRINGS", "Voice' o3-o5",        "valsound.strpad25", ColorPalette.PALETTE_BLUE,   45)
-
+	
 	_register_single_voice("WIND", "Clarinet #1",          "valsound.wind1", ColorPalette.PALETTE_PURPLE, 72)
 	_register_single_voice("WIND", "Clarinet #2 Brighter", "valsound.wind2", ColorPalette.PALETTE_RED,    73)
 	_register_single_voice("WIND", "E.Flute",              "valsound.wind3", ColorPalette.PALETTE_ORANGE, 74)
@@ -427,7 +427,7 @@ func _register_voices() -> void:
 	_register_single_voice("WIND", "Old flute",            "valsound.wind6", ColorPalette.PALETTE_BLUE,   77)
 	_register_single_voice("WIND", "Whistle 1",            "valsound.wind7", ColorPalette.PALETTE_PURPLE, 78)
 	_register_single_voice("WIND", "Whistle 2",            "valsound.wind8", ColorPalette.PALETTE_RED,    79)
-
+	
 	_register_single_voice("WORLD", "Banjo (Harpci)", "valsound.world1", ColorPalette.PALETTE_ORANGE, 105)
 	_register_single_voice("WORLD", "KOTO",           "valsound.world2", ColorPalette.PALETTE_GREEN,  107)
 	_register_single_voice("WORLD", "Koto 2",         "valsound.world3", ColorPalette.PALETTE_CYAN,   108)
@@ -439,78 +439,78 @@ func _register_voices() -> void:
 
 func _register_drumkits() -> void:
 	var drumkit_data: DrumkitData = null
-
+	
 	# Simple kit.
-
+	
 	drumkit_data = _register_drumkit_voice("DRUMKIT", "Simple Drumkit", "drumkit.1", ColorPalette.PALETTE_GRAY)
-
-	_register_drumkit_item(drumkit_data, "Bass Drum 1",   "valsound.percus1",  30)
-	_register_drumkit_item(drumkit_data, "Bass Drum 2",   "valsound.percus13", 32)
-	_register_drumkit_item(drumkit_data, "Bass Drum 3",   "valsound.percus3",  30)
-	_register_drumkit_item(drumkit_data, "Snare Drum",    "valsound.percus30", 20)
-	_register_drumkit_item(drumkit_data, "Snare Drum 2",  "valsound.percus29", 48)
-	_register_drumkit_item(drumkit_data, "Open Hi-Hat",   "valsound.percus17", 60)
-	_register_drumkit_item(drumkit_data, "Closed Hi-Hat", "valsound.percus23", 72)
-	_register_drumkit_item(drumkit_data, "Crash Cymbal",  "valsound.percus8",  48)
-
+	
+	_register_drumkit_item(drumkit_data, "Bass Drum 1",   "valsound.percus1",  30, 35)
+	_register_drumkit_item(drumkit_data, "Bass Drum 2",   "valsound.percus13", 32, 36)
+	_register_drumkit_item(drumkit_data, "Bass Drum 3",   "valsound.percus3",  30, 66)
+	_register_drumkit_item(drumkit_data, "Snare Drum",    "valsound.percus30", 20, 38)
+	_register_drumkit_item(drumkit_data, "Snare Drum 2",  "valsound.percus29", 48, 40)
+	_register_drumkit_item(drumkit_data, "Open Hi-Hat",   "valsound.percus17", 60, 46)
+	_register_drumkit_item(drumkit_data, "Closed Hi-Hat", "valsound.percus23", 72, 42)
+	_register_drumkit_item(drumkit_data, "Crash Cymbal",  "valsound.percus8",  48, 49)
+	
 	# SiON kit.
-
+	
 	drumkit_data = _register_drumkit_voice("DRUMKIT", "SiON Drumkit", "drumkit.2", ColorPalette.PALETTE_GRAY)
-
-	_register_drumkit_item(drumkit_data, "Bass Drum 2",           "valsound.percus1",  30)
-	_register_drumkit_item(drumkit_data, "Bass Drum 3 o1f",       "valsound.percus2")
-	_register_drumkit_item(drumkit_data, "RUFINA BD o2c",         "valsound.percus3",  30)
-	_register_drumkit_item(drumkit_data, "B.D.(-vBend)",          "valsound.percus4")
-	_register_drumkit_item(drumkit_data, "BD808_2(-vBend)",       "valsound.percus5")
-	_register_drumkit_item(drumkit_data, "Cho cho 3 (o2e)",       "valsound.percus6")
-	_register_drumkit_item(drumkit_data, "Cow-Bell 1",            "valsound.percus7")
-	_register_drumkit_item(drumkit_data, "Crash Cymbal (noise)",  "valsound.percus8",  48)
-	_register_drumkit_item(drumkit_data, "Crash Noise",           "valsound.percus9")
-	_register_drumkit_item(drumkit_data, "Crash Noise Short",     "valsound.percus10")
-	_register_drumkit_item(drumkit_data, "ETHNIC Percus.0",       "valsound.percus11")
-	_register_drumkit_item(drumkit_data, "ETHNIC Percus.1",       "valsound.percus12")
-	_register_drumkit_item(drumkit_data, "Heavy BD.",             "valsound.percus13", 32)
-	_register_drumkit_item(drumkit_data, "Heavy BD2",             "valsound.percus14")
-	_register_drumkit_item(drumkit_data, "Heavy SD1",             "valsound.percus15")
-	_register_drumkit_item(drumkit_data, "Hi-Hat close 5_",       "valsound.percus16")
-	_register_drumkit_item(drumkit_data, "Hi-Hat close 4",        "valsound.percus17")
-	_register_drumkit_item(drumkit_data, "Hi-Hat close 5",        "valsound.percus18")
-	_register_drumkit_item(drumkit_data, "Hi-Hat Close 6 -808-",  "valsound.percus19")
-	_register_drumkit_item(drumkit_data, "Hi-hat #7 Metal o3-6",  "valsound.percus20")
-	_register_drumkit_item(drumkit_data, "Hi-Hat Close #8 o4",    "valsound.percus21")
-	_register_drumkit_item(drumkit_data, "Hi-hat Open o4e-g+",    "valsound.percus22")
-	_register_drumkit_item(drumkit_data, "Open-hat2 Metal o4c-",  "valsound.percus23")
-	_register_drumkit_item(drumkit_data, "Open-hat3 Metal",       "valsound.percus24")
-	_register_drumkit_item(drumkit_data, "Hi-Hat Open #4 o4f",    "valsound.percus25")
-	_register_drumkit_item(drumkit_data, "Metal ride o4c or o5c", "valsound.percus26")
-	_register_drumkit_item(drumkit_data, "Rim Shot #1 o3c",       "valsound.percus27")
-	_register_drumkit_item(drumkit_data, "Snare Drum Light",      "valsound.percus28")
-	_register_drumkit_item(drumkit_data, "Snare Drum Lighter",    "valsound.percus29")
-	_register_drumkit_item(drumkit_data, "Snare Drum 808 o2-o3",  "valsound.percus30", 20)
-	_register_drumkit_item(drumkit_data, "Snare4 -808type- o2",   "valsound.percus31")
-	_register_drumkit_item(drumkit_data, "Snare5 o1-2(Franger)",  "valsound.percus32")
-	_register_drumkit_item(drumkit_data, "Tom (old)",             "valsound.percus33")
-	_register_drumkit_item(drumkit_data, "Synth tom 2 algo 3",    "valsound.percus34")
-	_register_drumkit_item(drumkit_data, "Synth (Noisy) Tom #3",  "valsound.percus35")
-	_register_drumkit_item(drumkit_data, "Synth Tom #3",          "valsound.percus36")
-	_register_drumkit_item(drumkit_data, "Synth -DX7- Tom #4",    "valsound.percus37")
-	_register_drumkit_item(drumkit_data, "Triangle 1 o5c",        "valsound.percus38")
-
+	
+	_register_drumkit_item(drumkit_data, "Bass Drum 2",           "valsound.percus1",  30, 35)
+	_register_drumkit_item(drumkit_data, "Bass Drum 3 o1f",       "valsound.percus2",  60, 36)
+	_register_drumkit_item(drumkit_data, "RUFINA BD o2c",         "valsound.percus3",  30, 35)
+	_register_drumkit_item(drumkit_data, "B.D.(-vBend)",          "valsound.percus4",  60, 35)
+	_register_drumkit_item(drumkit_data, "BD808_2(-vBend)",       "valsound.percus5",  60, 36)
+	_register_drumkit_item(drumkit_data, "Cho cho 3 (o2e)",       "valsound.percus6",  60, 72)
+	_register_drumkit_item(drumkit_data, "Cow-Bell 1",            "valsound.percus7",  60, 56)
+	_register_drumkit_item(drumkit_data, "Crash Cymbal (noise)",  "valsound.percus8",  48, 49)
+	_register_drumkit_item(drumkit_data, "Crash Noise",           "valsound.percus9",  60, 57)
+	_register_drumkit_item(drumkit_data, "Crash Noise Short",     "valsound.percus10", 60, 51)
+	_register_drumkit_item(drumkit_data, "ETHNIC Percus.0",       "valsound.percus11", 60, 40)
+	_register_drumkit_item(drumkit_data, "ETHNIC Percus.1",       "valsound.percus12", 60, 40)
+	_register_drumkit_item(drumkit_data, "Heavy BD.",             "valsound.percus13", 32, 35)
+	_register_drumkit_item(drumkit_data, "Heavy BD2",             "valsound.percus14", 60, 36)
+	_register_drumkit_item(drumkit_data, "Heavy SD1",             "valsound.percus15", 60, 38)
+	_register_drumkit_item(drumkit_data, "Hi-Hat close 5_",       "valsound.percus16", 60, 42)
+	_register_drumkit_item(drumkit_data, "Hi-Hat close 4",        "valsound.percus17", 60, 42)
+	_register_drumkit_item(drumkit_data, "Hi-Hat close 5",        "valsound.percus18", 60, 42)
+	_register_drumkit_item(drumkit_data, "Hi-Hat Close 6 -808-",  "valsound.percus19", 60, 42)
+	_register_drumkit_item(drumkit_data, "Hi-hat #7 Metal o3-6",  "valsound.percus20", 60, 42)
+	_register_drumkit_item(drumkit_data, "Hi-Hat Close #8 o4",    "valsound.percus21", 60, 42)
+	_register_drumkit_item(drumkit_data, "Hi-hat Open o4e-g+",    "valsound.percus22", 60, 46)
+	_register_drumkit_item(drumkit_data, "Open-hat2 Metal o4c-",  "valsound.percus23", 60, 46)
+	_register_drumkit_item(drumkit_data, "Open-hat3 Metal",       "valsound.percus24", 60, 46)
+	_register_drumkit_item(drumkit_data, "Hi-Hat Open #4 o4f",    "valsound.percus25", 60, 46)
+	_register_drumkit_item(drumkit_data, "Metal ride o4c or o5c", "valsound.percus26", 60, 51)
+	_register_drumkit_item(drumkit_data, "Rim Shot #1 o3c",       "valsound.percus27", 60, 59)
+	_register_drumkit_item(drumkit_data, "Snare Drum Light",      "valsound.percus28", 60, 38)
+	_register_drumkit_item(drumkit_data, "Snare Drum Lighter",    "valsound.percus29", 60, 38)
+	_register_drumkit_item(drumkit_data, "Snare Drum 808 o2-o3",  "valsound.percus30", 20, 38)
+	_register_drumkit_item(drumkit_data, "Snare4 -808type- o2",   "valsound.percus31", 60, 38)
+	_register_drumkit_item(drumkit_data, "Snare5 o1-2(Franger)",  "valsound.percus32", 60, 38)
+	_register_drumkit_item(drumkit_data, "Tom (old)",             "valsound.percus33", 60, 45)
+	_register_drumkit_item(drumkit_data, "Synth tom 2 algo 3",    "valsound.percus34", 60, 47)
+	_register_drumkit_item(drumkit_data, "Synth (Noisy) Tom #3",  "valsound.percus35", 60, 48)
+	_register_drumkit_item(drumkit_data, "Synth Tom #3",          "valsound.percus36", 60, 50)
+	_register_drumkit_item(drumkit_data, "Synth -DX7- Tom #4",    "valsound.percus37", 60, 76)
+	_register_drumkit_item(drumkit_data, "Triangle 1 o5c",        "valsound.percus38", 60, 81)
+	
 	# MIDI drums.
-
+	
 	drumkit_data = _register_drumkit_voice("DRUMKIT", "MIDI Drumkit", "drumkit.3", ColorPalette.PALETTE_GRAY)
-
-	_register_drumkit_item(drumkit_data, "Seq Click H",     "midi.drum24", 24, 24)
-	_register_drumkit_item(drumkit_data, "Brush Tap",       "midi.drum25", 25, 25)
-	_register_drumkit_item(drumkit_data, "Brush Swirl",     "midi.drum26", 26, 26)
-	_register_drumkit_item(drumkit_data, "Brush Slap",      "midi.drum27", 27, 27)
-	_register_drumkit_item(drumkit_data, "Brush Tap Swirl", "midi.drum28", 28, 28)
-	_register_drumkit_item(drumkit_data, "Snare Roll",      "midi.drum29", 16, 29)
-	_register_drumkit_item(drumkit_data, "Castanet",        "midi.drum32", 16, 32)
-	_register_drumkit_item(drumkit_data, "Snare L",         "midi.drum31", 16, 31)
-	_register_drumkit_item(drumkit_data, "Sticks",          "midi.drum32", 16, 32)
-	_register_drumkit_item(drumkit_data, "Bass Drum L",     "midi.drum33", 16, 33)
-	_register_drumkit_item(drumkit_data, "Open Rim Shot",   "midi.drum34", 16, 34)
+	
+	_register_drumkit_item(drumkit_data, "Seq Click H",     "midi.drum24", 24, 42)
+	_register_drumkit_item(drumkit_data, "Brush Tap",       "midi.drum25", 25, 55)
+	_register_drumkit_item(drumkit_data, "Brush Swirl",     "midi.drum26", 26, 59)
+	_register_drumkit_item(drumkit_data, "Brush Slap",      "midi.drum27", 27, 49)
+	_register_drumkit_item(drumkit_data, "Brush Tap Swirl", "midi.drum28", 28, 49)
+	_register_drumkit_item(drumkit_data, "Snare Roll",      "midi.drum29", 16, 38)
+	_register_drumkit_item(drumkit_data, "Castanet",        "midi.drum32", 16, 35)
+	_register_drumkit_item(drumkit_data, "Snare L",         "midi.drum31", 16, 40)
+	_register_drumkit_item(drumkit_data, "Sticks",          "midi.drum32", 16, 37)
+	_register_drumkit_item(drumkit_data, "Bass Drum L",     "midi.drum33", 16, 36)
+	_register_drumkit_item(drumkit_data, "Open Rim Shot",   "midi.drum34", 16, 46)
 	_register_drumkit_item(drumkit_data, "Bass Drum M",     "midi.drum35", 16, 35)
 	_register_drumkit_item(drumkit_data, "Bass Drum H",     "midi.drum36", 16, 36)
 	_register_drumkit_item(drumkit_data, "Closed Rim Shot", "midi.drum37", 16, 37)
@@ -558,23 +558,19 @@ func _register_drumkits() -> void:
 	_register_drumkit_item(drumkit_data, "Cuica Open",      "midi.drum79", 16, 79)
 	_register_drumkit_item(drumkit_data, "Triangle Mute",   "midi.drum80", 16, 80)
 	_register_drumkit_item(drumkit_data, "Triangle Open",   "midi.drum81", 16, 81)
-	_register_drumkit_item(drumkit_data, "Shaker",          "midi.drum82", 16, 82)
-	_register_drumkit_item(drumkit_data, "Jingle Bells",    "midi.drum83", 16, 83)
-	_register_drumkit_item(drumkit_data, "Bell Tree",       "midi.drum84", 16, 84)
+	_register_drumkit_item(drumkit_data, "Shaker",          "midi.drum82", 16, 70)
+	_register_drumkit_item(drumkit_data, "Jingle Bells",    "midi.drum83", 16, 81)
+	_register_drumkit_item(drumkit_data, "Bell Tree",       "midi.drum84", 16, 74)
 
 
-func _register_single_voice(category: String, name: String, voice_preset: String, color_palette: int, midi_instrument: int = -1) -> VoiceData:
+func _register_single_voice(category: String, name: String, voice_preset: String, color_palette: int, midi_instrument: int) -> VoiceData:
 	var voice_data := VoiceData.new()
 	voice_data.category = category
 	voice_data.name = name
 	voice_data.voice_preset = voice_preset
 	voice_data.color_palette = color_palette
-
-	if midi_instrument == -1:
-		voice_data.midi_instrument = _voices.size() % 128
-	else:
-		voice_data.midi_instrument = midi_instrument
-
+	voice_data.midi_instrument = midi_instrument
+	
 	voice_data.index = _voices.size()
 	_voices.push_back(voice_data)
 	_register_category(category)
@@ -588,8 +584,8 @@ func _register_drumkit_voice(category: String, name: String, voice_preset: Strin
 	voice_data.name = name
 	voice_data.voice_preset = voice_preset
 	voice_data.color_palette = color_palette
-	voice_data.midi_instrument = _voices.size() % 128
-
+	voice_data.midi_instrument = 0
+	
 	voice_data.index = _voices.size()
 	_voices.push_back(voice_data)
 	_register_category(category)
@@ -597,15 +593,13 @@ func _register_drumkit_voice(category: String, name: String, voice_preset: Strin
 	return voice_data
 
 
-func _register_drumkit_item(drumkit_data: DrumkitData, name: String, voice_preset: String, note: int = 60, midi_note: int = -1) -> void:
+func _register_drumkit_item(drumkit_data: DrumkitData, name: String, voice_preset: String, note: int, midi_note: int) -> void:
 	var item := DrumkitDataItem.new()
 	item.name = name
 	item.voice_preset = voice_preset
 	item.note = note
-
-	if midi_note != -1:
-		item.midi_note = midi_note
-
+	item.midi_note = midi_note
+	
 	drumkit_data.items.push_back(item)
 
 
@@ -653,7 +647,7 @@ func get_first_voice_data(category: String) -> VoiceData:
 		var voice := _voices[i]
 		if voice.category == category:
 			return voice
-
+	
 	printerr("VoiceManager: Invalid voice category (%s)." % [ category ])
 	return null
 
@@ -663,7 +657,7 @@ func get_voice_data(category: String, name: String) -> VoiceData:
 		var voice := _voices[i]
 		if voice.category == category && voice.name == name:
 			return voice
-
+	
 	printerr("VoiceManager: Invalid voice category or name (%s, %s)." % [ category, name ])
 	return null
 
@@ -672,7 +666,7 @@ func get_voice_data_at(index: int) -> VoiceData:
 	var index_ := ValueValidator.index(index, _voices.size(), "VoiceManager: Invalid voice index (%d)." % [ index ])
 	if index_ != index:
 		return null
-
+	
 	return _voices[index]
 
 
@@ -699,7 +693,7 @@ class SubCategory:
 class VoiceData:
 	## Sequential index used for serialization.
 	var index: int = -1
-
+	
 	## General category of the voice.
 	var category: String = ""
 	## Display name of the voice.

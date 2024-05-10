@@ -23,8 +23,7 @@ static func save(song: Song, path: String) -> bool:
 
 	# Try to write the file with the new contents.
 	
-	var file_contents := writer.get_contents()
-	file.store_string(file_contents)
+	file.store_string(writer.get_file_string())
 	error = file.get_error()
 	if error != OK:
 		printerr("SongSaver: Failed to write to the file at '%s' (code %d)." % [ path, error ])
@@ -112,7 +111,7 @@ class SongFileWriter extends RefCounted:
 		return _path
 	
 	
-	func get_contents() -> String:
+	func get_file_string() -> String:
 		return _contents
 	
 	

@@ -93,6 +93,9 @@ func save_ceol_song() -> void:
 
 
 func _save_ceol_song_confirmed(path: String) -> void:
+	if not Controller.current_song:
+		return
+	
 	var success := SongSaver.save(Controller.current_song, path)
 	if not success:
 		Controller.update_status("FAILED TO SAVE SONG", Controller.StatusLevel.ERROR)
@@ -166,3 +169,26 @@ func _save_wav_song(exporter: WavExporter) -> void:
 	Controller.unlock_song_editing()
 	Controller.update_status("SONG EXPORTED AS WAV", Controller.StatusLevel.SUCCESS)
 	print("Successfully exported song to %s." % [ exporter.get_export_path() ])
+
+
+func export_mid_song() -> void:
+	var export_dialog := Controller.get_file_dialog()
+	export_dialog.file_mode = FileDialog.FILE_MODE_SAVE_FILE
+	export_dialog.title = "Export .mid File"
+	export_dialog.add_filter("*.mid", "MIDI File")
+	export_dialog.file_selected.connect(_export_mid_song_confirmed, CONNECT_ONE_SHOT)
+	
+	Controller.show_file_dialog(export_dialog)
+
+
+func _export_mid_song_confirmed(path: String) -> void:
+	if not Controller.current_song:
+		return
+	
+	var success := MidiExporter.save(Controller.current_song, path)
+	if not success:
+		Controller.update_status("FAILED TO EXPORT SONG", Controller.StatusLevel.ERROR)
+		return
+	
+	Controller.update_status("SONG EXPORTED AS MIDI", Controller.StatusLevel.SUCCESS)
+	print("Successfully exported song to %s." % [ path ])
