@@ -106,15 +106,15 @@ func _update_version_subtitle() -> void:
 
 
 func _change_pattern_size() -> void:
-	Controller.set_pattern_size(_pattern_size_stepper.value)
+	Controller.set_song_pattern_size(_pattern_size_stepper.value)
 
 
 func _change_bar_size() -> void:
-	Controller.set_bar_size(_bar_size_stepper.value)
+	Controller.set_song_bar_size(_bar_size_stepper.value)
 
 
 func _change_bpm() -> void:
-	Controller.set_bpm(_bpm_stepper.value)
+	Controller.set_song_bpm(_bpm_stepper.value)
 
 
 func _update_song_steppers() -> void:

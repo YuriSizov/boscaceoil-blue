@@ -19,11 +19,11 @@ signal export_ended()
 
 const BEATS_PER_NOTE := 0.0625 # Beat is split into 16 intervals.
 const NOTE_LENGTH := 4.0 # In 1/16ths of a beat.
-const NOTE_SWING_THRESHOLD := 0.2 # In percent of NOTE_LENGTH.
+const NOTE_SWING_THRESHOLD := 0.2 # In portion of NOTE_LENGTH (i.e. = 20%).
 const NOTE_GRACE_PERIOD := 4
 
 const NOTE_SWING_MIN := NOTE_SWING_THRESHOLD * NOTE_LENGTH
-const NOTE_SWING_MAX := 2 * NOTE_LENGTH - NOTE_SWING_THRESHOLD * NOTE_LENGTH
+const NOTE_SWING_MAX := (2 - NOTE_SWING_THRESHOLD) * NOTE_LENGTH
 
 var _driver: SiONDriver = null
 var _music_playing: bool = false
@@ -185,12 +185,12 @@ func _update_swing() -> void:
 
 	_swing_active = true
 
-	# Swing goes from -10 to 10, F-Swing goes from 0.2 to 1.8
+	# Remapping swing setting range from -10 to 10, to 20% - 180% of NOTE_LENGTH.
 	var fswing: float = NOTE_SWING_MIN + (Controller.current_song.swing + 10.0) * (NOTE_SWING_MAX - NOTE_SWING_MIN) / 20.0
 	if _pattern_time % 2 == 0:
 		_driver.set_timer_interval(fswing)
 	else:
-		_driver.set_timer_interval(2 - fswing)
+		_driver.set_timer_interval(2 * NOTE_LENGTH - fswing)
 
 
 func is_playing() -> bool:

@@ -476,7 +476,7 @@ func get_instrument_theme(instrument: Instrument) -> Theme:
 
 # Song properties editing.
 
-func set_pattern_size(value: int) -> void:
+func set_song_pattern_size(value: int) -> void:
 	if not current_song:
 		return
 	
@@ -485,7 +485,7 @@ func set_pattern_size(value: int) -> void:
 	song_sizes_changed.emit()
 
 
-func set_bar_size(value: int) -> void:
+func set_song_bar_size(value: int) -> void:
 	if not current_song:
 		return
 	
@@ -494,10 +494,18 @@ func set_bar_size(value: int) -> void:
 	song_sizes_changed.emit()
 
 
-func set_bpm(value: int) -> void:
+func set_song_bpm(value: int) -> void:
 	if not current_song:
 		return
 	
 	current_song.bpm = value
 	current_song.mark_dirty()
 	music_player.update_driver_bpm()
+
+
+func set_song_swing(value: int) -> void:
+	if not current_song:
+		return
+	
+	current_song.swing = value
+	current_song.mark_dirty()

@@ -5,3 +5,13 @@
 ###################################################
 
 extends MarginContainer
+
+@onready var _swing_stepper: Stepper = %SwingStepper
+
+
+func _ready() -> void:
+	_swing_stepper.value_changed.connect(_change_swing)
+
+
+func _change_swing() -> void:
+	Controller.set_song_swing(_swing_stepper.value)
