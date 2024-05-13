@@ -15,6 +15,7 @@ signal song_instrument_changed()
 signal controls_locked(message: String)
 signal controls_unlocked()
 signal status_updated(level: StatusLevel, message: String)
+signal navigation_requested(target: int)
 
 const INFO_POPUP_SCENE := preload("res://gui/widgets/InfoPopup.tscn")
 
@@ -93,6 +94,12 @@ func _shortcut_input(event: InputEvent) -> void:
 		else:
 			music_player.start_playback()
 		get_viewport().set_input_as_handled()
+
+
+# Navigation.
+
+func navigate_to(target: Menu.NavigationTargets) -> void:
+	navigation_requested.emit(target)
 
 
 # Dialog and popup management.

@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://x2nsv2sot0hk"]
+
+[ext_resource type="Script" path="res://gui/widgets/LinkLabel.gd" id="1_3t751"]
+
+[node name="LinkLabel" type="Label"]
+auto_translate_mode = 1
+offset_right = 1.0
+offset_bottom = 28.0
+mouse_filter = 0
+mouse_default_cursor_shape = 2
+script = ExtResource("1_3t751")

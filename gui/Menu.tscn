@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://l0bjoy6vwtbx"]
+[gd_scene load_steps=13 format=3 uid="uid://l0bjoy6vwtbx"]
 
 [ext_resource type="Script" path="res://gui/Menu.gd" id="1_pjxdv"]
 [ext_resource type="Texture2D" uid="uid://l0r5er3xyb4r" path="res://gui/theme/icons/fullscreen_on_icon.tres" id="2_kmlcb"]
@@ -6,8 +6,12 @@
 [ext_resource type="ButtonGroup" uid="uid://duqg28jfenc12" path="res://gui/theme/navigation_buttons.tres" id="3_kmmx3"]
 [ext_resource type="PackedScene" uid="uid://d0lne8svx0ysl" path="res://gui/views/FileView.tscn" id="5_6f3ft"]
 [ext_resource type="PackedScene" uid="uid://c1oriajgloul5" path="res://gui/views/ArrangementView.tscn" id="6_0weha"]
+[ext_resource type="PackedScene" uid="uid://diwy8fi3i4ti1" path="res://gui/views/CreditsView.tscn" id="6_x0vu5"]
 [ext_resource type="PackedScene" uid="uid://cw48njslxrtsl" path="res://gui/views/InstrumentView.tscn" id="7_32hp6"]
+[ext_resource type="PackedScene" uid="uid://bhydnchi7pmla" path="res://gui/views/HelpView.tscn" id="7_efw7d"]
 [ext_resource type="PackedScene" uid="uid://ggnvgntxytdg" path="res://gui/views/AdvancedView.tscn" id="8_b5sqt"]
+[ext_resource type="PackedScene" uid="uid://cci6pssfnh4q6" path="res://gui/views/ThirdPartyView.tscn" id="10_c4eyv"]
+[ext_resource type="PackedScene" uid="uid://c0a2d6er3rr81" path="res://gui/views/LegacyView.tscn" id="11_vw4b6"]
 
 [node name="Menu" type="VBoxContainer"]
 auto_translate_mode = 1
@@ -58,6 +62,46 @@ focus_mode = 0
 button_group = ExtResource("3_kmmx3")
 label_text = "ADVANCED"
 
+[node name="CreditsTab" parent="Navigation" instance=ExtResource("2_l3q7q")]
+unique_name_in_owner = true
+auto_translate_mode = 1
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+button_group = ExtResource("3_kmmx3")
+label_text = "CREDITS"
+
+[node name="ThirdPartyTab" parent="Navigation" instance=ExtResource("2_l3q7q")]
+unique_name_in_owner = true
+auto_translate_mode = 1
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+button_group = ExtResource("3_kmmx3")
+label_text = "THIRDPARTY"
+
+[node name="LegacyTab" parent="Navigation" instance=ExtResource("2_l3q7q")]
+unique_name_in_owner = true
+auto_translate_mode = 1
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+button_group = ExtResource("3_kmmx3")
+label_text = "LEGACY"
+
+[node name="HelpTab" parent="Navigation" instance=ExtResource("2_l3q7q")]
+unique_name_in_owner = true
+auto_translate_mode = 1
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+button_group = ExtResource("3_kmmx3")
+label_text = "HELP"
+
 [node name="FullscreenToggle" type="Button" parent="Navigation"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(64, 28)
@@ -90,6 +134,26 @@ visible = false
 layout_mode = 2
 
 [node name="AdvancedView" parent="Contents" instance=ExtResource("8_b5sqt")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="CreditsView" parent="Contents" instance=ExtResource("6_x0vu5")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="ThirdPartyView" parent="Contents" instance=ExtResource("10_c4eyv")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="LegacyView" parent="Contents" instance=ExtResource("11_vw4b6")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="HelpView" parent="Contents" instance=ExtResource("7_efw7d")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2

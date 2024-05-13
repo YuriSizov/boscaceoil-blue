@@ -35,7 +35,6 @@ theme_type_variation = &"VBoxSpaced"
 
 [node name="BoscaFlair" type="VBoxContainer" parent="Layout/Introduction/Contents"]
 layout_mode = 2
-theme_override_constants/separation = 4
 
 [node name="Logo" parent="Layout/Introduction/Contents/BoscaFlair" instance=ExtResource("1_cb5p1")]
 layout_mode = 2
@@ -75,7 +74,6 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
-disabled = true
 text = "CREDITS"
 
 [node name="Help" parent="Layout/Introduction/Contents/Controls" instance=ExtResource("3_6fmtw")]

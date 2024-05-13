@@ -1,6 +1,10 @@
+<p align="center">
+	<img src="assets/logo_blue.png">
+</p>
+
 # Bosca Ceoil: The Blue Album
 
-**Bosca Ceoil: The Blue Album** (or _Bosca Ceoil Blue_, for short) is a simple and beginner-friendly music making app. Using a step sequencer you can create anything from a simple beat to a complex melodic piece, using multiple synthesized instruments!
+**Bosca Ceoil: The Blue Album** (or _Bosca Ceoil Blue_, for short) is a simple and beginner-friendly music making app. Using a step sequencer you can create anything from a simple beat to a complex melodic piece — with huge selection of synthesized instruments!
 
 _Bosca Ceoil Blue_ is a modern port of **Terry Cavanagh's [Bosca Ceoil](https://github.com/TerryCavanagh/boscaceoil)**, and attempts to preserve everything that made the original so approachable and intuitive. And just like the original, _Bosca Ceoil Blue_ is absolutely free and provided under a permissive open source license, should you need to modify it.
 
@@ -32,12 +36,15 @@ _Bosca Ceoil Blue_ is still in active development, with several major features i
 - [x] Pattern editing, scale and key adjustments.
 - [x] Instrument management and tuning.
 - [x] Composition and arrangement editing.
-- [ ] Advanced settings (swing, filters, app settings).
-- [ ] Advanced instrument filter recording per note.
+- [ ] Advanced settings (swing, filters).
+- [ ] App settings and persistence.
+- [ ] Advanced instrument tuning.
 - [x] Saving and loading.
-- [ ] Export and import in external formats.
+- [x] Export to WAV and MIDI.
+- [ ] Export to XM and MML (experimental).
+- [ ] Import from MIDI.
 - [ ] Keyboard shortcuts.
-- [ ] Help, credits.
+- [ ] Interactive help and on-boarding guide.
 
 A significant part of the port involves recreation of the [SiON software synthesizer](https://github.com/keim/SiON), which the original _Bosca Ceoil_ is based on, as a GDExtension. The progress on that is tracked in a separate project, [GDSiON](https://github.com/YuriSizov/gdsion). This includes platform support, specifically for the Web platform.
 

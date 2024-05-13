@@ -18,6 +18,9 @@ var _subtitle_easter_egg: bool = false
 @onready var _version_number: Label = %VersionNumber
 @onready var _version_subtitle: Label = %VersionSubtitle
 
+@onready var _credits_button: SquishyButton = %Credits
+@onready var _help_button: SquishyButton = %Help
+
 @onready var _play_button: Button = %Play
 @onready var _pause_button: Button = %Pause
 @onready var _stop_button: Button = %Stop
@@ -35,9 +38,13 @@ var _subtitle_easter_egg: bool = false
 
 func _ready() -> void:
 	_update_version_flair()
+	_populate_import_options()
 	_populate_export_options()
 	
 	_version_subtitle.gui_input.connect(_subtitle_gui_input)
+	
+	_credits_button.pressed.connect(Controller.navigate_to.bind(Menu.NavigationTargets.CREDITS))
+	_help_button.pressed.connect(Controller.navigate_to.bind(Menu.NavigationTargets.HELP))
 	
 	_play_button.pressed.connect(Controller.music_player.start_playback)
 	_pause_button.pressed.connect(Controller.music_player.pause_playback)
@@ -47,6 +54,7 @@ func _ready() -> void:
 	_load_song_button.pressed.connect(Controller.io_manager.load_ceol_song_safe)
 	_save_song_button.pressed.connect(Controller.io_manager.save_ceol_song)
 	
+	_import_song_button.option_pressed.connect(_handle_import_options)
 	_export_song_button.option_pressed.connect(_handle_export_option)
 	
 	_pattern_size_stepper.value_changed.connect(_change_pattern_size)
@@ -119,6 +127,16 @@ func _update_song_steppers() -> void:
 	_pattern_size_stepper.value = Controller.current_song.pattern_size
 	_bar_size_stepper.value = Controller.current_song.bar_size
 	_bpm_stepper.value = Controller.current_song.bpm
+
+
+# Import and export.
+
+func _populate_import_options() -> void:
+	pass
+
+
+func _handle_import_options(item: OptionListPopup.Item) -> void:
+	pass
 
 
 func _populate_export_options() -> void:
