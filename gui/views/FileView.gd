@@ -13,6 +13,11 @@ enum ExportOptions {
 	EXPORT_XM
 }
 
+var _subtitle_easter_egg: bool = false
+
+@onready var _version_number: Label = %VersionNumber
+@onready var _version_subtitle: Label = %VersionSubtitle
+
 @onready var _play_button: Button = %Play
 @onready var _pause_button: Button = %Pause
 @onready var _stop_button: Button = %Stop
@@ -29,7 +34,10 @@ enum ExportOptions {
 
 
 func _ready() -> void:
+	_update_version_flair()
 	_populate_export_options()
+	
+	_version_subtitle.gui_input.connect(_subtitle_gui_input)
 	
 	_play_button.pressed.connect(Controller.music_player.start_playback)
 	_pause_button.pressed.connect(Controller.music_player.pause_playback)
@@ -47,6 +55,46 @@ func _ready() -> void:
 	
 	if not Engine.is_editor_hint():
 		Controller.song_loaded.connect(_update_song_steppers)
+
+
+func _subtitle_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		var mb := event as InputEventMouseButton
+		
+		if mb.pressed && mb.button_index == MOUSE_BUTTON_LEFT:
+			_subtitle_easter_egg = !_subtitle_easter_egg
+			_update_version_subtitle()
+
+
+func _update_version_flair() -> void:
+	if not is_inside_tree():
+		return
+	
+	# Update version label.
+	
+	var version_setting: String = ProjectSettings.get_setting("application/config/version")
+	var flair_setting: String = ProjectSettings.get_setting("application/config/version_flair")
+	
+	var version_arr := version_setting.split(".")
+	var version_string := "v%s.%s" % [ version_arr[0], version_arr[1] ]
+	if version_arr.size() > 2 && version_arr[2] != "0":
+		version_string += ".%s" % [ version_arr[2] ]
+	
+	var flair_string := ""
+	if not flair_setting.is_empty():
+		flair_string = " %s" % [ flair_setting ]
+	
+	_version_number.text = "%s%s" % [ version_string, flair_string ]
+	
+	# Update subtitle label.
+	_update_version_subtitle()
+
+
+func _update_version_subtitle() -> void:
+	if not is_inside_tree():
+		return
+	
+	_version_subtitle.text = "Albam Gorm" if _subtitle_easter_egg else "The Blue Album"
 
 
 func _change_pattern_size() -> void:

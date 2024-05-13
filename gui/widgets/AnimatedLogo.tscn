@@ -5,12 +5,14 @@
 [ext_resource type="Texture2D" uid="uid://uxa5unpo0xp8" path="res://assets/logo_shadow.png" id="2_w1mr7"]
 
 [node name="LogoContainer" type="Control"]
+custom_minimum_size = Vector2(576, 120)
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 script = ExtResource("1_i10nm")
 
 [node name="Logo" type="TextureRect" parent="."]
@@ -23,7 +25,9 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 texture = ExtResource("1_lc2ol")
+expand_mode = 1
 stretch_mode = 5
 
 [node name="LogoShadow" type="TextureRect" parent="Logo"]
@@ -41,6 +45,7 @@ offset_right = 8.0
 offset_bottom = 8.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 texture = ExtResource("2_w1mr7")
 expand_mode = 1
 stretch_mode = 5

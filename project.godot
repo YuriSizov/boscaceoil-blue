@@ -11,9 +11,14 @@ config_version=5
 [application]
 
 config/name="Bosca Ceoil: The Blue Album"
+config/description="A simple music making app."
+config/version="3.0.0"
 run/main_scene="res://Main.tscn"
+config/use_custom_user_dir=true
+config/custom_user_dir_name="boscaceoil-blue"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 config/icon="res://icon.svg"
+config/version_flair="alpha"
 
 [autoload]
 
