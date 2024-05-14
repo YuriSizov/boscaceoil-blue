@@ -50,10 +50,12 @@ const DEFAULT_BPM := 120
 	set(value): swing = ValueValidator.range(value, -10, 10)
 ## Index of the globally applied effect.
 @export var global_effect: int = 0:
-	set(value): global_effect = ValueValidator.posizero(value) # Max value is limited by the number of implemented effects.
+	# Max value is limited by the number of implemented effects.
+	set(value): global_effect = ValueValidator.posizero(value)
 ## Power/intensity of the globally applied effect.
 @export var global_effect_power: int = 0:
-	set(value): global_effect_power = ValueValidator.range(value, 0, 100)
+	# This is probably not intentional, but effect power can go up to 130% in the original Bosca Ceoil.
+	set(value): global_effect_power = ValueValidator.range(value, 0, 130)
 
 # Composition.
 

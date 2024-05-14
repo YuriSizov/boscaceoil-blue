@@ -503,6 +503,16 @@ func set_song_bpm(value: int) -> void:
 	music_player.update_driver_bpm()
 
 
+func set_song_global_effect(effect: int, power: int) -> void:
+	if not current_song:
+		return
+	
+	current_song.global_effect = effect
+	current_song.global_effect_power = power
+	current_song.mark_dirty()
+	music_player.update_driver_effects()
+
+
 func set_song_swing(value: int) -> void:
 	if not current_song:
 		return

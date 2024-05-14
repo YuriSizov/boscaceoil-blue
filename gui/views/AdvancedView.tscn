@@ -41,37 +41,37 @@ size_flags_horizontal = 3
 text = "SONG SETTINGS"
 uppercase = true
 
-[node name="FilterSettings" type="PanelContainer" parent="Layout/Tuning/Contents"]
+[node name="EffectSettings" type="PanelContainer" parent="Layout/Tuning/Contents"]
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 theme_type_variation = &"WidgetPanel"
 
-[node name="Layout" type="HBoxContainer" parent="Layout/Tuning/Contents/FilterSettings"]
+[node name="Layout" type="HBoxContainer" parent="Layout/Tuning/Contents/EffectSettings"]
 auto_translate_mode = 1
 layout_mode = 2
 theme_type_variation = &"HBoxSpaced"
 alignment = 1
 
-[node name="Label" type="Label" parent="Layout/Tuning/Contents/FilterSettings/Layout"]
+[node name="Label" type="Label" parent="Layout/Tuning/Contents/EffectSettings/Layout"]
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 3
-text = "FILTER"
+text = "EFFECT"
 uppercase = true
 
-[node name="FilterPicker" parent="Layout/Tuning/Contents/FilterSettings/Layout" instance=ExtResource("3_ttw6g")]
+[node name="EffectPicker" parent="Layout/Tuning/Contents/EffectSettings/Layout" instance=ExtResource("3_ttw6g")]
 unique_name_in_owner = true
 layout_mode = 2
 placeholder_text = "NAME"
 
-[node name="FilterValueSlider" parent="Layout/Tuning/Contents/FilterSettings/Layout" instance=ExtResource("3_xr70i")]
+[node name="EffectValueSlider" parent="Layout/Tuning/Contents/EffectSettings/Layout" instance=ExtResource("3_xr70i")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 axis_mode = 1
-horizontal_range = Vector2i(0, 100)
+horizontal_range = Vector2i(0, 130)
 vertical_range = Vector2i(0, 0)
 
 [node name="SwingSettings" type="PanelContainer" parent="Layout/Tuning/Contents"]

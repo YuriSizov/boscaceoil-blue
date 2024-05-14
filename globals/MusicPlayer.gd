@@ -63,6 +63,7 @@ func reset_driver() -> void:
 	_driver.stop()
 
 	update_driver_bpm()
+	update_driver_effects()
 	_driver.play(null, false)
 	print("Driver streaming started.")
 
@@ -70,6 +71,51 @@ func reset_driver() -> void:
 func update_driver_bpm() -> void:
 	if Controller.current_song:
 		_driver.set_bpm(Controller.current_song.bpm)
+
+
+func update_driver_effects() -> void:
+	_driver.get_effector().clear_slot_effects(0)
+	
+	var song := Controller.current_song
+	if not song || song.global_effect_power <= 5:
+		return
+	
+	var _effect_power := song.global_effect_power / 100.0
+	match song.global_effect:
+		0:
+			var effect_delay := SiEffectStereoDelay.new()
+			effect_delay.set_params(300.0 * _effect_power, 0.1, false, 0.25) # Feedback uses non-default value.
+			_driver.get_effector().add_slot_effect(0, effect_delay);
+	
+		1:
+			var effect_chorus := SiEffectStereoChorus.new()
+			effect_chorus.set_params(20, 0.2, 4, 10 + 50.0 * _effect_power, 0.5, true)
+			_driver.get_effector().add_slot_effect(0, effect_chorus);
+	
+		2:
+			var effect_reverb := SiEffectStereoReverb.new()
+			effect_reverb.set_params(0.7, 0.4 + 0.5 * _effect_power, 0.8, 0.3)
+			_driver.get_effector().add_slot_effect(0, effect_reverb);
+	
+		3:
+			var effect_distortion := SiEffectDistortion.new()
+			effect_distortion.set_params(-20 - 80.0 * _effect_power, 18, 2400, 1)
+			_driver.get_effector().add_slot_effect(0, effect_distortion);
+	
+		4:
+			var effect_lowboost := SiFilterLowBoost.new()
+			effect_lowboost.set_params(3000, 1, 4 + 6.0 * _effect_power)
+			_driver.get_effector().add_slot_effect(0, effect_lowboost);
+	
+		5:
+			var effect_compressor := SiEffectCompressor.new()
+			effect_compressor.set_params(0.7, 50, 20, 20, -6, 0.2 + 0.6 * _effect_power)
+			_driver.get_effector().add_slot_effect(0, effect_compressor);
+	
+		6:
+			var effect_highpass := SiControllableFilterHighPass.new()
+			effect_highpass.set_params_manually(1.0 * _effect_power, 0.9)
+			_driver.get_effector().add_slot_effect(0, effect_highpass);
 
 
 # Driver interactions.
