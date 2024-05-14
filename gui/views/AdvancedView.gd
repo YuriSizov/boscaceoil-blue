@@ -10,6 +10,8 @@ extends MarginContainer
 @onready var _effect_value_slider: PadSlider = %EffectValueSlider
 @onready var _swing_stepper: Stepper = %SwingStepper
 
+@onready var _gui_scale_stepper: Stepper = %GUIScaleStepper
+
 
 func _ready() -> void:
 	_populate_effect_options()
@@ -18,11 +20,15 @@ func _ready() -> void:
 	_effect_value_slider.changed.connect(_change_effect)
 	_swing_stepper.value_changed.connect(_change_swing)
 	
+	_gui_scale_stepper.value_changed.connect(_change_gui_scale)
+	
 	if not Engine.is_editor_hint():
 		_edit_current_song()
 		
 		Controller.song_loaded.connect(_edit_current_song)
 
+
+# Song settings.
 
 func _populate_effect_options() -> void:
 	var selected_item: OptionListPopup.Item = null
@@ -59,3 +65,9 @@ func _change_effect() -> void:
 
 func _change_swing() -> void:
 	Controller.set_song_swing(_swing_stepper.value)
+
+
+# App settings.
+
+func _change_gui_scale() -> void:
+	Controller.settings_manager.set_gui_scale(_gui_scale_stepper.value)
