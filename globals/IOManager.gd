@@ -82,10 +82,10 @@ func _load_ceol_song_confirmed(path: String) -> void:
 	print("Successfully loaded song from %s:\n  %s" % [ path, loaded_song ])
 
 
-func save_ceol_song() -> void:
+func save_ceol_song(save_as: bool = false) -> void:
 	var save_dialog := Controller.get_file_dialog()
 	save_dialog.file_mode = FileDialog.FILE_MODE_SAVE_FILE
-	save_dialog.title = "Save .ceol Song"
+	save_dialog.title = "Save .ceol Song As" if save_as else "Save .ceol Song"
 	save_dialog.add_filter("*.ceol", "Bosca Ceoil Song")
 	save_dialog.file_selected.connect(_save_ceol_song_confirmed, CONNECT_ONE_SHOT)
 	

@@ -93,6 +93,22 @@ func _shortcut_input(event: InputEvent) -> void:
 			music_player.pause_playback()
 		else:
 			music_player.start_playback()
+		
+		get_viewport().set_input_as_handled()
+	
+	elif event.is_action_pressed("bosca_save", false, true):
+		if current_song:
+			if current_song.filename.is_empty():
+				io_manager.save_ceol_song()
+			else:
+				io_manager._save_ceol_song_confirmed(current_song.filename)
+		
+		get_viewport().set_input_as_handled()
+	
+	elif event.is_action_pressed("bosca_save_as", false, true):
+		if current_song:
+			io_manager.save_ceol_song(true)
+		
 		get_viewport().set_input_as_handled()
 
 
