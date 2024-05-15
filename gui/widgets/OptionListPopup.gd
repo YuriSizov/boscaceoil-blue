@@ -103,6 +103,15 @@ func _update_theme() -> void:
 	_update_popup_size()
 
 
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_PREDELETE:
+		# Clean up popups which are not currently mounted to the tree.
+		for item_id: int in _popup_map:
+			var sub_popup: OptionListPopup = _popup_map[item_id]
+			if is_instance_valid(sub_popup):
+				sub_popup.queue_free()
+
+
 func _physics_process(_delta: float) -> void:
 	if not _hovering:
 		return

@@ -32,9 +32,6 @@ var _swing_active: bool = false
 var _playing_residue: bool = false
 var _exporting_callback: Callable = Callable()
 
-## Driver's buffer size.
-var buffer_size: int = 2048
-
 ## Playback step of current patterns within the active timeline bar, in notes.
 ## Caps a current song's pattern size.
 var _pattern_time: int = -1
@@ -43,17 +40,33 @@ var _note_residue: PackedInt32Array = PackedInt32Array()
 var _note_residue_time: int = 0
 
 
-func _init(controller: Node) -> void:
-	_driver = SiONDriver.create(buffer_size)
-	controller.add_child(_driver)
-
-
 # Initialization.
 
-func initialize() -> void:
+func initialize_driver() -> void:
+	if _driver:
+		printerr("MusicPlayer: Cannot initialize the driver, an instance already exists.")
+		return
+	
+	_driver = SiONDriver.create(Controller.settings_manager.get_buffer_size())
 	_driver.set_beat_callback_interval(1) # In 1/16ths of a beat, can only be one of: 1, 2, 4, 8, 16.
 	_driver.set_timer_interval(NOTE_LENGTH)
-	print("Driver initialized.")
+	
+	Controller.add_child(_driver)
+	print("Synthesizer driver initialized.")
+
+
+func finalize_driver() -> void:
+	if not _driver:
+		printerr("MusicPlayer: Cannot finalize the driver, it doesn't exist.")
+		return
+	
+	_driver.stop()
+	
+	if _driver.get_parent():
+		_driver.get_parent().remove_child(_driver)
+	
+	_driver.free()
+	_driver = null
 
 
 func reset_driver() -> void:
@@ -65,7 +78,23 @@ func reset_driver() -> void:
 	update_driver_bpm()
 	update_driver_effects()
 	_driver.play(null, false)
-	print("Driver streaming started.")
+	print("Synthesizer driver streaming started.")
+
+
+func update_driver_buffer() -> void:
+	var was_playing := false
+	if is_playing():
+		was_playing = true
+		stop_playback()
+	
+	# Buffer changes require us to recreate the entire driver. This should be relatively safe,
+	# although leaks on the driver side are possible (but should be fixed in GDSiON anyway).
+	finalize_driver()
+	initialize_driver()
+	reset_driver()
+	
+	if was_playing:
+		start_playback()
 
 
 func update_driver_bpm() -> void:

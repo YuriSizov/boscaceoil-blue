@@ -160,6 +160,7 @@ func destroy_popup(popup: PopupControl) -> void:
 	var anchor := popup.get_parent()
 	anchor.remove_child(popup)
 	anchor.get_parent().remove_child(anchor)
+	anchor.queue_free()
 
 
 # Public API.

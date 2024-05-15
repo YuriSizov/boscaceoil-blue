@@ -7,7 +7,6 @@
 extends MarginContainer
 
 var _default_window_title: String = ""
-var _last_window_scale_factor: float = 1.0
 
 @onready var _filler: Control = %Filler
 @onready var _menu_bar: Control = %Menu
@@ -26,7 +25,6 @@ func _enter_tree() -> void:
 
 func _ready() -> void:
 	_update_window_size()
-	
 	Controller.settings_manager.gui_scale_changed.connect(_update_window_size)
 	
 	# A little trick to make sure the menu is on top of the pattern editor. We use a filler control
@@ -56,7 +54,8 @@ func _edit_current_song() -> void:
 
 func _update_window_size() -> void:
 	var main_window := get_window()
-	var neutral_size := main_window.size / _last_window_scale_factor
+	var neutral_size := main_window.size / main_window.content_scale_factor
+	main_window.content_scale_factor = Controller.settings_manager.get_gui_scale_factor()
 	
 	# HACK: This is a naive fix to an engine bug. For some reason, window's content scale factor
 	# affects controls' combined required minimum size, making it smaller the larger the scale is.
@@ -66,9 +65,7 @@ func _update_window_size() -> void:
 	# control, really) helps to counter-act the issue. So here we are. 
 	var content_minsize := (main_window.get_contents_minimum_size() * get_global_transform()).floor()
 	main_window.min_size = content_minsize * main_window.content_scale_factor
-	
 	main_window.size = neutral_size * main_window.content_scale_factor
-	_last_window_scale_factor = main_window.content_scale_factor
 
 
 func _update_window_title() -> void:

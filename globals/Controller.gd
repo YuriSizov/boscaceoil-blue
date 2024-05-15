@@ -64,15 +64,16 @@ var _controls_locked: bool = false
 func _init() -> void:
 	settings_manager = SettingsManager.new()
 	voice_manager = VoiceManager.new()
-	music_player = MusicPlayer.new(self)
+	music_player = MusicPlayer.new()
 	io_manager = IOManager.new()
+	
+	settings_manager.buffer_size_changed.connect(music_player.update_driver_buffer)
 
 
 func _ready() -> void:
 	get_tree().set_auto_accept_quit(false)
 	
-	# Driver must be ready by this time.
-	music_player.initialize()
+	music_player.initialize_driver()
 	io_manager.create_new_song()
 
 
@@ -84,6 +85,8 @@ func _notification(what: int) -> void:
 			_file_dialog.queue_free()
 		if is_instance_valid(_info_popup):
 			_info_popup.queue_free()
+		if is_instance_valid(_controls_blocker):
+			_controls_blocker.queue_free()
 
 
 func _shortcut_input(event: InputEvent) -> void:

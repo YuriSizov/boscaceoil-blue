@@ -6,28 +6,91 @@
 
 class_name SettingsManager extends RefCounted
 
-signal gui_scale_changed()
 signal buffer_size_changed()
+signal gui_scale_changed()
 
-enum GUIScalePresets {
+enum BufferSize {
+	BUFFER_SMALL  = 2048,
+	BUFFER_MEDIUM = 4096,
+	BUFFER_LARGE  = 8192,
+}
+
+const _buffer_size_descriptions := {
+	BufferSize.BUFFER_SMALL:  "default, high performance",
+	BufferSize.BUFFER_MEDIUM: "try if you get cracking on .wav exports",
+	BufferSize.BUFFER_LARGE:  "slow, not recommended",
+}
+
+enum GUIScalePreset {
 	GUI_SCALE_NORMAL = 1,
 	GUI_SCALE_LARGE = 2,
 }
 
 const _gui_scale_factors := {
-	GUIScalePresets.GUI_SCALE_NORMAL: 1.0,
-	GUIScalePresets.GUI_SCALE_LARGE:  1.25,
+	GUIScalePreset.GUI_SCALE_NORMAL: 1.0,
+	GUIScalePreset.GUI_SCALE_LARGE:  1.25,
 }
 
+# Stored properties.
 
-# TODO: Implement persistent settings.
+var _stored_file: ConfigFile = null
+var _buffer_size: int = BufferSize.BUFFER_SMALL
+var _gui_scale_preset: int = GUIScalePreset.GUI_SCALE_NORMAL
+
+
+# Persistence.
+
+func load_settings() -> void:
+	pass
+
+
+func save_settings() -> void:
+	pass
+
+
+func _save_settings_debounced() -> void:
+	pass
+
+
+# Settings management.
+
+func get_buffer_size() -> int:
+	return _buffer_size
+
+
+func get_buffer_size_text(value: int) -> String:
+	if _buffer_size_descriptions.has(value):
+		return "%d (%s)" % [ value, _buffer_size_descriptions[value] ]
+	return "%d" % [ value ]
+
+
+func set_buffer_size(value: int) -> void:
+	_set_buffer_size_safe(value)
+	buffer_size_changed.emit()
+	save_settings()
+
+
+func _set_buffer_size_safe(value: int) -> void:
+	for key: String in BufferSize:
+		if value == BufferSize[key]:
+			_buffer_size = value
+			return
+	
+	_buffer_size = BufferSize.BUFFER_SMALL
+
+
+func get_gui_scale_factor() -> float:
+	return _gui_scale_factors[_gui_scale_preset]
+
 
 func set_gui_scale(preset: int) -> void:
-	var value: float = _gui_scale_factors[GUIScalePresets.GUI_SCALE_NORMAL]
-	if _gui_scale_factors.has(preset):
-		value = _gui_scale_factors[preset]
-	
-	ProjectSettings.set_setting("display/window/stretch/scale", value)
-	Controller.get_window().content_scale_factor = value
-	
+	_set_gui_scale_safe(preset)
 	gui_scale_changed.emit()
+	save_settings()
+
+
+func _set_gui_scale_safe(preset: int) -> void:
+	if _gui_scale_factors.has(preset):
+		_gui_scale_preset = preset
+	else:
+		_gui_scale_preset = GUIScalePreset.GUI_SCALE_NORMAL
