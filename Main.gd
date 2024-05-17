@@ -6,6 +6,8 @@
 
 extends MarginContainer
 
+const SIZE_CHANGES_SAVE_DELAY := 0.3
+
 var _default_window_title: String = ""
 
 @onready var _filler: Control = %Filler
@@ -25,12 +27,14 @@ func _enter_tree() -> void:
 
 
 func _ready() -> void:
+	_restore_window_size()
 	_update_window_size()
 	Controller.settings_manager.gui_scale_changed.connect(_update_window_size)
 	Controller.settings_manager.fullscreen_changed.connect(_update_window_size)
 	
-	_save_timer.wait_time = 0.3
+	_save_timer.wait_time = SIZE_CHANGES_SAVE_DELAY
 	_save_timer.autostart = false
+	_save_timer.one_shot = true
 	_save_timer.timeout.connect(_save_window_size_debounced)
 	get_window().size_changed.connect(_save_window_size)
 
@@ -100,17 +104,23 @@ func _update_window_mode() -> void:
 		return
 	
 	if Controller.settings_manager.is_fullscreen():
-		if main_window.mode == Window.MODE_MAXIMIZED:
-			Controller.settings_manager.set_windowed_maximized(true)
-		else:
-			Controller.settings_manager.set_windowed_maximized(false)
-			Controller.settings_manager.set_windowed_size(main_window.size)
 		main_window.mode = Window.MODE_FULLSCREEN
 	else:
 		main_window.mode = Window.MODE_WINDOWED
 		main_window.size = Controller.settings_manager.get_windowed_size()
 		if Controller.settings_manager.is_windowed_maximized():
 			main_window.mode = Window.MODE_MAXIMIZED
+
+
+func _restore_window_size() -> void:
+	var main_window := get_window()
+	main_window.size = Controller.settings_manager.get_windowed_size()
+	
+	if Controller.settings_manager.is_windowed_maximized():
+		main_window.mode = Window.MODE_MAXIMIZED
+	
+	if Controller.settings_manager.is_fullscreen():
+		main_window.mode = Window.MODE_FULLSCREEN
 
 
 func _save_window_size() -> void:
@@ -122,6 +132,7 @@ func _save_window_size_debounced() -> void:
 	
 	if main_window.mode == Window.MODE_WINDOWED:
 		Controller.settings_manager.set_windowed_size(main_window.size)
+	
 	Controller.settings_manager.set_windowed_maximized(main_window.mode == Window.MODE_MAXIMIZED)
 	Controller.settings_manager.set_fullscreen(main_window.mode == Window.MODE_FULLSCREEN || main_window.mode == Window.MODE_EXCLUSIVE_FULLSCREEN, true)
 

@@ -47,12 +47,13 @@ func initialize_driver() -> void:
 		printerr("MusicPlayer: Cannot initialize the driver, an instance already exists.")
 		return
 	
-	_driver = SiONDriver.create(Controller.settings_manager.get_buffer_size())
+	var buffer_size := Controller.settings_manager.get_buffer_size()
+	_driver = SiONDriver.create(buffer_size)
 	_driver.set_beat_callback_interval(1) # In 1/16ths of a beat, can only be one of: 1, 2, 4, 8, 16.
 	_driver.set_timer_interval(NOTE_LENGTH)
 	
 	Controller.add_child(_driver)
-	print("Synthesizer driver initialized.")
+	print("Synthesizer driver initialized (buffer: %d)." % [ buffer_size ])
 
 
 func finalize_driver() -> void:

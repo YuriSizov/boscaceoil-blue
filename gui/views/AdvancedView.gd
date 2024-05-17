@@ -27,8 +27,10 @@ func _ready() -> void:
 	
 	if not Engine.is_editor_hint():
 		_edit_current_song()
+		_restore_app_settings()
 		
 		Controller.song_loaded.connect(_edit_current_song)
+		Controller.settings_manager.settings_loaded.connect(_restore_app_settings)
 
 
 # Song settings.
@@ -90,6 +92,15 @@ func _populate_buffer_size_options() -> void:
 	
 	_buffer_size_picker.commit_options()
 	_buffer_size_picker.set_selected(selected_item)
+
+
+func _restore_app_settings() -> void:
+	for item: OptionListPopup.Item in _buffer_size_picker.options:
+		if item.id == Controller.settings_manager.get_buffer_size():
+			_buffer_size_picker.set_selected(item)
+			break
+	
+	_gui_scale_stepper.value = Controller.settings_manager.get_gui_scale()
 
 
 func _change_buffer_size() -> void:

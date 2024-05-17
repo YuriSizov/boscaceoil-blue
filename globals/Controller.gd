@@ -68,6 +68,8 @@ func _init() -> void:
 	io_manager = IOManager.new()
 	
 	settings_manager.buffer_size_changed.connect(music_player.update_driver_buffer)
+	
+	settings_manager.load_settings()
 
 
 func _ready() -> void:

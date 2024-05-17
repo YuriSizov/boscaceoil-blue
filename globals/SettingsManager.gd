@@ -6,6 +6,10 @@
 
 class_name SettingsManager extends RefCounted
 
+const CONFIG_PATH := "user://bosca.settings"
+const CONFIG_SAVE_DELAY := 0.5
+
+signal settings_loaded()
 signal buffer_size_changed()
 signal gui_scale_changed()
 signal fullscreen_changed()
@@ -35,6 +39,8 @@ const _gui_scale_factors := {
 # Stored properties.
 
 var _stored_file: ConfigFile = null
+var _stored_timer: SceneTreeTimer = null
+
 var _buffer_size: int = BufferSize.BUFFER_SMALL
 var _gui_scale_preset: int = GUIScalePreset.GUI_SCALE_NORMAL
 var _fullscreen: bool = false
@@ -45,15 +51,66 @@ var _windowed_maximized: bool = false
 # Persistence.
 
 func load_settings() -> void:
-	pass
+	_stored_file = ConfigFile.new()
+	
+	# No recorded user profile, create it.
+	if not FileAccess.file_exists(CONFIG_PATH):
+		_save_settings_debounced() # Save immediately.
+		return
+	
+	# Load and apply existing profile.
+	var error := _stored_file.load(CONFIG_PATH)
+	if error: 
+		printerr("SettingsManager: Failed to load app settings file at '%s' (code %d)." % [ CONFIG_PATH, error ])
+		return
+	
+	# Restore saved values.
+	
+	_set_gui_scale_safe(     _stored_file.get_value("gui", "scale_preset", _gui_scale_preset))
+	_fullscreen =            _stored_file.get_value("gui", "fullscreen",   _fullscreen)
+	_windowed_maximized =    _stored_file.get_value("gui", "maximized",    _windowed_maximized)
+	_set_windowed_size_safe( _stored_file.get_value("gui", "last_size",    _windowed_size))
+	
+	_set_buffer_size_safe( _stored_file.get_value("synth", "driver_buffer", _buffer_size))
+	
+	settings_loaded.emit()
 
 
 func save_settings() -> void:
-	pass
+	if _stored_timer:
+		_stored_timer.timeout.disconnect(_save_settings_debounced)
+		_stored_timer = null
+	
+	_stored_timer = Controller.get_tree().create_timer(CONFIG_SAVE_DELAY)
+	_stored_timer.timeout.connect(_save_settings_debounced)
 
 
 func _save_settings_debounced() -> void:
-	pass
+	if not _stored_file:
+		return
+	
+	# Clean up the timer.
+	if _stored_timer:
+		_stored_timer.timeout.disconnect(_save_settings_debounced)
+		_stored_timer = null
+	
+	# Record current values.
+	
+	_stored_file.set_value("gui", "scale_preset", _gui_scale_preset)
+	_stored_file.set_value("gui", "fullscreen",   _fullscreen)
+	_stored_file.set_value("gui", "maximized",    _windowed_maximized)
+	_stored_file.set_value("gui", "last_size",    _windowed_size)
+	
+	_stored_file.set_value("synth", "driver_buffer", _buffer_size)
+	
+	# Save everything.
+	var error := _stored_file.save(CONFIG_PATH)
+	if error: 
+		printerr("SettingsManager: Failed to save app settings file at '%s' (code %d)." % [ CONFIG_PATH, error ])
+		Controller.update_status("FAILED TO SAVE APP SETTINGS", Controller.StatusLevel.ERROR)
+		return
+	
+	print("Successfully saved settings to %s." % [ CONFIG_PATH ] )
 
 
 # Settings management.
@@ -81,6 +138,10 @@ func _set_buffer_size_safe(value: int) -> void:
 			return
 	
 	_buffer_size = BufferSize.BUFFER_SMALL
+
+
+func get_gui_scale() -> int:
+	return _gui_scale_preset
 
 
 func get_gui_scale_factor() -> float:

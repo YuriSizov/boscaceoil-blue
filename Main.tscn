@@ -57,3 +57,4 @@ grow_vertical = 2
 
 [node name="SaveTimer" type="Timer" parent="."]
 unique_name_in_owner = true
+one_shot = true
