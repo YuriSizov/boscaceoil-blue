@@ -36,8 +36,8 @@ _Bosca Ceoil Blue_ is still in active development, with several major features i
 - [x] Pattern editing, scale and key adjustments.
 - [x] Instrument management and tuning.
 - [x] Composition and arrangement editing.
-- [ ] Advanced settings (swing, filters).
-- [ ] App settings and persistence.
+- [x] Advanced settings (swing, effects, filters).
+- [ ] App settings configuration and persistence.
 - [ ] Advanced instrument tuning.
 - [x] Saving and loading.
 - [x] Export to WAV and MIDI.
