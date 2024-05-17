@@ -1,7 +1,8 @@
 ### Project-specific ignores ###
 
-bin/
 .references/
+bin/
+export/
 
 ### Godot-specific ignores ###
 .godot/
