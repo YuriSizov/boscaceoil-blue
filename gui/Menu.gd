@@ -19,6 +19,7 @@ enum NavigationTargets {
 
 var _current_tab: int = 0
 
+@onready var _fullscreen_toggle: Button = %FullscreenToggle
 @onready var _contents_root: Control = $Contents
 @onready var _tab_buttons: ButtonGroup = load("res://gui/theme/navigation_buttons.tres")
 
@@ -57,6 +58,8 @@ func _ready() -> void:
 	_tab_buttons.pressed.connect(_handle_navigation_changed)
 	
 	if not Engine.is_editor_hint():
+		_fullscreen_toggle.pressed.connect(Controller.settings_manager.toggle_fullscreen)
+		
 		Controller.navigation_requested.connect(_navigate)
 		Controller.music_player.export_started.connect(_navigate.bind(NavigationTargets.ARRANGEMENT))
 

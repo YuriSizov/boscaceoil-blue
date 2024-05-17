@@ -157,7 +157,7 @@ func _draw() -> void:
 	
 	# Draw the note cursor.
 	
-	if note_unit_width > 0 && note_cursor_position.x >= 0 && note_cursor_position.y >= 0:
+	if note_unit_width > 0 && note_cursor_position.x >= 0:
 		var note_position := note_cursor_position + Vector2(half_border_width, half_border_width)
 		var note_size := Vector2(note_unit_width * note_cursor_size, note_height) - Vector2(border_width, border_width)
 		var note_cursor_color := get_theme_color("note_cursor_color", "NoteMap")

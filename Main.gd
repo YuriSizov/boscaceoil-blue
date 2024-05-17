@@ -13,6 +13,7 @@ var _default_window_title: String = ""
 
 @onready var _pattern_editor: Control = %PatternEditor
 @onready var _locked_indicator: Control = %LockedIndicator
+@onready var _save_timer: Timer = %SaveTimer
 
 
 func _enter_tree() -> void:
@@ -26,7 +27,13 @@ func _enter_tree() -> void:
 func _ready() -> void:
 	_update_window_size()
 	Controller.settings_manager.gui_scale_changed.connect(_update_window_size)
+	Controller.settings_manager.fullscreen_changed.connect(_update_window_size)
 	
+	_save_timer.wait_time = 0.3
+	_save_timer.autostart = false
+	_save_timer.timeout.connect(_save_window_size_debounced)
+	get_window().size_changed.connect(_save_window_size)
+
 	# A little trick to make sure the menu is on top of the pattern editor. We use a filler control
 	# and make it fit the same area in the box container.
 	_filler.custom_minimum_size = _menu_bar.get_combined_minimum_size()
@@ -53,6 +60,8 @@ func _edit_current_song() -> void:
 
 
 func _update_window_size() -> void:
+	_update_window_mode()
+	
 	var main_window := get_window()
 	var neutral_size := main_window.size / main_window.content_scale_factor
 	main_window.content_scale_factor = Controller.settings_manager.get_gui_scale_factor()
@@ -65,7 +74,56 @@ func _update_window_size() -> void:
 	# control, really) helps to counter-act the issue. So here we are. 
 	var content_minsize := (main_window.get_contents_minimum_size() * get_global_transform()).floor()
 	main_window.min_size = content_minsize * main_window.content_scale_factor
-	main_window.size = neutral_size * main_window.content_scale_factor
+	_fit_window_size(neutral_size * main_window.content_scale_factor)
+
+
+func _fit_window_size(window_size: Vector2) -> void:
+	var main_window := get_window()
+	var window_mode := main_window.mode
+	if window_mode == Window.MODE_MAXIMIZED || OS.has_feature("web"):
+		return
+	
+	var screen_index := main_window.current_screen
+	if window_mode == Window.MODE_FULLSCREEN || window_mode == Window.MODE_EXCLUSIVE_FULLSCREEN || OS.has_feature("android"):
+		main_window.size = DisplayServer.screen_get_size(screen_index)
+		return
+	
+	main_window.size = window_size
+	Controller.settings_manager.set_windowed_size(main_window.size)
+
+
+func _update_window_mode() -> void:
+	var main_window := get_window()
+	var is_actually_fullscreen := main_window.mode == Window.MODE_FULLSCREEN || main_window.mode == Window.MODE_EXCLUSIVE_FULLSCREEN
+	
+	if Controller.settings_manager.is_fullscreen() == is_actually_fullscreen:
+		return
+	
+	if Controller.settings_manager.is_fullscreen():
+		if main_window.mode == Window.MODE_MAXIMIZED:
+			Controller.settings_manager.set_windowed_maximized(true)
+		else:
+			Controller.settings_manager.set_windowed_maximized(false)
+			Controller.settings_manager.set_windowed_size(main_window.size)
+		main_window.mode = Window.MODE_FULLSCREEN
+	else:
+		main_window.mode = Window.MODE_WINDOWED
+		main_window.size = Controller.settings_manager.get_windowed_size()
+		if Controller.settings_manager.is_windowed_maximized():
+			main_window.mode = Window.MODE_MAXIMIZED
+
+
+func _save_window_size() -> void:
+	_save_timer.start()
+
+
+func _save_window_size_debounced() -> void:
+	var main_window := get_window()
+	
+	if main_window.mode == Window.MODE_WINDOWED:
+		Controller.settings_manager.set_windowed_size(main_window.size)
+	Controller.settings_manager.set_windowed_maximized(main_window.mode == Window.MODE_MAXIMIZED)
+	Controller.settings_manager.set_fullscreen(main_window.mode == Window.MODE_FULLSCREEN || main_window.mode == Window.MODE_EXCLUSIVE_FULLSCREEN, true)
 
 
 func _update_window_title() -> void:
