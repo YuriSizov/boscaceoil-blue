@@ -173,8 +173,6 @@ func get_available_rect() -> Rect2:
 func _change_scroll_offset(delta: int) ->  void:
 	_scroll_offset = clampi(_scroll_offset + delta, 0, _max_scroll_offset)
 	
-	_timeline.scroll_offset = _scroll_offset
-	
 	_update_scrollbar()
 	_update_playback_cursor()
 	_update_whole_grid()
@@ -200,7 +198,10 @@ func _update_scrollbar() -> void:
 	_track.can_scroll_left = _scrollbar.can_scroll_left
 	_track.can_scroll_right = _scrollbar.can_scroll_right
 	
+	_timeline.scroll_offset = _scroll_offset
+	
 	_scrollbar.queue_redraw()
+	_timeline.queue_redraw()
 	_track.queue_redraw()
 
 
