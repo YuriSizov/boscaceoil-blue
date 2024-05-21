@@ -20,10 +20,16 @@ var _button_holder: ButtonHolder = null
 func _ready() -> void:
 	_button_holder = ButtonHolder.new(self, _up_button, _down_button)
 	_button_holder.set_press_callback(_emit_hold_signal)
+	_button_holder.set_button_action(_up_button, "bosca_notemap_up")
+	_button_holder.set_button_action(_down_button, "bosca_notemap_down")
 
 
 func _process(delta: float) -> void:
 	_button_holder.process(delta)
+
+
+func _shortcut_input(event: InputEvent) -> void:
+	_button_holder.input(event)
 
 
 func _draw() -> void:

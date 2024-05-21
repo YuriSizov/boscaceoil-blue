@@ -8,6 +8,8 @@
 extends Control
 
 signal loop_changed(starts_at: int, ends_at: int)
+signal loop_changed_to_end(starts_at: int)
+
 signal bar_inserted(at_index: int)
 signal bar_removed(at_index: int)
 signal bars_copied()
@@ -19,6 +21,8 @@ signal shifted_left()
 ## Stepper is accelerated to make it easier to scroll through the range of values.
 ## These are arbitrary fine-tuned values, and can differ from ButtonHolder.
 const SCROLL_THRESHOLDS := [ 0.3, 0.2, 0.088 ]
+## Time between sequential clicks when they are considered a double click.
+const DOUBLE_CLICK_THRESHOLD := 0.2
 
 var arrangement_bars: Array[PatternMap.ArrangementBar] = []
 var pattern_width: float = 0
@@ -48,6 +52,11 @@ var _drag_span_size: Vector2 = Vector2(-1, -1)
 var _dragged_from_col: int = -1
 var _dragged_to_col: int = -1
 
+## Remaining timer to detect double clicks.
+var _double_click_timer: float = 0.0
+## Column that initiated the double click.
+var _double_clicked_on_col: int = -1
+
 ## Trackers for drag events that result in scrolling.
 var _scroll_threshold_idx := 0
 var _scroll_interval: float = 0
@@ -65,29 +74,39 @@ func _notification(what: int) -> void:
 	if _dragging && what == NOTIFICATION_DRAG_END:
 		_dragging = false
 		set_physics_process(_hovering || _dragging)
-		_stop_dragging()
+		_finish_dragging()
 
 
 func _physics_process(delta: float) -> void:
 	_process_loop_cursor()
 	_process_dragging()
 	_process_scrolling(delta)
+	
+	if _double_click_timer > 0:
+		_double_click_timer -= delta
 
 
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		var mb := event as InputEventMouseButton
 		
-		if mb.button_index == MOUSE_BUTTON_LEFT:
-			if mb.pressed:
-				_start_dragging()
-			else:
-				_stop_dragging()
-				set_physics_process(_hovering || _dragging)
-		elif mb.button_index == MOUSE_BUTTON_RIGHT && mb.pressed:
-			_remove_bar_at_cursor()
-		elif mb.button_index == MOUSE_BUTTON_MIDDLE && mb.pressed:
-			_insert_bar_at_cursor()
+		if mb.pressed:
+			if mb.button_index == MOUSE_BUTTON_LEFT && not mb.shift_pressed:
+				if _double_click_timer > 0:
+					_start_double_clicking()
+				else:
+					_start_dragging()
+			elif mb.button_index == MOUSE_BUTTON_RIGHT:
+				_remove_bar_at_cursor()
+			elif mb.button_index == MOUSE_BUTTON_MIDDLE || (mb.button_index == MOUSE_BUTTON_LEFT && mb.shift_pressed):
+				_insert_bar_at_cursor()
+		else:
+			if mb.button_index == MOUSE_BUTTON_LEFT && not mb.shift_pressed:
+				if _double_clicked_on_col >= 0:
+					_finish_double_clicking()
+				else:
+					_finish_dragging()
+					set_physics_process(_hovering || _dragging)
 
 
 func _shortcut_input(event: InputEvent) -> void:
@@ -124,6 +143,7 @@ func _draw() -> void:
 	
 	# Draw bar lines and labels.
 	
+	var last_col_x := 0.0
 	for bar in arrangement_bars:
 		var col_position := bar.position
 		var border_size := Vector2(border_width, available_rect.size.y)
@@ -135,6 +155,14 @@ func _draw() -> void:
 		
 		draw_string(font, shadow_position, label_text, HORIZONTAL_ALIGNMENT_LEFT, -1, label_font_size, label_shadow_color)
 		draw_string(font, label_position, label_text, HORIZONTAL_ALIGNMENT_LEFT, -1, label_font_size, label_font_color)
+		
+		last_col_x = col_position.x + pattern_width
+	
+	# Draw the final bar line.
+	if last_col_x < available_rect.end.x:
+		var col_position := Vector2(last_col_x, available_rect.position.y)
+		var border_size := Vector2(border_width, available_rect.size.y)
+		draw_rect(Rect2(col_position, border_size), border_color)
 	
 	# Draw loop cursors, either drag or hover.
 	if pattern_width > 0 && (_hovering || _dragging):
@@ -152,7 +180,9 @@ func _draw() -> void:
 		elif _loop_cursor_position.x >= 0 && _loop_cursor_position.y >= 0:
 			var cursor_position := _loop_cursor_position + Vector2(half_border_width, half_border_width)
 			var cursor_size := Vector2(pattern_width, available_rect.size.y) - Vector2(border_width, border_width)
-			cursor_label_text = "%d" % [ arrangement_bars[_hovered_col].bar_index + 1 ]
+			
+			if _hovered_col >= 0:
+				cursor_label_text = "%d" % [ arrangement_bars[_hovered_col].bar_index + 1 ]
 			
 			draw_rect(Rect2(cursor_position, cursor_size), cursor_color, false, cursor_width)
 		
@@ -227,7 +257,7 @@ func _get_cell_at_position(at_position: Vector2) -> Vector2i:
 	
 	var position_normalized := at_position - available_rect.position
 	var cell_indexed := Vector2i(0, 0)
-	cell_indexed.x = clampi(floori(position_normalized.x / pattern_width), 0, Arrangement.BAR_NUMBER)
+	cell_indexed.x = clampi(floori(position_normalized.x / pattern_width), 0, arrangement_bars.size() - 1)
 	return cell_indexed
 
 
@@ -269,6 +299,8 @@ func _process_loop_cursor() -> void:
 	if cell_indexed.x >= 0 && cell_indexed.y >= 0:
 		_loop_cursor_position = _get_cell_position(cell_indexed)
 		_hovered_col = cell_indexed.x
+		if _hovered_col >= arrangement_bars.size():
+			_hovered_col = -1
 	else:
 		_loop_cursor_position = Vector2(-1, -1)
 		_hovered_col = -1
@@ -335,9 +367,10 @@ func _start_dragging() -> void:
 	_update_drag_span()
 
 	_dragging = true
+	_double_click_timer = DOUBLE_CLICK_THRESHOLD
 
 
-func _stop_dragging() -> void:
+func _finish_dragging() -> void:
 	_process_dragging() # Process one last time to update drag data when mouse doesn't move.
 	_dragging = false
 	
@@ -372,6 +405,25 @@ func _process_dragging() -> void:
 	
 	_dragged_to_col = hovered_bar
 	_update_drag_span()
+
+
+func _start_double_clicking() -> void:
+	var current_scroll_offset := arrangement_bars[0].bar_index
+	_double_clicked_on_col = _hovered_col + current_scroll_offset
+	
+	_double_click_timer = 0.0
+
+
+func _finish_double_clicking() -> void:
+	var current_scroll_offset := arrangement_bars[0].bar_index
+	var clicked_on_col := _hovered_col + current_scroll_offset
+	
+	# Check for column-spanning drag between pressing and releasing.
+	if clicked_on_col == _double_clicked_on_col && _double_clicked_on_col >= 0:
+		loop_changed_to_end.emit(clicked_on_col)
+	
+	_double_click_timer = 0.0
+	_double_clicked_on_col = -1
 
 
 func _test_for_scrolling() -> void:

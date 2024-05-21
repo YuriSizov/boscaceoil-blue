@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://l0bjoy6vwtbx"]
+[gd_scene load_steps=15 format=3 uid="uid://l0bjoy6vwtbx"]
 
 [ext_resource type="Script" path="res://gui/Menu.gd" id="1_pjxdv"]
 [ext_resource type="Texture2D" uid="uid://l0r5er3xyb4r" path="res://gui/theme/icons/fullscreen_on_icon.tres" id="2_kmlcb"]
@@ -8,10 +8,12 @@
 [ext_resource type="PackedScene" uid="uid://c1oriajgloul5" path="res://gui/views/ArrangementView.tscn" id="6_0weha"]
 [ext_resource type="PackedScene" uid="uid://diwy8fi3i4ti1" path="res://gui/views/CreditsView.tscn" id="6_x0vu5"]
 [ext_resource type="PackedScene" uid="uid://cw48njslxrtsl" path="res://gui/views/InstrumentView.tscn" id="7_32hp6"]
-[ext_resource type="PackedScene" uid="uid://bhydnchi7pmla" path="res://gui/views/HelpView.tscn" id="7_efw7d"]
+[ext_resource type="PackedScene" uid="uid://bhydnchi7pmla" path="res://gui/views/GeneralHelpView.tscn" id="7_efw7d"]
 [ext_resource type="PackedScene" uid="uid://ggnvgntxytdg" path="res://gui/views/AdvancedView.tscn" id="8_b5sqt"]
 [ext_resource type="PackedScene" uid="uid://cci6pssfnh4q6" path="res://gui/views/ThirdPartyView.tscn" id="10_c4eyv"]
 [ext_resource type="PackedScene" uid="uid://c0a2d6er3rr81" path="res://gui/views/LegacyView.tscn" id="11_vw4b6"]
+[ext_resource type="PackedScene" uid="uid://dx08w2jjjtnag" path="res://gui/views/PatternHelpView.tscn" id="13_4cens"]
+[ext_resource type="PackedScene" uid="uid://dwl0v0nsr8r2n" path="res://gui/views/ArrangementHelpView.tscn" id="14_hrknx"]
 
 [node name="Menu" type="VBoxContainer"]
 auto_translate_mode = 1
@@ -80,7 +82,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 0
 button_group = ExtResource("3_kmmx3")
-label_text = "THIRDPARTY"
+label_text = "THIRD PARTY"
 
 [node name="LegacyTab" parent="Navigation" instance=ExtResource("2_l3q7q")]
 unique_name_in_owner = true
@@ -90,9 +92,9 @@ layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 0
 button_group = ExtResource("3_kmmx3")
-label_text = "LEGACY"
+label_text = "LEGACY CREDITS"
 
-[node name="HelpTab" parent="Navigation" instance=ExtResource("2_l3q7q")]
+[node name="GeneralHelpTab" parent="Navigation" instance=ExtResource("2_l3q7q")]
 unique_name_in_owner = true
 auto_translate_mode = 1
 visible = false
@@ -100,7 +102,27 @@ layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 0
 button_group = ExtResource("3_kmmx3")
-label_text = "HELP"
+label_text = "GENERAL HELP"
+
+[node name="PatternHelpTab" parent="Navigation" instance=ExtResource("2_l3q7q")]
+unique_name_in_owner = true
+auto_translate_mode = 1
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+button_group = ExtResource("3_kmmx3")
+label_text = "PATTERNS"
+
+[node name="ArrangementHelpTab" parent="Navigation" instance=ExtResource("2_l3q7q")]
+unique_name_in_owner = true
+auto_translate_mode = 1
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+button_group = ExtResource("3_kmmx3")
+label_text = "ARRANGEMENTS"
 
 [node name="FullscreenToggle" type="Button" parent="Navigation"]
 unique_name_in_owner = true
@@ -153,7 +175,17 @@ unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
-[node name="HelpView" parent="Contents" instance=ExtResource("7_efw7d")]
+[node name="GeneralHelpView" parent="Contents" instance=ExtResource("7_efw7d")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="PatternHelpView" parent="Contents" instance=ExtResource("13_4cens")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="ArrangementHelpView" parent="Contents" instance=ExtResource("14_hrknx")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2

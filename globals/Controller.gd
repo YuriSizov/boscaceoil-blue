@@ -95,7 +95,10 @@ func _shortcut_input(event: InputEvent) -> void:
 	if _controls_locked:
 		return
 	
-	if event.is_action_pressed("bosca_pause"):
+	if event.is_action_pressed("bosca_exit"):
+		io_manager.check_song_on_exit()
+	
+	elif event.is_action_pressed("bosca_pause"):
 		if music_player.is_playing():
 			music_player.pause_playback()
 		else:

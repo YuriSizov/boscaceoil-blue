@@ -1,0 +1,151 @@
+[gd_scene load_steps=4 format=3 uid="uid://bhydnchi7pmla"]
+
+[ext_resource type="Script" path="res://gui/views/GeneralHelpView.gd" id="1_5aixm"]
+[ext_resource type="PackedScene" uid="uid://71sw1mddco3" path="res://gui/widgets/SquishyButton.tscn" id="2_y870o"]
+[ext_resource type="PackedScene" uid="uid://cinwiem08gkak" path="res://gui/views/help_view/ShortcutLine.tscn" id="3_1pvp8"]
+
+[node name="GeneralHelpView" type="MarginContainer"]
+auto_translate_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_5aixm")
+
+[node name="Layout" type="HBoxContainer" parent="."]
+auto_translate_mode = 1
+layout_mode = 2
+
+[node name="FillerStart" type="Control" parent="Layout"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LeftPage" type="PanelContainer" parent="Layout"]
+auto_translate_mode = 1
+custom_minimum_size = Vector2(640, 0)
+layout_mode = 2
+
+[node name="Layout" type="VBoxContainer" parent="Layout/LeftPage"]
+auto_translate_mode = 1
+layout_mode = 2
+theme_type_variation = &"CreditsBox"
+
+[node name="Label" type="Label" parent="Layout/LeftPage/Layout"]
+auto_translate_mode = 1
+custom_minimum_size = Vector2(560, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"CreditsLabelHeader"
+text = "Learn the basics of how to make a song
+in Bosca Ceoil:"
+horizontal_alignment = 1
+
+[node name="Spacer" type="Control" parent="Layout/LeftPage/Layout"]
+auto_translate_mode = 1
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="StartBasicGuide" parent="Layout/LeftPage/Layout" instance=ExtResource("2_y870o")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(340, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+disabled = true
+text = "BASIC GUIDE"
+
+[node name="Spacer2" type="Control" parent="Layout/LeftPage/Layout"]
+auto_translate_mode = 1
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="Label2" type="Label" parent="Layout/LeftPage/Layout"]
+auto_translate_mode = 1
+custom_minimum_size = Vector2(560, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"CreditsLabelHeader"
+text = "Learn about some of the more
+advanced features:"
+horizontal_alignment = 1
+
+[node name="Spacer3" type="Control" parent="Layout/LeftPage/Layout"]
+auto_translate_mode = 1
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="StartAdvancedGuide" parent="Layout/LeftPage/Layout" instance=ExtResource("2_y870o")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(340, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+disabled = true
+text = "TIPS AND TRICKS"
+
+[node name="FillerMiddle" type="Control" parent="Layout"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RightPage" type="PanelContainer" parent="Layout"]
+auto_translate_mode = 1
+custom_minimum_size = Vector2(640, 0)
+layout_mode = 2
+
+[node name="Layout" type="VBoxContainer" parent="Layout/RightPage"]
+auto_translate_mode = 1
+layout_mode = 2
+theme_type_variation = &"CreditsBox"
+
+[node name="TitleLabel" type="Label" parent="Layout/RightPage/Layout"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"CreditsLabelHeader"
+text = "General shortcuts"
+
+[node name="ShortcutList" type="VBoxContainer" parent="Layout/RightPage/Layout"]
+auto_translate_mode = 1
+layout_mode = 2
+theme_type_variation = &"CreditsBox"
+
+[node name="ShortcutLine" parent="Layout/RightPage/Layout/ShortcutList" instance=ExtResource("3_1pvp8")]
+layout_mode = 2
+key_text = "bosca_pause"
+description_text = "Play/Pause"
+
+[node name="ShortcutLine2" parent="Layout/RightPage/Layout/ShortcutList" instance=ExtResource("3_1pvp8")]
+layout_mode = 2
+key_text = "bosca_save"
+description_text = "Save current song"
+
+[node name="ShortcutLine3" parent="Layout/RightPage/Layout/ShortcutList" instance=ExtResource("3_1pvp8")]
+layout_mode = 2
+key_text = "bosca_save_as"
+description_text = "Save as a copy"
+
+[node name="ShortcutLine4" parent="Layout/RightPage/Layout/ShortcutList" instance=ExtResource("3_1pvp8")]
+layout_mode = 2
+key_text = "bosca_exit"
+description_text = "Quit Bosca Ceoil"
+
+[node name="Filler" type="Control" parent="Layout/RightPage/Layout"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="NavigateBack" parent="Layout/RightPage/Layout" instance=ExtResource("2_y870o")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+text = "BACK"
+
+[node name="FillerEnd" type="Control" parent="Layout"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 3

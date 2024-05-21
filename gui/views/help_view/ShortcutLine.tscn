@@ -1,0 +1,32 @@
+[gd_scene load_steps=2 format=3 uid="uid://cinwiem08gkak"]
+
+[ext_resource type="Script" path="res://gui/views/help_view/ShortcutLine.gd" id="1_06v85"]
+
+[node name="ShortcutLine" type="HBoxContainer"]
+auto_translate_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 28.0
+grow_horizontal = 2
+script = ExtResource("1_06v85")
+
+[node name="KeyLabel" type="Label" parent="."]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabelAccented"
+text = "[UNBOUND]"
+uppercase = true
+
+[node name="Filler" type="Control" parent="."]
+auto_translate_mode = 1
+custom_minimum_size = Vector2(12, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="DescriptionLabel" type="Label" parent="."]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabel"
+text = "Description"

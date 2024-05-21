@@ -44,7 +44,7 @@ func _ready() -> void:
 	_version_subtitle.gui_input.connect(_subtitle_gui_input)
 	
 	_credits_button.pressed.connect(Controller.navigate_to.bind(Menu.NavigationTargets.CREDITS))
-	_help_button.pressed.connect(Controller.navigate_to.bind(Menu.NavigationTargets.HELP))
+	_help_button.pressed.connect(Controller.navigate_to.bind(Menu.NavigationTargets.GENERAL_HELP))
 	
 	_play_button.pressed.connect(Controller.music_player.start_playback)
 	_pause_button.pressed.connect(Controller.music_player.pause_playback)

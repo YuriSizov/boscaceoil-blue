@@ -30,6 +30,8 @@ var _right_default_size: float = 0.0
 func _ready() -> void:
 	_button_holder = ButtonHolder.new(self, _right_button, _left_button)
 	_button_holder.set_press_callback(_emit_hold_signal)
+	_button_holder.set_button_action(_right_button, "bosca_patternmap_right")
+	_button_holder.set_button_action(_left_button, "bosca_patternmap_left")
 	
 	_left_default_size = _left_button.get_combined_minimum_size().x
 	_right_default_size = _right_button.get_combined_minimum_size().x
@@ -45,6 +47,10 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	_button_holder.process(delta)
+
+
+func _shortcut_input(event: InputEvent) -> void:
+	_button_holder.input(event, not is_visible_in_tree())
 
 
 # Buttons.

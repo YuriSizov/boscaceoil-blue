@@ -98,6 +98,13 @@ func _gui_input(event: InputEvent) -> void:
 				_stop_drawing_notes()
 
 
+func _shortcut_input(event: InputEvent) -> void:
+	if event.is_action_pressed("bosca_notemap_cursor_bigger", false, true):
+		_resize_note_cursor(1)
+	elif event.is_action_pressed("bosca_notemap_cursor_smaller", false, true):
+		_resize_note_cursor(-1)
+
+
 func _physics_process(_delta: float) -> void:
 	_process_note_cursor()
 	_process_note_drawing()
@@ -366,7 +373,7 @@ func _get_cell_at_cursor() -> Vector2i:
 	var mouse_normalized := mouse_position - available_rect.position
 	var cell_indexed := Vector2i(0, 0)
 	cell_indexed.x = clampi(floori(mouse_normalized.x / _note_width), 0, pattern_size - 1)
-	cell_indexed.y = floori((available_rect.size.y - mouse_normalized.y) / note_height)
+	cell_indexed.y = clampi(floori((available_rect.size.y - mouse_normalized.y) / note_height), 0, _note_rows.size() - 1)
 	return cell_indexed
 
 

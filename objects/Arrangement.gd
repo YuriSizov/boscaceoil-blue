@@ -87,9 +87,16 @@ func remove_bar(at_index: int, silent: bool = false) -> void:
 		return # Index is outside of the filled in range, so there is nothing to do.
 	
 	# Erase the bar by shifting to the left.
-	for i in range(at_index, timeline_length + 1):
-		timeline_bars[i] = timeline_bars[i + 1].duplicate()
-
+	for i in range(at_index, timeline_length):
+		# Erase the last bar by clearing it.
+		if i == (BAR_NUMBER - 1):
+			var channels := PackedInt32Array()
+			channels.resize(CHANNEL_NUMBER)
+			channels.fill(-1)
+			timeline_bars[i] = channels
+		else:
+			timeline_bars[i] = timeline_bars[i + 1].duplicate()
+	
 	timeline_length -= 1
 	
 	if not silent:

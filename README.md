@@ -43,7 +43,7 @@ _Bosca Ceoil Blue_ is still in active development, with several major features i
 - [x] Export to WAV and MIDI.
 - [ ] Export to XM and MML (experimental).
 - [ ] Import from MIDI.
-- [ ] Keyboard shortcuts.
+- [x] Keyboard shortcuts.
 - [ ] Interactive help and on-boarding guide.
 
 A significant part of the port involves recreation of the [SiON software synthesizer](https://github.com/keim/SiON), which the original _Bosca Ceoil_ is based on, as a GDExtension. The progress on that is tracked in a separate project, [GDSiON](https://github.com/YuriSizov/gdsion). This includes platform support, specifically for the Web platform.

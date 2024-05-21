@@ -14,7 +14,9 @@ enum NavigationTargets {
 	CREDITS,
 	THIRD_PARTY,
 	LEGACY_CREDITS,
-	HELP,
+	GENERAL_HELP,
+	PATTERN_HELP,
+	ARRANGEMENT_HELP,
 }
 
 var _current_tab: int = 0
@@ -32,7 +34,9 @@ var _current_tab: int = 0
 @onready var _thirdparty_tab_button: Button = %ThirdPartyTab
 @onready var _legacy_tab_button: Button = %LegacyTab
 
-@onready var _help_tab_button: Button = %HelpTab
+@onready var _general_help_tab_button: Button = %GeneralHelpTab
+@onready var _pattern_help_tab_button: Button = %PatternHelpTab
+@onready var _arrangement_help_tab_button: Button = %ArrangementHelpTab
 
 # Menu collections.
 
@@ -48,7 +52,9 @@ var _current_tab: int = 0
 	_legacy_tab_button,
 ]
 @onready var HELP_MENU: Array[Button] = [
-	_help_tab_button,
+	_general_help_tab_button,
+	_pattern_help_tab_button,
+	_arrangement_help_tab_button,
 ]
 
 

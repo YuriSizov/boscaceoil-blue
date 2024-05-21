@@ -40,6 +40,7 @@ var _row_odd_color: Color = Color.WHITE
 var _row_even_color: Color = Color.WHITE
 var _border_width: int = 0
 var _border_color: Color = Color.WHITE
+var _border_cover_opacity: float = 1.0
 
 var _pattern_base_width: int = 0
 var _item_gutter_width: float = 0.0
@@ -77,6 +78,7 @@ func _ready() -> void:
 		_scrollbar.set_button_offset(_timeline.size.y, -_track.size.y)
 		
 		_track.loop_changed.connect(_change_arrangement_loop)
+		_track.loop_changed_to_end.connect(_change_arrangement_loop_to_end)
 		_track.bar_inserted.connect(_insert_timeline_bar)
 		_track.bar_removed.connect(_remove_timeline_bar)
 		_track.bars_copied.connect(_copy_timeline_bars)
@@ -101,6 +103,7 @@ func _update_theme() -> void:
 	_row_even_color = get_theme_color("row_even_color", "PatternMap")
 	_border_width = get_theme_constant("border_width", "PatternMap")
 	_border_color = get_theme_color("border_color", "PatternMap")
+	_border_cover_opacity = float(get_theme_constant("border_cover_opacity", "PatternMap")) / 100.0
 	
 	_pattern_base_width = get_theme_constant("pattern_width", "PatternMap")
 	
@@ -116,16 +119,16 @@ func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		var mb := event as InputEventMouseButton
 		
-		if event.is_pressed():
+		if mb.pressed:
 			if mb.button_index == MOUSE_BUTTON_WHEEL_UP:
 				_resize_pattern_width(1)
 			elif mb.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 				_resize_pattern_width(-1)
-			elif mb.button_index == MOUSE_BUTTON_LEFT:
+			elif mb.button_index == MOUSE_BUTTON_LEFT && not mb.shift_pressed:
 				_select_pattern_at_cursor()
 			elif mb.button_index == MOUSE_BUTTON_RIGHT:
 				_clear_pattern_at_cursor()
-			elif mb.button_index == MOUSE_BUTTON_MIDDLE:
+			elif mb.button_index == MOUSE_BUTTON_MIDDLE || (mb.button_index == MOUSE_BUTTON_LEFT && mb.shift_pressed):
 				_clone_pattern_at_cursor()
 
 
@@ -148,10 +151,26 @@ func _draw() -> void:
 		draw_rect(Rect2(row_position, row_size), row_color)
 
 	# Draw vertical lines.
+	var last_col_x := 0.0
 	for bar in _arrangement_bars:
 		var col_position := bar.grid_position
 		var border_size := Vector2(_border_width, available_rect.size.y)
 		draw_rect(Rect2(col_position, border_size), _border_color)
+		
+		last_col_x = col_position.x + _pattern_width
+	
+	# Draw an extra cover on top of inactive bars.
+	if last_col_x < available_rect.end.x:
+		var col_position := Vector2(last_col_x, available_rect.position.y)
+		
+		# Also draw the final bar line.
+		var border_size := Vector2(_border_width, available_rect.size.y)
+		draw_rect(Rect2(col_position, border_size), _border_color)
+		
+		var cover_position := col_position + Vector2(_border_width, 0)
+		var cover_size := Vector2(available_rect.end.x - last_col_x, available_rect.size.y)
+		var cover_color := Color(_border_color, _border_cover_opacity)
+		draw_rect(Rect2(cover_position, cover_size), cover_color)
 
 
 func get_available_rect() -> Rect2:
@@ -181,7 +200,7 @@ func _change_scroll_offset(delta: int) ->  void:
 func _update_max_scroll_offset() -> void:
 	var available_rect := get_available_rect()
 	var bars_on_screen := floori(available_rect.size.x / _pattern_width)
-	_max_scroll_offset = Arrangement.BAR_NUMBER - bars_on_screen + 1
+	_max_scroll_offset = Arrangement.BAR_NUMBER - bars_on_screen
 
 	_scroll_offset = clampi(_scroll_offset, 0, _max_scroll_offset)
 	_update_scrollbar()
@@ -189,6 +208,8 @@ func _update_max_scroll_offset() -> void:
 
 
 func _update_scrollbar() -> void:
+	if Engine.is_editor_hint():
+		return
 	if not is_inside_tree():
 		return
 	
@@ -297,8 +318,8 @@ func _get_cell_at_cursor() -> Vector2i:
 	
 	var mouse_normalized := mouse_position - available_rect.position
 	var cell_indexed := Vector2i(0, 0)
-	cell_indexed.x = clampi(floori(mouse_normalized.x / _pattern_width), 0, Arrangement.BAR_NUMBER)
-	cell_indexed.y = clampi(floori(mouse_normalized.y / _pattern_height), 0, Arrangement.CHANNEL_NUMBER)
+	cell_indexed.x = clampi(floori(mouse_normalized.x / _pattern_width), 0, _arrangement_bars.size() - 1)
+	cell_indexed.y = clampi(floori(mouse_normalized.y / _pattern_height), 0, Arrangement.CHANNEL_NUMBER - 1)
 	return cell_indexed
 
 
@@ -339,7 +360,7 @@ func _update_grid_layout() -> void:
 	var index := 0
 	while filled_width < (available_rect.size.x + 2 * _pattern_width): # Give it some buffer.
 		var bar_index: int = index + _scroll_offset
-		if bar_index > Arrangement.BAR_NUMBER:
+		if bar_index >= Arrangement.BAR_NUMBER:
 			break
 
 		# Create bar column data.
@@ -674,6 +695,17 @@ func _change_arrangement_loop(starts_at: int, ends_at: int) -> void:
 		return
 	
 	current_arrangement.set_loop(starts_at, ends_at)
+	Controller.current_song.mark_dirty()
+
+
+func _change_arrangement_loop_to_end(starts_at: int) -> void:
+	if not current_arrangement:
+		return
+	
+	if starts_at < current_arrangement.timeline_length:
+		current_arrangement.set_loop(starts_at, current_arrangement.timeline_length)
+	else:
+		current_arrangement.set_loop(starts_at, starts_at + 1)
 	Controller.current_song.mark_dirty()
 
 
