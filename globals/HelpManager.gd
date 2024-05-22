@@ -161,6 +161,7 @@ func _show_current_step() -> void:
 	if not _current_guide:
 		return
 	
+	_clear_trigger()
 	_info_popup.clear()
 	
 	var step := _current_guide.steps[_current_step]

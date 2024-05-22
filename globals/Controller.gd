@@ -185,6 +185,20 @@ func show_info_popup(popup: InfoPopup, popup_size: Vector2) -> void:
 	popup.popup_anchored(Vector2(0.5, 0.5), PopupManager.Direction.OMNI, true)
 
 
+func show_welcome_message() -> void:
+	var welcome_message := get_info_popup()
+	
+	welcome_message.title = "WELCOME to Bosca Ceoil"
+	welcome_message.content = "Looks like this is your [accent]FIRST TIME[/accent]!\nWould you like a quick introduction?\n\n(You can access this tour later by clicking [accent]HELP[/accent].)"
+	welcome_message.add_button("NO", welcome_message.close_popup)
+	welcome_message.add_button("YES", func() -> void:
+		welcome_message.close_popup()
+		help_manager.start_guide(HelpManager.GuideType.BASIC_GUIDE)
+	)
+	
+	show_info_popup(welcome_message, Vector2(640, 260))
+
+
 func show_blocker() -> void:
 	if not _controls_blocker:
 		_controls_blocker = PopupManager.PopupControl.new()
@@ -202,6 +216,7 @@ func hide_blocker() -> void:
 
 func update_status(message: String, level: StatusLevel = StatusLevel.INFO) -> void:
 	status_updated.emit(level, message)
+
 
 # Song editing.
 

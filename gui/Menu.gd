@@ -86,8 +86,13 @@ func _navigate(target: NavigationTarget) -> void:
 	if target == NavigationTarget.KEEP_CURRENT || (_current_tab == target - 1):
 		return
 	
+	var old_button := _tab_buttons.get_pressed_button()
+	if old_button:
+		old_button.set_pressed_no_signal(false)
+	
 	_current_tab = target - 1
 	var button := _tab_buttons.get_buttons()[_current_tab]
+	button.set_pressed_no_signal(true)
 	_update_current_tab()
 	
 	if button in MAIN_MENU:

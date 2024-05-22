@@ -46,6 +46,9 @@ func _ready() -> void:
 	_edit_current_song()
 	
 	if not Engine.is_editor_hint():
+		if Controller.settings_manager.is_first_time():
+			Controller.show_welcome_message()
+		
 		Controller.settings_manager.gui_scale_changed.connect(_update_window_size)
 		Controller.settings_manager.fullscreen_changed.connect(_update_window_size)
 		

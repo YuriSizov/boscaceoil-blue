@@ -36,6 +36,9 @@ const _gui_scale_factors := {
 	GUIScalePreset.GUI_SCALE_LARGE:  1.25,
 }
 
+# Indicates whether this is the first launch of the app.
+var _first_time: bool = true
+
 # Stored properties.
 
 var _stored_file: ConfigFile = null
@@ -46,6 +49,13 @@ var _gui_scale_preset: int = GUIScalePreset.GUI_SCALE_NORMAL
 var _fullscreen: bool = false
 var _windowed_size: Vector2 = Vector2.ZERO
 var _windowed_maximized: bool = false
+
+
+func _init() -> void:
+	_windowed_size = Vector2(
+		ProjectSettings.get_setting("display/window/size/viewport_width", 0),
+		ProjectSettings.get_setting("display/window/size/viewport_height", 0),
+	)
 
 
 # Persistence.
@@ -73,6 +83,7 @@ func load_settings() -> void:
 	
 	_set_buffer_size_safe( _stored_file.get_value("synth", "driver_buffer", _buffer_size))
 	
+	_first_time = false
 	settings_loaded.emit()
 
 
@@ -111,6 +122,10 @@ func _save_settings_debounced() -> void:
 		return
 	
 	print("Successfully saved settings to %s." % [ CONFIG_PATH ] )
+
+
+func is_first_time() -> bool:
+	return _first_time
 
 
 # Settings management.
