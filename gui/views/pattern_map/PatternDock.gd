@@ -33,6 +33,8 @@ func _ready() -> void:
 	theme_changed.connect(_update_theme)
 	
 	if not Engine.is_editor_hint():
+		Controller.help_manager.reference_node(HelpManager.StepNodeRef.ARRANGEMENT_EDITOR_ADD_NEW, _add_button.get_global_visual_rect)
+		
 		item_created.connect(Controller.create_and_edit_pattern)
 		item_selected.connect(Controller.edit_pattern)
 		item_deleted.connect(Controller.delete_pattern)

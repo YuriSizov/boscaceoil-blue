@@ -70,6 +70,9 @@ func _ready() -> void:
 	_scrollbar.shifted_down.connect(_change_scroll_offset.bind(-1))
 	
 	if not Engine.is_editor_hint():
+		Controller.help_manager.reference_node(HelpManager.StepNodeRef.PATTERN_EDITOR_NOTEMAP, get_global_available_rect)
+		Controller.help_manager.reference_node(HelpManager.StepNodeRef.PATTERN_EDITOR_SCROLLBAR, _scrollbar.get_global_rect)
+		
 		Controller.song_loaded.connect(_update_song_sizes)
 		Controller.song_loaded.connect(_edit_current_pattern)
 		Controller.song_sizes_changed.connect(_update_song_sizes)
@@ -83,17 +86,17 @@ func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		var mb := event as InputEventMouseButton
 		
-		if _note_cursor_visible && event.is_pressed():
+		if _note_cursor_visible && mb.pressed:
 			if mb.button_index == MOUSE_BUTTON_WHEEL_UP:
 				_resize_note_cursor(1)
 			elif mb.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 				_resize_note_cursor(-1)
-			elif mb.button_index == MOUSE_BUTTON_LEFT:
+			elif mb.button_index == MOUSE_BUTTON_LEFT && not mb.ctrl_pressed:
 				_start_drawing_notes(DrawingMode.DRAWING_ADD)
-			elif mb.button_index == MOUSE_BUTTON_RIGHT:
+			elif mb.button_index == MOUSE_BUTTON_RIGHT || (mb.button_index == MOUSE_BUTTON_LEFT && mb.ctrl_pressed):
 				_start_drawing_notes(DrawingMode.DRAWING_REMOVE)
 		
-		if _note_drawing_mode != DrawingMode.DRAWING_OFF && !event.is_pressed():
+		if _note_drawing_mode != DrawingMode.DRAWING_OFF && not mb.pressed:
 			if mb.button_index == MOUSE_BUTTON_LEFT || mb.button_index == MOUSE_BUTTON_RIGHT:
 				_stop_drawing_notes()
 
@@ -169,13 +172,19 @@ func get_available_rect() -> Rect2:
 	var available_rect := Rect2(Vector2.ZERO, size)
 	if not is_inside_tree():
 		return available_rect
-
+	
 	if _gutter:
 		available_rect.position.x += _gutter.size.x
 		available_rect.size.x -= _gutter.size.x
 	if _scrollbar:
 		available_rect.size.x -= _scrollbar.size.x
+	
+	return available_rect
 
+
+func get_global_available_rect() -> Rect2:
+	var available_rect := get_available_rect()
+	available_rect.position += global_position
 	return available_rect
 
 

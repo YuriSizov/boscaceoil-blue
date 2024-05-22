@@ -10,27 +10,50 @@ class_name InfoPopup extends PopupManager.PopupControl
 const BUTTON_SCENE := preload("res://gui/widgets/SquishyButton.tscn")
 const DEFAULT_TITLE := "Information"
 
+enum ImagePosition {
+	HIDDEN,
+	IMAGE_TOP,
+	IMAGE_LEFT,
+}
+
 var title: String = DEFAULT_TITLE:
 	set = set_title
 var content: String = "":
 	set = set_content
 
+var _ref_image: Texture2D = null
+var _ref_image_size: Vector2 = Vector2.ZERO
+var _ref_image_position: ImagePosition = ImagePosition.HIDDEN
+
 var _buttons: Array[SquishyButton] = []
+var _button_spacers: Array[Control] = []
+
+var button_autoswap: bool = true
+var button_alignment: HorizontalAlignment = HORIZONTAL_ALIGNMENT_RIGHT:
+	set = set_button_alignment
 
 @onready var _title_label: Label = %TitleLabel
 @onready var _content_label: RichTextLabel = %ContentLabel
+@onready var _top_image_node: TextureRect = %TopImage
+@onready var _left_image_node: TextureRect = %LeftImage
+
 @onready var _close_button: Button = %CloseButton
-@onready var _button_bar: Control = %ButtonBar
+@onready var _button_bar: HBoxContainer = %ButtonBar
 
 
 func _ready() -> void:
 	_update_title()
 	_update_content()
+	_update_image()
 	_update_buttons()
 	
-	_content_label.install_effect(AccentedContentEffect.new())
-	
 	_close_button.pressed.connect(close_popup)
+
+
+func _gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton && event.is_pressed():
+		mark_click_handled()
+		accept_event()
 
 
 func _draw() -> void:
@@ -64,35 +87,59 @@ func _draw() -> void:
 	draw_rect(Rect2(popup_origin, title_size), title_color)
 
 
-func popup(center_position: Vector2) -> void:
+# Lifecycle.
+
+func is_popped() -> bool:
+	if not is_node_ready() || not is_inside_tree():
+		return false
+	
+	return PopupManager.is_popup_shown(self)
+
+
+func popup_anchored(anchor_position: Vector2, direction: PopupManager.Direction = PopupManager.Direction.BOTTOM_RIGHT, blocking: bool = true) -> void:
 	if is_node_ready():
 		_update_title()
 		_update_content()
 		_update_buttons()
 	
-	var popup_position := center_position - size / 2.0
-	PopupManager.show_popup(self, popup_position, PopupManager.Direction.BOTTOM_RIGHT)
+	PopupManager.show_popup_anchored(self, anchor_position, direction, blocking)
+
+
+func move_anchored(anchor_position: Vector2, direction: PopupManager.Direction = PopupManager.Direction.BOTTOM_RIGHT) -> void:
+	PopupManager.move_popup_anchored(self, anchor_position, direction)
 
 
 func close_popup() -> void:
+	mark_click_handled()
 	PopupManager.hide_popup(self)
 
 
 func clear() -> void:
 	title = DEFAULT_TITLE
 	content = ""
+	_ref_image = null
+	_ref_image_size = Vector2.ZERO
+	_ref_image_position = ImagePosition.HIDDEN
 	
-	for button in _buttons:
-		if button.get_parent():
-			button.get_parent().remove_child(button)
-		button.queue_free()
 	_buttons.clear()
+	_button_spacers.clear()
 	
 	if is_node_ready():
+		_update_image()
+		
+		while _button_bar.get_child_count() > 0:
+			var child_node := _button_bar.get_child(_button_bar.get_child_count() - 1)
+			_button_bar.remove_child(child_node)
+			child_node.queue_free()
+		
 		_button_bar.visible = false
 	
+	custom_minimum_size = Vector2.ZERO
+	set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT, Control.PRESET_MODE_MINSIZE)
 	size = Vector2.ZERO
 
+
+# Content.
 
 func set_title(value: String) -> void:
 	title = value
@@ -118,38 +165,121 @@ func _update_content() -> void:
 	_content_label.text = content
 
 
-func add_button(text: String, callback: Callable) -> void:
+func add_image(texture: Texture2D, image_size: Vector2, image_position: ImagePosition) -> void:
+	_ref_image = texture
+	_ref_image_size = image_size
+	_ref_image_position = image_position
+	_update_image()
+
+
+func _update_image() -> void:
+	if not is_node_ready():
+		return
+	
+	match _ref_image_position:
+		ImagePosition.HIDDEN:
+			_top_image_node.custom_minimum_size = Vector2.ZERO
+			_top_image_node.visible = false
+			_left_image_node.custom_minimum_size = Vector2.ZERO
+			_left_image_node.visible = false
+		
+		ImagePosition.IMAGE_TOP:
+			_top_image_node.texture = _ref_image
+			
+			_top_image_node.custom_minimum_size = _ref_image_size
+			_top_image_node.visible = true
+			_left_image_node.custom_minimum_size = Vector2.ZERO
+			_left_image_node.visible = false
+		
+		ImagePosition.IMAGE_LEFT:
+			_left_image_node.texture = _ref_image
+			
+			_top_image_node.custom_minimum_size = Vector2.ZERO
+			_top_image_node.visible = false
+			_left_image_node.custom_minimum_size = _ref_image_size
+			_left_image_node.visible = true
+
+
+# Buttons.
+
+func add_button(text: String, callback: Callable) -> SquishyButton:
 	var button := BUTTON_SCENE.instantiate()
 	button.text = text
-	button.pressed.connect(callback)
+	button.pressed.connect(func() -> void:
+		mark_click_handled()
+		callback.call()
+	)
 	
-	if DisplayServer.get_swap_cancel_ok():
+	if button_autoswap && DisplayServer.get_swap_cancel_ok():
 		_buttons.push_front(button)
 	else:
 		_buttons.push_back(button)
 	
 	if is_node_ready():
+		var spacer: Control = null
+		if _buttons.size() > 1:
+			spacer = _button_bar.add_spacer(false)
+			spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			spacer.visible = (button_alignment == HORIZONTAL_ALIGNMENT_FILL)
+			_button_spacers.push_back(spacer)
+		
 		_button_bar.add_child(button)
-		if DisplayServer.get_swap_cancel_ok():
+		
+		if button_autoswap && DisplayServer.get_swap_cancel_ok():
+			if spacer:
+				_button_bar.move_child(spacer, 0)
 			_button_bar.move_child(button, 0)
 		
 		_button_bar.visible = true
+	
+	return button
 
 
 func _update_buttons() -> void:
 	if not is_node_ready():
 		return
 	
+	var i := 0
 	for button in _buttons:
 		if not button.get_parent():
+			if i > 0:
+				var spacer := _button_bar.add_spacer(false)
+				spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+				spacer.visible = (button_alignment == HORIZONTAL_ALIGNMENT_FILL)
+				_button_spacers.push_back(spacer)
+			
 			_button_bar.add_child(button)
+		
+		i += 1
 	
 	_button_bar.visible = _buttons.size() > 0
 
 
-class AccentedContentEffect extends RichTextEffect:
-	var bbcode: String = "accent"
+func set_button_alignment(value: HorizontalAlignment) -> void:
+	button_alignment = value
+	_update_button_alignment()
+
+
+func _update_button_alignment() -> void:
+	if not is_node_ready():
+		return
 	
-	func _process_custom_fx(char_fx: CharFXTransform) -> bool:
-		char_fx.color = ThemeDB.get_project_theme().get_color("accent_color", "InfoPopup")
-		return true
+	match button_alignment:
+		HORIZONTAL_ALIGNMENT_LEFT:
+			_button_bar.alignment = BoxContainer.ALIGNMENT_BEGIN
+		
+		HORIZONTAL_ALIGNMENT_RIGHT:
+			_button_bar.alignment = BoxContainer.ALIGNMENT_END
+		
+		HORIZONTAL_ALIGNMENT_CENTER:
+			_button_bar.alignment = BoxContainer.ALIGNMENT_CENTER
+		
+		HORIZONTAL_ALIGNMENT_FILL:
+			_button_bar.alignment = BoxContainer.ALIGNMENT_CENTER
+	
+	if button_alignment == HORIZONTAL_ALIGNMENT_FILL:
+		for spacer in _button_spacers:
+			spacer.visible = true
+	else:
+		for spacer in _button_spacers:
+			spacer.visible = false

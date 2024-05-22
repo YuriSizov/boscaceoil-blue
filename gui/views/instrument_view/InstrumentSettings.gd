@@ -9,10 +9,13 @@ extends PanelContainer
 var current_instrument: Instrument = null
 
 @onready var _instrument_label: Label = %InstrumentLabel
+@onready var _pickers_container: Control = %Pickers
+
 @onready var _category_picker: OptionPicker = %CategoryPicker
 @onready var _instrument_picker: OptionPicker = %InstrumentPicker
 @onready var _prev_instrument_button: Button = %PrevInstrument
 @onready var _next_instrument_button: Button = %NextInstrument
+
 @onready var _lowpass_slider: PadSlider = %LowPassSlider
 @onready var _volume_slider: PadSlider = %VolumeSlider
 
@@ -29,7 +32,11 @@ func _ready() -> void:
 	_volume_slider.changed.connect(_instrument_volume_changed)
 	
 	_edit_current_instrument()
+	
 	if not Engine.is_editor_hint():
+		Controller.help_manager.reference_node(HelpManager.StepNodeRef.INSTRUMENT_EDITOR_BOTH_PICKERS, _pickers_container.get_global_rect)
+		Controller.help_manager.reference_node(HelpManager.StepNodeRef.INSTRUMENT_EDITOR_VOLUME_SLIDER, _volume_slider.get_global_rect)
+		
 		Controller.song_loaded.connect(_edit_current_instrument)
 		Controller.song_instrument_changed.connect(_edit_current_instrument)
 

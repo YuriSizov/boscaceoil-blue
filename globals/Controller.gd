@@ -9,13 +9,16 @@ extends Node
 signal song_loaded()
 signal song_saved()
 signal song_sizes_changed()
+signal song_pattern_created()
 signal song_pattern_changed()
+signal song_instrument_created()
 signal song_instrument_changed()
 
 signal controls_locked(message: String)
 signal controls_unlocked()
 signal status_updated(level: StatusLevel, message: String)
 signal navigation_requested(target: int)
+signal navigation_succeeded(target: int)
 
 const INFO_POPUP_SCENE := preload("res://gui/widgets/InfoPopup.tscn")
 
@@ -35,6 +38,7 @@ var settings_manager: SettingsManager = null
 var voice_manager: VoiceManager = null
 var music_player: MusicPlayer = null
 var io_manager: IOManager = null
+var help_manager: HelpManager = null
 
 ## Current edited song.
 var current_song: Song = null
@@ -66,9 +70,9 @@ func _init() -> void:
 	voice_manager = VoiceManager.new()
 	music_player = MusicPlayer.new()
 	io_manager = IOManager.new()
+	help_manager = HelpManager.new()
 	
 	settings_manager.buffer_size_changed.connect(music_player.update_driver_buffer)
-	
 	settings_manager.load_settings()
 
 
@@ -124,8 +128,12 @@ func _shortcut_input(event: InputEvent) -> void:
 
 # Navigation.
 
-func navigate_to(target: Menu.NavigationTargets) -> void:
+func navigate_to(target: Menu.NavigationTarget) -> void:
 	navigation_requested.emit(target)
+
+
+func mark_navigation_succeeded(target: Menu.NavigationTarget) -> void:
+	navigation_succeeded.emit(target)
 
 
 # Dialog and popup management.
@@ -174,7 +182,7 @@ func get_info_popup() -> InfoPopup:
 
 func show_info_popup(popup: InfoPopup, popup_size: Vector2) -> void:
 	popup.size = popup_size
-	popup.popup(get_window().size / 2)
+	popup.popup_anchored(Vector2(0.5, 0.5), PopupManager.Direction.OMNI, true)
 
 
 func show_blocker() -> void:
@@ -260,6 +268,8 @@ func create_pattern() -> void:
 	pattern.instrument_idx = current_instrument_index
 	current_song.patterns.push_back(pattern)
 	current_song.mark_dirty()
+	
+	song_pattern_created.emit()
 
 
 func create_and_edit_pattern() -> void:
@@ -382,6 +392,8 @@ func create_instrument() -> void:
 	var instrument := instance_instrument_by_voice(voice_data)
 	current_song.instruments.push_back(instrument)
 	current_song.mark_dirty()
+	
+	song_instrument_created.emit()
 
 
 func create_and_edit_instrument() -> void:

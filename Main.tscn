@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://cf3nug1sfh1ix"]
+[gd_scene load_steps=8 format=3 uid="uid://cf3nug1sfh1ix"]
 
 [ext_resource type="Script" path="res://Main.gd" id="1_63yj5"]
 [ext_resource type="PackedScene" uid="uid://l0bjoy6vwtbx" path="res://gui/Menu.tscn" id="2_ljcdm"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://lnyrbw2vvjwl" path="res://gui/views/LockedIndicator.tscn" id="3_f0rno"]
 [ext_resource type="Script" path="res://globals/PopupManager.gd" id="4_kqdnh"]
 [ext_resource type="PackedScene" uid="uid://dxtku0ujhowt5" path="res://gui/widgets/ToastMessage.tscn" id="5_carau"]
+[ext_resource type="Script" path="res://gui/widgets/HighlightManager.gd" id="6_gf5v8"]
 
 [node name="Main" type="MarginContainer"]
 anchors_preset = 15
@@ -43,6 +44,19 @@ size_flags_vertical = 0
 [node name="ToastMessage" parent="." instance=ExtResource("5_carau")]
 layout_mode = 2
 size_flags_vertical = 8
+
+[node name="HighlightManager" type="CanvasLayer" parent="."]
+unique_name_in_owner = true
+script = ExtResource("6_gf5v8")
+
+[node name="HighlightIndicator" type="Control" parent="HighlightManager"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
 [node name="PopupManager" type="CanvasLayer" parent="."]
 script = ExtResource("4_kqdnh")

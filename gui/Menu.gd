@@ -6,7 +6,9 @@
 
 class_name Menu extends VBoxContainer
 
-enum NavigationTargets {
+enum NavigationTarget {
+	KEEP_CURRENT, # Special case when used as an option list enumeration.
+	
 	FILE,
 	ARRANGEMENT,
 	INSTRUMENT,
@@ -61,18 +63,32 @@ var _current_tab: int = 0
 func _ready() -> void:
 	_update_current_tab()
 	
-	_tab_buttons.pressed.connect(_handle_navigation_changed)
+	_tab_buttons.pressed.connect(_request_navigation)
 	
 	if not Engine.is_editor_hint():
+		Controller.help_manager.reference_node(HelpManager.StepNodeRef.NAVIGATION_FILE, _file_tab_button.get_global_rect)
+		Controller.help_manager.reference_node(HelpManager.StepNodeRef.NAVIGATION_ARRANGEMENT, _arrangement_tab_button.get_global_rect)
+		Controller.help_manager.reference_node(HelpManager.StepNodeRef.NAVIGATION_INSTRUMENT, _instrument_tab_button.get_global_rect)
+		
 		_fullscreen_toggle.pressed.connect(Controller.settings_manager.toggle_fullscreen)
 		
 		Controller.navigation_requested.connect(_navigate)
-		Controller.music_player.export_started.connect(_navigate.bind(NavigationTargets.ARRANGEMENT))
+		Controller.music_player.export_started.connect(_navigate.bind(NavigationTarget.ARRANGEMENT))
 
 
-func _navigate(target: NavigationTargets) -> void:
-	var button := _tab_buttons.get_buttons()[target]
-	button.set_pressed(true)
+func _request_navigation(button: Button) -> void:
+	# A little run around so all navigation requests emit a global signal.
+	var target: NavigationTarget = (button.get_index() + 1) as NavigationTarget
+	Controller.navigate_to(target)
+
+
+func _navigate(target: NavigationTarget) -> void:
+	if target == NavigationTarget.KEEP_CURRENT || (_current_tab == target - 1):
+		return
+	
+	_current_tab = target - 1
+	var button := _tab_buttons.get_buttons()[_current_tab]
+	_update_current_tab()
 	
 	if button in MAIN_MENU:
 		_update_menu_collection(MAIN_MENU)
@@ -80,11 +96,8 @@ func _navigate(target: NavigationTargets) -> void:
 		_update_menu_collection(CREDITS_MENU)
 	elif button in HELP_MENU:
 		_update_menu_collection(HELP_MENU)
-
-
-func _handle_navigation_changed(button: Button) -> void:
-	_current_tab = button.get_index()
-	_update_current_tab()
+	
+	Controller.mark_navigation_succeeded(target)
 
 
 func _update_menu_collection(menu_buttons: Array[Button]) -> void:

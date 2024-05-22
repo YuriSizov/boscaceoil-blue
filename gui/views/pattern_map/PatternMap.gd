@@ -75,6 +75,12 @@ func _ready() -> void:
 	mouse_exited.connect(_stop_hovering)
 	
 	if not Engine.is_editor_hint():
+		Controller.help_manager.reference_node(HelpManager.StepNodeRef.ARRANGEMENT_EDITOR_PATTERNMAP, get_global_available_rect)
+		
+		Controller.help_manager.reference_node(HelpManager.StepNodeRef.ARRANGEMENT_EDITOR_TIMELINE, _track.get_global_rect)
+		Controller.help_manager.reference_node(HelpManager.StepNodeRef.ARRANGEMENT_EDITOR_TIMELINE_SINGLE_BAR, _get_global_track_bar_rect)
+		Controller.help_manager.reference_node(HelpManager.StepNodeRef.ARRANGEMENT_EDITOR_TIMELINE_BAR_SPAN, _get_global_track_span_rect)
+		
 		_scrollbar.set_button_offset(_timeline.size.y, -_track.size.y)
 		
 		_track.loop_changed.connect(_change_arrangement_loop)
@@ -185,6 +191,32 @@ func get_available_rect() -> Rect2:
 		available_rect.position.y += _timeline.size.y
 
 	return available_rect
+
+
+func get_global_available_rect() -> Rect2:
+	var available_rect := get_available_rect()
+	available_rect.position += global_position
+	return available_rect
+
+
+func _get_global_track_bar_rect() -> Rect2:
+	var track_rect := _track.get_global_rect()
+	
+	var arbitrary_bar := _arrangement_bars[2]
+	track_rect.position.x += arbitrary_bar.grid_position.x
+	track_rect.size.x = _pattern_width
+	
+	return track_rect
+
+
+func _get_global_track_span_rect() -> Rect2:
+	var track_rect := _track.get_global_rect()
+	
+	var arbitrary_bar := _arrangement_bars[2]
+	track_rect.position.x += arbitrary_bar.grid_position.x
+	track_rect.size.x = _pattern_width * 3
+	
+	return track_rect
 
 
 # Scrolling.

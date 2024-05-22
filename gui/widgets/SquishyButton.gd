@@ -146,6 +146,13 @@ func _get_minimum_size() -> Vector2:
 	return min_size
 
 
+func get_global_visual_rect() -> Rect2:
+	var visual_rect := Rect2(Vector2.ZERO, size).expand(_panel_position)
+	visual_rect.position += global_position
+	
+	return visual_rect
+
+
 # Text.
 
 func set_text(value: String) -> void:

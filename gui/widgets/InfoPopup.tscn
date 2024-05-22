@@ -1,7 +1,11 @@
-[gd_scene load_steps=3 format=3 uid="uid://pte0alxv2p77"]
+[gd_scene load_steps=5 format=3 uid="uid://pte0alxv2p77"]
 
 [ext_resource type="Script" path="res://gui/widgets/InfoPopup.gd" id="1_id2ld"]
 [ext_resource type="Texture2D" uid="uid://bya1184uqykfm" path="res://gui/theme/icons/cross_icon.tres" id="2_7no5d"]
+[ext_resource type="Script" path="res://gui/widgets/AccentedContentEffect.gd" id="3_spm7g"]
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_ldctv"]
+script = ExtResource("3_spm7g")
 
 [node name="InfoPopup" type="Control"]
 layout_mode = 3
@@ -21,13 +25,16 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
 [node name="TitleBar" type="MarginContainer" parent="Layout"]
 layout_mode = 2
+mouse_filter = 2
 theme_type_variation = &"InfoPopupTitleBar"
 
 [node name="TitleBox" type="HBoxContainer" parent="Layout/TitleBar"]
 layout_mode = 2
+mouse_filter = 2
 
 [node name="TitleLabel" type="Label" parent="Layout/TitleBar/TitleBox"]
 unique_name_in_owner = true
@@ -52,21 +59,49 @@ expand_icon = true
 [node name="Content" type="MarginContainer" parent="Layout"]
 layout_mode = 2
 size_flags_vertical = 3
+mouse_filter = 2
 theme_type_variation = &"InfoPopupContent"
 
-[node name="ContentBox" type="VBoxContainer" parent="Layout/Content"]
+[node name="ContentHBox" type="HBoxContainer" parent="Layout/Content"]
 layout_mode = 2
-theme_type_variation = &"InfoPopupContentBox"
+mouse_filter = 2
+theme_type_variation = &"InfoPopupContentHBox"
 
-[node name="ContentLabel" type="RichTextLabel" parent="Layout/Content/ContentBox"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_vertical = 3
-bbcode_enabled = true
-
-[node name="ButtonBar" type="HBoxContainer" parent="Layout/Content/ContentBox"]
+[node name="LeftImage" type="TextureRect" parent="Layout/Content/ContentHBox"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
+size_flags_vertical = 0
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ContentBox" type="VBoxContainer" parent="Layout/Content/ContentHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_type_variation = &"InfoPopupContentBox"
+
+[node name="TopImage" type="TextureRect" parent="Layout/Content/ContentHBox/ContentBox"]
+unique_name_in_owner = true
+auto_translate_mode = 1
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ContentLabel" type="RichTextLabel" parent="Layout/Content/ContentHBox/ContentBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+bbcode_enabled = true
+custom_effects = [SubResource("RichTextEffect_ldctv")]
+
+[node name="ButtonBar" type="HBoxContainer" parent="Layout/Content/ContentHBox/ContentBox"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+mouse_filter = 2
 theme_type_variation = &"HBoxSpaced"
 alignment = 2

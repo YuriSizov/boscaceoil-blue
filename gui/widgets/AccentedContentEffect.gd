@@ -4,9 +4,12 @@
 # Provided under MIT                              #
 ###################################################
 
-extends MarginContainer
+@tool
+class_name AccentedContentEffect extends RichTextEffect
+
+var bbcode: String = "accent"
 
 
-func _ready() -> void:
-	if not Engine.is_editor_hint():
-		Controller.help_manager.reference_node(HelpManager.StepNodeRef.INSTRUMENT_EDITOR_VIEW, get_global_rect)
+func _process_custom_fx(char_fx: CharFXTransform) -> bool:
+	char_fx.color = ThemeDB.get_project_theme().get_color("accent_color", "InfoPopup")
+	return true

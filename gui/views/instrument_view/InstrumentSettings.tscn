@@ -36,8 +36,10 @@ text = "INSTRUMENT #"
 uppercase = true
 
 [node name="Pickers" type="HBoxContainer" parent="Layout/Metadata"]
+unique_name_in_owner = true
 auto_translate_mode = 1
 layout_mode = 2
+size_flags_horizontal = 0
 theme_type_variation = &"HBoxSpaced"
 
 [node name="CategoryList" type="PanelContainer" parent="Layout/Metadata/Pickers"]

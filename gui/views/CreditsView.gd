@@ -10,4 +10,4 @@ extends MarginContainer
 
 
 func _ready() -> void:
-	_navigate_back_button.pressed.connect(Controller.navigate_to.bind(Menu.NavigationTargets.FILE))
+	_navigate_back_button.pressed.connect(Controller.navigate_to.bind(Menu.NavigationTarget.FILE))

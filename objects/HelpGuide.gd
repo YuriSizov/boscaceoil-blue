@@ -4,9 +4,7 @@
 # Provided under MIT                              #
 ###################################################
 
-extends MarginContainer
+@tool
+class_name HelpGuide extends Resource
 
-
-func _ready() -> void:
-	if not Engine.is_editor_hint():
-		Controller.help_manager.reference_node(HelpManager.StepNodeRef.INSTRUMENT_EDITOR_VIEW, get_global_rect)
+@export var steps: Array[HelpGuideStep] = []

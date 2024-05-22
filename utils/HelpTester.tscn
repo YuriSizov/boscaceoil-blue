@@ -1,0 +1,39 @@
+[gd_scene load_steps=4 format=3 uid="uid://cyrjhcnftvyhg"]
+
+[ext_resource type="Script" path="res://utils/HelpTester.gd" id="1_qy55u"]
+[ext_resource type="PackedScene" uid="uid://cf3nug1sfh1ix" path="res://Main.tscn" id="2_ihl17"]
+[ext_resource type="PackedScene" uid="uid://pte0alxv2p77" path="res://gui/widgets/InfoPopup.tscn" id="3_j2h0f"]
+
+[node name="HelpTester" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_qy55u")
+
+[node name="Main" parent="." instance=ExtResource("2_ihl17")]
+layout_mode = 1
+
+[node name="Overlay" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Popup" parent="." instance=ExtResource("3_j2h0f")]
+visible = false
+custom_minimum_size = Vector2(320, 240)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 1
+grow_vertical = 1

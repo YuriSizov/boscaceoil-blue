@@ -29,6 +29,9 @@ func _ready() -> void:
 
 	_edit_current_pattern()
 	if not Engine.is_editor_hint():
+		Controller.help_manager.reference_node(HelpManager.StepNodeRef.PATTERN_EDITOR_VIEW, get_global_rect)
+		Controller.help_manager.reference_node(HelpManager.StepNodeRef.PATTERN_EDITOR_INSTRUMENT_PICKER, _instrument_picker.get_parent_control().get_global_rect)
+		
 		Controller.song_loaded.connect(_edit_current_pattern)
 		Controller.song_pattern_changed.connect(_edit_current_pattern)
 		Controller.song_instrument_changed.connect(_update_pattern_instrument)
