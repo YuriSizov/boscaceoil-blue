@@ -7,7 +7,6 @@
 @tool
 class_name NoteMap extends Control
 
-const OCTAVE_SIZE := 12
 const CENTER_OCTAVE := 3
 
 enum DrawingMode {
@@ -418,7 +417,7 @@ func _update_grid_layout() -> void:
 	# Iterate through all the notes and complete collections.
 	
 	var filled_height := 0
-	var target_height := available_rect.size.y + OCTAVE_SIZE * note_height # Give it some buffer.
+	var target_height := available_rect.size.y + Pattern.OCTAVE_SIZE * note_height # Give it some buffer.
 	var row_index := 0
 	var first_octave_index := -1
 	var last_octave_index := -1
@@ -426,11 +425,11 @@ func _update_grid_layout() -> void:
 	# Keep rendering until we fill the screen, or reach the end of notes.
 	while (row_index + _scroll_offset) < _note_row_value_map.size() && filled_height < target_height:
 		var note_index: int = _note_row_value_map[row_index + _scroll_offset]
-		var note_in_key := note_index % OCTAVE_SIZE + current_key
+		var note_in_key := note_index % Pattern.OCTAVE_SIZE + current_key
 		if note_in_key < 0:
-			note_in_key = OCTAVE_SIZE + note_in_key
-		elif note_in_key >= OCTAVE_SIZE:
-			note_in_key = note_in_key - OCTAVE_SIZE
+			note_in_key = Pattern.OCTAVE_SIZE + note_in_key
+		elif note_in_key >= Pattern.OCTAVE_SIZE:
+			note_in_key = note_in_key - Pattern.OCTAVE_SIZE
 
 		# Create data for a row of the grid, corresponding to one note value.
 		
@@ -455,7 +454,7 @@ func _update_grid_layout() -> void:
 		# in them. Each unique octave is only created once.
 		
 		@warning_ignore("integer_division")
-		var octave_index := note_index / OCTAVE_SIZE
+		var octave_index := note_index / Pattern.OCTAVE_SIZE
 		if not drumkit_instrument && octave_index != last_octave_index:
 			last_octave_index = octave_index
 			if first_octave_index == -1:

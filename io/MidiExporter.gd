@@ -4,7 +4,7 @@
 # Provided under MIT                              #
 ###################################################
 
-# Midi format implementation is based on the specification description referenced from:
+# MIDI format implementation is based on the specification description referenced from:
 # - https://www.music.mcgill.ca/~ich/classes/mumt306/StandardMIDIfileformat.html
 # - https://ccrma.stanford.edu/~craig/14q/midifile/MidiFileFormat.html
 

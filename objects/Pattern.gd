@@ -13,6 +13,7 @@ signal instrument_changed()
 signal note_added(note_data: Vector3i)
 signal notes_changed()
 
+const OCTAVE_SIZE := 12
 const MAX_NOTE_NUMBER := 128
 const MAX_NOTE_VALUE := 104
 const RECORD_FILTER_NUMBER := 32

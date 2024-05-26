@@ -152,12 +152,12 @@ func _populate_export_options() -> void:
 	
 	var mml_item := OptionListPopup.Item.new()
 	mml_item.id = ExportOptions.EXPORT_MML
-	mml_item.text = "EXPORT .mml (Experimental)"
+	mml_item.text = "EXPORT .mml"
 	_export_song_button.options.push_back(mml_item)
 	
 	var xm_item := OptionListPopup.Item.new()
 	xm_item.id = ExportOptions.EXPORT_XM
-	xm_item.text = "EXPORT .xm (Experimental)"
+	xm_item.text = "EXPORT .xm (experimental)"
 	_export_song_button.options.push_back(xm_item)
 	
 	_export_song_button.commit_options()
@@ -169,5 +169,7 @@ func _handle_export_option(item: OptionListPopup.Item) -> void:
 			Controller.io_manager.export_wav_song()
 		ExportOptions.EXPORT_MID:
 			Controller.io_manager.export_mid_song()
+		ExportOptions.EXPORT_MML:
+			Controller.io_manager.export_mml_song()
 		_:
 			Controller.update_status("FORMAT NOT SUPPORTED (YET)", Controller.StatusLevel.WARNING)

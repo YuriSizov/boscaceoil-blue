@@ -12,6 +12,7 @@ signal song_changed()
 
 const FILE_FORMAT := 3
 const FILE_EXTENSION := "ceol"
+const FILE_DEFAULT_NAME := "new_song"
 
 # These numbers are probably limited by the MIDI specification. For example, instruments
 # are translated into MIDI channels, and there can be only up to 16 channels (half a byte).
@@ -91,6 +92,14 @@ static func create_default_song() -> Song:
 	song.arrangement.set_pattern(0, 0, 0)
 	
 	return song
+
+
+func get_safe_filename(extension: String = "ceol") -> String:
+	if filename.is_empty():
+		return "%s.%s" % [ FILE_DEFAULT_NAME, extension ]
+	
+	var base_name := filename.get_file().get_basename()
+	return "%s.%s" % [ base_name, extension ]
 
 
 # Composition.

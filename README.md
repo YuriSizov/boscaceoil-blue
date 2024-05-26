@@ -40,8 +40,8 @@ _Bosca Ceoil Blue_ is still in active development, with several major features i
 - [x] App settings configuration and persistence.
 - [ ] Advanced instrument tuning.
 - [x] Saving and loading.
-- [x] Export to WAV and MIDI.
-- [ ] Export to XM and MML (experimental).
+- [x] Export to WAV, MIDI, and SiON MML.
+- [ ] Export to XM (experimental).
 - [ ] Import from MIDI.
 - [x] Keyboard shortcuts.
 - [ ] Interactive help and on-boarding guide.

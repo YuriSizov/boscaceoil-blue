@@ -45,6 +45,7 @@ func load_ceol_song() -> void:
 	load_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
 	load_dialog.title = "Load .ceol Song"
 	load_dialog.add_filter("*.ceol", "Bosca Ceoil Song")
+	load_dialog.current_file = ""
 	load_dialog.file_selected.connect(_load_ceol_song_confirmed, CONNECT_ONE_SHOT)
 	
 	Controller.show_file_dialog(load_dialog)
@@ -83,10 +84,14 @@ func _load_ceol_song_confirmed(path: String) -> void:
 
 
 func save_ceol_song(save_as: bool = false) -> void:
+	if not Controller.current_song:
+		return
+	
 	var save_dialog := Controller.get_file_dialog()
 	save_dialog.file_mode = FileDialog.FILE_MODE_SAVE_FILE
 	save_dialog.title = "Save .ceol Song As" if save_as else "Save .ceol Song"
 	save_dialog.add_filter("*.ceol", "Bosca Ceoil Song")
+	save_dialog.current_file = Controller.current_song.get_safe_filename()
 	save_dialog.file_selected.connect(_save_ceol_song_confirmed, CONNECT_ONE_SHOT)
 	
 	Controller.show_file_dialog(save_dialog)
@@ -126,10 +131,14 @@ func check_song_on_exit() -> void:
 # External format import and export.
 
 func export_wav_song() -> void:
+	if not Controller.current_song:
+		return
+	
 	var export_dialog := Controller.get_file_dialog()
 	export_dialog.file_mode = FileDialog.FILE_MODE_SAVE_FILE
 	export_dialog.title = "Export .wav File"
 	export_dialog.add_filter("*.wav", "Waveform Audio File")
+	export_dialog.current_file = Controller.current_song.get_safe_filename("wav")
 	export_dialog.file_selected.connect(_export_wav_song_confirmed, CONNECT_ONE_SHOT)
 	
 	Controller.show_file_dialog(export_dialog)
@@ -172,10 +181,14 @@ func _save_wav_song(exporter: WavExporter) -> void:
 
 
 func export_mid_song() -> void:
+	if not Controller.current_song:
+		return
+	
 	var export_dialog := Controller.get_file_dialog()
 	export_dialog.file_mode = FileDialog.FILE_MODE_SAVE_FILE
 	export_dialog.title = "Export .mid File"
 	export_dialog.add_filter("*.mid", "MIDI File")
+	export_dialog.current_file = Controller.current_song.get_safe_filename("mid")
 	export_dialog.file_selected.connect(_export_mid_song_confirmed, CONNECT_ONE_SHOT)
 	
 	Controller.show_file_dialog(export_dialog)
@@ -191,4 +204,31 @@ func _export_mid_song_confirmed(path: String) -> void:
 		return
 	
 	Controller.update_status("SONG EXPORTED AS MIDI", Controller.StatusLevel.SUCCESS)
+	print("Successfully exported song to %s." % [ path ])
+
+
+func export_mml_song() -> void:
+	if not Controller.current_song:
+		return
+	
+	var export_dialog := Controller.get_file_dialog()
+	export_dialog.file_mode = FileDialog.FILE_MODE_SAVE_FILE
+	export_dialog.title = "Export .mml File"
+	export_dialog.add_filter("*.mml", "MML File")
+	export_dialog.current_file = Controller.current_song.get_safe_filename("mml")
+	export_dialog.file_selected.connect(_export_mml_song_confirmed, CONNECT_ONE_SHOT)
+	
+	Controller.show_file_dialog(export_dialog)
+
+
+func _export_mml_song_confirmed(path: String) -> void:
+	if not Controller.current_song:
+		return
+	
+	var success := MMLExporter.save(Controller.current_song, path)
+	if not success:
+		Controller.update_status("FAILED TO EXPORT SONG", Controller.StatusLevel.ERROR)
+		return
+	
+	Controller.update_status("SONG EXPORTED AS MML", Controller.StatusLevel.SUCCESS)
 	print("Successfully exported song to %s." % [ path ])
