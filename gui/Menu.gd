@@ -4,7 +4,6 @@
 # Provided under MIT                              #
 ###################################################
 
-@tool
 class_name Menu extends VBoxContainer
 
 enum NavigationTarget {

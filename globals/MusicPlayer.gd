@@ -162,9 +162,10 @@ func _play_note(pattern: Pattern, instrument: Instrument, note_data: Vector3i, c
 	# Update the filter.
 	instrument.update_filter()
 
-	# If pattern uses recorded filter values, set them directly.
-	if pattern.record_filter_enabled:
-		instrument.change_filter_to(pattern.cutoff_graph[current_time], pattern.resonance_graph[current_time], pattern.volume_graph[current_time])
+	# If pattern uses recorded instrument values, set them directly.
+	if pattern.record_instrument:
+		var values := pattern.recorded_instrument_values[current_time] # { volume, cutoff, resonance }
+		instrument.change_filter_to(values.y, values.z, values.x)
 
 	var note_value := instrument.get_note_value(note_data.x)
 	var note_voice := instrument.get_note_voice(note_data.x)

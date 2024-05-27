@@ -32,6 +32,11 @@ enum AxisMode {
 		vertical_range = value
 		_update_cursors()
 
+var recording: bool = false:
+	set = set_recording
+var _recorded_values: Array[Vector2i] = []
+var _recorded_positions: Array[Vector2] = []
+
 var _position_area: Rect2 = Rect2()
 var _default_position: Vector2 = Vector2.ZERO
 var _cursor_position: Vector2 = Vector2.ZERO
@@ -80,7 +85,7 @@ func _draw() -> void:
 	var background_pattern := get_theme_stylebox("background_pattern", "PadSlider")
 	draw_style_box(background_pattern, Rect2(Vector2.ZERO, size))
 	
-	# Draw the default value and the current value indicators.
+	# Draw the default value, recorded values, and the current value indicators.
 	
 	var cursor_width := get_theme_constant("cursor_size", "PadSlider")
 	var cursor_outline_width := get_theme_constant("cursor_outline_width", "PadSlider")
@@ -89,12 +94,34 @@ func _draw() -> void:
 	var default_outline_color := get_theme_color("default_value_outline_color", "PadSlider")
 	_draw_cursor(_default_position, cursor_width, cursor_outline_width, default_color, default_outline_color)
 	
+	if recording:
+		var recorded_color := get_theme_color("recorded_value_color", "PadSlider")
+		var recorded_outline_color := get_theme_color("recorded_value_outline_color", "PadSlider")
+		var recorded_color_end := get_theme_color("recorded_value_color_end", "PadSlider")
+		var recorded_outline_color_end := get_theme_color("recorded_value_outline_color_end", "PadSlider")
+		
+		for i in _recorded_positions.size():
+			var recorded_position := _recorded_positions[i]
+			var recorder_width := cursor_width / 2.0
+			
+			var final_position := recorded_position + Vector2(recorder_width, recorder_width) / 2.0
+			var color_coefficient := float(i) / (_recorded_positions.size() - 1)
+			var final_color := recorded_color.lerp(recorded_color_end, color_coefficient)
+			var final_outline_color := recorded_outline_color.lerp(recorded_outline_color_end, color_coefficient)
+			
+			_draw_cursor(final_position, recorder_width, cursor_outline_width, final_color, final_outline_color)
+	
 	var cursor_color := get_theme_color("cursor_color", "PadSlider")
 	var cursor_outline_color := get_theme_color("cursor_outline_color", "PadSlider")
 	_draw_cursor(_cursor_position, cursor_width, cursor_outline_width, cursor_color, cursor_outline_color)
+	
+	# Draw recording overlay.
+	if recording:
+		var recording_overlay := get_theme_stylebox("recording_overlay", "PadSlider")
+		draw_style_box(recording_overlay, Rect2(Vector2.ZERO, size))
 
 
-func _draw_cursor(at_position: Vector2, width: int, outline_width: int, fill_color: Color, outline_color: Color) -> void:
+func _draw_cursor(at_position: Vector2, width: float, outline_width: int, fill_color: Color, outline_color: Color) -> void:
 	var inner_position := at_position + Vector2(outline_width, outline_width)
 	var cursor_size := Vector2(width, width)
 	var cursor_inner_size := cursor_size - 2 * Vector2(outline_width, outline_width)
@@ -126,8 +153,8 @@ func _process_dragging() -> void:
 	
 	# Double conversion allows to normalize the value and snap it to the step.
 	var current_value := _convert_position_to_value(get_local_mouse_position() - _position_area.position)
-	if current_value.x == _last_value.x && current_value.y == _last_value.y:
-		return # No change.
+	if current_value.x == _last_value.x && current_value.y == _last_value.y && not recording:
+		return # No change (unless we're in recording mode).
 	
 	_last_value = current_value
 	_cursor_position = _convert_value_to_position(current_value)
@@ -215,3 +242,24 @@ func get_current_value() -> Vector2i:
 
 func set_current_value(value: Vector2i) -> void:
 	_cursor_position = _convert_value_to_position(value)
+	
+	if not _dragging:
+		queue_redraw()
+
+
+func set_recorded_values(values: Array[Vector2i]) -> void:
+	_recorded_values = values
+	_recorded_positions.clear()
+	
+	for record in _recorded_values:
+		_recorded_positions.push_back(_convert_value_to_position(record))
+	
+	if not _dragging:
+		queue_redraw()
+
+
+# Recording mode.
+
+func set_recording(value: bool) -> void:
+	recording = value
+	queue_redraw()

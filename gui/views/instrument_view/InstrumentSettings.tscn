@@ -97,18 +97,19 @@ flat = true
 icon_alignment = 1
 expand_icon = true
 
-[node name="Tuner" type="HBoxContainer" parent="Layout"]
+[node name="TunerBox" type="HBoxContainer" parent="Layout"]
+unique_name_in_owner = true
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="LowPass" type="VBoxContainer" parent="Layout/Tuner"]
+[node name="LowPass" type="VBoxContainer" parent="Layout/TunerBox"]
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 12
 
-[node name="LowPassSlider" parent="Layout/Tuner/LowPass" instance=ExtResource("2_misq6")]
+[node name="LowPassSlider" parent="Layout/TunerBox/LowPass" instance=ExtResource("2_misq6")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
@@ -116,21 +117,35 @@ default_value = Vector2i(128, 0)
 horizontal_range = Vector2i(0, 128)
 vertical_range = Vector2i(0, 9)
 
-[node name="Label" type="Label" parent="Layout/Tuner/LowPass"]
+[node name="Labels" type="HBoxContainer" parent="Layout/TunerBox/LowPass"]
+layout_mode = 2
+
+[node name="RecordingLabel" type="Label" parent="Layout/TunerBox/LowPass/Labels"]
+unique_name_in_owner = true
 auto_translate_mode = 1
 layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"InstrumentRecordingLabel"
+text = "! RECORDING: PATTERN # !"
+vertical_alignment = 1
+uppercase = true
+
+[node name="Label" type="Label" parent="Layout/TunerBox/LowPass/Labels"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 3
 text = "LOW PASS FILTER PAD"
 horizontal_alignment = 1
 vertical_alignment = 1
 uppercase = true
 
-[node name="Volume" type="VBoxContainer" parent="Layout/Tuner"]
+[node name="Volume" type="VBoxContainer" parent="Layout/TunerBox"]
 auto_translate_mode = 1
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="VolumeSlider" parent="Layout/Tuner/Volume" instance=ExtResource("2_misq6")]
+[node name="VolumeSlider" parent="Layout/TunerBox/Volume" instance=ExtResource("2_misq6")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
@@ -140,7 +155,7 @@ axis_mode = 2
 horizontal_range = Vector2i(0, 0)
 vertical_range = Vector2i(256, 0)
 
-[node name="Label" type="Label" parent="Layout/Tuner/Volume"]
+[node name="Label" type="Label" parent="Layout/TunerBox/Volume"]
 auto_translate_mode = 1
 layout_mode = 2
 text = "VOL"

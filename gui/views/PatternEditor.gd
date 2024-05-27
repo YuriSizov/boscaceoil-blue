@@ -12,6 +12,8 @@ var current_pattern: Pattern = null
 @onready var _instrument_picker: OptionPicker = %InstrumentPicker
 @onready var _scale_picker: OptionPicker = %ScalePicker
 @onready var _key_picker: OptionPicker = %KeyPicker
+
+@onready var _record_instrument: Button = %RecordInstrument
 @onready var _note_shift_up: Button = %NoteShiftUp
 @onready var _note_shift_down: Button = %NoteShiftDown
 
@@ -24,10 +26,12 @@ func _ready() -> void:
 	_scale_picker.selected.connect(_change_scale)
 	_key_picker.selected.connect(_change_key)
 	
+	_record_instrument.toggled.connect(_toggle_record_instrument)
 	_note_shift_up.pressed.connect(_shift_notes.bind(1))
 	_note_shift_down.pressed.connect(_shift_notes.bind(-1))
 
 	_edit_current_pattern()
+	
 	if not Engine.is_editor_hint():
 		Controller.help_manager.reference_node(HelpManager.StepNodeRef.PATTERN_EDITOR_VIEW, get_global_rect)
 		Controller.help_manager.reference_node(HelpManager.StepNodeRef.PATTERN_EDITOR_INSTRUMENT_PICKER, _instrument_picker.get_parent_control().get_global_rect)
@@ -92,9 +96,11 @@ func _edit_current_pattern() -> void:
 	if current_pattern:
 		_scale_picker.set_selected(_scale_picker.options[current_pattern.scale])
 		_key_picker.set_selected(_key_picker.options[current_pattern.key])
+		_record_instrument.set_pressed_no_signal(current_pattern.record_instrument)
 	else:
 		_scale_picker.clear_selected()
 		_key_picker.clear_selected()
+		_record_instrument.set_pressed_no_signal(false)
 
 
 func _update_pattern_instrument() -> void:
@@ -161,6 +167,18 @@ func _change_key() -> void:
 		return
 	current_pattern.change_key(selected_item.id)
 	Controller.current_song.mark_dirty()
+
+
+func _toggle_record_instrument(enabled: bool) -> void:
+	if not Controller.current_song || not current_pattern:
+		return
+	
+	current_pattern.toggle_record_instrument(enabled)
+	Controller.current_song.mark_dirty()
+	
+	if enabled:
+		Controller.navigate_to(Menu.NavigationTarget.INSTRUMENT)
+		Controller.edit_instrument(current_pattern.instrument_idx)
 
 
 func _shift_notes(offset: int) -> void:

@@ -85,12 +85,12 @@ static func _load_v1(reader: SongFileReader) -> Song:
 		pattern.sort_notes()
 		pattern.reindex_active_notes()
 		
-		pattern.record_filter_enabled = (reader.read_int() == 1)
-		if pattern.record_filter_enabled:
+		pattern.record_instrument = (reader.read_int() == 1)
+		if pattern.record_instrument:
 			for j in 16: # Patterns can only go up to 16 notes in this version.
-				pattern.record_filter_values[j].x = reader.read_int() # Volume
-				pattern.record_filter_values[j].y = reader.read_int() # Cutoff
-				pattern.record_filter_values[j].z = reader.read_int() # Resonance
+				pattern.recorded_instrument_values[j].x = reader.read_int() # Volume
+				pattern.recorded_instrument_values[j].y = reader.read_int() # Cutoff
+				pattern.recorded_instrument_values[j].z = reader.read_int() # Resonance
 		
 		song.patterns.push_back(pattern)
 	
@@ -166,12 +166,12 @@ static func _load_v2(reader: SongFileReader) -> Song:
 		pattern.sort_notes()
 		pattern.reindex_active_notes()
 		
-		pattern.record_filter_enabled = (reader.read_int() == 1)
-		if pattern.record_filter_enabled:
+		pattern.record_instrument = (reader.read_int() == 1)
+		if pattern.record_instrument:
 			for j in 16: # Patterns can only go up to 16 notes in this version.
-				pattern.record_filter_values[j].x = reader.read_int() # Volume
-				pattern.record_filter_values[j].y = reader.read_int() # Cutoff
-				pattern.record_filter_values[j].z = reader.read_int() # Resonance
+				pattern.recorded_instrument_values[j].x = reader.read_int() # Volume
+				pattern.recorded_instrument_values[j].y = reader.read_int() # Cutoff
+				pattern.recorded_instrument_values[j].z = reader.read_int() # Resonance
 		
 		song.patterns.push_back(pattern)
 	
@@ -250,12 +250,12 @@ static func _load_v3(reader: SongFileReader) -> Song:
 		pattern.sort_notes()
 		pattern.reindex_active_notes()
 		
-		pattern.record_filter_enabled = (reader.read_int() == 1)
-		if pattern.record_filter_enabled:
+		pattern.record_instrument = (reader.read_int() == 1)
+		if pattern.record_instrument:
 			for j in 16: # Due to a bug, only first 16 notes record their advanced filter values.
-				pattern.record_filter_values[j].x = reader.read_int() # Volume
-				pattern.record_filter_values[j].y = reader.read_int() # Cutoff
-				pattern.record_filter_values[j].z = reader.read_int() # Resonance
+				pattern.recorded_instrument_values[j].x = reader.read_int() # Volume
+				pattern.recorded_instrument_values[j].y = reader.read_int() # Cutoff
+				pattern.recorded_instrument_values[j].z = reader.read_int() # Resonance
 		
 		song.patterns.push_back(pattern)
 	

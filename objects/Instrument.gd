@@ -15,9 +15,9 @@ enum InstrumentType {
 	MAX
 }
 
-const VOLUME_MAX := 256
-const FILTER_CUTOFF_MAX := 128
-const FILTER_RESONANCE_MAX := 9
+const MAX_VOLUME := 256
+const MAX_FILTER_CUTOFF := 128
+const MAX_FILTER_RESONANCE := 9
 
 # Metadata.
 
@@ -49,14 +49,14 @@ var color_palette: int:
 # Adjustments.
 
 ## Volume.
-@export var volume: int = VOLUME_MAX:
-	set(value): volume = ValueValidator.range(value, 0, VOLUME_MAX)
+@export var volume: int = MAX_VOLUME:
+	set(value): volume = ValueValidator.range(value, 0, MAX_VOLUME)
 ## Low pass filter cutoff.
-@export var lp_cutoff: int = FILTER_CUTOFF_MAX:
-	set(value): lp_cutoff = ValueValidator.range(value, 0, FILTER_CUTOFF_MAX)
+@export var lp_cutoff: int = MAX_FILTER_CUTOFF:
+	set(value): lp_cutoff = ValueValidator.range(value, 0, MAX_FILTER_CUTOFF)
 ## Low pass filter resonance.
 @export var lp_resonance: int = 0:
-	set(value): lp_resonance = ValueValidator.range(value, 0, FILTER_RESONANCE_MAX)
+	set(value): lp_resonance = ValueValidator.range(value, 0, MAX_FILTER_RESONANCE)
 
 
 func _init(voice_data: VoiceManager.VoiceData) -> void:

@@ -76,13 +76,13 @@ static func _write(writer: SongFileWriter, song: Song) -> void:
 			writer.write_int(pattern.notes[i].y) # Note position
 			writer.write_int(0) # Empty write, this value is not used.
 		
-		writer.write_int(1 if pattern.record_filter_enabled else 0)
-		if pattern.record_filter_enabled:
+		writer.write_int(1 if pattern.record_instrument else 0)
+		if pattern.record_instrument:
 			# FIXME: Format v3 only handles the first 16 notes, but patterns can contain up to 32. Requires v4.
 			for i in 16:
-				writer.write_int(pattern.record_filter_values[i].x) # Volume
-				writer.write_int(pattern.record_filter_values[i].y) # Cutoff
-				writer.write_int(pattern.record_filter_values[i].z) # Resonance
+				writer.write_int(pattern.recorded_instrument_values[i].x) # Volume
+				writer.write_int(pattern.recorded_instrument_values[i].y) # Cutoff
+				writer.write_int(pattern.recorded_instrument_values[i].z) # Resonance
 	
 	# Arrangement.
 	

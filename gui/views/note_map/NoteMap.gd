@@ -210,7 +210,7 @@ func _center_scroll_offset() -> void:
 		var note_height := get_theme_constant("note_height", "NoteMap")
 		var notes_on_screen := floori(available_rect.size.y / note_height)
 	
-		var central_note_index := current_pattern.active_note_span[roundi(current_pattern.active_note_span.size() / 2.0)]
+		var central_note_index := current_pattern.active_note_span[floori(current_pattern.active_note_span.size() / 2.0)]
 		note_offset = _note_value_row_map[central_note_index] - roundi(notes_on_screen / 2.0)
 	else:
 		var scale_size := _scale_layout.size()

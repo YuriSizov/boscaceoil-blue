@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=60 format=3 uid="uid://chpsnl8o0raaf"]
+[gd_resource type="Theme" load_steps=64 format=3 uid="uid://chpsnl8o0raaf"]
 
 [ext_resource type="Texture2D" uid="uid://n8jw4gat8tg7" path="res://assets/icons/arrow_down_small.png" id="1_1ij5d"]
 [ext_resource type="Texture2D" uid="uid://d2aswndmtik56" path="res://assets/overlap-dither.png" id="1_4kypt"]
@@ -218,6 +218,19 @@ texture = ExtResource("2_ovmtp")
 axis_stretch_horizontal = 1
 axis_stretch_vertical = 1
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_18rur"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.980392, 0.498039, 0.666667, 1)
+expand_margin_left = 4.0
+expand_margin_top = 4.0
+expand_margin_right = 4.0
+expand_margin_bottom = 4.0
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6ehto"]
 content_margin_left = 32.0
 content_margin_top = 16.0
@@ -256,6 +269,24 @@ content_margin_left = 10.0
 content_margin_top = 2.0
 content_margin_right = 10.0
 content_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_eigra"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jh826"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dyr3t"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3fj3y"]
 
@@ -435,6 +466,8 @@ InfoPopupTitleButton/styles/normal = SubResource("StyleBoxEmpty_d1541")
 InfoPopupTitleButton/styles/pressed = SubResource("StyleBoxEmpty_1k2ot")
 InstrumentDock/colors/item_color = Color(0.376471, 0.376471, 0.376471, 1)
 InstrumentDock/colors/item_gutter_color = Color(0.54902, 0.54902, 0.54902, 1)
+InstrumentRecordingLabel/base_type = &"Label"
+InstrumentRecordingLabel/colors/font_color = Color(0.980392, 0.498039, 0.666667, 1)
 InstrumentSettingsPanel/base_type = &"PanelContainer"
 InstrumentSettingsPanel/styles/panel = SubResource("StyleBoxFlat_jn8kv")
 InstrumentWidgetPanel/base_type = &"PanelContainer"
@@ -507,9 +540,14 @@ PadSlider/colors/cursor_color = Color(1, 1, 1, 1)
 PadSlider/colors/cursor_outline_color = Color(0, 0, 0, 1)
 PadSlider/colors/default_value_color = Color(0.313726, 0.396078, 0.415686, 1)
 PadSlider/colors/default_value_outline_color = Color(0.211765, 0.262745, 0.278431, 1)
+PadSlider/colors/recorded_value_color = Color(0.539181, 0.297673, 0.372651, 1)
+PadSlider/colors/recorded_value_color_end = Color(0.239646, 0.431412, 0.33994, 1)
+PadSlider/colors/recorded_value_outline_color = Color(0.328905, 0.19758, 0.226971, 1)
+PadSlider/colors/recorded_value_outline_color_end = Color(0.154089, 0.273084, 0.196237, 1)
 PadSlider/constants/cursor_outline_width = 3
 PadSlider/constants/cursor_size = 32
 PadSlider/styles/background_pattern = SubResource("StyleBoxTexture_rxqrq")
+PadSlider/styles/recording_overlay = SubResource("StyleBoxFlat_18rur")
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_6ehto")
 PatternMap/colors/border_color = Color(0.203922, 0.258824, 0.27451, 1)
 PatternMap/colors/dock_color = Color(0.737255, 0.784314, 0.8, 1)
@@ -539,6 +577,11 @@ PlaybackButton/styles/hover = SubResource("StyleBoxEmpty_n7tc4")
 PlaybackButton/styles/normal = SubResource("StyleBoxEmpty_ywx6j")
 PlaybackButton/styles/pressed = SubResource("StyleBoxEmpty_7loji")
 PopupManager/colors/click_catcher_color = Color(0.21, 0.21, 0.21, 0.25098)
+RecordButton/base_type = &"Button"
+RecordButton/colors/icon_pressed_color = Color(0.8, 0.188235, 0, 1)
+RecordButton/styles/hover = SubResource("StyleBoxEmpty_eigra")
+RecordButton/styles/normal = SubResource("StyleBoxEmpty_jh826")
+RecordButton/styles/pressed = SubResource("StyleBoxEmpty_dyr3t")
 RichTextLabel/colors/default_color = Color(1, 1, 1, 1)
 RichTextLabel/colors/font_shadow_color = Color(0, 0, 0, 1)
 RichTextLabel/constants/shadow_offset_x = 2

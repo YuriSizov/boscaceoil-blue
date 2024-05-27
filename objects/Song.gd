@@ -20,8 +20,12 @@ const MAX_INSTRUMENT_COUNT := 16
 const MAX_PATTERN_COUNT := 4096
 
 const DEFAULT_PATTERN_SIZE := 16
+const MAX_PATTERN_SIZE := 32
 const DEFAULT_BAR_SIZE := 4
+
 const DEFAULT_BPM := 120
+const MIN_BPM := 10
+const MAX_BPM := 220
 
 # Metadata.
 
@@ -36,13 +40,13 @@ const DEFAULT_BPM := 120
 
 ## Length of each pattern in notes.
 @export var pattern_size: int = DEFAULT_PATTERN_SIZE:
-	set(value): pattern_size = ValueValidator.range(value, 1, 32)
+	set(value): pattern_size = ValueValidator.range(value, 1, MAX_PATTERN_SIZE)
 ## Length of a bar in notes, purely visual.
 @export var bar_size: int = DEFAULT_BAR_SIZE:
-	set(value): bar_size = ValueValidator.range(value, 1, 32)
+	set(value): bar_size = ValueValidator.range(value, 1, MAX_PATTERN_SIZE)
 ## Beats per minute.
 @export var bpm: int = DEFAULT_BPM:
-	set(value): bpm = ValueValidator.range(value, 10, 220)
+	set(value): bpm = ValueValidator.range(value, MIN_BPM, MAX_BPM)
 
 # Advanced settings.
 
