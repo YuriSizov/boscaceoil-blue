@@ -45,7 +45,8 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"PatternSettingsBar"
 
-[node name="Label" type="Label" parent="PatternSettings/PropertyBar/ButtonBar"]
+[node name="RecordInstrumentLabel" type="Label" parent="PatternSettings/PropertyBar/ButtonBar"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "REC"
 

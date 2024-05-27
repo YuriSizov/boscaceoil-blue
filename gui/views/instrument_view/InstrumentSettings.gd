@@ -40,6 +40,8 @@ func _ready() -> void:
 	if not Engine.is_editor_hint():
 		Controller.help_manager.reference_node(HelpManager.StepNodeRef.INSTRUMENT_EDITOR_BOTH_PICKERS, _pickers_container.get_global_rect)
 		Controller.help_manager.reference_node(HelpManager.StepNodeRef.INSTRUMENT_EDITOR_VOLUME_SLIDER, _volume_slider.get_global_rect)
+		Controller.help_manager.reference_node(HelpManager.StepNodeRef.INSTRUMENT_EDITOR_FILTER_PAD, _lowpass_slider.get_global_rect)
+		Controller.help_manager.reference_node(HelpManager.StepNodeRef.INSTRUMENT_EDITOR_BOTH_PAD_SLIDERS, _get_global_sliders_rect)
 		
 		Controller.song_loaded.connect(_edit_current_instrument)
 		Controller.song_instrument_changed.connect(_edit_current_instrument)
@@ -47,6 +49,13 @@ func _ready() -> void:
 		Controller.song_pattern_changed.connect(_edit_current_pattern)
 		
 		Controller.music_player.playback_tick.connect(_update_sliders)
+
+
+func _get_global_sliders_rect() -> Rect2:
+	var combined_rect := _lowpass_slider.get_global_rect()
+	combined_rect = combined_rect.expand(_volume_slider.get_global_rect().end)
+	
+	return combined_rect
 
 
 # Data.

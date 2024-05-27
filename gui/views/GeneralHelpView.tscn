@@ -82,7 +82,6 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(340, 0)
 layout_mode = 2
 size_flags_horizontal = 4
-disabled = true
 text = "TIPS AND TRICKS"
 
 [node name="FillerMiddle" type="Control" parent="Layout"]

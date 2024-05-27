@@ -51,6 +51,13 @@ func _get_property_list() -> Array[Dictionary]:
 		"hint": PROPERTY_HINT_RANGE,
 		"hint_string": "%d,%d,%d" % [ -1, steps_count - 1, 1 ]
 	})
+	props.push_back({
+		"name": "guide_step_data",
+		"type": TYPE_OBJECT,
+		"usage": PROPERTY_USAGE_EDITOR,
+		"hint": PROPERTY_HINT_RESOURCE_TYPE,
+		"hint_string": "HelpGuideStep"
+	})
 	
 	return props
 
@@ -60,6 +67,11 @@ func _get(property: StringName) -> Variant:
 		return _guide_resource
 	if property == "guide_step":
 		return _guide_step_index
+	if property == "guide_step_data":
+		if _guide_step_index < 0:
+			return null
+		
+		return _guide_step
 	
 	return null
 
@@ -90,6 +102,7 @@ func set_guide_resource(value: HelpGuide) -> void:
 
 func set_guide_step(value: int) -> void:
 	_guide_step_index = value
+	notify_property_list_changed()
 	
 	if _guide_step:
 		_guide_step.changed.disconnect(_update_guide_step)

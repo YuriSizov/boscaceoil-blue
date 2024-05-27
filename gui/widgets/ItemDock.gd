@@ -257,6 +257,10 @@ func get_available_size() -> Vector2:
 	return available_size
 
 
+func get_global_rect_with_delete_area() -> Rect2:
+	return get_global_rect().grow_side(SIDE_BOTTOM, _delete_area.get_global_rect().size.y)
+
+
 # Data.
 
 ## Virtual.

@@ -14,6 +14,7 @@ var current_pattern: Pattern = null
 @onready var _key_picker: OptionPicker = %KeyPicker
 
 @onready var _record_instrument: Button = %RecordInstrument
+@onready var _record_instrument_label: Label = %RecordInstrumentLabel
 @onready var _note_shift_up: Button = %NoteShiftUp
 @onready var _note_shift_down: Button = %NoteShiftDown
 
@@ -34,11 +35,40 @@ func _ready() -> void:
 	
 	if not Engine.is_editor_hint():
 		Controller.help_manager.reference_node(HelpManager.StepNodeRef.PATTERN_EDITOR_VIEW, get_global_rect)
-		Controller.help_manager.reference_node(HelpManager.StepNodeRef.PATTERN_EDITOR_INSTRUMENT_PICKER, _instrument_picker.get_parent_control().get_global_rect)
+		Controller.help_manager.reference_node(HelpManager.StepNodeRef.PATTERN_EDITOR_INSTRUMENT_PICKER, _get_global_instrument_picker_rect)
+		Controller.help_manager.reference_node(HelpManager.StepNodeRef.PATTERN_EDITOR_KEY_SCALE_PICKERS, _get_global_pickers_rect)
+		Controller.help_manager.reference_node(HelpManager.StepNodeRef.PATTERN_EDITOR_NOTE_SHIFTER, _get_global_note_shifter_rect)
+		Controller.help_manager.reference_node(HelpManager.StepNodeRef.PATTERN_EDITOR_RECORD_BUTTON, _get_global_record_instrument_rect)
 		
 		Controller.song_loaded.connect(_edit_current_pattern)
 		Controller.song_pattern_changed.connect(_edit_current_pattern)
 		Controller.song_instrument_changed.connect(_update_pattern_instrument)
+
+
+func _get_global_instrument_picker_rect() -> Rect2:
+	return _instrument_picker.get_parent_control().get_global_rect()
+
+
+func _get_global_pickers_rect() -> Rect2:
+	var combined_rect := _scale_picker.get_parent_control().get_global_rect()
+	combined_rect = combined_rect.expand(_key_picker.get_parent_control().get_global_rect().end)
+	
+	return combined_rect
+
+
+func _get_global_note_shifter_rect() -> Rect2:
+	var combined_rect := _note_shift_up.get_global_rect()
+	combined_rect = combined_rect.expand(_note_shift_down.get_global_rect().end)
+	
+	return combined_rect
+
+
+func _get_global_record_instrument_rect() -> Rect2:
+	var combined_rect := _record_instrument_label.get_global_rect()
+	combined_rect = combined_rect.grow_side(SIDE_LEFT, 4)
+	combined_rect = combined_rect.expand(_record_instrument.get_global_rect().end)
+	
+	return combined_rect
 
 
 func _update_scale_options() -> void:
