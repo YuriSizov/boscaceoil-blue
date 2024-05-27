@@ -22,6 +22,9 @@ class_name MMLExporter extends RefCounted
 
 const FILE_EXTENSION := "mml"
 
+const EMPTY_NOTE_COMMAND := "     "
+const REST_COMMAND := "  r  "
+
 
 static func save(song: Song, path: String) -> bool:
 	if path.get_extension() != FILE_EXTENSION:
@@ -62,7 +65,7 @@ static func _write(writer: MMLFileWriter, song: Song) -> void:
 	writer.encode_channels(song.arrangement)
 	
 	# Header comment.
-	writer.write_line("/** Exported from Bosca Ceoil Blue */")
+	writer.write_line("/** SiON MML flavor. Exported from Bosca Ceoil Blue */")
 	writer.write_line("")
 	
 	# Instrument definitions.
@@ -206,6 +209,10 @@ class MMLFileWriter:
 			var note_label := Note.get_note_name(mml_note.value % Pattern.OCTAVE_SIZE)
 			mml_note.label = note_label.to_lower().replace("#", "+")
 			
+			# Handled patterns with recorded instrument values.
+			if pattern.record_instrument:
+				mml_note.recorded_values = pattern.recorded_instrument_values[mml_note.position]
+			
 			# Track used instruments and drumkits.
 			
 			if not _used_instruments.has(pattern.instrument_idx):
@@ -254,7 +261,7 @@ class MMLFileWriter:
 		if instrument is SingleVoiceInstrument:
 			var single_instrument := instrument as SingleVoiceInstrument
 			var instrument_index := mml_instrument.index
-			var instrument_mml := single_instrument.voice.get_mml(instrument_index)
+			var instrument_mml := single_instrument.voice.get_mml(instrument_index, "<autodetect>", false)
 			
 			mml_instrument.add_definition(mml_instrument.index, instrument.name, instrument_mml)
 			mml_instrument.add_config(instrument_index, instrument.volume, instrument.lp_cutoff, instrument.lp_resonance)
@@ -265,7 +272,7 @@ class MMLFileWriter:
 				var voice_index := 0
 				for note_value: int in _used_drumkit_voices[mml_instrument.index]:
 					var instrument_index := 100 * mml_instrument.index + voice_index
-					var voice_mml := drumkit_instrument.get_note_voice(note_value).get_mml(instrument_index)
+					var voice_mml := drumkit_instrument.get_note_voice(note_value).get_mml(instrument_index, "<autodetect>", false)
 					
 					mml_instrument.add_sub_definition(mml_instrument.index, voice_index, drumkit_instrument.get_note_name(note_value), voice_mml)
 					mml_instrument.add_config(instrument_index, instrument.volume, instrument.lp_cutoff, instrument.lp_resonance)
@@ -343,6 +350,8 @@ class MMLPatternNote:
 	var octave: int = 4
 	var label: String = ""
 	
+	var recorded_values: Vector3i = Vector3i(-1, -1, -1)
+	
 	
 	func set_mask(pattern_size: int) -> void:
 		# Mask's bit pattern matches visuals in the app, makes debugging easier.
@@ -413,7 +422,7 @@ class MMLPatternTrack:
 		var i := 0
 		while i < _notes.size():
 			if i < skip_notes:
-				note_string += "     "
+				note_string += EMPTY_NOTE_COMMAND
 				i += 1
 				continue
 			
@@ -423,7 +432,7 @@ class MMLPatternTrack:
 				last_octave = note.octave
 				i += note.length
 			else:
-				note_string += "  r  "
+				note_string += REST_COMMAND
 				i += 1
 		
 		return note_string
@@ -433,9 +442,6 @@ class MMLPatternTrack:
 		# Extra spacing is added for formatting purposes and has no significance.
 		# Do be careful, though, as it is not recommended to break up some parts
 		# of the syntax, otherwise certain parsers will reject the song.
-		
-		# TODO: Add support for recorded filter values.
-		# This will require us to add filter and velocity commands before each note.
 		
 		# Regarding octave shift commands. I have learnt that there is no universal truth
 		# whether < should mean "octave up" or "octave down". It all depends on the synth/
@@ -460,6 +466,14 @@ class MMLPatternTrack:
 		for i in range(1, note.length):
 			note_slur = "&" if i < (note.length - 1) else " "
 			note_string += "  %s%s" % [ note_label.rpad(2, " "), note_slur ]
+		
+		# Adjust note string with recorded instrument values if present.
+		if note.recorded_values.x >= 0 && note.recorded_values.y >= 0 && note.recorded_values.z >= 0:
+			@warning_ignore("integer_division")
+			var normalized_volume := mini(15, note.recorded_values.x / 16)
+			var volume_string := ("v%d" % [ normalized_volume ]).rpad(3, " ")
+			var filter_string := ("@f%d,%d" % [ note.recorded_values.y, note.recorded_values.z ]).rpad(7, " ")
+			note_string = volume_string + " " + filter_string + " " + note_string
 		
 		return note_string
 	
