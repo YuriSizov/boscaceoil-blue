@@ -6,8 +6,8 @@
 [ext_resource type="Script" path="res://gui/views/pattern_map/PatternMapItems.gd" id="3_8l50s"]
 [ext_resource type="Script" path="res://gui/views/pattern_map/PatternMapTimeline.gd" id="3_w7hei"]
 [ext_resource type="Script" path="res://gui/views/pattern_map/PatternMapScrollbar.gd" id="5_0hb0q"]
-[ext_resource type="Texture2D" uid="uid://bd2krncfqgml8" path="res://gui/theme/icons/right_arrow_small.tres" id="5_gu52u"]
-[ext_resource type="Texture2D" uid="uid://brvh0ppwqe62" path="res://gui/theme/icons/left_arrow_small.tres" id="6_no0i7"]
+[ext_resource type="Texture2D" uid="uid://bu4ylhahtvclx" path="res://assets/icons/arrow_right_small.png" id="7_hkgbo"]
+[ext_resource type="Texture2D" uid="uid://dreol4dav8ocg" path="res://assets/icons/arrow_left_small.png" id="8_lgr55"]
 
 [node name="PatternMap" type="Control"]
 auto_translate_mode = 1
@@ -80,32 +80,32 @@ script = ExtResource("5_0hb0q")
 [node name="RightButton" type="Button" parent="PatternMapScrollbar"]
 unique_name_in_owner = true
 auto_translate_mode = 1
-custom_minimum_size = Vector2(28, 28)
+custom_minimum_size = Vector2(26, 26)
 layout_mode = 1
 anchors_preset = 11
 anchor_left = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = 28.0
+offset_right = 26.0
 grow_horizontal = 0
 grow_vertical = 2
 focus_mode = 0
 theme_type_variation = &"ScrollbarButton"
-icon = ExtResource("5_gu52u")
+icon = ExtResource("7_hkgbo")
 icon_alignment = 1
 expand_icon = true
 
 [node name="LeftButton" type="Button" parent="PatternMapScrollbar"]
 unique_name_in_owner = true
 auto_translate_mode = 1
-custom_minimum_size = Vector2(28, 28)
+custom_minimum_size = Vector2(26, 26)
 layout_mode = 1
 anchors_preset = 9
 anchor_bottom = 1.0
-offset_left = -28.0
+offset_left = -26.0
 grow_vertical = 2
 focus_mode = 0
 theme_type_variation = &"ScrollbarButton"
-icon = ExtResource("6_no0i7")
+icon = ExtResource("8_lgr55")
 icon_alignment = 1
 expand_icon = true

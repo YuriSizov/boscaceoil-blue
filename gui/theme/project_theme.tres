@@ -1,12 +1,14 @@
-[gd_resource type="Theme" load_steps=58 format=3 uid="uid://chpsnl8o0raaf"]
+[gd_resource type="Theme" load_steps=60 format=3 uid="uid://chpsnl8o0raaf"]
 
+[ext_resource type="Texture2D" uid="uid://n8jw4gat8tg7" path="res://assets/icons/arrow_down_small.png" id="1_1ij5d"]
 [ext_resource type="Texture2D" uid="uid://d2aswndmtik56" path="res://assets/overlap-dither.png" id="1_4kypt"]
-[ext_resource type="Texture2D" uid="uid://dsaf8rh2mger7" path="res://gui/theme/icons/down_arrow_small.tres" id="1_a2jy6"]
-[ext_resource type="FontFile" uid="uid://blsoavvmevh5x" path="res://assets/FFF Aquarius Bold Condensed Regular.ttf" id="1_q75co"]
-[ext_resource type="Texture2D" uid="uid://bd6e6pu2tm4u3" path="res://gui/theme/icons/up_arrow_small.tres" id="2_exvkf"]
 [ext_resource type="Texture2D" uid="uid://di3xykrb8awus" path="res://gui/theme/pad_slider_pattern.tres" id="2_ovmtp"]
-[ext_resource type="Texture2D" uid="uid://bw1l2mvuxboun" path="res://gui/theme/icons/down_arrow.tres" id="4_l7eih"]
-[ext_resource type="Texture2D" uid="uid://cpckledy6ji3n" path="res://gui/theme/icons/up_arrow.tres" id="5_65g4b"]
+[ext_resource type="Texture2D" uid="uid://cbvbbfa1ojixi" path="res://assets/icons/arrow_up_small.png" id="2_xe02t"]
+[ext_resource type="Texture2D" uid="uid://ddcgvq3easmuh" path="res://assets/icons/fullscreen_off.png" id="3_ff3yn"]
+[ext_resource type="Texture2D" uid="uid://dltrbt3gaisqw" path="res://assets/icons/arrow_down.png" id="4_6fvac"]
+[ext_resource type="Texture2D" uid="uid://b2uo4lffopiu7" path="res://assets/icons/fullscreen_on.png" id="4_heflt"]
+[ext_resource type="Texture2D" uid="uid://bcnk14je7sagv" path="res://assets/icons/arrow_up.png" id="5_ixtld"]
+[ext_resource type="FontFile" uid="uid://blsoavvmevh5x" path="res://assets/fonts/FFF Aquarius Bold Condensed Regular.ttf" id="7_n3is1"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a0spi"]
 content_margin_left = 24.0
@@ -86,22 +88,22 @@ content_margin_bottom = 2.0
 bg_color = Color(0.415113, 0.478785, 0.504881, 1)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8fwph"]
-content_margin_left = 2.0
-content_margin_top = 2.0
-content_margin_right = 2.0
-content_margin_bottom = 2.0
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wnhx7"]
-content_margin_left = 2.0
-content_margin_top = 2.0
-content_margin_right = 2.0
-content_margin_bottom = 2.0
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ebj3h"]
-content_margin_left = 2.0
-content_margin_top = 2.0
-content_margin_right = 2.0
-content_margin_bottom = 2.0
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ltu87"]
 content_margin_left = 8.0
@@ -353,7 +355,7 @@ content_margin_bottom = 4.0
 bg_color = Color(0.203922, 0.258824, 0.27451, 1)
 
 [sub_resource type="FontVariation" id="FontVariation_ktmxc"]
-base_font = ExtResource("1_q75co")
+base_font = ExtResource("7_n3is1")
 spacing_glyph = 1
 
 [resource]
@@ -444,8 +446,8 @@ ItemDock/colors/selected_shadow_color = Color(0, 0, 0, 1)
 ItemDock/constants/cursor_width = 3
 ItemDock/constants/item_height = 36
 ItemDock/constants/pager_icon_width = 28
-ItemDock/icons/down_arrow = ExtResource("1_a2jy6")
-ItemDock/icons/up_arrow = ExtResource("2_exvkf")
+ItemDock/icons/down_arrow = ExtResource("1_1ij5d")
+ItemDock/icons/up_arrow = ExtResource("2_xe02t")
 ItemDock/styles/content_margins = SubResource("StyleBoxEmpty_hnbok")
 Label/colors/font_color = Color(1, 1, 1, 1)
 Label/colors/font_shadow_color = Color(0, 0, 0, 1)
@@ -455,6 +457,8 @@ MarginContainer/constants/margin_bottom = 0
 MarginContainer/constants/margin_left = 0
 MarginContainer/constants/margin_right = 0
 MarginContainer/constants/margin_top = 0
+Menu/icons/fullscreen_off = ExtResource("3_ff3yn")
+Menu/icons/fullscreen_on = ExtResource("4_heflt")
 MenuContentsPanel/base_type = &"PanelContainer"
 MenuContentsPanel/styles/panel = SubResource("StyleBoxTexture_3o700")
 NavigationButton/base_type = &"Button"
@@ -495,8 +499,8 @@ OptionListPopup/font_sizes/option_font_size = 22
 OptionListPopup/styles/item_margins = SubResource("StyleBoxEmpty_lgaqy")
 OptionListPopup/styles/popup_panel = SubResource("StyleBoxFlat_wpor0")
 OptionPicker/base_type = &"MarginContainer"
-OptionPicker/icons/down_arrow = ExtResource("4_l7eih")
-OptionPicker/icons/up_arrow = ExtResource("5_65g4b")
+OptionPicker/icons/down_arrow = ExtResource("4_6fvac")
+OptionPicker/icons/up_arrow = ExtResource("5_ixtld")
 OptionPickerBox/base_type = &"HBoxContainer"
 OptionPickerBox/constants/separation = 16
 PadSlider/colors/cursor_color = Color(1, 1, 1, 1)

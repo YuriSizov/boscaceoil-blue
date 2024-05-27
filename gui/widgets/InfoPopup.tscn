@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://pte0alxv2p77"]
 
 [ext_resource type="Script" path="res://gui/widgets/InfoPopup.gd" id="1_id2ld"]
-[ext_resource type="Texture2D" uid="uid://bya1184uqykfm" path="res://gui/theme/icons/cross_icon.tres" id="2_7no5d"]
+[ext_resource type="Texture2D" uid="uid://dqatqvd3ie4cw" path="res://assets/icons/cross.png" id="2_jd830"]
 [ext_resource type="Script" path="res://gui/widgets/AccentedContentEffect.gd" id="3_spm7g"]
 
 [sub_resource type="RichTextEffect" id="RichTextEffect_ldctv"]
@@ -51,7 +51,7 @@ custom_minimum_size = Vector2(36, 36)
 layout_mode = 2
 size_flags_vertical = 4
 theme_type_variation = &"InfoPopupTitleButton"
-icon = ExtResource("2_7no5d")
+icon = ExtResource("2_jd830")
 flat = true
 icon_alignment = 1
 expand_icon = true

@@ -3,9 +3,9 @@
 [ext_resource type="PackedScene" uid="uid://jjkaxpgl6mmu" path="res://gui/widgets/AnimatedLogo.tscn" id="1_cb5p1"]
 [ext_resource type="Script" path="res://gui/views/FileView.gd" id="1_i5se4"]
 [ext_resource type="PackedScene" uid="uid://71sw1mddco3" path="res://gui/widgets/SquishyButton.tscn" id="3_6fmtw"]
-[ext_resource type="Texture2D" uid="uid://b4pqq6culbr6a" path="res://gui/theme/icons/right_arrow.tres" id="3_jbhik"]
-[ext_resource type="Texture2D" uid="uid://ck1durkyp2j8a" path="res://gui/theme/icons/pause_icon.tres" id="4_np651"]
-[ext_resource type="Texture2D" uid="uid://c152mlked4d1i" path="res://gui/theme/icons/stop_icon.tres" id="5_7b7gn"]
+[ext_resource type="Texture2D" uid="uid://dxrpimbnhks71" path="res://assets/icons/play.png" id="4_nblwm"]
+[ext_resource type="Texture2D" uid="uid://82f8rwsfmuq8" path="res://assets/icons/pause.png" id="5_2i624"]
+[ext_resource type="Texture2D" uid="uid://y5ab1acbg8ka" path="res://assets/icons/stop.png" id="6_3jhgl"]
 [ext_resource type="PackedScene" uid="uid://d2peohvka6nmb" path="res://gui/widgets/Stepper.tscn" id="6_8p7iu"]
 
 [node name="FileView" type="MarginContainer"]
@@ -95,11 +95,11 @@ alignment = 1
 
 [node name="Play" type="Button" parent="Layout/Introduction/Contents/Controls/Playback/Layout"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(48, 30)
+custom_minimum_size = Vector2(46, 30)
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"PlaybackButton"
-icon = ExtResource("3_jbhik")
+icon = ExtResource("4_nblwm")
 flat = true
 icon_alignment = 1
 expand_icon = true
@@ -111,7 +111,7 @@ custom_minimum_size = Vector2(48, 30)
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"PlaybackButton"
-icon = ExtResource("4_np651")
+icon = ExtResource("5_2i624")
 flat = true
 icon_alignment = 1
 expand_icon = true
@@ -123,7 +123,7 @@ custom_minimum_size = Vector2(48, 30)
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"PlaybackButton"
-icon = ExtResource("5_7b7gn")
+icon = ExtResource("6_3jhgl")
 flat = true
 icon_alignment = 1
 expand_icon = true

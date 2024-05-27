@@ -4,9 +4,9 @@
 [ext_resource type="Script" path="res://gui/views/note_map/NoteMap.gd" id="1_opxc8"]
 [ext_resource type="Script" path="res://gui/views/note_map/NoteMapGutter.gd" id="2_3knao"]
 [ext_resource type="Script" path="res://gui/views/note_map/NoteMapScrollbar.gd" id="3_gs7e5"]
-[ext_resource type="Texture2D" uid="uid://bd6e6pu2tm4u3" path="res://gui/theme/icons/up_arrow_small.tres" id="4_lvxl6"]
-[ext_resource type="Texture2D" uid="uid://dsaf8rh2mger7" path="res://gui/theme/icons/down_arrow_small.tres" id="5_cu2vu"]
+[ext_resource type="Texture2D" uid="uid://cbvbbfa1ojixi" path="res://assets/icons/arrow_up_small.png" id="6_5b2uk"]
 [ext_resource type="Script" path="res://gui/views/note_map/NoteMapOverlay.gd" id="6_20i0e"]
+[ext_resource type="Texture2D" uid="uid://n8jw4gat8tg7" path="res://assets/icons/arrow_down_small.png" id="7_oqrjh"]
 
 [node name="NoteMap" type="Control"]
 auto_translate_mode = 1
@@ -68,32 +68,32 @@ grow_vertical = 2
 
 [node name="UpButton" type="Button" parent="NoteMapScrollButtons"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 28)
+custom_minimum_size = Vector2(0, 26)
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 28.0
+offset_bottom = 26.0
 grow_horizontal = 2
 focus_mode = 0
 theme_type_variation = &"ScrollbarButton"
-icon = ExtResource("4_lvxl6")
+icon = ExtResource("6_5b2uk")
 icon_alignment = 1
 expand_icon = true
 
 [node name="DownButton" type="Button" parent="NoteMapScrollButtons"]
 unique_name_in_owner = true
 auto_translate_mode = 1
-custom_minimum_size = Vector2(0, 28)
+custom_minimum_size = Vector2(0, 26)
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -28.0
+offset_top = -12.0
 grow_horizontal = 2
 grow_vertical = 0
 focus_mode = 0
 theme_type_variation = &"ScrollbarButton"
-icon = ExtResource("5_cu2vu")
+icon = ExtResource("7_oqrjh")
 icon_alignment = 1
 expand_icon = true

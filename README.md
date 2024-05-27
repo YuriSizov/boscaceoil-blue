@@ -1,5 +1,5 @@
 <p align="center">
-	<img src="assets/logo_blue.png">
+	<img src="assets/logos/logo_blue.png">
 </p>
 
 # Bosca Ceoil: The Blue Album

@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://jjkaxpgl6mmu"]
 
 [ext_resource type="Script" path="res://gui/widgets/AnimatedLogo.gd" id="1_i10nm"]
-[ext_resource type="Texture2D" uid="uid://bl2bn0gj2t4wo" path="res://assets/logo_blue.png" id="1_lc2ol"]
-[ext_resource type="Texture2D" uid="uid://uxa5unpo0xp8" path="res://assets/logo_shadow.png" id="2_w1mr7"]
+[ext_resource type="Texture2D" uid="uid://bl2bn0gj2t4wo" path="res://assets/logos/logo_blue.png" id="1_lc2ol"]
+[ext_resource type="Texture2D" uid="uid://uxa5unpo0xp8" path="res://assets/logos/logo_shadow.png" id="2_w1mr7"]
 
 [node name="LogoContainer" type="Control"]
 custom_minimum_size = Vector2(576, 120)

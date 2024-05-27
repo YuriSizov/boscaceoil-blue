@@ -4,6 +4,7 @@
 # Provided under MIT                              #
 ###################################################
 
+@tool
 class_name Menu extends VBoxContainer
 
 enum NavigationTarget {
@@ -62,6 +63,7 @@ var _current_tab: int = 0
 
 func _ready() -> void:
 	_update_current_tab()
+	_update_fullscreen_button()
 	
 	_tab_buttons.pressed.connect(_request_navigation)
 	
@@ -71,6 +73,7 @@ func _ready() -> void:
 		Controller.help_manager.reference_node(HelpManager.StepNodeRef.NAVIGATION_INSTRUMENT, _instrument_tab_button.get_global_rect)
 		
 		_fullscreen_toggle.pressed.connect(Controller.settings_manager.toggle_fullscreen)
+		get_window().size_changed.connect(_update_fullscreen_button)
 		
 		Controller.navigation_requested.connect(_navigate)
 		Controller.music_player.export_started.connect(_navigate.bind(NavigationTarget.ARRANGEMENT))
@@ -116,3 +119,15 @@ func _update_menu_collection(menu_buttons: Array[Button]) -> void:
 func _update_current_tab() -> void:
 	for child in _contents_root.get_children():
 		child.visible = child.get_index() == _current_tab
+
+
+func _update_fullscreen_button() -> void:
+	if Engine.is_editor_hint():
+		return
+	if not is_inside_tree():
+		return
+	
+	if get_window().mode == Window.MODE_FULLSCREEN:
+		_fullscreen_toggle.icon = get_theme_icon("fullscreen_off", "Menu")
+	else:
+		_fullscreen_toggle.icon = get_theme_icon("fullscreen_on", "Menu")

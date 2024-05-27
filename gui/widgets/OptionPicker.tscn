@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://dpno0cpboqdm0"]
 
 [ext_resource type="Script" path="res://gui/widgets/OptionPicker.gd" id="1_m580c"]
-[ext_resource type="Texture2D" uid="uid://bw1l2mvuxboun" path="res://gui/theme/icons/down_arrow.tres" id="2_p6jtu"]
+[ext_resource type="Texture2D" uid="uid://dltrbt3gaisqw" path="res://assets/icons/arrow_down.png" id="2_5j6us"]
 
 [node name="OptionPicker" type="MarginContainer"]
 anchors_preset = 15
@@ -17,10 +17,10 @@ layout_mode = 2
 theme_type_variation = &"OptionPickerBox"
 
 [node name="Arrow" type="TextureRect" parent="Layout"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(26, 20)
 layout_mode = 2
 size_flags_vertical = 4
-texture = ExtResource("2_p6jtu")
+texture = ExtResource("2_5j6us")
 expand_mode = 1
 stretch_mode = 5
 
