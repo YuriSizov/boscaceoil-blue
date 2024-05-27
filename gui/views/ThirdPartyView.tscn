@@ -37,41 +37,22 @@ auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 0
 theme_type_variation = &"CreditsLabelHeader"
-text = "GDSiON software synthesizer for Godot"
+text = "Made with Godot Engine"
 
 [node name="Label2" type="Label" parent="Layout/LeftPage/Layout"]
 auto_translate_mode = 1
 layout_mode = 2
-size_flags_horizontal = 0
 theme_type_variation = &"CreditsLabel"
-text = "(c) 2024 Yuri Sizov and contributors"
+text = "(c) 2014-present Godot Engine contributors.
+(c) 2007-2014 Juan Linietsky, Ariel Manzur."
+autowrap_mode = 2
 
 [node name="LinkLabel" parent="Layout/LeftPage/Layout" instance=ExtResource("2_7kftr")]
 layout_mode = 2
 size_flags_horizontal = 0
 theme_type_variation = &"CreditsLabelLink"
-text = "github.com/YuriSizov/gdsion/"
-url = "https://github.com/YuriSizov/gdsion"
-
-[node name="Spacer" type="Control" parent="Layout/LeftPage/Layout"]
-auto_translate_mode = 1
-custom_minimum_size = Vector2(0, 16)
-layout_mode = 2
-size_flags_horizontal = 0
-
-[node name="Label3" type="Label" parent="Layout/LeftPage/Layout"]
-auto_translate_mode = 1
-layout_mode = 2
-size_flags_horizontal = 0
-theme_type_variation = &"CreditsLabelHeader"
-text = "FFF Aquarius font"
-
-[node name="Label4" type="Label" parent="Layout/LeftPage/Layout"]
-auto_translate_mode = 1
-layout_mode = 2
-size_flags_horizontal = 0
-theme_type_variation = &"CreditsLabel"
-text = "FontsForFlash & Randy Caldwell"
+text = "godotengine.org/"
+url = "https://godotengine.org"
 
 [node name="FillerMiddle" type="Control" parent="Layout"]
 auto_translate_mode = 1
@@ -87,6 +68,47 @@ layout_mode = 2
 auto_translate_mode = 1
 layout_mode = 2
 theme_type_variation = &"CreditsBox"
+
+[node name="Label5" type="Label" parent="Layout/RightPage/Layout"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabelHeader"
+text = "GDSiON software synthesizer for Godot"
+
+[node name="Label6" type="Label" parent="Layout/RightPage/Layout"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabel"
+text = "(c) 2024 Yuri Sizov and contributors"
+
+[node name="LinkLabel2" parent="Layout/RightPage/Layout" instance=ExtResource("2_7kftr")]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabelLink"
+text = "github.com/YuriSizov/gdsion/"
+url = "https://github.com/YuriSizov/gdsion"
+
+[node name="Spacer2" type="Control" parent="Layout/RightPage/Layout"]
+auto_translate_mode = 1
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="Label3" type="Label" parent="Layout/RightPage/Layout"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabelHeader"
+text = "FFF Aquarius font"
+
+[node name="Label4" type="Label" parent="Layout/RightPage/Layout"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabel"
+text = "FontsForFlash & Randy Caldwell"
 
 [node name="Filler" type="Control" parent="Layout/RightPage/Layout"]
 auto_translate_mode = 1
