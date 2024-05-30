@@ -11,13 +11,29 @@ class_name IOManager extends RefCounted
 
 # Creation.
 
-func create_new_song() -> void:
+func initialize_song() -> void:
+	if not _try_load_song_from_args():
+		create_new_song(true)
+
+
+func _try_load_song_from_args() -> bool:
+	var args := OS.get_cmdline_args()
+	for arg in args:
+		if arg.ends_with(".ceol"):
+			return _load_ceol_song_confirmed(arg)
+	
+	return false
+
+
+func create_new_song(silent: bool = false) -> void:
 	if Controller.music_player.is_playing():
 		Controller.music_player.stop_playback()
 	
 	var new_song := Song.create_default_song()
 	Controller.set_current_song(new_song)
-	Controller.update_status("NEW SONG CREATED", Controller.StatusLevel.SUCCESS)
+	
+	if not silent:
+		Controller.update_status("NEW SONG CREATED", Controller.StatusLevel.SUCCESS)
 
 
 func create_new_song_safe() -> void:
@@ -69,11 +85,11 @@ func load_ceol_song_safe() -> void:
 	load_ceol_song()
 
 
-func _load_ceol_song_confirmed(path: String) -> void:
+func _load_ceol_song_confirmed(path: String) -> bool:
 	var loaded_song: Song = SongLoader.load(path)
 	if not loaded_song:
 		Controller.update_status("FAILED TO LOAD SONG", Controller.StatusLevel.ERROR)
-		return
+		return false
 	
 	if Controller.music_player.is_playing():
 		Controller.music_player.stop_playback()
@@ -81,6 +97,7 @@ func _load_ceol_song_confirmed(path: String) -> void:
 	Controller.set_current_song(loaded_song)
 	Controller.update_status("SONG LOADED", Controller.StatusLevel.SUCCESS)
 	print("Successfully loaded song from %s:\n  %s" % [ path, loaded_song ])
+	return true
 
 
 func save_ceol_song(save_as: bool = false) -> void:
@@ -154,7 +171,7 @@ func _export_wav_song_confirmed(path: String) -> void:
 		Controller.update_status("FAILED TO EXPORT SONG: INVALID FILENAME", Controller.StatusLevel.ERROR)
 		return
 	
-	Controller.lock_song_editing()
+	Controller.lock_song_editing("NOW EXPORTING AS WAV, PLEASE WAIT")
 	Controller.music_player.stop_playback()
 	
 	Controller.current_song.arrangement.set_loop(0, Controller.current_song.arrangement.timeline_length)
@@ -213,7 +230,7 @@ func export_mml_song() -> void:
 	
 	var export_dialog := Controller.get_file_dialog()
 	export_dialog.file_mode = FileDialog.FILE_MODE_SAVE_FILE
-	export_dialog.title = "Export .mml File"
+	export_dialog.title = "Export SiON .mml File"
 	export_dialog.add_filter("*.mml", "MML File")
 	export_dialog.current_file = Controller.current_song.get_safe_filename("mml")
 	export_dialog.file_selected.connect(_export_mml_song_confirmed, CONNECT_ONE_SHOT)
@@ -232,3 +249,47 @@ func _export_mml_song_confirmed(path: String) -> void:
 	
 	Controller.update_status("SONG EXPORTED AS MML", Controller.StatusLevel.SUCCESS)
 	print("Successfully exported song to %s." % [ path ])
+
+
+func export_xm_song() -> void:
+	if not Controller.current_song:
+		return
+	
+	var export_dialog := Controller.get_file_dialog()
+	export_dialog.file_mode = FileDialog.FILE_MODE_SAVE_FILE
+	export_dialog.title = "Export .xm File"
+	export_dialog.add_filter("*.xm", "XM Tracker File")
+	export_dialog.current_file = Controller.current_song.get_safe_filename("xm")
+	export_dialog.file_selected.connect(_export_xm_song_confirmed, CONNECT_ONE_SHOT)
+	
+	Controller.show_file_dialog(export_dialog)
+
+
+func _export_xm_song_confirmed(path: String) -> void:
+	if not Controller.current_song:
+		return
+	
+	var exporter := XMExporter.new()
+	var success := exporter.prepare(Controller.current_song, path)
+	if not success:
+		Controller.update_status("FAILED TO EXPORT SONG: INVALID FILENAME", Controller.StatusLevel.ERROR)
+		return
+	
+	Controller.lock_song_editing("NOW EXPORTING AS XM, PLEASE WAIT")
+	Controller.music_player.stop_playback()
+	
+	var samples := exporter.get_queued_samples()
+	Controller.music_player.export_ended.connect(_save_xm_song.bind(exporter), CONNECT_ONE_SHOT)
+	Controller.music_player.start_rendering_samples(samples)
+
+
+func _save_xm_song(exporter: XMExporter) -> void:
+	var success := exporter.save()
+	if not success:
+		Controller.update_status("FAILED TO EXPORT SONG", Controller.StatusLevel.ERROR)
+		Controller.unlock_song_editing()
+		return
+	
+	Controller.unlock_song_editing()
+	Controller.update_status("SONG EXPORTED AS XM", Controller.StatusLevel.SUCCESS)
+	print("Successfully exported song to %s." % [ exporter.get_export_path() ])

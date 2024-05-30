@@ -80,7 +80,6 @@ func _ready() -> void:
 	get_tree().set_auto_accept_quit(false)
 	
 	music_player.initialize_driver()
-	io_manager.create_new_song()
 
 
 func _notification(what: int) -> void:
@@ -236,10 +235,10 @@ func mark_song_saved() -> void:
 	song_saved.emit()
 
 
-func lock_song_editing() -> void:
+func lock_song_editing(message: String) -> void:
 	_controls_locked = true
 	show_blocker()
-	controls_locked.emit("NOW EXPORTING AS WAV, PLEASE WAIT")
+	controls_locked.emit(message)
 
 
 func unlock_song_editing() -> void:

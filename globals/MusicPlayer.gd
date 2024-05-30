@@ -39,6 +39,12 @@ var _pattern_time: int = -1
 var _note_residue: PackedInt32Array = PackedInt32Array()
 var _note_residue_time: int = 0
 
+## Sample queue for rendering, used during some exports.
+var _sample_queue: Array[QueuedSample] = []
+var _sample_queue_index: int = -1
+var _current_sample: QueuedSample = null
+var _current_sample_time: int = 0
+
 
 # Initialization.
 
@@ -319,7 +325,7 @@ func stop_playback() -> void:
 	playback_stopped.emit()
 
 
-# Data streaming.
+# Data rendering and exporting.
 
 func start_exporting(callback: Callable) -> void:
 	if _music_exporting:
@@ -359,3 +365,67 @@ func is_playing_residue() -> bool:
 
 func get_residue_time() -> int:
 	return _note_residue_time
+
+
+func start_rendering_samples(samples: Array[QueuedSample]) -> void:
+	if _music_exporting:
+		return
+	
+	_music_exporting = true
+	reset_driver() # Clears the output so there is no residue at the start.
+	
+	_sample_queue = samples
+	_sample_queue_index = -1
+	_current_sample = null
+	_current_sample_time = 0
+	_driver.timer_interval.connect(_render_next_sample)
+	
+	export_started.emit()
+
+
+func _stop_rendering_samples() -> void:
+	if not _music_exporting:
+		return
+	
+	_music_exporting = false
+	_driver.timer_interval.disconnect(_render_next_sample)
+	
+	export_ended.emit()
+
+
+func _render_next_sample() -> void:
+	if _current_sample: # Check for the current sample first.
+		_current_sample_time -= 1
+		if _current_sample_time > 0:
+			return # Wait for it to finish.
+		
+		# It's done, stop collecting.
+		_driver.set_stream_event_enabled(false)
+		_driver.streaming.disconnect(_current_sample.callback)
+		_current_sample = null
+		#reset_driver() # Clears the output so there is no residue at the start.
+		
+		return # Give it a moment to reset.
+	
+	# Try the next sample.
+	_sample_queue_index += 1
+	if _sample_queue_index >= _sample_queue.size():
+		_stop_rendering_samples()
+		return # Rendering is complete.
+	
+	# There are still samples left, handle the next one.
+	
+	_current_sample = _sample_queue[_sample_queue_index]
+	_current_sample_time = _current_sample.note_length
+	
+	_driver.streaming.connect(_current_sample.callback)
+	_driver.set_stream_event_enabled(true)
+	_driver.note_on(_current_sample.note_value, _current_sample.voice, _current_sample.note_length * NOTE_LENGTH)
+
+
+class QueuedSample:
+	var voice: SiONVoice = null
+	var note_value: int = -1
+	var note_length: int = 1
+	
+	var callback: Callable = Callable()

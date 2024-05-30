@@ -6,7 +6,7 @@
 
 extends MarginContainer
 
-enum ExportOptions {
+enum ExportOption {
 	EXPORT_WAV,
 	EXPORT_MID,
 	EXPORT_MML,
@@ -135,29 +135,29 @@ func _populate_import_options() -> void:
 	pass
 
 
-func _handle_import_options(item: OptionListPopup.Item) -> void:
+func _handle_import_options(_item: OptionListPopup.Item) -> void:
 	pass
 
 
 func _populate_export_options() -> void:
 	var wav_item := OptionListPopup.Item.new()
-	wav_item.id = ExportOptions.EXPORT_WAV
+	wav_item.id = ExportOption.EXPORT_WAV
 	wav_item.text = "EXPORT .wav"
 	_export_song_button.options.push_back(wav_item)
 	
 	var mid_item := OptionListPopup.Item.new()
-	mid_item.id = ExportOptions.EXPORT_MID
+	mid_item.id = ExportOption.EXPORT_MID
 	mid_item.text = "EXPORT .mid"
 	_export_song_button.options.push_back(mid_item)
 	
 	var mml_item := OptionListPopup.Item.new()
-	mml_item.id = ExportOptions.EXPORT_MML
+	mml_item.id = ExportOption.EXPORT_MML
 	mml_item.text = "EXPORT .mml"
 	_export_song_button.options.push_back(mml_item)
 	
 	var xm_item := OptionListPopup.Item.new()
-	xm_item.id = ExportOptions.EXPORT_XM
-	xm_item.text = "EXPORT .xm (experimental)"
+	xm_item.id = ExportOption.EXPORT_XM
+	xm_item.text = "EXPORT .xm"
 	_export_song_button.options.push_back(xm_item)
 	
 	_export_song_button.commit_options()
@@ -165,11 +165,13 @@ func _populate_export_options() -> void:
 
 func _handle_export_option(item: OptionListPopup.Item) -> void:
 	match item.id:
-		ExportOptions.EXPORT_WAV:
+		ExportOption.EXPORT_WAV:
 			Controller.io_manager.export_wav_song()
-		ExportOptions.EXPORT_MID:
+		ExportOption.EXPORT_MID:
 			Controller.io_manager.export_mid_song()
-		ExportOptions.EXPORT_MML:
+		ExportOption.EXPORT_MML:
 			Controller.io_manager.export_mml_song()
+		ExportOption.EXPORT_XM:
+			Controller.io_manager.export_xm_song()
 		_:
 			Controller.update_status("FORMAT NOT SUPPORTED (YET)", Controller.StatusLevel.WARNING)

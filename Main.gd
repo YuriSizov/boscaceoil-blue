@@ -43,6 +43,7 @@ func _ready() -> void:
 	
 	_pattern_editor.visible = true
 	_locked_indicator.visible = false
+	Controller.io_manager.initialize_song()
 	_edit_current_song()
 	
 	if not Engine.is_editor_hint():

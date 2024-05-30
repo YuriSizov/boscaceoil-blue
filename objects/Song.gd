@@ -98,7 +98,7 @@ static func create_default_song() -> Song:
 	return song
 
 
-func get_safe_filename(extension: String = "ceol") -> String:
+func get_safe_filename(extension: String = FILE_EXTENSION) -> String:
 	if filename.is_empty():
 		return "%s.%s" % [ FILE_DEFAULT_NAME, extension ]
 	

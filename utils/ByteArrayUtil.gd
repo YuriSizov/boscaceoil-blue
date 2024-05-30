@@ -11,6 +11,14 @@ static func write_string(array: PackedByteArray, value: String) -> void:
 	array.append_array(value.to_utf8_buffer())
 
 
+static func write_ascii_string(array: PackedByteArray, value: String, pad_to_size: int = 0) -> void:
+	var temp := value.to_ascii_buffer()
+	while temp.size() < pad_to_size:
+		temp.append(0x20) # Space.
+	
+	array.append_array(temp)
+
+
 static func write_int32(array: PackedByteArray, value: int, big_endian: bool = false) -> void:
 	if big_endian: # PackedByteArray encodes in Little Endian with no setting to change that.
 		var temp := PackedByteArray()
