@@ -526,7 +526,7 @@ func _register_drumkits() -> void:
 	_register_drumkit_item(drumkit_data, "Mid Tom L",       "midi.drum47", 16, 47)
 	_register_drumkit_item(drumkit_data, "Mid Tom H",       "midi.drum48", 16, 48)
 	_register_drumkit_item(drumkit_data, "Crash Cymbal 1",  "midi.drum49", 16, 49)
-	_register_drumkit_item(drumkit_data, "High Tom",        "midi.drum52", 16, 52)
+	_register_drumkit_item(drumkit_data, "High Tom",        "midi.drum52", 16, 50)
 	_register_drumkit_item(drumkit_data, "Ride Cymbal 1",   "midi.drum51", 16, 51)
 	_register_drumkit_item(drumkit_data, "Chinese Cymbal",  "midi.drum52", 16, 52)
 	_register_drumkit_item(drumkit_data, "Ride Cymbal Cup", "midi.drum53", 16, 53)
@@ -536,7 +536,7 @@ func _register_drumkits() -> void:
 	_register_drumkit_item(drumkit_data, "Crash Cymbal 2",  "midi.drum57", 16, 57)
 	_register_drumkit_item(drumkit_data, "Vibraslap",       "midi.drum58", 16, 58)
 	_register_drumkit_item(drumkit_data, "Ride Cymbal 2",   "midi.drum59", 16, 59)
-	_register_drumkit_item(drumkit_data, "Bongo H",         "midi.drum62", 16, 62)
+	_register_drumkit_item(drumkit_data, "Bongo H",         "midi.drum62", 16, 60)
 	_register_drumkit_item(drumkit_data, "Bongo L",         "midi.drum61", 16, 61)
 	_register_drumkit_item(drumkit_data, "Conga H Mute",    "midi.drum62", 16, 62)
 	_register_drumkit_item(drumkit_data, "Conga H Open",    "midi.drum63", 16, 63)
@@ -643,8 +643,7 @@ func get_sub_categories(category: String) -> Array[SubCategory]:
 
 
 func get_first_voice_data(category: String) -> VoiceData:
-	for i in _voices.size():
-		var voice := _voices[i]
+	for voice in _voices:
 		if voice.category == category:
 			return voice
 	
@@ -653,8 +652,7 @@ func get_first_voice_data(category: String) -> VoiceData:
 
 
 func get_voice_data(category: String, name: String) -> VoiceData:
-	for i in _voices.size():
-		var voice := _voices[i]
+	for voice in _voices:
 		if voice.category == category && voice.name == name:
 			return voice
 	
@@ -668,6 +666,15 @@ func get_voice_data_at(index: int) -> VoiceData:
 		return null
 	
 	return _voices[index]
+
+
+func get_voice_data_for_midi(midi_instrument: int) -> VoiceData:
+	for voice in _voices:
+		if voice.midi_instrument == midi_instrument:
+			return voice
+	
+	# No match found, but that's not an error, like in other methods.
+	return null
 
 
 func get_random_voice_data() -> VoiceData:

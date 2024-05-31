@@ -26,8 +26,7 @@ func _try_load_song_from_args() -> bool:
 
 
 func create_new_song(silent: bool = false) -> void:
-	if Controller.music_player.is_playing():
-		Controller.music_player.stop_playback()
+	Controller.music_player.stop_playback()
 	
 	var new_song := Song.create_default_song()
 	Controller.set_current_song(new_song)
@@ -91,8 +90,7 @@ func _load_ceol_song_confirmed(path: String) -> bool:
 		Controller.update_status("FAILED TO LOAD SONG", Controller.StatusLevel.ERROR)
 		return false
 	
-	if Controller.music_player.is_playing():
-		Controller.music_player.stop_playback()
+	Controller.music_player.stop_playback()
 	
 	Controller.set_current_song(loaded_song)
 	Controller.update_status("SONG LOADED", Controller.StatusLevel.SUCCESS)
@@ -145,7 +143,51 @@ func check_song_on_exit() -> void:
 	Controller.get_tree().quit()
 
 
-# External format import and export.
+# External format import.
+
+func import_mid_song() -> void:
+	var import_dialog := Controller.get_file_dialog()
+	import_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
+	import_dialog.title = "Import .mid File"
+	import_dialog.add_filter("*.mid", "MIDI File")
+	import_dialog.current_file = ""
+	import_dialog.file_selected.connect(_import_mid_song_confirmed, CONNECT_ONE_SHOT)
+	
+	Controller.show_file_dialog(import_dialog)
+
+
+func import_mid_song_safe() -> void:
+	if Controller.current_song && Controller.current_song.is_dirty():
+		var unsaved_warning := Controller.get_info_popup()
+		
+		unsaved_warning.title = "WARNING — Unsaved changes"
+		unsaved_warning.content = "Current song has [accent]UNSAVED CHANGES[/accent].\n\nAre you sure you want to import a different one?"
+		unsaved_warning.add_button("Cancel", unsaved_warning.close_popup)
+		unsaved_warning.add_button("I'm sure!", func() -> void:
+			unsaved_warning.close_popup()
+			import_mid_song()
+		)
+		
+		Controller.show_info_popup(unsaved_warning, Vector2(660, 220))
+		return
+	
+	import_mid_song()
+
+
+func _import_mid_song_confirmed(path: String) -> void:
+	var imported_song: Song = MidiImporter.import(path)
+	if not imported_song:
+		Controller.update_status("FAILED TO IMPORT SONG", Controller.StatusLevel.ERROR)
+		return
+	
+	Controller.music_player.stop_playback()
+	
+	Controller.set_current_song(imported_song)
+	Controller.update_status("SONG IMPORTED FROM MIDI", Controller.StatusLevel.SUCCESS)
+	print("Successfully imported song from %s:\n  %s" % [ path, imported_song ])
+
+
+# External format export.
 
 func export_wav_song() -> void:
 	if not Controller.current_song:

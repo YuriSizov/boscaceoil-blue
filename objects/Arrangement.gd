@@ -140,6 +140,15 @@ func get_current_bar() -> PackedInt32Array:
 
 # Patterns.
 
+func has_pattern(bar_idx: int, channel_idx: int) -> bool:
+	var bar_index_ := ValueValidator.index(bar_idx, BAR_NUMBER, "Arrangement: Cannot check a pattern for a bar at %d, index is outside of the valid range [%d, %d]." % [ bar_idx, 0, BAR_NUMBER - 1 ])
+	var channel_index_ := ValueValidator.index(channel_idx, CHANNEL_NUMBER, "Arrangement: Cannot check a pattern for a channel %d, index is outside of the valid range [%d, %d]." % [ channel_idx, 0, CHANNEL_NUMBER - 1 ])
+	if bar_index_ != bar_idx || channel_index_ != channel_idx:
+		return false
+	
+	return timeline_bars[bar_idx][channel_idx] != -1
+
+
 func set_pattern(bar_idx: int, channel_idx: int, value: int) -> void:
 	var bar_index_ := ValueValidator.index(bar_idx, BAR_NUMBER, "Arrangement: Cannot set a pattern for a bar at %d, index is outside of the valid range [%d, %d]." % [ bar_idx, 0, BAR_NUMBER - 1 ])
 	var channel_index_ := ValueValidator.index(channel_idx, CHANNEL_NUMBER, "Arrangement: Cannot set a pattern for a channel %d, index is outside of the valid range [%d, %d]." % [ channel_idx, 0, CHANNEL_NUMBER - 1 ])

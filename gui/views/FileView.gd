@@ -6,6 +6,10 @@
 
 extends MarginContainer
 
+enum ImportOption {
+	IMPORT_MID,
+}
+
 enum ExportOption {
 	EXPORT_WAV,
 	EXPORT_MID,
@@ -132,11 +136,20 @@ func _update_song_steppers() -> void:
 # Import and export.
 
 func _populate_import_options() -> void:
-	pass
+	var mid_item := OptionListPopup.Item.new()
+	mid_item.id = ImportOption.IMPORT_MID
+	mid_item.text = "IMPORT .mid"
+	_import_song_button.options.push_back(mid_item)
+	
+	_import_song_button.commit_options()
 
 
-func _handle_import_options(_item: OptionListPopup.Item) -> void:
-	pass
+func _handle_import_options(item: OptionListPopup.Item) -> void:
+	match item.id:
+		ImportOption.IMPORT_MID:
+			Controller.io_manager.import_mid_song_safe()
+		_:
+			Controller.update_status("FORMAT NOT SUPPORTED (YET)", Controller.StatusLevel.WARNING)
 
 
 func _populate_export_options() -> void:

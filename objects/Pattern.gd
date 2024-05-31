@@ -81,6 +81,10 @@ func clone() -> Pattern:
 	return cloned
 
 
+func get_hash() -> int:
+	return _hash
+
+
 # Properties.
 
 func _get_valid_note_values() -> Array[int]:

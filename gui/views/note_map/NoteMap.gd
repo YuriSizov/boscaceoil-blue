@@ -234,14 +234,16 @@ func _edit_current_pattern() -> void:
 		current_pattern.notes_changed.disconnect(_update_active_notes)
 	
 	current_pattern = Controller.get_current_pattern()
+	current_instrument = null
 
 	if current_pattern:
 		current_pattern.key_changed.connect(_update_whole_grid)
 		current_pattern.scale_changed.connect(_update_whole_grid_and_center)
 		current_pattern.instrument_changed.connect(_update_pattern_instrument)
 		current_pattern.notes_changed.connect(_update_active_notes)
-
-	current_instrument = Controller.current_song.instruments[current_pattern.instrument_idx]
+		
+		current_instrument = Controller.current_song.instruments[current_pattern.instrument_idx]
+	
 	theme = Controller.get_instrument_theme(current_instrument)
 	_update_whole_grid_and_center()
 	_update_playback_cursor()

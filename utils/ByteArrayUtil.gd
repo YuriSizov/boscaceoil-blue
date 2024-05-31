@@ -7,6 +7,8 @@
 class_name ByteArrayUtil extends Object
 
 
+# Writing.
+
 static func write_string(array: PackedByteArray, value: String) -> void:
 	array.append_array(value.to_utf8_buffer())
 
@@ -76,3 +78,26 @@ static func write_vlen(array: PackedByteArray, value: int) -> void:
 			buffer >>= 8
 			continue
 		break
+
+
+# Reading.
+
+static func read_string(file: FileAccess, length: int) -> String:
+	var array := file.get_buffer(length)
+	return array.get_string_from_utf8()
+
+
+static func read_vlen(file: FileAccess) -> int:
+	# See write_vlen for details. This does the same but in reverse.
+	var value := 0
+	
+	while file.get_position() < file.get_length():
+		var byte := file.get_8()
+		value <<= 7
+		value += (byte & 0x7F)
+		
+		if byte & 0x80:
+			continue
+		break
+	
+	return value

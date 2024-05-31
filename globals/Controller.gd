@@ -520,7 +520,7 @@ func get_current_instrument_theme() -> Theme:
 
 
 func get_instrument_theme(instrument: Instrument) -> Theme:
-	if not instrument_themes.has(instrument.color_palette):
+	if not instrument || not instrument_themes.has(instrument.color_palette):
 		return instrument_themes[ColorPalette.PALETTE_GRAY]
 	
 	return instrument_themes[instrument.color_palette]

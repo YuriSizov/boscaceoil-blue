@@ -49,6 +49,19 @@ func get_midi_note(note: int) -> int:
 	return drumkit_data.items[note].midi_note
 
 
+func get_note_from_midi_note(midi_note: int) -> int:
+	var drumkit_data := _voice_data as VoiceManager.DrumkitData
+	
+	var i := 11 # We skip first 11 as they aren't default MIDI drumkit items.
+	while i < drumkit_data.items.size():
+		if drumkit_data.items[i].midi_note == midi_note:
+			return i
+		
+		i += 1
+	
+	return 11 # Default to Bass Drum.
+
+
 # Filter state.
 
 func update_filter() -> void:
