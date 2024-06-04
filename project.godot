@@ -17,8 +17,11 @@ run/main_scene="res://Main.tscn"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="boscaceoil-blue"
 config/features=PackedStringArray("4.3", "GL Compatibility")
-config/icon="res://icon.svg"
-config/version_flair="alpha"
+boot_splash/image="res://dist/logo-full.png"
+boot_splash/fullsize=false
+config/icon="res://icon.png"
+config/windows_native_icon="res://dist/windows-icon.ico"
+config/version_flair="beta1"
 
 [autoload]
 
