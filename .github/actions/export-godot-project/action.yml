@@ -25,7 +25,7 @@ runs:
       shell: bash
       continue-on-error: true
       run: |
-        godot --headless --path ${{ inputs.project-path }} --import
+        godot --headless --path ${{ inputs.project-path }} --editor --quit-after=300
 
     - name: Export project (${{ inputs.preset }})
       id: export-project-step

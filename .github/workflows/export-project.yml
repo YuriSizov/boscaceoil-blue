@@ -9,7 +9,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  GODOT_VERSION: "4.3.0-beta1"
+  GODOT_VERSION: "4.3.0-dev5"
   GDSION_VERSION: "0.7-beta0"
 
 jobs:
