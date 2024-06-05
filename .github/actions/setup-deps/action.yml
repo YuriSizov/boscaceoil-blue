@@ -10,6 +10,14 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Install rcedit (Windows)
+      if: ${{ inputs.platform == 'windows' }}
+      shell: bash
+      run: |
+        curl -JLO https://github.com/electron/rcedit/releases/download/v2.0.0/rcedit-x64.exe
+        mv rcedit-x64.exe bin/rcedit.exe
+        export PATH=$(realpath bin/rcedit.exe):$PATH
+
     - name: Install GDSiON
       shell: bash
       env:
