@@ -1,0 +1,46 @@
+name: Publish Example Project
+
+on:
+  workflow_call:
+    inputs:
+      release-version:
+        required: true
+        type: string
+
+# Make sure jobs cannot overlap.
+concurrency:
+  group: publish-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    name: Package and publish the project
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download project artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: export
+          pattern: boscaceoil-blue-*
+
+      - name: Archive project exports
+        uses: ./.github/actions/zip-folder
+        with:
+          directory: export
+          split: true
+
+      - name: Make GitHub Release
+        uses: ./.github/actions/make-release
+        with:
+          release-version: ${{ inputs.release-version }}
+
+      - name: Update the release with the project
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload ${{ inputs.release-version }} export/*.zip --clobber
+

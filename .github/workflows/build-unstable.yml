@@ -1,0 +1,17 @@
+name: Build and Test Unstable (main branch)
+
+on:
+  push:
+    branches:
+      - 'main'
+
+# Make sure jobs cannot overlap.
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+
+  export-project:
+    name: Export the project for target platforms
+    uses: ./.github/workflows/export-project.yml

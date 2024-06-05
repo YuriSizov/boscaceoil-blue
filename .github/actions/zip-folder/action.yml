@@ -1,0 +1,28 @@
+name: Zip up a folder
+description: Create a zip archive of a folder or folders.
+
+inputs:
+  filename:
+    description: Output file name for the archive.
+    default: ""
+  path:
+    description: Base path for archive files.
+    default: "."
+  directory:
+    description: Working directory where the command is called.
+    default: "."
+  split:
+    description: Create a separate archive for each directory in the base path. Folder's name is the file name.
+    default: false
+
+runs:
+  using: composite
+  steps:
+    - name:
+      shell: bash
+      working-directory: ${{ inputs.directory }}
+      env:
+        ARCHIVE_OUTPUT_NAME: ${{ inputs.filename }}
+        ARCHIVE_INCLUDE_PATH: ${{ inputs.path }}
+        ARCHIVE_SPLIT: ${{ inputs.split == 'true' && 1 || 0 }}
+      run: $GITHUB_ACTION_PATH/zip.sh

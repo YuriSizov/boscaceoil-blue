@@ -1,0 +1,41 @@
+name: Export Godot project
+description: Export a project for the target platform.
+
+inputs:
+  platform:
+    required: true
+  arch:
+    required: true
+  preset:
+    required: true
+  output:
+    required: true
+
+  project-path:
+    default: "."
+
+outputs:
+  export-path:
+    value: ${{ steps.export-project-step.outputs.export-path }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Import assets, scripts, extensions
+      shell: bash
+      continue-on-error: true
+      run: |
+        godot --headless --path ${{ inputs.project-path }} --editor --quit
+
+    - name: Export project (${{ inputs.preset }})
+      id: export-project-step
+      shell: bash
+      env:
+        EXPORT_OUTPUT_PATH: export/${{ inputs.platform }}/${{ inputs.arch }}
+      run: |
+        echo "Creating the export output folder..."
+        mkdir -p ${{ inputs.project-path }}/${{ env.EXPORT_OUTPUT_PATH }}
+
+        echo "Exporting the project..."
+        godot --headless --path ${{ inputs.project-path }} --export-release "${{ inputs.preset }}" ${{ env.EXPORT_OUTPUT_PATH }}/${{ inputs.output }}
+        echo "export-path=${{ inputs.project-path }}/${{ env.EXPORT_OUTPUT_PATH }}" >> "$GITHUB_OUTPUT"

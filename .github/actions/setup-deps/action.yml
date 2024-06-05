@@ -1,0 +1,19 @@
+name: Set up Project Dependencies
+description: Download and install dependencies and libraries used by the project.
+
+inputs:
+  platform:
+    required: true
+  gdsion-version:
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install GDSiON
+      shell: bash
+      env:
+        GDSION_PATH: https://github.com/YuriSizov/gdsion/releases/download/${{ inputs.gdsion-version }}/libgdsion-${{ inputs.platform }}.zip
+      run: |
+        wget ${{ env.GDSION_PATH }}
+        unzip libgdsion-${{ inputs.platform }}.zip

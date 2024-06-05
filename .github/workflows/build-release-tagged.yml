@@ -1,0 +1,25 @@
+name: Build and Publish Tagged Release
+
+on:
+  push:
+    tags:
+      # Match only tags that look like version numbers, e.g. 0.1, 2.3-beta, 4.5.6d, etc.
+      - '[0-9]+.[0-9]+*'
+
+# Make sure jobs cannot overlap.
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+
+  export-project:
+    name: Export the project for target platforms
+    uses: ./.github/workflows/export-project.yml
+
+  publish-project:
+    name: Package and publish the project
+    needs: [ export-project ]
+    uses: ./.github/workflows/publish-project.yml
+    with:
+      release-version: ${{ github.ref_name }}

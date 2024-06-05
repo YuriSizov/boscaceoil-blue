@@ -1,0 +1,22 @@
+name: Make GitHub Release
+description: Create a GitHub release as a draft, and generate its description.
+
+inputs:
+  release-version:
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Prepare release notes for this release
+      shell: bash
+      run: |
+        sed -i 's/\${COMMIT_HASH}/${{ github.sha }}/g' $GITHUB_ACTION_PATH/release-notes.md
+        sed -i 's/\${VERSION_TAG}/${{ inputs.release-version }}/g' $GITHUB_ACTION_PATH/release-notes.md
+
+    - name: Create a draft release with custom release notes
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        gh release create --verify-tag ${{ inputs.release-version }} --draft --title 'Bosca Ceoil Blue - ${{ inputs.release-version }}' --notes-file $GITHUB_ACTION_PATH/release-notes.md

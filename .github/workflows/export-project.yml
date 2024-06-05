@@ -1,0 +1,82 @@
+name: Export Project
+
+on:
+  workflow_call:
+
+# Make sure jobs cannot overlap.
+concurrency:
+  group: export-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  GODOT_VERSION: "4.3.0-dev5"
+  GDSION_VERSION: "0.7-beta0"
+
+jobs:
+  export-publish:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux
+            arch: x86_64
+            preset: "Linux - x86_64"
+            output: "boscaceoil-blue.x86_64"
+            runs-on: ubuntu-latest
+
+          - platform: macos
+            arch: universal
+            preset: "macOS - Universal"
+            output: "boscaceoil-blue.zip"
+            runs-on: macos-latest
+
+          - platform: windows
+            arch: x86_64
+            preset: "Windows - x86_64"
+            output: "boscaceoil-blue.exe"
+            runs-on: windows-latest
+
+          - platform: windows
+            arch: x86_32
+            preset: "Windows - x86_32"
+            output: "boscaceoil-blue.exe"
+            runs-on: windows-latest
+
+    name: Export the project (${{ matrix.preset }})
+    runs-on: ${{ matrix.runs-on }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Godot ${{ env.GODOT_VERSION }}
+        uses: chickensoft-games/setup-godot@v2
+        with:
+          version: ${{ env.GODOT_VERSION }}
+          use-dotnet: false
+          include-templates: true
+
+      - name: Verify Godot
+        shell: bash
+        run: |
+          godot --version
+
+      - name: Set up project dependencies
+        uses: ./.github/actions/setup-deps
+        with:
+          platform: ${{ matrix.platform }}
+          gdsion-version: ${{ env.GDSION_VERSION }}
+
+      - name: Export the project
+        id: export-project-step
+        uses: ./.github/actions/export-godot-project
+        with:
+          platform: ${{ matrix.platform }}
+          arch: ${{ matrix.arch }}
+          preset: ${{ matrix.preset }}
+          output: ${{ matrix.output }}
+
+      - name: Upload the project
+        uses: actions/upload-artifact@v4
+        with:
+          name: boscaceoil-blue-${{ matrix.platform }}-${{ matrix.arch }}
+          path: "${{ steps.export-project-step.outputs.export-path }}/*"
+          retention-days: 14

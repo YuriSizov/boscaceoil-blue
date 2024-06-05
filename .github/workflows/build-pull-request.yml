@@ -1,0 +1,15 @@
+name: Build and Test Pull Request
+
+on:
+  pull_request:
+
+# Make sure jobs cannot overlap.
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+
+  export-project:
+    name: Export the project for target platforms
+    uses: ./.github/workflows/export-project.yml
