@@ -15,8 +15,8 @@ runs:
       shell: bash
       run: |
         curl -JLO https://github.com/electron/rcedit/releases/download/v2.0.0/rcedit-x64.exe
-        mv rcedit-x64.exe bin/rcedit.exe
-        export PATH=$(realpath bin/rcedit.exe):$PATH
+        mv rcedit-x64.exe rcedit.exe
+        export PATH=$(realpath ./):$PATH
 
     - name: Install GDSiON
       shell: bash
