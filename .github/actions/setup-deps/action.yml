@@ -15,5 +15,5 @@ runs:
       env:
         GDSION_PATH: https://github.com/YuriSizov/gdsion/releases/download/${{ inputs.gdsion-version }}/libgdsion-${{ inputs.platform }}.zip
       run: |
-        curl -O ${{ env.GDSION_PATH }}
+        curl -JLO ${{ env.GDSION_PATH }}
         unzip libgdsion-${{ inputs.platform }}.zip
