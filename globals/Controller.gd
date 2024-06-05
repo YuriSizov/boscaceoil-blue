@@ -221,7 +221,7 @@ func update_status(message: String, level: StatusLevel = StatusLevel.INFO) -> vo
 
 func set_current_song(song: Song) -> void:
 	current_song = song
-	_change_current_pattern(0, false)
+	_change_current_pattern(0, false, true)
 	_change_current_instrument(0, false)
 	
 	music_player.reset_driver()
@@ -253,8 +253,8 @@ func is_song_editing_locked() -> bool:
 
 # Pattern editing.
 
-func _change_current_pattern(pattern_index: int, notify: bool = true) -> void:
-	if current_pattern_index == pattern_index:
+func _change_current_pattern(pattern_index: int, notify: bool = true, force: bool = false) -> void:
+	if current_pattern_index == pattern_index && not force:
 		return
 	
 	if current_song && current_pattern_index < current_song.patterns.size():
