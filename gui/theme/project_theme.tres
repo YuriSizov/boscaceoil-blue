@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=64 format=3 uid="uid://chpsnl8o0raaf"]
+[gd_resource type="Theme" load_steps=70 format=3 uid="uid://chpsnl8o0raaf"]
 
 [ext_resource type="Texture2D" uid="uid://n8jw4gat8tg7" path="res://assets/icons/arrow_down_small.png" id="1_1ij5d"]
 [ext_resource type="Texture2D" uid="uid://d2aswndmtik56" path="res://assets/overlap-dither.png" id="1_4kypt"]
@@ -64,6 +64,8 @@ border_width_right = 4
 border_width_bottom = 4
 border_color = Color(0, 0, 0, 1)
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5rijg"]
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cuba5"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_thvhp"]
@@ -87,6 +89,8 @@ content_margin_right = 1.0
 content_margin_bottom = 2.0
 bg_color = Color(0.415113, 0.478785, 0.504881, 1)
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_520ht"]
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8fwph"]
 content_margin_left = 4.0
 content_margin_top = 4.0
@@ -104,6 +108,8 @@ content_margin_left = 4.0
 content_margin_top = 4.0
 content_margin_right = 4.0
 content_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5q6jm"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ltu87"]
 content_margin_left = 8.0
@@ -252,6 +258,8 @@ content_margin_right = 8.0
 content_margin_bottom = 1.0
 bg_color = Color(0.203922, 0.258824, 0.27451, 1)
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7dcsh"]
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_n7tc4"]
 content_margin_left = 10.0
 content_margin_top = 2.0
@@ -270,6 +278,8 @@ content_margin_top = 2.0
 content_margin_right = 10.0
 content_margin_bottom = 2.0
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_v4cjq"]
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_eigra"]
 content_margin_left = 4.0
 content_margin_top = 4.0
@@ -287,6 +297,8 @@ content_margin_left = 4.0
 content_margin_top = 4.0
 content_margin_right = 4.0
 content_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_kv1pc"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3fj3y"]
 
@@ -422,6 +434,7 @@ DeleteArea/styles/normal = SubResource("StyleBoxFlat_lg4yk")
 ExportIndicator/colors/base_color = Color(0.101961, 0.129412, 0.137255, 1)
 ExportIndicator/colors/stripe_color = Color(0.203922, 0.258824, 0.27451, 1)
 FullscreenButton/base_type = &"Button"
+FullscreenButton/styles/disabled = SubResource("StyleBoxEmpty_5rijg")
 FullscreenButton/styles/focus = SubResource("StyleBoxEmpty_cuba5")
 FullscreenButton/styles/hover = SubResource("StyleBoxFlat_thvhp")
 FullscreenButton/styles/normal = SubResource("StyleBoxFlat_mv0eo")
@@ -433,6 +446,7 @@ HighlightManager/colors/highlight_bevel_color = Color(0.891203, 0.891203, 0, 1)
 HighlightManager/colors/highlight_color = Color(1, 1, 0, 1)
 HighlightManager/constants/highlight_thickness = 4
 IncrementButton/base_type = &"Button"
+IncrementButton/styles/disabled = SubResource("StyleBoxEmpty_520ht")
 IncrementButton/styles/hover = SubResource("StyleBoxEmpty_8fwph")
 IncrementButton/styles/normal = SubResource("StyleBoxEmpty_wnhx7")
 IncrementButton/styles/pressed = SubResource("StyleBoxEmpty_ebj3h")
@@ -460,6 +474,7 @@ InfoPopupTitleBar/constants/margin_left = 12
 InfoPopupTitleBar/constants/margin_right = 4
 InfoPopupTitleBar/constants/margin_top = 0
 InfoPopupTitleButton/base_type = &"Button"
+InfoPopupTitleButton/styles/disabled = SubResource("StyleBoxEmpty_5q6jm")
 InfoPopupTitleButton/styles/focus = SubResource("StyleBoxEmpty_ltu87")
 InfoPopupTitleButton/styles/hover = SubResource("StyleBoxEmpty_i6yl7")
 InfoPopupTitleButton/styles/normal = SubResource("StyleBoxEmpty_d1541")
@@ -573,12 +588,14 @@ PatternSettingsPanel/styles/panel = SubResource("StyleBoxFlat_260lt")
 PatternSettingsPickerPanel/base_type = &"PanelContainer"
 PatternSettingsPickerPanel/styles/panel = SubResource("StyleBoxFlat_rdn8x")
 PlaybackButton/base_type = &"Button"
+PlaybackButton/styles/disabled = SubResource("StyleBoxEmpty_7dcsh")
 PlaybackButton/styles/hover = SubResource("StyleBoxEmpty_n7tc4")
 PlaybackButton/styles/normal = SubResource("StyleBoxEmpty_ywx6j")
 PlaybackButton/styles/pressed = SubResource("StyleBoxEmpty_7loji")
 PopupManager/colors/click_catcher_color = Color(0.21, 0.21, 0.21, 0.25098)
 RecordButton/base_type = &"Button"
 RecordButton/colors/icon_pressed_color = Color(0.8, 0.188235, 0, 1)
+RecordButton/styles/disabled = SubResource("StyleBoxEmpty_v4cjq")
 RecordButton/styles/hover = SubResource("StyleBoxEmpty_eigra")
 RecordButton/styles/normal = SubResource("StyleBoxEmpty_jh826")
 RecordButton/styles/pressed = SubResource("StyleBoxEmpty_dyr3t")
@@ -587,6 +604,7 @@ RichTextLabel/colors/font_shadow_color = Color(0, 0, 0, 1)
 RichTextLabel/constants/shadow_offset_x = 2
 RichTextLabel/constants/shadow_offset_y = 1
 ScrollbarButton/base_type = &"Button"
+ScrollbarButton/styles/disabled = SubResource("StyleBoxEmpty_kv1pc")
 ScrollbarButton/styles/focus = SubResource("StyleBoxEmpty_3fj3y")
 ScrollbarButton/styles/hover = SubResource("StyleBoxFlat_7qnyx")
 ScrollbarButton/styles/normal = SubResource("StyleBoxFlat_on2ux")

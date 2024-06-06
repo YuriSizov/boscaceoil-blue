@@ -71,6 +71,7 @@ theme_type_variation = &"HBoxSpaced"
 
 [node name="Credits" parent="Layout/Introduction/Contents/Controls" instance=ExtResource("3_6fmtw")]
 unique_name_in_owner = true
+physics_interpolation_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -78,6 +79,7 @@ text = "CREDITS"
 
 [node name="Help" parent="Layout/Introduction/Contents/Controls" instance=ExtResource("3_6fmtw")]
 unique_name_in_owner = true
+physics_interpolation_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -150,6 +152,7 @@ alignment = 1
 
 [node name="CreateSong" parent="Layout/BaseControls/Rows/SongFileActions" instance=ExtResource("3_6fmtw")]
 unique_name_in_owner = true
+physics_interpolation_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -162,6 +165,7 @@ theme_type_variation = &"HBoxSpaced"
 
 [node name="LoadSong" parent="Layout/BaseControls/Rows/SongFileActions/Layout" instance=ExtResource("3_6fmtw")]
 unique_name_in_owner = true
+physics_interpolation_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -169,6 +173,7 @@ text = "LOAD"
 
 [node name="SaveSong" parent="Layout/BaseControls/Rows/SongFileActions/Layout" instance=ExtResource("3_6fmtw")]
 unique_name_in_owner = true
+physics_interpolation_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -182,6 +187,7 @@ alignment = 1
 
 [node name="ImportSong" parent="Layout/BaseControls/Rows/ImportExport" instance=ExtResource("3_6fmtw")]
 unique_name_in_owner = true
+physics_interpolation_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -190,6 +196,7 @@ operation_mode = 1
 
 [node name="ExportSong" parent="Layout/BaseControls/Rows/ImportExport" instance=ExtResource("3_6fmtw")]
 unique_name_in_owner = true
+physics_interpolation_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
