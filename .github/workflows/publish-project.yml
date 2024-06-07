@@ -1,4 +1,4 @@
-name: Publish Example Project
+name: Publish Project
 
 on:
   workflow_call:
@@ -25,6 +25,19 @@ jobs:
         with:
           path: export
           pattern: boscaceoil-blue-*
+
+      - name: Untar downloaded artifacts
+        shell: bash
+        working-directory: export
+        run: |
+          for name in ./*; do
+            if [ -d "$name" ]; then
+              cd "./$name"
+              tar -xvf boscaceoil-blue.tar
+              rm -f boscaceoil-blue.tar
+              cd ..
+            fi
+          done
 
       - name: Archive project exports
         uses: ./.github/actions/zip-folder

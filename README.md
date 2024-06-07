@@ -31,16 +31,20 @@ Powered by a versatile software synthesizer, _Bosca Ceoil Blue_ offers you prett
 Export your creations to WAV and MIDI. Share them with the world, or use them for your next game or video!
 
 
-## Project status
+## Download
 
-**_Bosca Ceoil Blue_ is feature complete!** Every feature and mechanic of the original app has been ported, with some improvements here and there.
+**_Bosca Ceoil Blue_ is currently in the _beta_ phase!** This means it's feature complete and is looking for users and testers to offer feedback and validate its stability.
 
-The project is now in the beta stage, looking for users and testers to report issues and validate functionality in production environment. At this moment, only desktop platforms are targeted (Linux, macOS, and Windows). Web and Android exports are planned in the future.
+If you find a usability issue or a bug, please [file a report](https://github.com/YuriSizov/boscaceoil-blue/issues). If you don't have a GitHub account, you can also reach out on [Discord](https://discord.gg/S657Y9KPF9).
 
-Download links for user testing will soon be provided. For now, you can test the project using the Godot editor (see [Contributing](#contributing)).
+### Current release: 3.0-beta1
 
-> [!NOTE]
-> A significant part of the port involves recreation of the [SiON software synthesizer](https://github.com/keim/SiON), which the original _Bosca Ceoil_ is based on, as a GDExtension. The progress on that is tracked in a separate project, [GDSiON](https://github.com/YuriSizov/gdsion).
+* **[Download for Linux (x86_64)](https://github.com/YuriSizov/boscaceoil-blue/releases/download/3.0-beta1/boscaceoil-blue-linux-x86_64.zip)**
+* **[Download for macOS (Universal)](https://github.com/YuriSizov/boscaceoil-blue/releases/download/3.0-beta1/boscaceoil-blue-macos-universal.zip)**
+* **[Download for Windows (x86_64)](https://github.com/YuriSizov/boscaceoil-blue/releases/download/3.0-beta1/boscaceoil-blue-windows-x86_64.zip)**
+* **[Download for Windows (x86_32)](https://github.com/YuriSizov/boscaceoil-blue/releases/download/3.0-beta1/boscaceoil-blue-windows-x86_32.zip)**
+
+_Web and Android versions are planned in the future._
 
 
 ## Contributing

@@ -27,7 +27,7 @@ runs:
       run: |
         godot --headless --path ${{ inputs.project-path }} --import
 
-    - name: Export project (${{ inputs.preset }})
+    - name: Export the project (${{ inputs.preset }})
       id: export-project-step
       shell: bash
       env:
@@ -39,3 +39,16 @@ runs:
         echo "Exporting the project..."
         godot --headless --path ${{ inputs.project-path }} --export-release "${{ inputs.preset }}" ${{ env.EXPORT_OUTPUT_PATH }}/${{ inputs.output }}
         echo "export-path=${{ inputs.project-path }}/${{ env.EXPORT_OUTPUT_PATH }}" >> "$GITHUB_OUTPUT"
+
+    # Perform post-export steps.
+
+    # We need the .app folder on macOS, not the zip that Godot produces.
+    - name: Unzip the project (macos)
+      if: ${{ inputs.platform == 'macos' }}
+      shell: bash
+      env:
+        EXPORT_OUTPUT_PATH: export/${{ inputs.platform }}/${{ inputs.arch }}
+      run: |
+        cd ${{ inputs.project-path }}/${{ env.EXPORT_OUTPUT_PATH }}
+        unzip ${{ inputs.output }}
+        rm -f ${{ inputs.output }}

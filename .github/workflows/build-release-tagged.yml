@@ -16,6 +16,9 @@ jobs:
   export-project:
     name: Export the project for target platforms
     uses: ./.github/workflows/export-project.yml
+    secrets: inherit
+    with:
+      with-codesign: true
 
   publish-project:
     name: Package and publish the project

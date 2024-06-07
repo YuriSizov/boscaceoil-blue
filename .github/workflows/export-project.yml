@@ -2,6 +2,10 @@ name: Export Project
 
 on:
   workflow_call:
+    inputs:
+      with-codesign:
+        type: boolean
+        default: false
 
 # Make sure jobs cannot overlap.
 concurrency:
@@ -10,7 +14,7 @@ concurrency:
 
 env:
   GODOT_VERSION: "4.3.0-beta1"
-  GDSION_VERSION: "0.7-beta0"
+  GDSION_VERSION: "0.7-beta1"
 
 jobs:
   export-publish:
@@ -22,30 +26,36 @@ jobs:
             arch: x86_64
             preset: "Linux - x86_64"
             output: "boscaceoil-blue.x86_64"
+            app-name: "boscaceoil-blue.x86_64"
             runs-on: ubuntu-latest
 
           - platform: macos
             arch: universal
             preset: "macOS - Universal"
             output: "boscaceoil-blue.zip"
+            app-name: "Bosca Ceoil- The Blue Album.app"
             runs-on: macos-latest
 
           - platform: windows
             arch: x86_64
             preset: "Windows - x86_64"
             output: "boscaceoil-blue.exe"
+            app-name: "boscaceoil-blue.exe"
             runs-on: windows-latest
 
           - platform: windows
             arch: x86_32
             preset: "Windows - x86_32"
             output: "boscaceoil-blue.exe"
+            app-name: "boscaceoil-blue.exe"
             runs-on: windows-latest
 
     name: Export the project (${{ matrix.preset }})
     runs-on: ${{ matrix.runs-on }}
     steps:
       - uses: actions/checkout@v4
+
+      # Set up prerequisites.
 
       - name: Install Godot ${{ env.GODOT_VERSION }}
         uses: chickensoft-games/setup-godot@v2
@@ -65,6 +75,8 @@ jobs:
           platform: ${{ matrix.platform }}
           gdsion-version: ${{ env.GDSION_VERSION }}
 
+      # Export the project.
+
       - name: Export the project
         id: export-project-step
         uses: ./.github/actions/export-godot-project
@@ -74,9 +86,42 @@ jobs:
           preset: ${{ matrix.preset }}
           output: ${{ matrix.output }}
 
+      # Codesign if necessary.
+
+      - name: Set up codesign environment
+        if: ${{ inputs.with-codesign }}
+        uses: ./.github/actions/sign-godot-project
+        with:
+          platform: ${{ matrix.platform }}
+          setup-env: true
+          apple-cert-base64:   ${{ secrets.APPLE_CERT_BASE64 }}
+          apple-cert-password: ${{ secrets.APPLE_CERT_PASSWORD }}
+
+      - name: Sign the exported project
+        if: ${{ inputs.with-codesign }}
+        uses: ./.github/actions/sign-godot-project
+        with:
+          platform: ${{ matrix.platform }}
+          codesign: true
+          directory: ${{ steps.export-project-step.outputs.export-path }}
+          target-name: ${{ matrix.app-name }}
+          apple-dev-id:        ${{ secrets.APPLE_DEV_ID }}
+          apple-dev-app-id:    ${{ secrets.APPLE_DEV_APP_ID }}
+          apple-dev-team-id:   ${{ secrets.APPLE_DEV_TEAM_ID }}
+          apple-dev-password:  ${{ secrets.APPLE_DEV_PASSWORD }}
+
+      # Upload the results.
+
+      # This step helps to preserve file permissions.
+      - name: Tar up the example project
+        shell: bash
+        working-directory: "${{ steps.export-project-step.outputs.export-path }}"
+        run: |
+          tar -cvf boscaceoil-blue.tar .
+
       - name: Upload the project
         uses: actions/upload-artifact@v4
         with:
           name: boscaceoil-blue-${{ matrix.platform }}-${{ matrix.arch }}
-          path: "${{ steps.export-project-step.outputs.export-path }}/*"
+          path: "${{ steps.export-project-step.outputs.export-path }}/boscaceoil-blue.tar"
           retention-days: 14

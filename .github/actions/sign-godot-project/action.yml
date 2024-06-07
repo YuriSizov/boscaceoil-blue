@@ -1,0 +1,66 @@
+name: Codesign Godot Project
+description: Codesign and notarize Godot project export artifacts.
+
+inputs:
+  platform:
+    description: Target platform.
+    required: true
+
+  setup-env:
+    description: Flag that enables the setup step.
+    default: false
+  codesign:
+    description: Flag that enables the codesign step.
+    default: false
+
+  # Setup arguments.
+  apple-cert-base64:
+    required: true
+  apple-cert-password:
+    required: true
+
+  # Codesign arguments.
+  apple-dev-id:
+    required: true
+  apple-dev-app-id:
+    required: true
+  apple-dev-team-id:
+    required: true
+  apple-dev-password:
+    required: true
+
+  # Input/output arguments.
+  directory:
+    description: Path to the folder with the project.
+    required: true
+  target-name:
+    description: Name of the project executable file or folder (like on macOS).
+    required: true
+
+runs:
+  using: composite
+  steps:
+    # macOS-specific steps.
+
+    # Setup.
+
+    - name: Set up the signing environment (macos)
+      if: ${{ inputs.platform == 'macos' && inputs.setup-env == 'true' }}
+      shell: bash
+      env:
+        APPLE_CERT_BASE64:   ${{ inputs.apple-cert-base64 }}
+        APPLE_CERT_PASSWORD: ${{ inputs.apple-cert-password }}
+      run: $GITHUB_ACTION_PATH/macos/setup.sh
+
+    # Codesign.
+
+    - name: Sign and notarize the project (macos)
+      if: ${{ inputs.platform == 'macos' && inputs.codesign == 'true' }}
+      shell: bash
+      env:
+        APPLE_DEV_ID:       ${{ inputs.apple-dev-id }}
+        APPLE_DEV_APP_ID:   ${{ inputs.apple-dev-app-id }}
+        APPLE_DEV_TEAM_ID:  ${{ inputs.apple-dev-team-id }}
+        APPLE_DEV_PASSWORD: ${{ inputs.apple-dev-password }}
+        APP_PATH:           ${{ inputs.directory }}/${{ inputs.target-name }}
+      run: $GITHUB_ACTION_PATH/macos/sign.sh
