@@ -83,7 +83,10 @@ func _edit_current_instrument() -> void:
 	theme = Controller.get_current_instrument_theme()
 	
 	if category_changed:
+		_update_selected_category()
 		_set_instrument_options()
+	else:
+		_update_selected_instrument()
 	
 	# Update sliders.
 	_update_recording_state()
@@ -126,18 +129,10 @@ func _set_category_options() -> void:
 func _set_instrument_options() -> void:
 	_instrument_picker.options = []
 	_instrument_picker.clear_selected()
-	_category_picker.clear_selected()
 	
 	if not current_instrument:
 		_instrument_picker.commit_options()
 		return
-	
-	# Update the category name.
-	
-	for category_item in _category_picker.options:
-		if category_item.text == current_instrument.category:
-			_category_picker.set_selected(category_item)
-			break
 	
 	# Update the instrument picker.
 	
@@ -177,6 +172,30 @@ func _set_instrument_options() -> void:
 	
 	_instrument_picker.commit_options()
 	_instrument_picker.set_selected(selected_item)
+
+
+func _update_selected_category() -> void:
+	_category_picker.clear_selected()
+	
+	if not current_instrument:
+		return
+	
+	for category_item in _category_picker.options:
+		if category_item.text == current_instrument.category:
+			_category_picker.set_selected(category_item)
+			break
+
+
+func _update_selected_instrument() -> void:
+	_instrument_picker.clear_selected()
+	
+	if not current_instrument:
+		return
+	
+	for linked_instrument_item in _instrument_picker.get_linked_options():
+		if linked_instrument_item.value.id == current_instrument.voice_index:
+			_instrument_picker.set_selected(linked_instrument_item.value)
+			break
 
 
 func _category_selected() -> void:

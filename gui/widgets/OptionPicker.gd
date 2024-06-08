@@ -83,6 +83,7 @@ func _flatten_options(option_list: Array[OptionListPopup.Item]) -> void:
 
 
 func _link_options() -> void:
+	_options_linked_map.clear()
 	_flatten_options(options)
 	if _options_linked_map.size() == 0:
 		return
@@ -96,10 +97,12 @@ func _link_options() -> void:
 
 
 func commit_options() -> void:
-	_options_linked_map.clear()
 	_link_options()
-	
 	_popup_control.update_options(options)
+
+
+func get_linked_options() -> Array[LinkedItem]:
+	return _options_linked_map
 
 
 # Visuals and drawables.
