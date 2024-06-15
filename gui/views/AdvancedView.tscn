@@ -7,11 +7,10 @@
 
 [node name="AdvancedView" type="MarginContainer"]
 auto_translate_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+offset_right = 1280.0
+offset_bottom = 196.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 script = ExtResource("1_lhikh")
 
 [node name="Layout" type="HBoxContainer" parent="."]
@@ -97,6 +96,7 @@ uppercase = true
 [node name="SwingStepper" parent="Layout/Tuning/Contents/SwingSettings/Layout" instance=ExtResource("1_uibd1")]
 unique_name_in_owner = true
 auto_translate_mode = 1
+visible = false
 layout_mode = 2
 min_value = -10
 max_value = 10
@@ -174,9 +174,9 @@ uppercase = true
 unique_name_in_owner = true
 auto_translate_mode = 1
 layout_mode = 2
-value = 1
+value = 3
 min_value = 1
-max_value = 2
+max_value = 5
 
 [node name="FillerEnd" type="Control" parent="Layout"]
 auto_translate_mode = 1

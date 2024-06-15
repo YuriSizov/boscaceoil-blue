@@ -92,6 +92,8 @@ func _notification(what: int) -> void:
 			_info_popup.queue_free()
 		if is_instance_valid(_controls_blocker):
 			_controls_blocker.queue_free()
+		if is_instance_valid(music_player):
+			music_player.pause_playback()
 
 
 func _shortcut_input(event: InputEvent) -> void:
@@ -571,3 +573,9 @@ func set_song_swing(value: int) -> void:
 	
 	current_song.swing = value
 	current_song.mark_dirty()
+
+
+#Exit func - I think playback causes crash on exit.
+func exit_app() -> void:
+	music_player.pause_playback()
+	get_tree().quit()

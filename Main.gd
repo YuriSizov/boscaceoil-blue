@@ -93,33 +93,52 @@ func _update_window_title() -> void:
 func _update_window_size() -> void:
 	_update_window_mode()
 	
-	var main_window := get_window()
-	var neutral_size := main_window.size / main_window.content_scale_factor
-	main_window.content_scale_factor = Controller.settings_manager.get_gui_scale_factor()
+	#From RikK:
+	#Looks like I bypass/used properly window.content_scale_factor bag
+	#It's also sets max/min window sizes
+	#Maybe you'll need to merge this func and "_fit_window_size" func...
 	
-	# HACK: This is a naive fix to an engine bug. For some reason, window's content scale factor
-	# affects controls' combined required minimum size, making it smaller the larger the scale is.
-	# This doesn't seem rational or logical, and the difference isn't even proportional to scale.
-	#
-	# Experimentally, I identified that the global transform matrix of this control (any fullscreen
-	# control, really) helps to counter-act the issue. So here we are. 
-	var content_minsize := (main_window.get_contents_minimum_size() * get_global_transform()).floor()
-	main_window.min_size = content_minsize * main_window.content_scale_factor
-	_fit_window_size(neutral_size * main_window.content_scale_factor)
+	var main_window := get_window()
+	var screen_index := main_window.current_screen
+	var scale_factor := Controller.settings_manager.get_gui_scale_factor()
+	var min_size := get_combined_minimum_size() * scale_factor
+	var max_size := DisplayServer.screen_get_size(screen_index)
+	
+	#From RikK:
+	#100 - represents Windows toolbar height.
+	#Just enough to reach ScrollContainer's bottom scrollbar if UI become too big after sacaling.
+	#Can't find a func in Engine to get actual...
+	max_size.y -= 100
+	
+	min_size.x = min(min_size.x, max_size.x)
+	min_size.y = min(min_size.y, max_size.y)
+	
+	main_window.content_scale_factor = scale_factor
+	main_window.min_size = min_size
+	main_window.max_size = max_size
+	
+	_fit_window_size(main_window.size)
 
 
 func _fit_window_size(window_size: Vector2) -> void:
 	var main_window := get_window()
 	var window_mode := main_window.mode
-	if window_mode == Window.MODE_MAXIMIZED || OS.has_feature("web"):
-		return
-	
 	var screen_index := main_window.current_screen
-	if window_mode == Window.MODE_FULLSCREEN || window_mode == Window.MODE_EXCLUSIVE_FULLSCREEN || OS.has_feature("android"):
+	
+	if OS.has_feature("web"): return
+	
+	if OS.has_feature("android"):
 		main_window.size = DisplayServer.screen_get_size(screen_index)
 		return
 	
-	main_window.size = window_size
+	#From RikK:
+	#Code below get rid unwanted mouse position offset after UI scale change.
+	if window_mode == Window.MODE_MAXIMIZED || window_mode == Window.MODE_FULLSCREEN || window_mode == Window.MODE_EXCLUSIVE_FULLSCREEN:
+		main_window.mode = Window.MODE_WINDOWED
+		await get_tree().create_timer(0.1).timeout
+		main_window.mode = window_mode
+		return
+	
 	Controller.settings_manager.set_windowed_size(main_window.size)
 
 
@@ -141,6 +160,7 @@ func _update_window_mode() -> void:
 
 func _restore_window_size() -> void:
 	var main_window := get_window()
+	main_window.content_scale_factor = Controller.settings_manager.get_gui_scale_factor()
 	main_window.size = Controller.settings_manager.get_windowed_size()
 	
 	if Controller.settings_manager.is_windowed_maximized():
