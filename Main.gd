@@ -95,8 +95,9 @@ func _update_window_size() -> void:
 	
 	#From RikK:
 	#Looks like I bypass/used properly window.content_scale_factor bag
-	#It's also sets max/min window sizes
+	#It's also properly sets max/min window sizes
 	#Maybe you'll need to merge this func and "_fit_window_size" func...
+	#Saved becouse I don't know it's needs to be separated or not.
 	
 	var main_window := get_window()
 	var screen_index := main_window.current_screen
@@ -104,14 +105,8 @@ func _update_window_size() -> void:
 	var min_size := get_combined_minimum_size() * scale_factor
 	var max_size := DisplayServer.screen_get_size(screen_index)
 	
-	#From RikK:
-	#100 - represents Windows toolbar height.
-	#Just enough to reach ScrollContainer's bottom scrollbar if UI become too big after sacaling.
-	#Can't find a func in Engine to get actual...
-	max_size.y -= 100
-	
 	min_size.x = min(min_size.x, max_size.x)
-	min_size.y = min(min_size.y, max_size.y)
+	min_size.y = min(min_size.y, max_size.y - 80) #80 - represents OS toolbar height
 	
 	main_window.content_scale_factor = scale_factor
 	main_window.min_size = min_size
@@ -135,7 +130,7 @@ func _fit_window_size(window_size: Vector2) -> void:
 	#Code below get rid unwanted mouse position offset after UI scale change.
 	if window_mode == Window.MODE_MAXIMIZED || window_mode == Window.MODE_FULLSCREEN || window_mode == Window.MODE_EXCLUSIVE_FULLSCREEN:
 		main_window.mode = Window.MODE_WINDOWED
-		await get_tree().create_timer(0.1).timeout
+		await get_tree().create_timer(0.2).timeout
 		main_window.mode = window_mode
 		return
 	

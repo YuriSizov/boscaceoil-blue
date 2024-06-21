@@ -18,7 +18,7 @@
 [node name="Menu" type="VBoxContainer"]
 auto_translate_mode = 1
 offset_right = 1280.0
-offset_bottom = 330.0
+offset_bottom = 220.0
 script = ExtResource("1_pjxdv")
 
 [node name="Navigation" type="HBoxContainer" parent="."]
