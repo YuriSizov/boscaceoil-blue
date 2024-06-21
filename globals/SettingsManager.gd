@@ -27,13 +27,19 @@ const _buffer_size_descriptions := {
 }
 
 enum GUIScalePreset {
-	GUI_SCALE_NORMAL = 1,
-	GUI_SCALE_LARGE = 2,
+	GUI_SCALE_SUPERSMALL = 1,
+	GUI_SCALE_SMALL = 2,
+	GUI_SCALE_NORMAL = 3,
+	GUI_SCALE_LARGE = 4,
+	GUI_SCALE_SUPERLARGE = 5,
 }
 
 const _gui_scale_factors := {
+	GUIScalePreset.GUI_SCALE_SUPERSMALL: 0.5,
+	GUIScalePreset.GUI_SCALE_SMALL: 0.75,
 	GUIScalePreset.GUI_SCALE_NORMAL: 1.0,
 	GUIScalePreset.GUI_SCALE_LARGE:  1.25,
+	GUIScalePreset.GUI_SCALE_SUPERLARGE: 1.5,
 }
 
 # Indicates whether this is the first launch of the app.

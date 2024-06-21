@@ -93,33 +93,50 @@ func _update_window_title() -> void:
 func _update_window_size() -> void:
 	_update_window_mode()
 	
-	var main_window := get_window()
-	var neutral_size := main_window.size / main_window.content_scale_factor
-	main_window.content_scale_factor = Controller.settings_manager.get_gui_scale_factor()
-	
 	# HACK: This is a naive fix to an engine bug. For some reason, window's content scale factor
 	# affects controls' combined required minimum size, making it smaller the larger the scale is.
 	# This doesn't seem rational or logical, and the difference isn't even proportional to scale.
 	#
 	# Experimentally, I identified that the global transform matrix of this control (any fullscreen
-	# control, really) helps to counter-act the issue. So here we are. 
-	var content_minsize := (main_window.get_contents_minimum_size() * get_global_transform()).floor()
-	main_window.min_size = content_minsize * main_window.content_scale_factor
-	_fit_window_size(neutral_size * main_window.content_scale_factor)
+	# control, really) helps to counter-act the issue. So here we are.
+	#
+	# From RikK:
+	# It's also logicly counts for root Control what uses Full Rect Anchor presset.
+	# But Controls under root Control not affected, even if used Fill in ContainerSizing propertys.
+	# If you don't like the idea of using a ScrollContainer, you can replace it with usual Control
+	# to achive same effect.
+	
+	var main_window := get_window()
+	var screen_index := main_window.current_screen
+	var scale_factor := Controller.settings_manager.get_gui_scale_factor()
+	var min_size := get_combined_minimum_size() * scale_factor
+	var max_size := DisplayServer.screen_get_size(screen_index)
+	var count_OS_toolbar = main_window.mode != Window.MODE_EXCLUSIVE_FULLSCREEN && main_window.mode != Window.MODE_FULLSCREEN
+	
+	min_size.x = min(min_size.x, max_size.x)
+	min_size.y = min(min_size.y + 1, max_size.y - 80 * int(count_OS_toolbar))
+	# From RikK:
+	# 80 - represents OS toolbar height, can't find a func in Engine...
+	# 1 - because othervise ScrollContainer will show vertical scrollbar for some reason.
+	
+	main_window.content_scale_factor = scale_factor
+	main_window.min_size = min_size
+	main_window.max_size = max_size
+	
+	_fit_window_size(main_window.size)
 
 
 func _fit_window_size(window_size: Vector2) -> void:
 	var main_window := get_window()
 	var window_mode := main_window.mode
-	if window_mode == Window.MODE_MAXIMIZED || OS.has_feature("web"):
-		return
-	
 	var screen_index := main_window.current_screen
-	if window_mode == Window.MODE_FULLSCREEN || window_mode == Window.MODE_EXCLUSIVE_FULLSCREEN || OS.has_feature("android"):
+	
+	if OS.has_feature("web"): return
+	
+	if OS.has_feature("android"):
 		main_window.size = DisplayServer.screen_get_size(screen_index)
 		return
 	
-	main_window.size = window_size
 	Controller.settings_manager.set_windowed_size(main_window.size)
 
 
@@ -141,6 +158,7 @@ func _update_window_mode() -> void:
 
 func _restore_window_size() -> void:
 	var main_window := get_window()
+	main_window.content_scale_factor = Controller.settings_manager.get_gui_scale_factor()
 	main_window.size = Controller.settings_manager.get_windowed_size()
 	
 	if Controller.settings_manager.is_windowed_maximized():

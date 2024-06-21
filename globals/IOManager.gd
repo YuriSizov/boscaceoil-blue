@@ -134,13 +134,13 @@ func check_song_on_exit() -> void:
 		unsaved_warning.content = "Current song has [accent]UNSAVED CHANGES[/accent].\n\nAre you sure you want to quit?"
 		unsaved_warning.add_button("Cancel", unsaved_warning.close_popup)
 		unsaved_warning.add_button("I'm sure!", func() -> void:
-			Controller.get_tree().quit()
+			Controller.exit_app()
 		)
 		
 		Controller.show_info_popup(unsaved_warning, Vector2(600, 220))
 		return
 	
-	Controller.get_tree().quit()
+	Controller.exit_app()
 
 
 # External format import.

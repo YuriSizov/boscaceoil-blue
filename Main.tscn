@@ -8,48 +8,53 @@
 [ext_resource type="PackedScene" uid="uid://dxtku0ujhowt5" path="res://gui/widgets/ToastMessage.tscn" id="5_carau"]
 [ext_resource type="Script" path="res://gui/widgets/HighlightManager.gd" id="6_gf5v8"]
 
-[node name="Main" type="MarginContainer"]
+[node name="ScrollContainer" type="ScrollContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="Main" type="MarginContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 script = ExtResource("1_63yj5")
 
-[node name="Main" type="VBoxContainer" parent="."]
+[node name="Main" type="VBoxContainer" parent="Main"]
 layout_mode = 2
 
-[node name="Filler" type="Control" parent="Main"]
+[node name="Filler" type="Control" parent="Main/Main"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 340)
 layout_mode = 2
 
-[node name="PatternEditor" parent="Main" instance=ExtResource("2_nrw1o")]
+[node name="PatternEditor" parent="Main/Main" instance=ExtResource("2_nrw1o")]
 unique_name_in_owner = true
 show_behind_parent = true
 layout_mode = 2
 
-[node name="LockedIndicator" parent="Main" instance=ExtResource("3_f0rno")]
+[node name="LockedIndicator" parent="Main/Main" instance=ExtResource("3_f0rno")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Menu" parent="." instance=ExtResource("2_ljcdm")]
+[node name="Menu" parent="Main" instance=ExtResource("2_ljcdm")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 340)
 layout_mode = 2
 size_flags_vertical = 0
 
-[node name="ToastMessage" parent="." instance=ExtResource("5_carau")]
+[node name="ToastMessage" parent="Main" instance=ExtResource("5_carau")]
 layout_mode = 2
 size_flags_vertical = 8
 
-[node name="HighlightManager" type="CanvasLayer" parent="."]
+[node name="HighlightManager" type="CanvasLayer" parent="Main"]
 unique_name_in_owner = true
 script = ExtResource("6_gf5v8")
 
-[node name="HighlightIndicator" type="Control" parent="HighlightManager"]
+[node name="HighlightIndicator" type="Control" parent="Main/HighlightManager"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -58,10 +63,10 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="PopupManager" type="CanvasLayer" parent="."]
+[node name="PopupManager" type="CanvasLayer" parent="Main"]
 script = ExtResource("4_kqdnh")
 
-[node name="ClickCatcher" type="Control" parent="PopupManager"]
+[node name="ClickCatcher" type="Control" parent="Main/PopupManager"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -69,6 +74,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="SaveTimer" type="Timer" parent="."]
+[node name="SaveTimer" type="Timer" parent="Main"]
 unique_name_in_owner = true
 one_shot = true
