@@ -3,11 +3,8 @@
 [ext_resource type="Script" path="res://gui/widgets/NavigationButton.gd" id="1_qmiek"]
 
 [node name="NavigationButton" type="Button"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+offset_right = 48.0
+offset_bottom = 2.0
 theme_type_variation = &"NavigationButton"
 toggle_mode = true
 script = ExtResource("1_qmiek")
@@ -18,6 +15,10 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 1.0
+offset_right = -24.0
+offset_bottom = -1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_type_variation = &"NavigationLabel"

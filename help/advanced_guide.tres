@@ -17,7 +17,7 @@ description = "Some useful keys to know:
 (More shortcuts in the HELP menu!)"
 ref_image_size = Vector2(0, 0)
 ref_image_position = 0
-navigation_target = 2
+navigation_target = 1
 node_target = 0
 trigger_target = 0
 position_anchor = Vector2(0.5, 0.5)
@@ -30,7 +30,7 @@ title = "HELP - Tips and Tricks"
 description = "These little [accent]PLUS[/accent] and [accent]MINUS[/accent] buttons [accent]transpose[/accent] notes in the current pattern moving them higher or lower!"
 ref_image_size = Vector2(0, 0)
 ref_image_position = 0
-navigation_target = 0
+navigation_target = -1
 node_target = 105
 trigger_target = 0
 position_anchor = Vector2(0.575, 0.91)
@@ -46,7 +46,7 @@ When you're using a [accent]SCALE[/accent], notes which are not in that scale ar
 Limiting yourself to a given scale is a great way to make things sound good when you're learning to write music!"
 ref_image_size = Vector2(0, 0)
 ref_image_position = 0
-navigation_target = 0
+navigation_target = -1
 node_target = 104
 trigger_target = 0
 position_anchor = Vector2(0.82, 0.91)
@@ -61,7 +61,7 @@ description = "You can [accent]RIGHT CLICK[/accent] on a timeline section to del
 You can [accent]MIDDLE CLICK[/accent] on the timeline to insert a blank bar."
 ref_image_size = Vector2(0, 0)
 ref_image_position = 0
-navigation_target = 2
+navigation_target = 1
 node_target = 203
 trigger_target = 0
 position_anchor = Vector2(0.19, 0.41)
@@ -77,7 +77,7 @@ Just select the sections of the timeline you want, and press [accent]CTRL + C[/a
 To paste, hover the mouse over the timeline section you want to insert from, and press [accent]CTRL + V[/accent]."
 ref_image_size = Vector2(0, 0)
 ref_image_position = 0
-navigation_target = 2
+navigation_target = 1
 node_target = 203
 trigger_target = 0
 position_anchor = Vector2(0.24, 0.385)
@@ -91,7 +91,7 @@ description = "[accent]TWEAK[/accent] how your instrument sounds with the filter
 Move the square around to play with cutoff and resonance values."
 ref_image_size = Vector2(0, 0)
 ref_image_position = 0
-navigation_target = 3
+navigation_target = 2
 node_target = 304
 trigger_target = 0
 position_anchor = Vector2(0.88, 0.375)
@@ -107,7 +107,7 @@ Start dragging the item from the [accent]side list[/accent], and a [accent]delet
 ref_image = ExtResource("3_7bj3b")
 ref_image_size = Vector2(480, 180)
 ref_image_position = 1
-navigation_target = 3
+navigation_target = 2
 node_target = 306
 trigger_target = 0
 position_anchor = Vector2(0.385, 0.18)
@@ -122,7 +122,7 @@ description = "Alright, last one, but this one's really fancy!
 Spot this [accent]RECORD[/accent] button next to the instrument picker down below."
 ref_image_size = Vector2(0, 0)
 ref_image_position = 0
-navigation_target = 3
+navigation_target = 2
 node_target = 106
 trigger_target = 0
 position_anchor = Vector2(0.28, 0.895)
@@ -139,7 +139,7 @@ Try clicking the button and playing with the filter pad and the volume slider."
 ref_image = ExtResource("4_f2mo2")
 ref_image_size = Vector2(590, 200)
 ref_image_position = 1
-navigation_target = 3
+navigation_target = 2
 node_target = 305
 trigger_target = 0
 position_anchor = Vector2(0.9, 0.375)
@@ -154,7 +154,7 @@ description = "I think that's everything! Have fun creating music.
 And thanks for using Bosca Ceoil!"
 ref_image_size = Vector2(0, 0)
 ref_image_position = 0
-navigation_target = 2
+navigation_target = 1
 node_target = 0
 trigger_target = 0
 position_anchor = Vector2(0.5, 0.5)

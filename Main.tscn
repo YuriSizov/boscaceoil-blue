@@ -52,8 +52,6 @@ size_flags_vertical = 8
 
 [node name="HighlightManager" type="CanvasLayer" parent="Main"]
 unique_name_in_owner = true
-offset = Vector2(300, 0)
-transform = Transform2D(1, 0, 0, 1, 300, 0)
 script = ExtResource("6_gf5v8")
 
 [node name="HighlightIndicator" type="Control" parent="Main/HighlightManager"]
