@@ -106,4 +106,5 @@ bosca_notemap_cursor_smaller={
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
 textures/vram_compression/import_etc2_astc=true
+limits/global_shader_variables/buffer_size=4096
 environment/defaults/default_clear_color=Color(0.0603977, 0.0700237, 0.101998, 1)

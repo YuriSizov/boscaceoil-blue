@@ -11,19 +11,20 @@ extends MarginContainer
 @onready var _swing_stepper: Stepper = %SwingStepper
 
 @onready var _buffer_size_picker: OptionPicker = %BufferPicker
-@onready var _gui_scale_stepper: Stepper = %GUIScaleStepper
+@onready var _gui_scale_picker: OptionPicker = %GUIScalePicker
 
 
 func _ready() -> void:
 	_populate_effect_options()
 	_populate_buffer_size_options()
+	_populate_gui_scale_options()
 	
 	_effect_picker.selected.connect(_change_effect)
 	_effect_value_slider.changed.connect(_change_effect)
 	_swing_stepper.value_changed.connect(_change_swing)
 	
 	_buffer_size_picker.selected.connect(_change_buffer_size)
-	_gui_scale_stepper.value_changed.connect(_change_gui_scale)
+	_gui_scale_picker.selected.connect(_change_gui_scale)
 	
 	if not Engine.is_editor_hint():
 		_edit_current_song()
@@ -94,13 +95,51 @@ func _populate_buffer_size_options() -> void:
 	_buffer_size_picker.set_selected(selected_item)
 
 
+func _populate_gui_scale_options() -> void:
+	var selected_item: OptionListPopup.Item = null
+	
+	for key: String in SettingsManager.GUIScale:
+		var value: int = SettingsManager.GUIScale[key]
+		
+		var item := OptionListPopup.Item.new()
+		item.id = value
+		item.text = "%d%%" % [ value ]
+		item.text_extended = "%d%%" % [ value ]
+		
+		if not selected_item:
+			selected_item = item
+		
+		_gui_scale_picker.options.push_back(item)
+	
+	_gui_scale_picker.commit_options()
+	_gui_scale_picker.set_selected(selected_item)
+
+
 func _restore_app_settings() -> void:
 	for item: OptionListPopup.Item in _buffer_size_picker.options:
 		if item.id == Controller.settings_manager.get_buffer_size():
 			_buffer_size_picker.set_selected(item)
 			break
 	
-	_gui_scale_stepper.value = Controller.settings_manager.get_gui_scale()
+	var gui_scale_selected := false
+	for item: OptionListPopup.Item in _gui_scale_picker.options:
+		if item.id == Controller.settings_manager.get_gui_scale():
+			_gui_scale_picker.set_selected(item)
+			gui_scale_selected = true
+			break
+	
+	# Custom option is manually selected in the config file.
+	if not gui_scale_selected:
+		var value := Controller.settings_manager.get_gui_scale()
+		
+		var item := OptionListPopup.Item.new()
+		item.id = value
+		item.text = "%d%%" % [ value ]
+		item.text_extended = "%d%% (Custom)" % [ value ]
+		
+		_gui_scale_picker.options.push_back(item)
+		_gui_scale_picker.commit_options()
+		_gui_scale_picker.set_selected(item)
 
 
 func _change_buffer_size() -> void:
@@ -108,4 +147,4 @@ func _change_buffer_size() -> void:
 
 
 func _change_gui_scale() -> void:
-	Controller.settings_manager.set_gui_scale(_gui_scale_stepper.value)
+	Controller.settings_manager.set_gui_scale(_gui_scale_picker.get_selected().id)

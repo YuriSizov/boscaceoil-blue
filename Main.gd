@@ -104,6 +104,17 @@ func _update_window_size() -> void:
 	# Experimentally, I identified that the global transform matrix of this control (any fullscreen
 	# control, really) helps to counter-act the issue. So here we are. 
 	var content_minsize := (main_window.get_contents_minimum_size() * get_global_transform()).floor()
+	
+	# We also want to ensure that the UI always fits the screen, and downscale everything if we're
+	# exceeding the bounds.
+	var window_minsize := content_minsize * main_window.content_scale_factor
+	var screen_size := DisplayServer.screen_get_usable_rect(main_window.current_screen).size
+	if window_minsize.x > screen_size.x || window_minsize.y > screen_size.y:
+		var scale_factor_adjustment := minf(float(screen_size.x) / window_minsize.x, float(screen_size.y) / window_minsize.y)
+		scale_factor_adjustment = floorf(scale_factor_adjustment * 100.0) / 100.0 # Truncate excessive precision.
+		
+		main_window.content_scale_factor = main_window.content_scale_factor * scale_factor_adjustment
+	
 	main_window.min_size = content_minsize * main_window.content_scale_factor
 	_fit_window_size(neutral_size * main_window.content_scale_factor)
 
@@ -115,12 +126,35 @@ func _fit_window_size(window_size: Vector2) -> void:
 		return
 	
 	var screen_index := main_window.current_screen
+	
+	# Under certain conditions just set the window to the full screen size.
 	if window_mode == Window.MODE_FULLSCREEN || window_mode == Window.MODE_EXCLUSIVE_FULLSCREEN || OS.has_feature("android"):
 		main_window.size = DisplayServer.screen_get_size(screen_index)
 		return
 	
+	# Make sure our windowed mode window is displayed fully on screen.
+	# First, adjust the window size to fit the screen size (minus system flair).
+	
+	var screen_size := DisplayServer.screen_get_usable_rect(screen_index).size
+	window_size.x = minf(window_size.x, screen_size.x)
+	window_size.y = minf(window_size.y, screen_size.y)
+	
 	main_window.size = window_size
 	Controller.settings_manager.set_windowed_size(main_window.size)
+	
+	# Last, adjust the position (accounting for window decorations).
+	
+	var window_position := main_window.get_position_with_decorations()
+	
+	if window_position.x < 0:
+		main_window.position.x -= window_position.x
+	elif (window_position.x + main_window.size.x) > screen_size.x:
+		main_window.position.x -= (window_position.x + main_window.size.x) - screen_size.x
+	
+	if window_position.y < 0:
+		main_window.position.y -= window_position.y
+	elif (window_position.y + main_window.size.y) > screen_size.y:
+		main_window.position.y -= (window_position.y + main_window.size.y) - screen_size.y
 
 
 func _update_window_mode() -> void:

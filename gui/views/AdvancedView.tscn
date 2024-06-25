@@ -170,13 +170,11 @@ size_flags_horizontal = 3
 text = "GUI SCALE"
 uppercase = true
 
-[node name="GUIScaleStepper" parent="Layout/ExtraControls/Contents/GUIScaleSettings/Layout" instance=ExtResource("1_uibd1")]
+[node name="GUIScalePicker" parent="Layout/ExtraControls/Contents/GUIScaleSettings/Layout" instance=ExtResource("3_ttw6g")]
 unique_name_in_owner = true
-auto_translate_mode = 1
 layout_mode = 2
-value = 1
-min_value = 1
-max_value = 2
+direction = 1
+placeholder_text = "100%"
 
 [node name="FillerEnd" type="Control" parent="Layout"]
 auto_translate_mode = 1
