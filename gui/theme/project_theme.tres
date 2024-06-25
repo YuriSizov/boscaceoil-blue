@@ -522,6 +522,7 @@ NavigationLabel/font_sizes/font_size = 20
 NoteMap/colors/active_note_bevel_color = Color(1, 0.72549, 0.372549, 1)
 NoteMap/colors/active_note_color = Color(1, 1, 0.752941, 1)
 NoteMap/colors/gutter_color = Color(0.427451, 0.521569, 0.552941, 1)
+NoteMap/colors/gutter_hover_color = Color(0.313726, 0.396078, 0.415686, 1)
 NoteMap/colors/note_cursor_color = Color(1, 1, 1, 1)
 NoteMap/colors/octave_bar_color = Color(0.737255, 0.811765, 1, 1)
 NoteMap/colors/octave_bar_shadow_color = Color(0, 0, 0, 0.784314)

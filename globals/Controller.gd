@@ -161,7 +161,7 @@ func show_file_dialog(dialog: FileDialog) -> void:
 	# Temporarily pausing playback can prevent issues with the synthesizer, as the file dialog
 	# block the main window's execution.
 	_file_dialog_was_playing = music_player.is_playing()
-	music_player.pause_playback()
+	music_player.pause_playback(true)
 	
 	get_tree().root.add_child(dialog)
 	dialog.popup_centered()
@@ -376,7 +376,14 @@ func get_current_pattern() -> Pattern:
 	return current_song.patterns[current_pattern_index]
 
 
-func _handle_pattern_note_added(note_data: Vector3) -> void:
+func preview_pattern_note(value: int) -> void:
+	var note_data := Vector3i(value, music_player.get_pattern_time(), 1)
+	var current_pattern := get_current_pattern()
+	if current_pattern:
+		music_player.play_note(current_pattern, note_data)
+
+
+func _handle_pattern_note_added(note_data: Vector3i) -> void:
 	# Play the added note immediately if the song is not playing.
 	if music_player.is_playing():
 		return

@@ -169,7 +169,7 @@ func _play_note(pattern: Pattern, instrument: Instrument, note_data: Vector3i, c
 	instrument.update_filter()
 
 	# If pattern uses recorded instrument values, set them directly.
-	if pattern.record_instrument:
+	if pattern.record_instrument && current_time >= 0 && current_time < pattern.recorded_instrument_values.size():
 		var values := pattern.recorded_instrument_values[current_time] # { volume, cutoff, resonance }
 		instrument.change_filter_to(values.y, values.z, values.x)
 
@@ -305,13 +305,14 @@ func start_playback() -> void:
 	playback_started.emit()
 
 
-func pause_playback() -> void:
+func pause_playback(pause_driver: bool = false) -> void:
 	if not _music_playing:
 		return
 	
 	_music_playing = false
 	_driver.timer_interval.disconnect(_playback_step)
-	_driver.pause() # Make sure driver doesn't try to process anything.
+	if pause_driver:
+		_driver.pause() # Make sure driver doesn't try to process anything.
 	playback_paused.emit()
 
 
