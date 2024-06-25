@@ -142,12 +142,15 @@ func _update_window_mode() -> void:
 func _restore_window_size() -> void:
 	var main_window := get_window()
 	main_window.size = Controller.settings_manager.get_windowed_size()
+	main_window.content_scale_factor = Controller.settings_manager.get_gui_scale_factor()
 	
 	if Controller.settings_manager.is_windowed_maximized():
 		main_window.mode = Window.MODE_MAXIMIZED
 	
 	if Controller.settings_manager.is_fullscreen():
 		main_window.mode = Window.MODE_FULLSCREEN
+	
+	main_window.move_to_center()
 
 
 func _save_window_size() -> void:
