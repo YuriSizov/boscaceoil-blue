@@ -58,7 +58,8 @@ var instrument_themes: Dictionary = {
 }
 
 var _file_dialog: FileDialog = null
-var _file_dialog_unparent_callable: Callable = Callable()
+var _file_dialog_finalize_callable: Callable = Callable()
+var _file_dialog_was_playing: bool = false
 var _info_popup: InfoPopup = null
 var _controls_blocker: PopupManager.PopupControl = null
 
@@ -143,19 +144,25 @@ func get_file_dialog() -> FileDialog:
 		_file_dialog.use_native_dialog = true
 		_file_dialog.access = FileDialog.ACCESS_FILESYSTEM
 		
-		# While it should be possible to compare this _unparent_file_dialog.unbind(1) with
-		# another _unparent_file_dialog.unbind(1) later on, in actuality the check in the engine
+		# While it should be possible to compare this _finalize_file_dialog.unbind(1) with
+		# another _finalize_file_dialog.unbind(1) later on, in actuality the check in the engine
 		# is faulty and explicitly returns NOT EQUAL for two equal custom callables. So we do this.
-		_file_dialog_unparent_callable = _unparent_file_dialog.unbind(1)
-		_file_dialog.file_selected.connect(_file_dialog_unparent_callable)
+		_file_dialog_finalize_callable = _finalize_file_dialog.unbind(1)
+		_file_dialog.file_selected.connect(_file_dialog_finalize_callable)
 		_file_dialog.canceled.connect(_clear_file_dialog_connections)
-		_file_dialog.canceled.connect(_unparent_file_dialog)
+		_file_dialog.canceled.connect(_finalize_file_dialog)
 	
 	_file_dialog.clear_filters()
+	_file_dialog.current_dir = settings_manager.get_last_opened_folder()
 	return _file_dialog
 
 
 func show_file_dialog(dialog: FileDialog) -> void:
+	# Temporarily pausing playback can prevent issues with the synthesizer, as the file dialog
+	# block the main window's execution.
+	_file_dialog_was_playing = music_player.is_playing()
+	music_player.pause_playback()
+	
 	get_tree().root.add_child(dialog)
 	dialog.popup_centered()
 
@@ -163,12 +170,18 @@ func show_file_dialog(dialog: FileDialog) -> void:
 func _clear_file_dialog_connections() -> void:
 	var connections := _file_dialog.file_selected.get_connections()
 	for connection : Dictionary in connections:
-		if connection["callable"] != _file_dialog_unparent_callable:
+		if connection["callable"] != _file_dialog_finalize_callable:
 			_file_dialog.file_selected.disconnect(connection["callable"])
 
 
-func _unparent_file_dialog() -> void:
+func _finalize_file_dialog() -> void:
 	_file_dialog.get_parent().remove_child(_file_dialog)
+	
+	if _file_dialog_was_playing:
+		_file_dialog_was_playing = false
+		music_player.start_playback()
+	
+	settings_manager.set_last_opened_folder(_file_dialog.current_dir)
 
 
 func get_info_popup() -> InfoPopup:

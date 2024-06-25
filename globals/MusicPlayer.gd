@@ -295,21 +295,23 @@ func get_note_time_length() -> float:
 func start_playback() -> void:
 	if _music_playing:
 		return
-
+	
 	if _pattern_time == -1:
 		_pattern_time = 0
 	_music_playing = true
-
+	
 	_driver.timer_interval.connect(_playback_step)
+	_driver.resume() # Unpauses if it was paused, does nothing otherwise.
 	playback_started.emit()
 
 
 func pause_playback() -> void:
 	if not _music_playing:
 		return
-
+	
 	_music_playing = false
 	_driver.timer_interval.disconnect(_playback_step)
+	_driver.pause() # Make sure driver doesn't try to process anything.
 	playback_paused.emit()
 
 

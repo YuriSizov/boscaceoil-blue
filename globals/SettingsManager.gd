@@ -44,11 +44,15 @@ var _first_time: bool = true
 var _stored_file: ConfigFile = null
 var _stored_timer: SceneTreeTimer = null
 
-var _buffer_size: int = BufferSize.BUFFER_SMALL
+# Settings: GUI.
 var _gui_scale_preset: int = GUIScalePreset.GUI_SCALE_NORMAL
 var _fullscreen: bool = false
 var _windowed_size: Vector2 = Vector2.ZERO
 var _windowed_maximized: bool = false
+# Settings: Synth.
+var _buffer_size: int = BufferSize.BUFFER_SMALL
+# Settings: Files.
+var _last_opened_folder: String = ""
 
 
 func _init() -> void:
@@ -81,7 +85,9 @@ func load_settings() -> void:
 	_windowed_maximized =    _stored_file.get_value("gui", "maximized",    _windowed_maximized)
 	_set_windowed_size_safe( _stored_file.get_value("gui", "last_size",    _windowed_size))
 	
-	_set_buffer_size_safe( _stored_file.get_value("synth", "driver_buffer", _buffer_size))
+	_set_buffer_size_safe(   _stored_file.get_value("synth", "driver_buffer", _buffer_size))
+	
+	_last_opened_folder =    _stored_file.get_value("files", "last_folder", _last_opened_folder)
 	
 	_first_time = false
 	settings_loaded.emit()
@@ -114,6 +120,8 @@ func _save_settings_debounced() -> void:
 	
 	_stored_file.set_value("synth", "driver_buffer", _buffer_size)
 	
+	_stored_file.set_value("files", "last_folder", _last_opened_folder)
+	
 	# Save everything.
 	var error := _stored_file.save(CONFIG_PATH)
 	if error: 
@@ -130,30 +138,7 @@ func is_first_time() -> bool:
 
 # Settings management.
 
-func get_buffer_size() -> int:
-	return _buffer_size
-
-
-func get_buffer_size_text(value: int) -> String:
-	if _buffer_size_descriptions.has(value):
-		return "%d (%s)" % [ value, _buffer_size_descriptions[value] ]
-	return "%d" % [ value ]
-
-
-func set_buffer_size(value: int) -> void:
-	_set_buffer_size_safe(value)
-	buffer_size_changed.emit()
-	save_settings()
-
-
-func _set_buffer_size_safe(value: int) -> void:
-	for key: String in BufferSize:
-		if value == BufferSize[key]:
-			_buffer_size = value
-			return
-	
-	_buffer_size = BufferSize.BUFFER_SMALL
-
+# Settings: GUI.
 
 func get_gui_scale() -> int:
 	return _gui_scale_preset
@@ -211,4 +196,42 @@ func is_windowed_maximized() -> bool:
 
 func set_windowed_maximized(value: bool) -> void:
 	_windowed_maximized = value
+	save_settings()
+
+
+# Settings: Synth.
+
+func get_buffer_size() -> int:
+	return _buffer_size
+
+
+func get_buffer_size_text(value: int) -> String:
+	if _buffer_size_descriptions.has(value):
+		return "%d (%s)" % [ value, _buffer_size_descriptions[value] ]
+	return "%d" % [ value ]
+
+
+func set_buffer_size(value: int) -> void:
+	_set_buffer_size_safe(value)
+	buffer_size_changed.emit()
+	save_settings()
+
+
+func _set_buffer_size_safe(value: int) -> void:
+	for key: String in BufferSize:
+		if value == BufferSize[key]:
+			_buffer_size = value
+			return
+	
+	_buffer_size = BufferSize.BUFFER_SMALL
+
+
+# Settings: Files
+
+func get_last_opened_folder() -> String:
+	return _last_opened_folder
+
+
+func set_last_opened_folder(value: String) -> void:
+	_last_opened_folder = value
 	save_settings()
