@@ -20,6 +20,7 @@ signal status_updated(level: StatusLevel, message: String)
 signal navigation_requested(target: int)
 signal navigation_succeeded(target: int)
 
+const MAIN_WINDOW_SCRIPT := preload("res://gui/MainWindow.gd")
 const INFO_POPUP_SCENE := preload("res://gui/widgets/InfoPopup.tscn")
 
 enum StatusLevel {
@@ -79,6 +80,7 @@ func _init() -> void:
 
 func _ready() -> void:
 	get_tree().set_auto_accept_quit(false)
+	get_window().set_script(MAIN_WINDOW_SCRIPT)
 	
 	music_player.initialize_driver()
 

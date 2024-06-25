@@ -37,10 +37,6 @@ func _ready() -> void:
 	_save_timer.timeout.connect(_save_window_size_debounced)
 	get_window().size_changed.connect(_save_window_size)
 	
-	# A little trick to make sure the menu is on top of the pattern editor. We use a filler control
-	# and make it fit the same area in the box container.
-	_filler.custom_minimum_size = _menu_bar.get_combined_minimum_size()
-	
 	_pattern_editor.visible = true
 	_locked_indicator.visible = false
 	Controller.io_manager.initialize_song()
@@ -97,25 +93,19 @@ func _update_window_size() -> void:
 	var neutral_size := main_window.size / main_window.content_scale_factor
 	main_window.content_scale_factor = Controller.settings_manager.get_gui_scale_factor()
 	
-	# HACK: This is a naive fix to an engine bug. For some reason, window's content scale factor
-	# affects controls' combined required minimum size, making it smaller the larger the scale is.
-	# This doesn't seem rational or logical, and the difference isn't even proportional to scale.
-	#
-	# Experimentally, I identified that the global transform matrix of this control (any fullscreen
-	# control, really) helps to counter-act the issue. So here we are. 
-	var content_minsize := (main_window.get_contents_minimum_size() * get_global_transform()).floor()
-	
-	# We also want to ensure that the UI always fits the screen, and downscale everything if we're
+	# We want to ensure that the UI always fits the screen, and downscale everything if we're
 	# exceeding the bounds.
-	var window_minsize := content_minsize * main_window.content_scale_factor
+	
+	var window_minsize := main_window.get_contents_minimum_size()
 	var screen_size := DisplayServer.screen_get_usable_rect(main_window.current_screen).size
+	
 	if window_minsize.x > screen_size.x || window_minsize.y > screen_size.y:
 		var scale_factor_adjustment := minf(float(screen_size.x) / window_minsize.x, float(screen_size.y) / window_minsize.y)
 		scale_factor_adjustment = floorf(scale_factor_adjustment * 100.0) / 100.0 # Truncate excessive precision.
 		
 		main_window.content_scale_factor = main_window.content_scale_factor * scale_factor_adjustment
 	
-	main_window.min_size = content_minsize * main_window.content_scale_factor
+	main_window.min_size = main_window.get_contents_minimum_size()
 	_fit_window_size(neutral_size * main_window.content_scale_factor)
 
 

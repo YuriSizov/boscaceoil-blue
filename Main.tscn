@@ -1,6 +1,7 @@
-[gd_scene load_steps=8 format=3 uid="uid://cf3nug1sfh1ix"]
+[gd_scene load_steps=9 format=3 uid="uid://cf3nug1sfh1ix"]
 
 [ext_resource type="Script" path="res://Main.gd" id="1_63yj5"]
+[ext_resource type="Script" path="res://gui/widgets/FillerControl.gd" id="2_kg520"]
 [ext_resource type="PackedScene" uid="uid://l0bjoy6vwtbx" path="res://gui/Menu.tscn" id="2_ljcdm"]
 [ext_resource type="PackedScene" uid="uid://byfh0p3nqrosa" path="res://gui/views/PatternEditor.tscn" id="2_nrw1o"]
 [ext_resource type="PackedScene" uid="uid://lnyrbw2vvjwl" path="res://gui/views/LockedIndicator.tscn" id="3_f0rno"]
@@ -19,10 +20,12 @@ script = ExtResource("1_63yj5")
 [node name="Main" type="VBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="Filler" type="Control" parent="Main"]
+[node name="Filler" type="Control" parent="Main" node_paths=PackedStringArray("paired_node")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 340)
 layout_mode = 2
+script = ExtResource("2_kg520")
+paired_node = NodePath("../../Menu")
 
 [node name="PatternEditor" parent="Main" instance=ExtResource("2_nrw1o")]
 unique_name_in_owner = true
