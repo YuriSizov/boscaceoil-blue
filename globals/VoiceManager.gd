@@ -6,7 +6,7 @@
 
 ## Voice manager component responsible for providing preset voice data
 ## and SiONVoice instances for insturments.
-class_name VoiceManager extends Object
+class_name VoiceManager extends RefCounted
 
 ## SiON tool with a bunch of pre-configured voices.
 var _preset_util: SiONVoicePresetUtil = SiONVoicePresetUtil.new()
@@ -24,6 +24,11 @@ func _init() -> void:
 	_register_categories()
 	_register_voices()
 	_register_drumkits()
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_PREDELETE:
+		_preset_util.free()
 
 
 # Initialization.

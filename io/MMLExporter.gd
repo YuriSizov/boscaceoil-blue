@@ -262,7 +262,7 @@ class MMLFileWriter:
 		if instrument is SingleVoiceInstrument:
 			var single_instrument := instrument as SingleVoiceInstrument
 			var instrument_index := mml_instrument.index
-			var instrument_mml := single_instrument.voice.get_mml(instrument_index, "<autodetect>", false)
+			var instrument_mml := single_instrument.voice.get_mml(instrument_index, SiONDriver.CHIP_AUTO, false)
 			
 			mml_instrument.add_definition(mml_instrument.index, instrument.name, instrument_mml)
 			mml_instrument.add_config(instrument_index, instrument.volume, instrument.lp_cutoff, instrument.lp_resonance)
@@ -273,7 +273,7 @@ class MMLFileWriter:
 				var voice_index := 0
 				for note_value: int in _used_drumkit_voices[mml_instrument.index]:
 					var instrument_index := 100 * mml_instrument.index + voice_index
-					var voice_mml := drumkit_instrument.get_note_voice(note_value).get_mml(instrument_index, "<autodetect>", false)
+					var voice_mml := drumkit_instrument.get_note_voice(note_value).get_mml(instrument_index, SiONDriver.CHIP_AUTO, false)
 					
 					mml_instrument.add_sub_definition(mml_instrument.index, voice_index, drumkit_instrument.get_note_name(note_value), voice_mml)
 					mml_instrument.add_config(instrument_index, instrument.volume, instrument.lp_cutoff, instrument.lp_resonance)

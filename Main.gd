@@ -10,9 +10,6 @@ const SIZE_CHANGES_SAVE_DELAY := 0.3
 
 var _default_window_title: String = ""
 
-@onready var _filler: Control = %Filler
-@onready var _menu_bar: Control = %Menu
-
 @onready var _pattern_editor: Control = %PatternEditor
 @onready var _locked_indicator: Control = %LockedIndicator
 @onready var _save_timer: Timer = %SaveTimer

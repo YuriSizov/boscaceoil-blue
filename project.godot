@@ -17,6 +17,7 @@ run/main_scene="res://Main.tscn"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="boscaceoil-blue"
 config/features=PackedStringArray("4.3", "GL Compatibility")
+run/max_fps=200
 boot_splash/bg_color=Color(0.0593993, 0.0688814, 0.10927, 1)
 boot_splash/image="res://dist/logo-full.png"
 boot_splash/fullsize=false
