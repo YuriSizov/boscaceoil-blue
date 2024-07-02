@@ -81,6 +81,15 @@ func _ready() -> void:
 		Controller.music_player.playback_stopped.connect(_update_playback_cursor)
 
 
+func _notification(what: int) -> void:
+	if Engine.is_editor_hint():
+		return
+	
+	if what == NOTIFICATION_APPLICATION_FOCUS_OUT:
+		if _note_drawing_mode != DrawingMode.DRAWING_OFF:
+			_stop_drawing_notes()
+
+
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		var mb := event as InputEventMouseButton
