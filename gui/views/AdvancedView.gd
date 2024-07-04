@@ -27,10 +27,12 @@ func _ready() -> void:
 	_gui_scale_picker.selected.connect(_change_gui_scale)
 	
 	if not Engine.is_editor_hint():
-		_edit_current_song()
+		_update_song_widgets()
 		_restore_app_settings()
 		
-		Controller.song_loaded.connect(_edit_current_song)
+		Controller.song_loaded.connect(_update_song_widgets)
+		Controller.song_effect_changed.connect(_update_song_widgets)
+		Controller.song_swing_changed.connect(_update_song_widgets)
 		Controller.settings_manager.settings_loaded.connect(_restore_app_settings)
 
 
@@ -53,7 +55,7 @@ func _populate_effect_options() -> void:
 	_effect_picker.set_selected(selected_item)
 
 
-func _edit_current_song() -> void:
+func _update_song_widgets() -> void:
 	if not Controller.current_song:
 		_effect_picker.set_selected(_effect_picker.options[0])
 		_effect_value_slider.set_current_value(Vector2i(0, 0))

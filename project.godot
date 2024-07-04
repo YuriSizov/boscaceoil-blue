@@ -40,6 +40,7 @@ window/size/viewport_height=1008
 
 [editor]
 
+run/main_run_args="--verbose"
 naming/scene_name_casing=1
 naming/script_name_casing=1
 

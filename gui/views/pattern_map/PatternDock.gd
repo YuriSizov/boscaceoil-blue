@@ -40,6 +40,7 @@ func _ready() -> void:
 		item_deleted.connect(Controller.delete_pattern)
 
 		Controller.song_loaded.connect(_edit_current_pattern)
+		Controller.song_pattern_created.connect(queue_redraw)
 		Controller.song_pattern_changed.connect(_edit_current_pattern)
 		Controller.song_instrument_changed.connect(queue_redraw)
 

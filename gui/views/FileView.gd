@@ -67,6 +67,8 @@ func _ready() -> void:
 	
 	if not Engine.is_editor_hint():
 		Controller.song_loaded.connect(_update_song_steppers)
+		Controller.song_sizes_changed.connect(_update_song_steppers)
+		Controller.song_bpm_changed.connect(_update_song_steppers)
 
 
 func _subtitle_gui_input(event: InputEvent) -> void:

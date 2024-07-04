@@ -605,8 +605,19 @@ func _add_note_at_cursor() -> void:
 	if current_pattern.has_note(note_value, note_indexed.x, true):
 		return # Space is already occupied.
 	
-	current_pattern.add_note(note_value, note_indexed.x, _note_cursor_size)
-	Controller.current_song.mark_dirty()
+	var note_data := Vector3i(note_value, note_indexed.x, _note_cursor_size)
+	
+	var pattern_state := Controller.state_manager.create_state_change(StateManager.StateChangeType.PATTERN, Controller.current_pattern_index)
+	pattern_state.add_do_action(func() -> void:
+		var reference_pattern := Controller.current_song.patterns[pattern_state.reference_id]
+		reference_pattern.add_note(note_data.x, note_data.y, note_data.z)
+	)
+	pattern_state.add_undo_action(func() -> void:
+		var reference_pattern := Controller.current_song.patterns[pattern_state.reference_id]
+		reference_pattern.remove_note(note_data.x, note_data.y, true)
+	)
+	
+	Controller.state_manager.commit_state_change(pattern_state)
 
 
 func _remove_note_at_cursor() -> void:
@@ -621,8 +632,23 @@ func _remove_note_at_cursor() -> void:
 		return
 	
 	var note_value: int = _note_row_value_map[note_value_index] + current_pattern.key
-	current_pattern.remove_note(note_value, note_indexed.x, true)
-	Controller.current_song.mark_dirty()
+	if not current_pattern.has_note(note_value, note_indexed.x, true):
+		return # Space is empty.
+	
+	var note_data := Vector3i(note_value, note_indexed.x, 0)
+	note_data.z = current_pattern.get_note_length(note_data.x, note_data.y)
+	
+	var pattern_state := Controller.state_manager.create_state_change(StateManager.StateChangeType.PATTERN, Controller.current_pattern_index)
+	pattern_state.add_do_action(func() -> void:
+		var reference_pattern := Controller.current_song.patterns[pattern_state.reference_id]
+		reference_pattern.remove_note(note_data.x, note_data.y, true)
+	)
+	pattern_state.add_undo_action(func() -> void:
+		var reference_pattern := Controller.current_song.patterns[pattern_state.reference_id]
+		reference_pattern.add_note(note_data.x, note_data.y, note_data.z)
+	)
+	
+	Controller.state_manager.commit_state_change(pattern_state)
 
 
 class NoteRow:

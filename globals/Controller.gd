@@ -8,7 +8,12 @@ extends Node
 
 signal song_loaded()
 signal song_saved()
+
 signal song_sizes_changed()
+signal song_bpm_changed()
+signal song_effect_changed()
+signal song_swing_changed()
+
 signal song_pattern_created()
 signal song_pattern_changed()
 signal song_instrument_created()
@@ -36,6 +41,7 @@ enum DragSources {
 }
 
 var settings_manager: SettingsManager = null
+var state_manager: StateManager = null
 var voice_manager: VoiceManager = null
 var music_player: MusicPlayer = null
 var io_manager: IOManager = null
@@ -69,6 +75,7 @@ var _controls_locked: bool = false
 
 func _init() -> void:
 	settings_manager = SettingsManager.new()
+	state_manager = StateManager.new()
 	voice_manager = VoiceManager.new()
 	music_player = MusicPlayer.new()
 	io_manager = IOManager.new()
@@ -76,6 +83,11 @@ func _init() -> void:
 	
 	settings_manager.buffer_size_changed.connect(music_player.update_driver_buffer)
 	settings_manager.load_settings()
+	
+	state_manager.state_changed.connect(func() -> void:
+		# TODO: It would be nice to track the last saved state and if we undo changes to get to it, mark as clean instead.
+		current_song.mark_dirty()
+	)
 
 
 func _ready() -> void:
@@ -124,6 +136,18 @@ func _shortcut_input(event: InputEvent) -> void:
 	elif event.is_action_pressed("bosca_save_as", false, true):
 		if current_song:
 			io_manager.save_ceol_song(true)
+		
+		get_viewport().set_input_as_handled()
+	
+	elif event.is_action_pressed("ui_undo", false, true):
+		if current_song:
+			state_manager.undo_state_change()
+		
+		get_viewport().set_input_as_handled()
+	
+	elif event.is_action_pressed("ui_redo", false, true):
+		if current_song:
+			state_manager.do_state_change()
 		
 		get_viewport().set_input_as_handled()
 
@@ -235,6 +259,8 @@ func update_status(message: String, level: StatusLevel = StatusLevel.INFO) -> vo
 # Song editing.
 
 func set_current_song(song: Song) -> void:
+	state_manager.clear_state_memory()
+	
 	current_song = song
 	_change_current_pattern(0, false, true)
 	_change_current_instrument(0, false)
@@ -281,10 +307,20 @@ func _change_current_pattern(pattern_index: int, notify: bool = true, force: boo
 	
 	if current_song && current_pattern_index < current_song.patterns.size():
 		var current_pattern := current_song.patterns[current_pattern_index]
-		current_pattern.note_added.connect(_handle_pattern_note_added)
-
+		if not current_pattern.note_added.is_connected(_handle_pattern_note_added):
+			current_pattern.note_added.connect(_handle_pattern_note_added)
+	
 	if notify:
 		song_pattern_changed.emit()
+
+
+func _disconnect_pattern(pattern_index: int) -> void:
+	if not current_song || pattern_index >= current_song.patterns.size():
+		return
+	
+	var pattern := current_song.patterns[pattern_index]
+	if pattern.note_added.is_connected(_handle_pattern_note_added):
+		pattern.note_added.disconnect(_handle_pattern_note_added)
 
 
 func create_pattern() -> void:
@@ -293,12 +329,30 @@ func create_pattern() -> void:
 	if current_song.patterns.size() >= Song.MAX_PATTERN_COUNT:
 		return
 	
-	var pattern := Pattern.new()
-	pattern.instrument_idx = current_instrument_index
-	current_song.patterns.push_back(pattern)
-	current_song.mark_dirty()
+	var instrument_idx := current_instrument_index
+	var state_context := { "id": -1 } # We need a reference type to make sure it can be shared by lambdas.
 	
-	song_pattern_created.emit()
+	var song_state := state_manager.create_state_change(StateManager.StateChangeType.SONG)
+	song_state.add_do_action(func() -> void:
+		state_context.id = create_pattern_nocheck(instrument_idx)
+		song_pattern_created.emit()
+	)
+	song_state.add_undo_action(func() -> void:
+		delete_pattern_nocheck(state_context.id)
+		song_pattern_changed.emit()
+	)
+	
+	state_manager.commit_state_change(song_state)
+
+
+func create_pattern_nocheck(instrument_index: int) -> int:
+	var pattern_index := current_song.patterns.size()
+	
+	var pattern := Pattern.new()
+	pattern.instrument_idx = instrument_index
+	current_song.patterns.push_back(pattern)
+	
+	return pattern_index
 
 
 func create_and_edit_pattern() -> void:
@@ -322,16 +376,20 @@ func edit_pattern(pattern_index: int) -> void:
 	_change_current_pattern(pattern_index)
 
 
-func clone_pattern(pattern_index: int) -> int:
+func can_clone_pattern(pattern_index: int) -> bool:
 	if not current_song:
-		return -1
+		return false
 	if current_song.patterns.size() >= Song.MAX_PATTERN_COUNT:
-		return -1
+		return false
 	
 	var pattern_index_ := ValueValidator.index(pattern_index, current_song.patterns.size())
 	if pattern_index != pattern_index_:
-		return -1
+		return false
 	
+	return true
+
+
+func clone_pattern_nocheck(pattern_index: int) -> int:
 	var cloned_index := current_song.patterns.size()
 	var pattern := current_song.patterns[pattern_index].clone()
 	current_song.patterns.push_back(pattern)
@@ -341,32 +399,87 @@ func clone_pattern(pattern_index: int) -> int:
 
 
 func delete_pattern(pattern_index: int) -> void:
+	if not current_song:
+		return
+	
 	var pattern_index_ := ValueValidator.index(pattern_index, current_song.patterns.size())
 	if pattern_index != pattern_index_:
 		return
 	
-	current_song.patterns.remove_at(pattern_index)
-	if current_song.patterns.size() == 0: # There is nothing left, create a new one.
-		create_pattern()
+	var instrument_idx := current_instrument_index
+	var state_context := {
+		"pattern": null,
+		"deleted_last": false,
+		"cleared_bars": [],
+		"shifted_bars": [],
+	}
 	
-	# Validate the arrangement.
-	
-	for bar in current_song.arrangement.timeline_bars:
-		for i in Arrangement.CHANNEL_NUMBER:
-			# If we delete this pattern, clear the channel.
-			if bar[i] == pattern_index:
-				bar[i] = -1
+	var song_state := state_manager.create_state_change(StateManager.StateChangeType.SONG)
+	song_state.add_do_action(func() -> void:
+		# Delete the pattern itself from the list.
+		state_context.pattern = current_song.patterns[pattern_index]
+		_disconnect_pattern(pattern_index)
+		current_song.patterns.remove_at(pattern_index)
+		
+		# There is nothing left, create a new one.
+		if current_song.patterns.is_empty():
+			create_pattern_nocheck(instrument_idx)
+			state_context.deleted_last = true
+		else:
+			state_context.deleted_last = false
+		
+		# Make sure the edited pattern is valid.
+		if current_pattern_index >= current_song.patterns.size():
+			_change_current_pattern(current_song.patterns.size() - 1, false)
+		
+		state_context.cleared_bars.clear()
+		state_context.shifted_bars.clear()
+		
+		# Validate the arrangement.
+		for bar_idx in current_song.arrangement.timeline_bars.size():
+			var bar := current_song.arrangement.timeline_bars[bar_idx]
 			
-			# If we delete a pattern before this one in the list, shift the index. 
-			elif bar[i] > pattern_index:
-				bar[i] = bar[i] - 1
+			for i in Arrangement.CHANNEL_NUMBER:
+				# If we deleted this pattern, clear the channel.
+				if bar[i] == pattern_index:
+					bar[i] = -1
+					state_context.cleared_bars.push_back(Vector2i(bar_idx, i))
+				
+				# If we deleted a pattern before this one in the list, shift the index. 
+				elif bar[i] > pattern_index:
+					bar[i] = bar[i] - 1
+					state_context.shifted_bars.push_back(Vector2i(bar_idx, i))
+		
+		song_pattern_changed.emit()
+	)
+	song_state.add_undo_action(func() -> void:
+		# Delete the replacement pattern, if it was created.
+		if state_context.deleted_last:
+			_disconnect_pattern(0)
+			current_song.patterns.remove_at(0)
+		
+		# Restore the original pattern.
+		current_song.patterns.insert(pattern_index, state_context.pattern)
+		
+		# Restore cleared and shifted bars.
+		for key: Vector2i in state_context.cleared_bars:
+			current_song.arrangement.timeline_bars[key.x][key.y] = pattern_index
+		for key: Vector2i in state_context.shifted_bars:
+			current_song.arrangement.timeline_bars[key.x][key.y] = current_song.arrangement.timeline_bars[key.x][key.y] + 1
+		
+		song_pattern_changed.emit()
+	)
+	
+	state_manager.commit_state_change(song_state)
+
+
+func delete_pattern_nocheck(pattern_index: int) -> void:
+	_disconnect_pattern(pattern_index)
+	current_song.patterns.remove_at(pattern_index)
 	
 	# Make sure the edited pattern is valid.
 	if current_pattern_index >= current_song.patterns.size():
 		_change_current_pattern(current_song.patterns.size() - 1, false)
-	song_pattern_changed.emit()
-	
-	current_song.mark_dirty()
 
 
 func get_current_pattern() -> Pattern:
@@ -376,6 +489,13 @@ func get_current_pattern() -> Pattern:
 		return null
 	
 	return current_song.patterns[current_pattern_index]
+
+
+func refresh_current_pattern_instrument() -> void:
+	var current_pattern := get_current_pattern()
+	var instrument := current_song.instruments[current_pattern.instrument_idx]
+	
+	current_pattern.change_instrument(current_pattern.instrument_idx, instrument)
 
 
 func preview_pattern_note(value: int) -> void:
@@ -425,11 +545,28 @@ func create_instrument() -> void:
 		return
 	
 	var voice_data := voice_manager.get_random_voice_data()
+	var state_context := { "id": -1 } # We need a reference type to make sure it can be shared by lambdas.
+	
+	var song_state := state_manager.create_state_change(StateManager.StateChangeType.SONG)
+	song_state.add_do_action(func() -> void:
+		state_context.id = create_instrument_nocheck(voice_data)
+		song_instrument_created.emit()
+	)
+	song_state.add_undo_action(func() -> void:
+		delete_instrument_nocheck(state_context.id)
+		song_instrument_changed.emit()
+	)
+	
+	state_manager.commit_state_change(song_state)
+
+
+func create_instrument_nocheck(voice_data: VoiceManager.VoiceData) -> int:
+	var instrument_index := current_song.instruments.size()
+	
 	var instrument := instance_instrument_by_voice(voice_data)
 	current_song.instruments.push_back(instrument)
-	current_song.mark_dirty()
 	
-	song_instrument_created.emit()
+	return instrument_index
 
 
 func create_and_edit_instrument() -> void:
@@ -451,42 +588,113 @@ func edit_instrument(instrument_index: int) -> void:
 
 
 func delete_instrument(instrument_index: int) -> void:
+	if not current_song:
+		return
+	
 	var instrument_index_ := ValueValidator.index(instrument_index, current_song.instruments.size())
 	if instrument_index != instrument_index_:
 		return
 	
-	current_song.instruments.remove_at(instrument_index)
-	if current_song.instruments.size() == 0: # There is nothing left, create a new one.
-		create_instrument()
+	var voice_data := voice_manager.get_random_voice_data()
+	var state_context := {
+		"instrument": null,
+		"deleted_last": false,
+		"reset_patterns": [],
+		"shifted_patterns": [],
+	}
 	
-	# Validate instruments in available patterns.
-	
-	var current_pattern := get_current_pattern()
-	var current_pattern_affected := false
-	for pattern in current_song.patterns:
-		# If we delete this instrument, set the pattern to the first available.
-		if pattern.instrument_idx == instrument_index:
-			pattern.instrument_idx = 0
-			if pattern == current_pattern:
+	var song_state := state_manager.create_state_change(StateManager.StateChangeType.SONG)
+	song_state.add_do_action(func() -> void:
+		# Delete the instrument itself from the list.
+		state_context.instrument = current_song.instruments[instrument_index]
+		current_song.instruments.remove_at(instrument_index)
+		
+		# There is nothing left, create a new one.
+		if current_song.instruments.is_empty():
+			create_instrument_nocheck(voice_data)
+			state_context.deleted_last = true
+		else:
+			state_context.deleted_last = false
+		
+		# Make sure the edited instrument is valid.
+		if current_instrument_index >= current_song.instruments.size():
+			_change_current_instrument(current_song.instruments.size() - 1, false)
+		
+		state_context.reset_patterns.clear()
+		state_context.shifted_patterns.clear()
+		
+		# Validate instruments in available patterns.
+		
+		# Note that we actually want the current pattern here, not the one that was current when we
+		# created this state. Same applies to undo.
+		var current_pattern_affected := false
+		for pattern_idx in current_song.patterns.size():
+			var pattern := current_song.patterns[pattern_idx]
+			
+			# If we deleted this instrument, set the pattern to the first available.
+			if pattern.instrument_idx == instrument_index:
+				pattern.instrument_idx = 0
+				state_context.reset_patterns.push_back(pattern_idx)
+				
+				if pattern_idx == current_pattern_index:
+					current_pattern_affected = true
+			
+			# If we deleted an instrument before this one in the list, shift the index.
+			elif pattern.instrument_idx > instrument_index:
+				pattern.instrument_idx -= 1
+				state_context.shifted_patterns.push_back(pattern_idx)
+				
+				if pattern_idx == current_pattern_index:
+					current_pattern_affected = true
+		
+		song_instrument_changed.emit()
+		
+		# Properly signal that the instrument has changed for the currently edited pattern.
+		if current_pattern_affected:
+			refresh_current_pattern_instrument()
+	)
+	song_state.add_undo_action(func() -> void:
+		# Delete the replacement instrument, if it was created.
+		if state_context.deleted_last:
+			current_song.instruments.remove_at(0)
+		
+		# Restore the original instrument.
+		current_song.instruments.insert(instrument_index, state_context.instrument)
+		
+		# Restore reset and shifted patterns.
+		
+		# Note that we actually want the current pattern here, not the one that was current when we
+		# created this state. Same applies to do.
+		var current_pattern_affected := false
+		
+		for pattern_idx: int in state_context.reset_patterns:
+			current_song.patterns[pattern_idx].instrument_idx = instrument_index
+			
+			if pattern_idx == current_pattern_index:
 				current_pattern_affected = true
 		
-		# If we delete an instrument before this one in the list, shift the index.
-		elif pattern.instrument_idx > instrument_index:
-			pattern.instrument_idx -= 1
-			if pattern == current_pattern:
+		for pattern_idx: int in state_context.shifted_patterns:
+			current_song.patterns[pattern_idx].instrument_idx += 1
+			
+			if pattern_idx == current_pattern_index:
 				current_pattern_affected = true
+		
+		# Properly signal that the instrument has changed for the currently edited pattern.
+		if current_pattern_affected:
+			refresh_current_pattern_instrument()
+		
+		song_instrument_changed.emit()
+	)
+	
+	state_manager.commit_state_change(song_state)
+
+
+func delete_instrument_nocheck(instrument_index: int) -> void:
+	current_song.instruments.remove_at(instrument_index)
 	
 	# Make sure the edited instrument is valid.
 	if current_instrument_index >= current_song.instruments.size():
 		_change_current_instrument(current_song.instruments.size() - 1, false)
-	song_instrument_changed.emit()
-	
-	# Properly signal that the instrument has changed for the edited pattern.
-	if current_pattern && current_pattern_affected:
-		var instrument := current_song.instruments[current_pattern.instrument_idx]
-		current_pattern.change_instrument(current_pattern.instrument_idx, instrument)
-	
-	current_song.mark_dirty()
 
 
 func get_current_instrument() -> Instrument:
@@ -502,15 +710,31 @@ func _set_current_instrument_by_voice(voice_data: VoiceManager.VoiceData) -> voi
 	if not voice_data:
 		return
 	
-	var instrument := instance_instrument_by_voice(voice_data)
-	current_song.instruments[current_instrument_index] = instrument
-	song_instrument_changed.emit()
+	var instrument_idx := current_instrument_index
+	var old_instrument := current_song.instruments[instrument_idx]
 	
-	var current_pattern := get_current_pattern()
-	if current_pattern && current_pattern.instrument_idx == current_instrument_index:
-		current_pattern.change_instrument(current_instrument_index, instrument)
+	var song_state := state_manager.create_state_change(StateManager.StateChangeType.SONG)
+	song_state.add_do_action(func() -> void:
+		var instrument := instance_instrument_by_voice(voice_data)
+		current_song.instruments[instrument_idx] = instrument
+		song_instrument_changed.emit()
+		
+		# Refresh the currently edited pattern, if necessary.
+		var current_pattern := get_current_pattern()
+		if current_pattern && current_pattern.instrument_idx == instrument_idx:
+			current_pattern.change_instrument(instrument_idx, instrument)
+	)
+	song_state.add_undo_action(func() -> void:
+		current_song.instruments[instrument_idx] = old_instrument
+		song_instrument_changed.emit()
+		
+		# Refresh the currently edited pattern, if necessary.
+		var current_pattern := get_current_pattern()
+		if current_pattern && current_pattern.instrument_idx == instrument_idx:
+			current_pattern.change_instrument(instrument_idx, old_instrument)
+	)
 	
-	current_song.mark_dirty()
+	state_manager.commit_state_change(song_state)
 
 
 func set_current_instrument(category: String, instrument_name: String) -> void:
@@ -554,42 +778,70 @@ func set_song_pattern_size(value: int) -> void:
 	if not current_song:
 		return
 	
-	current_song.pattern_size = value
-	current_song.mark_dirty()
-	song_sizes_changed.emit()
+	var song_state := state_manager.create_state_change(StateManager.StateChangeType.SONG)
+	song_state.add_property(current_song, "pattern_size", value)
+	song_state.add_action(
+		func() -> void:
+			song_sizes_changed.emit()
+	)
+	
+	state_manager.commit_state_change(song_state)
 
 
 func set_song_bar_size(value: int) -> void:
 	if not current_song:
 		return
 	
-	current_song.bar_size = value
-	current_song.mark_dirty()
-	song_sizes_changed.emit()
+	var song_state := state_manager.create_state_change(StateManager.StateChangeType.SONG)
+	song_state.add_property(current_song, "bar_size", value)
+	song_state.add_action(
+		func() -> void:
+			song_sizes_changed.emit()
+	)
+	
+	state_manager.commit_state_change(song_state)
 
 
 func set_song_bpm(value: int) -> void:
 	if not current_song:
 		return
 	
-	current_song.bpm = value
-	current_song.mark_dirty()
-	music_player.update_driver_bpm()
+	var song_state := state_manager.create_state_change(StateManager.StateChangeType.SONG)
+	song_state.add_property(current_song, "bpm", value)
+	song_state.add_action(
+		func() -> void:
+			music_player.update_driver_bpm()
+			song_bpm_changed.emit()
+	)
+	
+	state_manager.commit_state_change(song_state)
 
 
 func set_song_global_effect(effect: int, power: int) -> void:
 	if not current_song:
 		return
 	
-	current_song.global_effect = effect
-	current_song.global_effect_power = power
-	current_song.mark_dirty()
-	music_player.update_driver_effects()
+	var song_state := state_manager.create_state_change(StateManager.StateChangeType.SONG, -1, "song_global_effect")
+	song_state.add_property(current_song, "global_effect", effect)
+	song_state.add_property(current_song, "global_effect_power", power)
+	song_state.add_action(
+		func() -> void:
+			music_player.update_driver_effects()
+			song_effect_changed.emit()
+	)
+	
+	state_manager.commit_state_change(song_state)
 
 
 func set_song_swing(value: int) -> void:
 	if not current_song:
 		return
 	
-	current_song.swing = value
-	current_song.mark_dirty()
+	var song_state := state_manager.create_state_change(StateManager.StateChangeType.SONG)
+	song_state.add_property(current_song, "swing", value)
+	song_state.add_action(
+		func() -> void:
+			song_swing_changed.emit()
+	)
+	
+	state_manager.commit_state_change(song_state)

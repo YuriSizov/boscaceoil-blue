@@ -676,8 +676,21 @@ func _set_pattern_at_cursor(pattern_idx: int) -> void:
 	if cell.y < 0 || cell.y >= Arrangement.CHANNEL_NUMBER:
 		return
 	
-	current_arrangement.set_pattern(bar_index, cell.y, pattern_idx)
-	Controller.current_song.mark_dirty()
+	var arrangement_state := Controller.state_manager.create_state_change(StateManager.StateChangeType.ARRANGEMENT)
+	arrangement_state.add_setget_property(current_arrangement, "pattern", pattern_idx,
+		# Getter.
+		func() -> int:
+			return current_arrangement.get_pattern(bar_index, cell.y)
+			,
+		# Setter.
+		func(value: int) -> void:
+			if value == -1:
+				current_arrangement.clear_pattern(bar_index, cell.y)
+			else:
+				current_arrangement.set_pattern(bar_index, cell.y, value)
+	)
+	
+	Controller.state_manager.commit_state_change(arrangement_state)
 
 
 func _select_pattern_at_cursor() -> void:
@@ -701,8 +714,22 @@ func _clear_pattern_at_cursor() -> void:
 	
 	var cell := _get_cell_at_cursor()
 	var bar_index := cell.x + _scroll_offset
-	current_arrangement.clear_pattern(bar_index, cell.y)
-	Controller.current_song.mark_dirty()
+	
+	var arrangement_state := Controller.state_manager.create_state_change(StateManager.StateChangeType.ARRANGEMENT)
+	arrangement_state.add_setget_property(current_arrangement, "pattern", -1,
+		# Getter.
+		func() -> int:
+			return current_arrangement.get_pattern(bar_index, cell.y)
+			,
+		# Setter.
+		func(value: int) -> void:
+			if value == -1:
+				current_arrangement.clear_pattern(bar_index, cell.y)
+			else:
+				current_arrangement.set_pattern(bar_index, cell.y, value)
+	)
+	
+	Controller.state_manager.commit_state_change(arrangement_state)
 
 
 func _clone_pattern_at_cursor() -> void:
@@ -712,41 +739,87 @@ func _clone_pattern_at_cursor() -> void:
 	var pattern_idx := _get_pattern_at_cursor()
 	if pattern_idx < 0:
 		return
-	var variation_idx := Controller.clone_pattern(pattern_idx)
-	if variation_idx < 0:
+	if not Controller.can_clone_pattern(pattern_idx):
 		return
 	
 	var cell := _get_cell_at_cursor()
 	var bar_index := cell.x + _scroll_offset
-	current_arrangement.set_pattern(bar_index, cell.y, variation_idx)
-	Controller.current_song.mark_dirty()
+	
+	var old_value := current_arrangement.get_pattern(bar_index, cell.y)
+	var state_context := { "id": -1 } # We need a reference type to make sure it can be shared by lambdas.
+	
+	var arrangement_state := Controller.state_manager.create_state_change(StateManager.StateChangeType.ARRANGEMENT)
+	arrangement_state.add_do_action(func() -> void:
+		state_context.id = Controller.clone_pattern_nocheck(pattern_idx)
+		current_arrangement.set_pattern(bar_index, cell.y, state_context.id)
+	)
+	arrangement_state.add_undo_action(func() -> void:
+		if old_value == -1:
+			current_arrangement.clear_pattern(bar_index, cell.y)
+		else:
+			current_arrangement.set_pattern(bar_index, cell.y, old_value)
+		
+		Controller.delete_pattern_nocheck(state_context.id)
+	)
+	
+	Controller.state_manager.commit_state_change(arrangement_state)
 
 
 func _change_arrangement_loop(starts_at: int, ends_at: int) -> void:
 	if not current_arrangement:
 		return
 	
-	current_arrangement.set_loop(starts_at, ends_at)
-	Controller.current_song.mark_dirty()
+	var old_loop_start := current_arrangement.loop_start
+	var old_loop_end := current_arrangement.loop_end
+	
+	var arrangement_state := Controller.state_manager.create_state_change(StateManager.StateChangeType.ARRANGEMENT)
+	arrangement_state.add_do_action(func() -> void:
+		current_arrangement.set_loop(starts_at, ends_at)
+	)
+	arrangement_state.add_undo_action(func() -> void:
+		current_arrangement.set_loop(old_loop_start, old_loop_end)
+	)
+	
+	Controller.state_manager.commit_state_change(arrangement_state)
 
 
 func _change_arrangement_loop_to_end(starts_at: int) -> void:
 	if not current_arrangement:
 		return
 	
+	var ends_at := starts_at + 1
 	if starts_at < current_arrangement.timeline_length:
-		current_arrangement.set_loop(starts_at, current_arrangement.timeline_length)
-	else:
-		current_arrangement.set_loop(starts_at, starts_at + 1)
-	Controller.current_song.mark_dirty()
+		ends_at = current_arrangement.timeline_length
+	
+	var old_loop_start := current_arrangement.loop_start
+	var old_loop_end := current_arrangement.loop_end
+	
+	var arrangement_state := Controller.state_manager.create_state_change(StateManager.StateChangeType.ARRANGEMENT)
+	arrangement_state.add_do_action(func() -> void:
+		current_arrangement.set_loop(starts_at, ends_at)
+	)
+	arrangement_state.add_undo_action(func() -> void:
+		current_arrangement.set_loop(old_loop_start, old_loop_end)
+	)
+	
+	Controller.state_manager.commit_state_change(arrangement_state)
 
 
 func _insert_timeline_bar(at_index: int) -> void:
 	if not current_arrangement:
 		return
 	
-	current_arrangement.insert_bar(at_index + _scroll_offset)
-	Controller.current_song.mark_dirty()
+	var bar_index := at_index + _scroll_offset
+	
+	var arrangement_state := Controller.state_manager.create_state_change(StateManager.StateChangeType.ARRANGEMENT)
+	arrangement_state.add_do_action(func() -> void:
+		current_arrangement.insert_bar(bar_index)
+	)
+	arrangement_state.add_undo_action(func() -> void:
+		current_arrangement.remove_bar(bar_index)
+	)
+	
+	Controller.state_manager.commit_state_change(arrangement_state)
 
 
 func _remove_timeline_bar(at_index: int) -> void:
@@ -755,8 +828,21 @@ func _remove_timeline_bar(at_index: int) -> void:
 	if current_arrangement.timeline_length <= 0:
 		return
 	
-	current_arrangement.remove_bar(at_index + _scroll_offset)
-	Controller.current_song.mark_dirty()
+	var bar_index := at_index + _scroll_offset
+	var bar_patterns := current_arrangement.timeline_bars[bar_index].duplicate()
+	
+	var arrangement_state := Controller.state_manager.create_state_change(StateManager.StateChangeType.ARRANGEMENT)
+	arrangement_state.add_do_action(func() -> void:
+		current_arrangement.remove_bar(bar_index)
+	)
+	arrangement_state.add_undo_action(func() -> void:
+		current_arrangement.insert_bar(bar_index)
+		
+		for i: int in bar_patterns.size():
+			current_arrangement.set_pattern(bar_index, i, bar_patterns[i])
+	)
+	
+	Controller.state_manager.commit_state_change(arrangement_state)
 
 
 func _copy_timeline_bars() -> void:
@@ -771,8 +857,23 @@ func _paste_timeline_bars(at_index: int) -> void:
 	if not current_arrangement:
 		return
 	
-	current_arrangement.paste_bar_range(at_index + _scroll_offset)
-	Controller.current_song.mark_dirty()
+	var copied_data := current_arrangement.get_copied_bar_range().duplicate()
+	if copied_data.is_empty():
+		return
+	
+	var bar_index := at_index + _scroll_offset
+	var state_context := { "affected": 0 } # We need a reference type to make sure it can be shared by lambdas.
+	
+	var arrangement_state := Controller.state_manager.create_state_change(StateManager.StateChangeType.ARRANGEMENT)
+	arrangement_state.add_do_action(func() -> void:
+		state_context.affected = current_arrangement.paste_bar_range(bar_index, copied_data)
+	)
+	arrangement_state.add_undo_action(func() -> void:
+		for i: int in range(state_context.affected, 0, -1): # Iterate backwards, so deletions are cheaper.
+			current_arrangement.remove_bar(bar_index + i - 1)
+	)
+	
+	Controller.state_manager.commit_state_change(arrangement_state)
 
 
 class ArrangementChannel:

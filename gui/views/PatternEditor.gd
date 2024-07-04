@@ -42,6 +42,7 @@ func _ready() -> void:
 		
 		Controller.song_loaded.connect(_edit_current_pattern)
 		Controller.song_pattern_changed.connect(_edit_current_pattern)
+		Controller.song_instrument_created.connect(_update_pattern_instrument)
 		Controller.song_instrument_changed.connect(_update_pattern_instrument)
 
 
@@ -115,22 +116,20 @@ func _edit_current_pattern() -> void:
 	
 	if current_pattern:
 		current_pattern.instrument_changed.disconnect(_update_pattern_instrument)
+		current_pattern.scale_changed.disconnect(_update_pattern_widgets)
+		current_pattern.key_changed.disconnect(_update_pattern_widgets)
+		current_pattern.instrument_recording_toggled.disconnect(_update_pattern_widgets)
 	
 	current_pattern = Controller.get_current_pattern()
-
-	if current_pattern:
-		current_pattern.instrument_changed.connect(_update_pattern_instrument)
-
-	_update_pattern_instrument()
 	
 	if current_pattern:
-		_scale_picker.set_selected(_scale_picker.options[current_pattern.scale])
-		_key_picker.set_selected(_key_picker.options[current_pattern.key])
-		_record_instrument.set_pressed_no_signal(current_pattern.record_instrument)
-	else:
-		_scale_picker.clear_selected()
-		_key_picker.clear_selected()
-		_record_instrument.set_pressed_no_signal(false)
+		current_pattern.instrument_changed.connect(_update_pattern_instrument)
+		current_pattern.scale_changed.connect(_update_pattern_widgets)
+		current_pattern.key_changed.connect(_update_pattern_widgets)
+		current_pattern.instrument_recording_toggled.connect(_update_pattern_widgets)
+	
+	_update_pattern_instrument()
+	_update_pattern_widgets()
 
 
 func _update_pattern_instrument() -> void:
@@ -166,6 +165,17 @@ func _update_pattern_instrument() -> void:
 		_key_picker.get_parent().visible = selected_instrument.type != Instrument.InstrumentType.INSTRUMENT_DRUMKIT
 
 
+func _update_pattern_widgets() -> void:
+	if current_pattern:
+		_scale_picker.set_selected(_scale_picker.options[current_pattern.scale])
+		_key_picker.set_selected(_key_picker.options[current_pattern.key])
+		_record_instrument.set_pressed_no_signal(current_pattern.record_instrument)
+	else:
+		_scale_picker.clear_selected()
+		_key_picker.clear_selected()
+		_record_instrument.set_pressed_no_signal(false)
+
+
 func _change_instrument() -> void:
 	if not Controller.current_song || not current_pattern:
 		return
@@ -173,8 +183,33 @@ func _change_instrument() -> void:
 	var selected_item := _instrument_picker.get_selected()
 	if not selected_item:
 		return
-	current_pattern.change_instrument(selected_item.id, Controller.current_song.instruments[selected_item.id])
-	Controller.current_song.mark_dirty()
+	
+	var instrument_idx := selected_item.id
+	var old_instrument_idx := current_pattern.instrument_idx
+	var state_context := { "affected": [] } # We need a reference type to make sure it can be shared by lambdas.
+	
+	var pattern_state := Controller.state_manager.create_state_change(StateManager.StateChangeType.PATTERN, Controller.current_pattern_index)
+	pattern_state.add_do_action(func() -> void:
+		var reference_pattern := Controller.current_song.patterns[pattern_state.reference_id]
+		var pattern_instrument := Controller.current_song.instruments[instrument_idx]
+		
+		state_context.affected = reference_pattern.change_instrument(instrument_idx, pattern_instrument)
+	)
+	pattern_state.add_undo_action(func() -> void:
+		var reference_pattern := Controller.current_song.patterns[pattern_state.reference_id]
+		var pattern_instrument := Controller.current_song.instruments[old_instrument_idx]
+		
+		reference_pattern.change_instrument(old_instrument_idx, pattern_instrument)
+		
+		for note_data: Vector3i in state_context.affected:
+			reference_pattern.add_note(note_data.x, note_data.y, note_data.z, false)
+		
+		reference_pattern.sort_notes()
+		reference_pattern.reindex_active_notes()
+		reference_pattern.notes_changed.emit()
+	)
+	
+	Controller.state_manager.commit_state_change(pattern_state)
 
 
 func _change_scale() -> void:
@@ -184,8 +219,29 @@ func _change_scale() -> void:
 	var selected_item := _scale_picker.get_selected()
 	if not selected_item:
 		return
-	current_pattern.change_scale(selected_item.id)
-	Controller.current_song.mark_dirty()
+	
+	var scale_id := selected_item.id
+	var old_scale_id := current_pattern.scale
+	var state_context := { "affected": [] } # We need a reference type to make sure it can be shared by lambdas.
+	
+	var pattern_state := Controller.state_manager.create_state_change(StateManager.StateChangeType.PATTERN, Controller.current_pattern_index)
+	pattern_state.add_do_action(func() -> void:
+		var reference_pattern := Controller.current_song.patterns[pattern_state.reference_id]
+		state_context.affected = reference_pattern.change_scale(scale_id)
+	)
+	pattern_state.add_undo_action(func() -> void:
+		var reference_pattern := Controller.current_song.patterns[pattern_state.reference_id]
+		reference_pattern.change_scale(old_scale_id)
+		
+		for note_data: Vector3i in state_context.affected:
+			reference_pattern.add_note(note_data.x, note_data.y, note_data.z, false)
+		
+		reference_pattern.sort_notes()
+		reference_pattern.reindex_active_notes()
+		reference_pattern.notes_changed.emit()
+	)
+	
+	Controller.state_manager.commit_state_change(pattern_state)
 
 
 func _change_key() -> void:
@@ -195,17 +251,42 @@ func _change_key() -> void:
 	var selected_item := _key_picker.get_selected()
 	if not selected_item:
 		return
-	current_pattern.change_key(selected_item.id)
-	Controller.current_song.mark_dirty()
+	
+	var key_id := selected_item.id
+	var old_key_id := current_pattern.key
+	
+	var pattern_state := Controller.state_manager.create_state_change(StateManager.StateChangeType.PATTERN, Controller.current_pattern_index)
+	pattern_state.add_do_action(func() -> void:
+		var reference_pattern := Controller.current_song.patterns[pattern_state.reference_id]
+		reference_pattern.change_key(key_id)
+	)
+	pattern_state.add_undo_action(func() -> void:
+		var reference_pattern := Controller.current_song.patterns[pattern_state.reference_id]
+		reference_pattern.change_key(old_key_id)
+	)
+	
+	Controller.state_manager.commit_state_change(pattern_state)
 
 
 func _toggle_record_instrument(enabled: bool) -> void:
 	if not Controller.current_song || not current_pattern:
 		return
 	
-	current_pattern.toggle_record_instrument(enabled)
-	Controller.current_song.mark_dirty()
+	var old_enabled := current_pattern.record_instrument
 	
+	var pattern_state := Controller.state_manager.create_state_change(StateManager.StateChangeType.PATTERN, Controller.current_pattern_index)
+	pattern_state.add_do_action(func() -> void:
+		var reference_pattern := Controller.current_song.patterns[pattern_state.reference_id]
+		reference_pattern.toggle_record_instrument(enabled)
+	)
+	pattern_state.add_undo_action(func() -> void:
+		var reference_pattern := Controller.current_song.patterns[pattern_state.reference_id]
+		reference_pattern.toggle_record_instrument(old_enabled)
+	)
+	
+	Controller.state_manager.commit_state_change(pattern_state)
+	
+	# Only switch on the initial toggle, but not on undo/redo.
 	if enabled:
 		Controller.navigate_to(Menu.NavigationTarget.INSTRUMENT)
 		Controller.edit_instrument(current_pattern.instrument_idx)
@@ -215,5 +296,22 @@ func _shift_notes(offset: int) -> void:
 	if not Controller.current_song || not current_pattern:
 		return
 	
-	current_pattern.shift_notes(offset)
-	Controller.current_song.mark_dirty()
+	var old_notes := current_pattern.notes.duplicate()
+	
+	# FIXME: This technically can produce empty steps because we don't check if shift will do anything.
+	var pattern_state := Controller.state_manager.create_state_change(StateManager.StateChangeType.PATTERN, Controller.current_pattern_index)
+	pattern_state.add_do_action(func() -> void:
+		var reference_pattern := Controller.current_song.patterns[pattern_state.reference_id]
+		reference_pattern.shift_notes(offset)
+	)
+	pattern_state.add_undo_action(func() -> void:
+		var reference_pattern := Controller.current_song.patterns[pattern_state.reference_id]
+		
+		for i in old_notes.size():
+			reference_pattern.notes[i] = old_notes[i]
+		
+		reference_pattern.reindex_active_notes()
+		reference_pattern.notes_changed.emit()
+	)
+	
+	Controller.state_manager.commit_state_change(pattern_state)

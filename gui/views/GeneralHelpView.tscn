@@ -50,6 +50,7 @@ size_flags_horizontal = 0
 
 [node name="StartBasicGuide" parent="Layout/LeftPage/Layout" instance=ExtResource("2_y870o")]
 unique_name_in_owner = true
+physics_interpolation_mode = 2
 custom_minimum_size = Vector2(340, 0)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -79,6 +80,7 @@ size_flags_horizontal = 0
 
 [node name="StartAdvancedGuide" parent="Layout/LeftPage/Layout" instance=ExtResource("2_y870o")]
 unique_name_in_owner = true
+physics_interpolation_mode = 2
 custom_minimum_size = Vector2(340, 0)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -116,6 +118,16 @@ layout_mode = 2
 key_text = "bosca_pause"
 description_text = "Play/Pause"
 
+[node name="ShortcutLine5" parent="Layout/RightPage/Layout/ShortcutList" instance=ExtResource("3_1pvp8")]
+layout_mode = 2
+key_text = "ui_undo"
+description_text = "Undo last action"
+
+[node name="ShortcutLine6" parent="Layout/RightPage/Layout/ShortcutList" instance=ExtResource("3_1pvp8")]
+layout_mode = 2
+key_text = "ui_redo"
+description_text = "Redo last action"
+
 [node name="ShortcutLine2" parent="Layout/RightPage/Layout/ShortcutList" instance=ExtResource("3_1pvp8")]
 layout_mode = 2
 key_text = "bosca_save"
@@ -138,6 +150,7 @@ size_flags_vertical = 3
 
 [node name="NavigateBack" parent="Layout/RightPage/Layout" instance=ExtResource("2_y870o")]
 unique_name_in_owner = true
+physics_interpolation_mode = 2
 custom_minimum_size = Vector2(240, 0)
 layout_mode = 2
 size_flags_horizontal = 8

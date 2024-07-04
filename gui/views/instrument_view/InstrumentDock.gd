@@ -32,8 +32,9 @@ func _ready() -> void:
 		item_created.connect(Controller.create_and_edit_instrument)
 		item_selected.connect(Controller.edit_instrument)
 		item_deleted.connect(Controller.delete_instrument)
-
+		
 		Controller.song_loaded.connect(queue_redraw)
+		Controller.song_instrument_created.connect(queue_redraw)
 		Controller.song_instrument_changed.connect(queue_redraw)
 
 

@@ -215,21 +215,40 @@ func _instrument_selected() -> void:
 	Controller.set_current_instrument(category_name, instrument_name)
 
 
+func _is_instrument_recording() -> bool:
+	return current_pattern && current_pattern.record_instrument && current_pattern.instrument_idx == Controller.current_instrument_index
+
+
 func _instrument_filter_changed() -> void:
 	if not Controller.current_song || not current_instrument:
 		return
 	
 	var slider_value := _lowpass_slider.get_current_value()
 	
-	if current_pattern && current_pattern.record_instrument && current_pattern.instrument_idx == Controller.current_instrument_index:
+	if _is_instrument_recording():
 		var current_position := Controller.music_player.get_pattern_time()
 		if current_position >= 0:
-			current_pattern.record_instrument_filter(current_position, slider_value.x, slider_value.y)
-	else:
-		current_instrument.lp_cutoff = slider_value.x
-		current_instrument.lp_resonance = slider_value.y
+			var pattern_state := Controller.state_manager.create_state_change(StateManager.StateChangeType.PATTERN, Controller.current_pattern_index, "pattern_recorded_filter%d" % [ current_position ])
+			pattern_state.add_setget_property(current_pattern, "instrument_filter", slider_value,
+				# Getter.
+				func() -> Vector2i:
+					var reference_pattern := Controller.current_song.patterns[pattern_state.reference_id]
+					return reference_pattern.get_instrument_filter(current_position)
+					,
+				# Setter.
+				func(value: Vector2i) -> void:
+					var reference_pattern := Controller.current_song.patterns[pattern_state.reference_id]
+					reference_pattern.record_instrument_filter(current_position, value.x, value.y)
+			)
+			
+			Controller.state_manager.commit_state_change(pattern_state)
 	
-	Controller.current_song.mark_dirty()
+	else:
+		var instrument_state := Controller.state_manager.create_state_change(StateManager.StateChangeType.INSTRUMENT, Controller.current_instrument_index, "instrument_lp_filter")
+		instrument_state.add_indexed_property(Controller.current_song.instruments, instrument_state.reference_id, "lp_cutoff", slider_value.x)
+		instrument_state.add_indexed_property(Controller.current_song.instruments, instrument_state.reference_id, "lp_resonance", slider_value.y)
+		
+		Controller.state_manager.commit_state_change(instrument_state)
 
 
 func _instrument_volume_changed() -> void:
@@ -238,14 +257,28 @@ func _instrument_volume_changed() -> void:
 	
 	var slider_value := _volume_slider.get_current_value()
 	
-	if current_pattern && current_pattern.record_instrument && current_pattern.instrument_idx == Controller.current_instrument_index:
+	if _is_instrument_recording():
 		var current_position := Controller.music_player.get_pattern_time()
 		if current_position >= 0:
-			current_pattern.record_instrument_volume(current_position, slider_value.y)
+			var pattern_state := Controller.state_manager.create_state_change(StateManager.StateChangeType.PATTERN, Controller.current_pattern_index, "pattern_recorded_volume%d" % [ current_position ])
+			pattern_state.add_setget_property(current_pattern, "instrument_volume", slider_value.y,
+				# Getter.
+				func() -> int:
+					var reference_pattern := Controller.current_song.patterns[pattern_state.reference_id]
+					return reference_pattern.get_instrument_volume(current_position)
+					,
+				# Setter.
+				func(value: int) -> void:
+					var reference_pattern := Controller.current_song.patterns[pattern_state.reference_id]
+					reference_pattern.record_instrument_volume(current_position, value)
+			)
+			
+			Controller.state_manager.commit_state_change(pattern_state)
 	else:
-		current_instrument.volume = slider_value.y
-	
-	Controller.current_song.mark_dirty()
+		var instrument_state := Controller.state_manager.create_state_change(StateManager.StateChangeType.INSTRUMENT, Controller.current_instrument_index, "instrument_volume")
+		instrument_state.add_indexed_property(Controller.current_song.instruments, instrument_state.reference_id, "volume", slider_value.y)
+		
+		Controller.state_manager.commit_state_change(instrument_state)
 
 
 # Instrument recording.

@@ -121,20 +121,23 @@ func change_key(new_key: int) -> void:
 	key_changed.emit()
 
 
-func change_scale(new_scale: int) -> void:
+func change_scale(new_scale: int) -> Array[Vector3i]:
 	scale = new_scale
+	var affected_notes: Array[Vector3i] = []
 	
 	# Delete notes that don't fit the new scale.
 	var valid_notes := _get_valid_note_values()
 	var i := 0
 	while i < note_amount:
 		if not valid_notes.has(notes[i].x - key):
+			affected_notes.push_back(notes[i])
 			remove_note_at(i)
 			i -= 1
 		i += 1
 	
 	reindex_active_notes()
 	scale_changed.emit()
+	return affected_notes
 
 
 func shift_notes(offset: int) -> void:
@@ -168,8 +171,9 @@ func shift_notes(offset: int) -> void:
 	notes_changed.emit()
 
 
-func change_instrument(new_idx: int, instrument: Instrument) -> void:
+func change_instrument(new_idx: int, instrument: Instrument) -> Array[Vector3i]:
 	instrument_idx = new_idx
+	var affected_notes: Array[Vector3i] = []
 	
 	# Delete notes that don't fit the new instrument.
 	if instrument.type == Instrument.InstrumentType.INSTRUMENT_DRUMKIT:
@@ -177,11 +181,13 @@ func change_instrument(new_idx: int, instrument: Instrument) -> void:
 		var i := 0
 		while i < note_amount:
 			if notes[i].x >= drumkit_instrument.voices.size():
+				affected_notes.push_back(notes[i])
 				remove_note_at(i)
 				i -= 1
 			i += 1
 	
 	instrument_changed.emit()
+	return affected_notes
 
 
 # Instrument recording.
@@ -192,6 +198,15 @@ func toggle_record_instrument(enabled: bool) -> void:
 	instrument_recording_toggled.emit()
 
 
+func get_instrument_filter(position: int) -> Vector2i:
+	if position < 0 || position >= Song.MAX_PATTERN_SIZE:
+		printerr("Pattern: Invalid note position for recorded values, %d is not in range (%d, %d)." % [ position, 0, Song.MAX_PATTERN_SIZE - 1 ])
+		return Vector2i(-1, -1)
+	
+	var recorded_data := recorded_instrument_values[position]
+	return Vector2i(recorded_data.y, recorded_data.z)
+
+
 func record_instrument_filter(position: int, cutoff: int, resonance: int) -> void:
 	if position < 0 || position >= Song.MAX_PATTERN_SIZE:
 		printerr("Pattern: Invalid note position for recorded values, %d is not in range (%d, %d)." % [ position, 0, Song.MAX_PATTERN_SIZE - 1 ])
@@ -199,6 +214,14 @@ func record_instrument_filter(position: int, cutoff: int, resonance: int) -> voi
 	
 	recorded_instrument_values[position].y = cutoff
 	recorded_instrument_values[position].z = resonance
+
+
+func get_instrument_volume(position: int) -> int:
+	if position < 0 || position >= Song.MAX_PATTERN_SIZE:
+		printerr("Pattern: Invalid note position for recorded values, %d is not in range (%d, %d)." % [ position, 0, Song.MAX_PATTERN_SIZE - 1 ])
+		return -1
+	
+	return recorded_instrument_values[position].x
 
 
 func record_instrument_volume(position: int, volume: int) -> void:
@@ -293,17 +316,28 @@ func sort_notes() -> void:
 func has_note(value: int, position: int, exact: bool = false) -> bool:
 	if value < 0 || position < 0:
 		return false
-
+	
 	for i in note_amount:
 		if notes[i].x != value:
 			continue
-
+		
 		if exact && position == notes[i].y:
 			return true
 		if not exact && position >= notes[i].y && position < (notes[i].y + notes[i].z):
 			return true
-
+	
 	return false
+
+
+func get_note_length(value: int, position: int) -> int:
+	if value < 0 || position < 0:
+		return 0
+	
+	for i in note_amount:
+		if notes[i].x == value && notes[i].y == position:
+			return notes[i].z
+	
+	return 0
 
 
 func remove_note(value: int, position: int, exact: bool = false) -> void:
