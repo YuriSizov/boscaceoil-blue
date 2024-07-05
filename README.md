@@ -22,7 +22,7 @@ Begin writing music quickly with a playful piano roll sequencer. Create patterns
 
 Just as playfully rearrange your patterns on the timeline, create variations and make adjustments. Use up to 8 channels to play multiple patterns and instruments in parallel. Block by block, build your multi-minute song!
 
-### Over 300 synthesizes instruments
+### Over 300 synthesized instruments
 
 Powered by a versatile software synthesizer, _Bosca Ceoil Blue_ offers you pretty much any instrument you can think of! Don't like how your tune sounds with a piano? Swap it for a guitar with a swift adjustment. If you feel adventurous, make sure to take a look at instrument tuning.
 
@@ -37,12 +37,12 @@ Export your creations to WAV and MIDI. Share them with the world, or use them fo
 
 If you find a usability issue or a bug, please [file a report](https://github.com/YuriSizov/boscaceoil-blue/issues). If you don't have a GitHub account, you can also reach out on [Discord](https://discord.gg/S657Y9KPF9).
 
-### Current release: 3.0-beta1
+### Current release: 3.0-beta2
 
-* **[Download for Linux (x86_64)](https://github.com/YuriSizov/boscaceoil-blue/releases/download/3.0-beta1/boscaceoil-blue-linux-x86_64.zip)**
-* **[Download for macOS (Universal)](https://github.com/YuriSizov/boscaceoil-blue/releases/download/3.0-beta1/boscaceoil-blue-macos-universal.zip)**
-* **[Download for Windows (x86_64)](https://github.com/YuriSizov/boscaceoil-blue/releases/download/3.0-beta1/boscaceoil-blue-windows-x86_64.zip)**
-* **[Download for Windows (x86_32)](https://github.com/YuriSizov/boscaceoil-blue/releases/download/3.0-beta1/boscaceoil-blue-windows-x86_32.zip)**
+* **[Download for Linux (x86_64)](https://github.com/YuriSizov/boscaceoil-blue/releases/download/3.0-beta2/boscaceoil-blue-linux-x86_64.zip)**
+* **[Download for macOS (Universal)](https://github.com/YuriSizov/boscaceoil-blue/releases/download/3.0-beta2/boscaceoil-blue-macos-universal.zip)**
+* **[Download for Windows (x86_64)](https://github.com/YuriSizov/boscaceoil-blue/releases/download/3.0-beta2/boscaceoil-blue-windows-x86_64.zip)**
+* **[Download for Windows (x86_32)](https://github.com/YuriSizov/boscaceoil-blue/releases/download/3.0-beta2/boscaceoil-blue-windows-x86_32.zip)**
 
 _Web and Android versions are planned in the future._
 
@@ -67,6 +67,12 @@ To work on _Bosca Ceoil Blue_ you need to:
 
 
 ## FAQ
+
+### Is _Bosca Ceoil Blue_ compatible with the original?
+
+Yes, the new version is fully compatible with the original _Bosca Ceoil_ and should be perceived as the next major release in the series. In fact, the first release of _The Blue Album_ is versioned `3.0` to indicate just that. This version should sound the same, loads all existing `.ceol` files, and has every feature of the original.
+
+This also means that tracks created with _The Blue Album_ `3.x` can be loaded back into the original _Bosca Ceoil_, if you so desire. Future releases of _Bosca Ceoil Blue_ are likely to introduce changes and features incompatible with the original, whenever that might be necessary. However, you will always be able to open and edit existing `.ceol` files in every future version of the tool, with your songs being automatically converted to the newest format.
 
 ### Why _Bosca Ceoil_ needs a port?
 

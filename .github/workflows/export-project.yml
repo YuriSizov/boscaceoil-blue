@@ -13,8 +13,8 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  GODOT_VERSION: "4.3.0-beta1"
-  GDSION_VERSION: "0.7-beta1"
+  GODOT_VERSION: "4.3.0-beta2"
+  GDSION_VERSION: "0.7-beta2"
 
 jobs:
   export-publish:
