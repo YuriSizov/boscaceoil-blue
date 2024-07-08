@@ -28,8 +28,12 @@ func _update_label() -> void:
 	if not _label:
 		return
 	
+	var text_color := get_theme_color("font_color", "NavigationButton")
+	if not button_pressed:
+		text_color = get_theme_color("font_inactive_color", "NavigationButton")
+	
 	_label.text = label_text
-	_label.modulate.a = 1.0 if button_pressed else 0.65
+	_label.add_theme_color_override("font_color", text_color)
 	_label.queue_redraw()
 
 

@@ -8,7 +8,11 @@ extends MarginContainer
 
 const SIZE_CHANGES_SAVE_DELAY := 0.3
 
+const THEME_FONT_NORMAL := preload("res://assets/fonts/fff-aquarius-bold-condensed.normal.ttf")
+const THEME_FONT_MSDF := preload("res://assets/fonts/fff-aquarius-bold-condensed.msdf.ttf")
+
 var _default_window_title: String = ""
+var _project_theme: Theme = null
 
 @onready var _pattern_editor: Control = %PatternEditor
 @onready var _locked_indicator: Control = %LockedIndicator
@@ -22,11 +26,13 @@ func _enter_tree() -> void:
 	get_window().wrap_controls = true
 	
 	_default_window_title = get_window().title
+	_project_theme = load("res://gui/theme/project_theme.tres") # By magic of Godot, this is a shared reference.
 
 
 func _ready() -> void:
 	_restore_window_size()
 	_update_window_size()
+	_update_project_theme()
 	
 	_save_timer.wait_time = SIZE_CHANGES_SAVE_DELAY
 	_save_timer.autostart = false
@@ -45,6 +51,8 @@ func _ready() -> void:
 		
 		Controller.settings_manager.gui_scale_changed.connect(_update_window_size)
 		Controller.settings_manager.fullscreen_changed.connect(_update_window_size)
+		
+		Controller.settings_manager.gui_scale_changed.connect(_update_project_theme)
 		
 		Controller.song_loaded.connect(_edit_current_song)
 		Controller.song_saved.connect(_update_window_title)
@@ -186,6 +194,20 @@ func _save_window_size_debounced() -> void:
 	
 	Controller.settings_manager.set_windowed_maximized(main_window.mode == Window.MODE_MAXIMIZED)
 	Controller.settings_manager.set_fullscreen(main_window.mode == Window.MODE_FULLSCREEN || main_window.mode == Window.MODE_EXCLUSIVE_FULLSCREEN, true)
+
+
+# Project theme.
+
+func _update_project_theme() -> void:
+	if not _project_theme:
+		return
+	
+	var scale_factor := Controller.settings_manager.get_gui_scale_factor()
+	
+	if scale_factor <= 1.0:
+		_project_theme.default_font.base_font = THEME_FONT_NORMAL
+	else:
+		_project_theme.default_font.base_font = THEME_FONT_MSDF
 
 
 # Editor locking.

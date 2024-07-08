@@ -3,12 +3,12 @@
 importer="font_data_dynamic"
 type="FontFile"
 uid="uid://blsoavvmevh5x"
-path="res://.godot/imported/FFF Aquarius Bold Condensed Regular.ttf-0cc48dcf45514885cb830eef70c5fb4c.fontdata"
+path="res://.godot/imported/fff-aquarius-bold-condensed.normal.ttf-142e0b9828cb72550410ad9b393271c5.fontdata"
 
 [deps]
 
-source_file="res://assets/fonts/FFF Aquarius Bold Condensed Regular.ttf"
-dest_files=["res://.godot/imported/FFF Aquarius Bold Condensed Regular.ttf-0cc48dcf45514885cb830eef70c5fb4c.fontdata"]
+source_file="res://assets/fonts/fff-aquarius-bold-condensed.normal.ttf"
+dest_files=["res://.godot/imported/fff-aquarius-bold-condensed.normal.ttf-142e0b9828cb72550410ad9b393271c5.fontdata"]
 
 [params]
 

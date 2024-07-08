@@ -8,7 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://dltrbt3gaisqw" path="res://assets/icons/arrow_down.png" id="4_6fvac"]
 [ext_resource type="Texture2D" uid="uid://b2uo4lffopiu7" path="res://assets/icons/fullscreen_on.png" id="4_heflt"]
 [ext_resource type="Texture2D" uid="uid://bcnk14je7sagv" path="res://assets/icons/arrow_up.png" id="5_ixtld"]
-[ext_resource type="FontFile" uid="uid://blsoavvmevh5x" path="res://assets/fonts/FFF Aquarius Bold Condensed Regular.ttf" id="7_n3is1"]
+[ext_resource type="FontFile" uid="uid://cjwuh3bvsqt57" path="res://assets/fonts/fff-aquarius-bold-condensed.msdf.ttf" id="9_cvewl"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a0spi"]
 content_margin_left = 24.0
@@ -398,7 +398,7 @@ content_margin_bottom = 4.0
 bg_color = Color(0.203922, 0.258824, 0.27451, 1)
 
 [sub_resource type="FontVariation" id="FontVariation_ktmxc"]
-base_font = ExtResource("7_n3is1")
+base_font = ExtResource("9_cvewl")
 spacing_glyph = 1
 
 [resource]
@@ -510,7 +510,8 @@ Menu/icons/fullscreen_on = ExtResource("4_heflt")
 MenuContentsPanel/base_type = &"PanelContainer"
 MenuContentsPanel/styles/panel = SubResource("StyleBoxTexture_3o700")
 NavigationButton/base_type = &"Button"
-NavigationButton/colors/font_color = Color(0.737255, 0.784314, 0.8, 1)
+NavigationButton/colors/font_color = Color(1, 1, 1, 1)
+NavigationButton/colors/font_inactive_color = Color(0.737255, 0.784314, 0.8, 1)
 NavigationButton/colors/font_pressed_color = Color(1, 1, 1, 1)
 NavigationButton/styles/focus = SubResource("StyleBoxEmpty_1geuc")
 NavigationButton/styles/hover = SubResource("StyleBoxFlat_455my")
