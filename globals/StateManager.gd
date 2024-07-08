@@ -148,9 +148,17 @@ class StateChange:
 	var items: Array[StateChangeItem] = []
 	var _item_prop_key_map: Dictionary = {} # String: StateChangeProperty.
 	
+	# We need a reference type to make sure it can be shared by lambdas. We also need it
+	# not to leak, so it's allocated with the state.
+	var _context: Dictionary = {}
+	
 	
 	func _should_accumulate() -> bool:
 		return not accumulation_id.is_empty() && not accumulation_pending
+	
+	
+	func get_context() -> Dictionary:
+		return _context
 	
 	
 	# Suitable for tracking properties of persistent objects, like songs and arrangements.

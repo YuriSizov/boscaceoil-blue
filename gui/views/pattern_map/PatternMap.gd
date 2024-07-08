@@ -746,9 +746,11 @@ func _clone_pattern_at_cursor() -> void:
 	var bar_index := cell.x + _scroll_offset
 	
 	var old_value := current_arrangement.get_pattern(bar_index, cell.y)
-	var state_context := { "id": -1 } # We need a reference type to make sure it can be shared by lambdas.
 	
 	var arrangement_state := Controller.state_manager.create_state_change(StateManager.StateChangeType.ARRANGEMENT)
+	var state_context := arrangement_state.get_context()
+	state_context["id"] = -1
+	
 	arrangement_state.add_do_action(func() -> void:
 		state_context.id = Controller.clone_pattern_nocheck(pattern_idx)
 		current_arrangement.set_pattern(bar_index, cell.y, state_context.id)
@@ -862,9 +864,11 @@ func _paste_timeline_bars(at_index: int) -> void:
 		return
 	
 	var bar_index := at_index + _scroll_offset
-	var state_context := { "affected": 0 } # We need a reference type to make sure it can be shared by lambdas.
 	
 	var arrangement_state := Controller.state_manager.create_state_change(StateManager.StateChangeType.ARRANGEMENT)
+	var state_context := arrangement_state.get_context()
+	state_context["affected"] = 0
+	
 	arrangement_state.add_do_action(func() -> void:
 		state_context.affected = current_arrangement.paste_bar_range(bar_index, copied_data)
 	)

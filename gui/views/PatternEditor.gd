@@ -30,7 +30,7 @@ func _ready() -> void:
 	_record_instrument.toggled.connect(_toggle_record_instrument)
 	_note_shift_up.pressed.connect(_shift_notes.bind(1))
 	_note_shift_down.pressed.connect(_shift_notes.bind(-1))
-
+	
 	_edit_current_pattern()
 	
 	if not Engine.is_editor_hint():
@@ -186,9 +186,11 @@ func _change_instrument() -> void:
 	
 	var instrument_idx := selected_item.id
 	var old_instrument_idx := current_pattern.instrument_idx
-	var state_context := { "affected": [] } # We need a reference type to make sure it can be shared by lambdas.
 	
 	var pattern_state := Controller.state_manager.create_state_change(StateManager.StateChangeType.PATTERN, Controller.current_pattern_index)
+	var state_context := pattern_state.get_context()
+	state_context["affected"] = []
+	
 	pattern_state.add_do_action(func() -> void:
 		var reference_pattern := Controller.current_song.patterns[pattern_state.reference_id]
 		var pattern_instrument := Controller.current_song.instruments[instrument_idx]
@@ -222,9 +224,11 @@ func _change_scale() -> void:
 	
 	var scale_id := selected_item.id
 	var old_scale_id := current_pattern.scale
-	var state_context := { "affected": [] } # We need a reference type to make sure it can be shared by lambdas.
 	
 	var pattern_state := Controller.state_manager.create_state_change(StateManager.StateChangeType.PATTERN, Controller.current_pattern_index)
+	var state_context := pattern_state.get_context()
+	state_context["affected"] = []
+	
 	pattern_state.add_do_action(func() -> void:
 		var reference_pattern := Controller.current_song.patterns[pattern_state.reference_id]
 		state_context.affected = reference_pattern.change_scale(scale_id)

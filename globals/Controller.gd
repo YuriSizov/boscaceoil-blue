@@ -330,9 +330,11 @@ func create_pattern() -> void:
 		return
 	
 	var instrument_idx := current_instrument_index
-	var state_context := { "id": -1 } # We need a reference type to make sure it can be shared by lambdas.
 	
 	var song_state := state_manager.create_state_change(StateManager.StateChangeType.SONG)
+	var state_context := song_state.get_context()
+	state_context["id"] = -1
+	
 	song_state.add_do_action(func() -> void:
 		state_context.id = create_pattern_nocheck(instrument_idx)
 		song_pattern_created.emit()
@@ -407,14 +409,14 @@ func delete_pattern(pattern_index: int) -> void:
 		return
 	
 	var instrument_idx := current_instrument_index
-	var state_context := {
-		"pattern": null,
-		"deleted_last": false,
-		"cleared_bars": [],
-		"shifted_bars": [],
-	}
 	
 	var song_state := state_manager.create_state_change(StateManager.StateChangeType.SONG)
+	var state_context := song_state.get_context()
+	state_context["pattern"] = null
+	state_context["deleted_last"] = false
+	state_context["cleared_bars"] = []
+	state_context["shifted_bars"] = []
+	
 	song_state.add_do_action(func() -> void:
 		# Delete the pattern itself from the list.
 		state_context.pattern = current_song.patterns[pattern_index]
@@ -545,9 +547,11 @@ func create_instrument() -> void:
 		return
 	
 	var voice_data := voice_manager.get_random_voice_data()
-	var state_context := { "id": -1 } # We need a reference type to make sure it can be shared by lambdas.
 	
 	var song_state := state_manager.create_state_change(StateManager.StateChangeType.SONG)
+	var state_context := song_state.get_context()
+	state_context["id"] = -1
+	
 	song_state.add_do_action(func() -> void:
 		state_context.id = create_instrument_nocheck(voice_data)
 		song_instrument_created.emit()
@@ -596,14 +600,14 @@ func delete_instrument(instrument_index: int) -> void:
 		return
 	
 	var voice_data := voice_manager.get_random_voice_data()
-	var state_context := {
-		"instrument": null,
-		"deleted_last": false,
-		"reset_patterns": [],
-		"shifted_patterns": [],
-	}
 	
 	var song_state := state_manager.create_state_change(StateManager.StateChangeType.SONG)
+	var state_context := song_state.get_context()
+	state_context["instrument"] = null
+	state_context["deleted_last"] = false
+	state_context["reset_patterns"] = []
+	state_context["shifted_patterns"] = []
+	
 	song_state.add_do_action(func() -> void:
 		# Delete the instrument itself from the list.
 		state_context.instrument = current_song.instruments[instrument_index]
