@@ -16,6 +16,7 @@ var current_pattern: Pattern = null
 @onready var _instrument_picker: OptionPicker = %InstrumentPicker
 @onready var _prev_instrument_button: Button = %PrevInstrument
 @onready var _next_instrument_button: Button = %NextInstrument
+@onready var _randomize_instrument_button: Button = %RandomizeInstrument
 
 @onready var _lowpass_slider: PadSlider = %LowPassSlider
 @onready var _volume_slider: PadSlider = %VolumeSlider
@@ -30,12 +31,15 @@ func _ready() -> void:
 	_instrument_picker.selected.connect(_instrument_selected)
 	_prev_instrument_button.pressed.connect(_instrument_picker.select_previous)
 	_next_instrument_button.pressed.connect(_instrument_picker.select_next)
+	_randomize_instrument_button.pressed.connect(_instrument_randomized)
 	
 	_lowpass_slider.changed.connect(_instrument_filter_changed)
 	_volume_slider.changed.connect(_instrument_volume_changed)
 	
 	_edit_current_instrument()
 	_edit_current_pattern()
+	
+	
 	
 	if not Engine.is_editor_hint():
 		Controller.help_manager.reference_node(HelpManager.StepNodeRef.INSTRUMENT_EDITOR_BOTH_PICKERS, _pickers_container.get_global_rect)
@@ -198,6 +202,12 @@ func _update_selected_instrument() -> void:
 			break
 
 
+func _instrument_randomized() -> void:
+	if Engine.is_editor_hint():
+		return
+		
+	Controller.randomize_current_instrument()
+	
 func _category_selected() -> void:
 	if Engine.is_editor_hint():
 		return

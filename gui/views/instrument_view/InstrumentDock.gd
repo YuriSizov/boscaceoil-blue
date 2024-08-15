@@ -66,7 +66,7 @@ func _draw_item(on_control: Control, item_index: int, item_rect: Rect2) -> void:
 	
 	var string_position := item_rect.position + Vector2(8, item_rect.size.y - 10)
 	var shadow_position := string_position + _shadow_size
-	var gutter_string := "%d" % [ item_index + 1 ]
+	var gutter_string := "%d" % [item_index + 1]
 	on_control.draw_string(_font, shadow_position, gutter_string, HORIZONTAL_ALIGNMENT_LEFT, -1, _font_size, _shadow_color)
 	on_control.draw_string(_font, string_position, gutter_string, HORIZONTAL_ALIGNMENT_LEFT, -1, _font_size, _font_color)
 
