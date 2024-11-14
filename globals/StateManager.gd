@@ -312,6 +312,6 @@ class StateChangeProperty extends StateChangeItem:
 	var rollback: Callable = Callable()
 
 
-class StateChangeAction extends  StateChangeItem:
+class StateChangeAction extends StateChangeItem:
 	var commit: Callable = Callable()
 	var rollback: Callable = Callable()

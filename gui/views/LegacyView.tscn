@@ -238,6 +238,7 @@ size_flags_vertical = 3
 
 [node name="NavigateBack" parent="Layout/RightPage/Layout" instance=ExtResource("2_rxlm0")]
 unique_name_in_owner = true
+physics_interpolation_mode = 2
 custom_minimum_size = Vector2(240, 0)
 layout_mode = 2
 size_flags_horizontal = 8

@@ -170,7 +170,7 @@ func get_file_dialog() -> FileDialog:
 		_file_dialog.use_native_dialog = true
 		_file_dialog.access = FileDialog.ACCESS_FILESYSTEM
 		
-		# While it should be possible to compare this _finalize_file_dialog.unbind(1) with
+		# HACK: While it should be possible to compare this _finalize_file_dialog.unbind(1) with
 		# another _finalize_file_dialog.unbind(1) later on, in actuality the check in the engine
 		# is faulty and explicitly returns NOT EQUAL for two equal custom callables. So we do this.
 		_file_dialog_finalize_callable = _finalize_file_dialog.unbind(1)

@@ -24,17 +24,40 @@ func _ready() -> void:
 	_update_label()
 
 
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_THEME_CHANGED:
+		_update_label_color()
+	elif what == NOTIFICATION_EDITOR_PRE_SAVE:
+		_clear_label_color()
+	elif what == NOTIFICATION_EDITOR_POST_SAVE:
+		_update_label_color()
+
+
 func _update_label() -> void:
-	if not _label:
+	if not is_node_ready():
+		return
+
+	_update_label_color()
+	_label.text = label_text
+	_label.queue_redraw()
+
+
+func _update_label_color() -> void:
+	if not is_node_ready():
+		return
+
+	var text_color := get_theme_color("font_color")
+	if not button_pressed:
+		text_color = get_theme_color("font_inactive_color")
+	
+	_label.add_theme_color_override("font_color", text_color)
+
+
+func _clear_label_color() -> void:
+	if not is_node_ready():
 		return
 	
-	var text_color := get_theme_color("font_color", "NavigationButton")
-	if not button_pressed:
-		text_color = get_theme_color("font_inactive_color", "NavigationButton")
-	
-	_label.text = label_text
-	_label.add_theme_color_override("font_color", text_color)
-	_label.queue_redraw()
+	_label.remove_theme_color_override("font_color")
 
 
 func _toggled(_toggled_on: bool) -> void:
