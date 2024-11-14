@@ -26,6 +26,7 @@ script = ExtResource("1_pjxdv")
 
 [node name="Navigation" type="HBoxContainer" parent="."]
 auto_translate_mode = 1
+custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
 
 [node name="FileTab" parent="Navigation" instance=ExtResource("2_l3q7q")]
@@ -126,7 +127,7 @@ label_text = "ARRANGEMENTS"
 
 [node name="FullscreenToggle" type="Button" parent="Navigation"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(64, 28)
+custom_minimum_size = Vector2(52, 20)
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"FullscreenButton"
@@ -136,7 +137,7 @@ expand_icon = true
 
 [node name="Contents" type="PanelContainer" parent="."]
 auto_translate_mode = 1
-custom_minimum_size = Vector2(1280, 0)
+custom_minimum_size = Vector2(1024, 0)
 layout_mode = 2
 size_flags_vertical = 3
 theme_type_variation = &"MenuContentsPanel"

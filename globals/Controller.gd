@@ -212,9 +212,15 @@ func _finalize_file_dialog() -> void:
 	settings_manager.set_last_opened_folder(_file_dialog.current_dir)
 
 
-func get_info_popup() -> InfoPopup:
+func get_info_popup(override: bool = false) -> InfoPopup:
 	if not _info_popup:
 		_info_popup = INFO_POPUP_SCENE.instantiate()
+	
+	if _info_popup.is_visible_in_tree():
+		if not override:
+			return
+		
+		_info_popup.close_popup()
 	
 	_info_popup.clear()
 	return _info_popup
@@ -236,7 +242,7 @@ func show_welcome_message() -> void:
 		help_manager.start_guide(HelpManager.GuideType.BASIC_GUIDE)
 	)
 	
-	show_info_popup(welcome_message, Vector2(640, 260))
+	show_info_popup(welcome_message, Vector2(600, 200))
 
 
 func show_blocker() -> void:

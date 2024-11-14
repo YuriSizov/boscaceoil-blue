@@ -24,7 +24,7 @@ size_flags_horizontal = 3
 
 [node name="LeftPage" type="PanelContainer" parent="Layout"]
 auto_translate_mode = 1
-custom_minimum_size = Vector2(640, 0)
+custom_minimum_size = Vector2(540, 0)
 layout_mode = 2
 
 [node name="Layout" type="VBoxContainer" parent="Layout/LeftPage"]
@@ -34,37 +34,36 @@ theme_type_variation = &"CreditsBox"
 
 [node name="Label" type="Label" parent="Layout/LeftPage/Layout"]
 auto_translate_mode = 1
-custom_minimum_size = Vector2(560, 0)
+custom_minimum_size = Vector2(460, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_type_variation = &"CreditsLabelHeader"
-text = "Learn the basics of how to make a song
-in Bosca Ceoil:"
+text = "Learn the basics of how to make
+a song in Bosca Ceoil:"
 horizontal_alignment = 1
 
 [node name="Spacer" type="Control" parent="Layout/LeftPage/Layout"]
 auto_translate_mode = 1
-custom_minimum_size = Vector2(0, 16)
+custom_minimum_size = Vector2(0, 12)
 layout_mode = 2
 size_flags_horizontal = 0
 
 [node name="StartBasicGuide" parent="Layout/LeftPage/Layout" instance=ExtResource("2_y870o")]
 unique_name_in_owner = true
-physics_interpolation_mode = 2
-custom_minimum_size = Vector2(340, 0)
+custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 text = "BASIC GUIDE"
 
 [node name="Spacer2" type="Control" parent="Layout/LeftPage/Layout"]
 auto_translate_mode = 1
-custom_minimum_size = Vector2(0, 16)
+custom_minimum_size = Vector2(0, 12)
 layout_mode = 2
 size_flags_horizontal = 0
 
 [node name="Label2" type="Label" parent="Layout/LeftPage/Layout"]
 auto_translate_mode = 1
-custom_minimum_size = Vector2(560, 0)
+custom_minimum_size = Vector2(460, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_type_variation = &"CreditsLabelHeader"
@@ -74,14 +73,13 @@ horizontal_alignment = 1
 
 [node name="Spacer3" type="Control" parent="Layout/LeftPage/Layout"]
 auto_translate_mode = 1
-custom_minimum_size = Vector2(0, 16)
+custom_minimum_size = Vector2(0, 12)
 layout_mode = 2
 size_flags_horizontal = 0
 
 [node name="StartAdvancedGuide" parent="Layout/LeftPage/Layout" instance=ExtResource("2_y870o")]
 unique_name_in_owner = true
-physics_interpolation_mode = 2
-custom_minimum_size = Vector2(340, 0)
+custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 text = "TIPS AND TRICKS"
@@ -93,7 +91,7 @@ size_flags_horizontal = 3
 
 [node name="RightPage" type="PanelContainer" parent="Layout"]
 auto_translate_mode = 1
-custom_minimum_size = Vector2(640, 0)
+custom_minimum_size = Vector2(540, 0)
 layout_mode = 2
 
 [node name="Layout" type="VBoxContainer" parent="Layout/RightPage"]
@@ -150,8 +148,7 @@ size_flags_vertical = 3
 
 [node name="NavigateBack" parent="Layout/RightPage/Layout" instance=ExtResource("2_y870o")]
 unique_name_in_owner = true
-physics_interpolation_mode = 2
-custom_minimum_size = Vector2(240, 0)
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 8
 text = "BACK"

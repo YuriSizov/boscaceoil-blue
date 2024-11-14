@@ -22,7 +22,7 @@ layout_mode = 2
 
 [node name="Filler" type="Control" parent="Main" node_paths=PackedStringArray("paired_node")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 340)
+custom_minimum_size = Vector2(0, 280)
 layout_mode = 2
 script = ExtResource("2_kg520")
 paired_node = NodePath("../../Menu")
@@ -40,7 +40,7 @@ size_flags_vertical = 3
 
 [node name="Menu" parent="." instance=ExtResource("2_ljcdm")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 340)
+custom_minimum_size = Vector2(0, 280)
 layout_mode = 2
 size_flags_vertical = 0
 

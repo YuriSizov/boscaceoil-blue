@@ -38,7 +38,7 @@ mouse_filter = 2
 
 [node name="TitleLabel" type="Label" parent="Layout/TitleBar/TitleBox"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 36)
+custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Information"
@@ -47,7 +47,7 @@ text_overrun_behavior = 3
 
 [node name="CloseButton" type="Button" parent="Layout/TitleBar/TitleBox"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(36, 36)
+custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
 size_flags_vertical = 4
 theme_type_variation = &"InfoPopupTitleButton"

@@ -16,6 +16,7 @@ var _shadow_color: Color = Color.WHITE
 var _shadow_size: Vector2 = Vector2.ZERO
 
 var _item_height: int = -1
+var _item_label_offset: Vector2 = Vector2.ZERO
 var _item_gutter_size: Vector2 = Vector2.ZERO
 
 
@@ -46,6 +47,8 @@ func _update_theme() -> void:
 	_shadow_size = Vector2(get_theme_constant("shadow_offset_x", "Label"), get_theme_constant("shadow_offset_y", "Label"))
 	
 	_item_height = get_theme_constant("item_height", "ItemDock")
+	_item_label_offset.x = get_theme_constant("item_label_offset_x", "ItemDock")
+	_item_label_offset.y = get_theme_constant("item_label_offset_y", "ItemDock")
 	_item_gutter_size = _font.get_string_size("00", HORIZONTAL_ALIGNMENT_LEFT, -1, _font_size) + Vector2(20, 0)
 	_item_gutter_size.y = _item_height
 
@@ -64,7 +67,7 @@ func _draw_item(on_control: Control, item_index: int, item_rect: Rect2) -> void:
 
 	# Draw gutter string.
 	
-	var string_position := item_rect.position + Vector2(8, item_rect.size.y - 10)
+	var string_position := item_rect.position + _item_label_offset + Vector2(0, item_rect.size.y)
 	var shadow_position := string_position + _shadow_size
 	var gutter_string := "%d" % [ item_index + 1 ]
 	on_control.draw_string(_font, shadow_position, gutter_string, HORIZONTAL_ALIGNMENT_LEFT, -1, _font_size, _shadow_color)

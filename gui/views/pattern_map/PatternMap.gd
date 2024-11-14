@@ -43,6 +43,7 @@ var _border_color: Color = Color.WHITE
 var _border_cover_opacity: float = 1.0
 
 var _pattern_base_width: int = 0
+var _pattern_label_offset: Vector2 = Vector2.ZERO
 var _item_gutter_width: float = 0.0
 var _note_border_width: int = 0
 
@@ -112,6 +113,8 @@ func _update_theme() -> void:
 	_border_cover_opacity = float(get_theme_constant("border_cover_opacity", "PatternMap")) / 100.0
 	
 	_pattern_base_width = get_theme_constant("pattern_width", "PatternMap")
+	_pattern_label_offset.x = get_theme_constant("pattern_label_offset_x", "PatternMap")
+	_pattern_label_offset.y = get_theme_constant("pattern_label_offset_y", "PatternMap")
 	
 	var font := get_theme_default_font()
 	var font_size := get_theme_font_size("pattern_font_size", "PatternMap")
@@ -453,7 +456,7 @@ func _update_active_patterns() -> void:
 				active_pattern.item_position + Vector2(0, 3.0 * active_pattern.item_size.y / 5.0),
 				Vector2(_item_gutter_width - _note_border_width, 2.0 * active_pattern.item_size.y / 5.0)
 			)
-			active_pattern.label_position = active_pattern.item_position + Vector2(8, active_pattern.item_size.y - 10)
+			active_pattern.label_position = active_pattern.item_position + _pattern_label_offset + Vector2(0, active_pattern.item_size.y)
 
 			active_pattern.notes_area = Rect2(
 				active_pattern.item_position + Vector2(_item_gutter_width + _note_border_width, _note_border_width),

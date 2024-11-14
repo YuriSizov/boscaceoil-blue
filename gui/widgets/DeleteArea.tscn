@@ -5,7 +5,7 @@
 [node name="DeleteArea" type="Label"]
 auto_translate_mode = 1
 show_behind_parent = true
-custom_minimum_size = Vector2(0, 36)
+custom_minimum_size = Vector2(0, 30)
 anchors_preset = 10
 anchor_right = 1.0
 offset_bottom = 34.0

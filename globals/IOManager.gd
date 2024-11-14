@@ -47,7 +47,7 @@ func create_new_song_safe() -> void:
 			create_new_song()
 		)
 		
-		Controller.show_info_popup(unsaved_warning, Vector2(700, 220))
+		Controller.show_info_popup(unsaved_warning, Vector2(600, 190))
 		return
 	
 	create_new_song()
@@ -78,7 +78,7 @@ func load_ceol_song_safe() -> void:
 			load_ceol_song()
 		)
 		
-		Controller.show_info_popup(unsaved_warning, Vector2(760, 220))
+		Controller.show_info_popup(unsaved_warning, Vector2(640, 190))
 		return
 	
 	load_ceol_song()
@@ -128,7 +128,7 @@ func _save_ceol_song_confirmed(path: String) -> void:
 
 func check_song_on_exit() -> void:
 	if Controller.current_song && Controller.current_song.is_dirty():
-		var unsaved_warning := Controller.get_info_popup()
+		var unsaved_warning := Controller.get_info_popup(true)
 		
 		unsaved_warning.title = "WARNING — Unsaved changes"
 		unsaved_warning.content = "Current song has [accent]UNSAVED CHANGES[/accent].\n\nAre you sure you want to quit?"
@@ -137,7 +137,7 @@ func check_song_on_exit() -> void:
 			Controller.get_tree().quit()
 		)
 		
-		Controller.show_info_popup(unsaved_warning, Vector2(620, 220))
+		Controller.show_info_popup(unsaved_warning, Vector2(560, 190))
 		return
 	
 	Controller.get_tree().quit()
@@ -168,7 +168,7 @@ func import_mid_song_safe() -> void:
 			import_mid_song()
 		)
 		
-		Controller.show_info_popup(unsaved_warning, Vector2(760, 220))
+		Controller.show_info_popup(unsaved_warning, Vector2(640, 190))
 		return
 	
 	import_mid_song()

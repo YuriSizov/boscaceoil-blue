@@ -6,7 +6,7 @@
 
 [node name="ItemDock" type="Control"]
 auto_translate_mode = 1
-custom_minimum_size = Vector2(480, 0)
+custom_minimum_size = Vector2(400, 0)
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -17,17 +17,17 @@ script = ExtResource("1_cdtng")
 
 [node name="DeleteArea" parent="." instance=ExtResource("2_gogr1")]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 34)
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 16.0
-offset_right = -16.0
+offset_left = 12.0
+offset_right = -12.0
 offset_bottom = 0.0
 
 [node name="AddItem" parent="." instance=ExtResource("3_g3e56")]
 unique_name_in_owner = true
-physics_interpolation_mode = 2
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5

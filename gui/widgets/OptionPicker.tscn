@@ -4,20 +4,18 @@
 [ext_resource type="Texture2D" uid="uid://dltrbt3gaisqw" path="res://assets/icons/arrow_down.png" id="2_5j6us"]
 
 [node name="OptionPicker" type="MarginContainer"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+offset_right = 105.0
+offset_bottom = 23.0
 theme_type_variation = &"OptionPicker"
 script = ExtResource("1_m580c")
+placeholder_text = "Picker"
 
 [node name="Layout" type="HBoxContainer" parent="."]
 layout_mode = 2
 theme_type_variation = &"OptionPickerBox"
 
 [node name="Arrow" type="TextureRect" parent="Layout"]
-custom_minimum_size = Vector2(26, 20)
+custom_minimum_size = Vector2(22, 18)
 layout_mode = 2
 size_flags_vertical = 4
 texture = ExtResource("2_5j6us")
@@ -27,4 +25,5 @@ stretch_mode = 5
 [node name="Label" type="Label" parent="Layout"]
 layout_mode = 2
 size_flags_horizontal = 3
+text = "Picker"
 vertical_alignment = 1

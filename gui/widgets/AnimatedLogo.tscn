@@ -5,7 +5,6 @@
 [ext_resource type="Texture2D" uid="uid://uxa5unpo0xp8" path="res://assets/logos/logo_shadow.png" id="2_w1mr7"]
 
 [node name="LogoContainer" type="Control"]
-custom_minimum_size = Vector2(576, 120)
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -18,7 +17,7 @@ script = ExtResource("1_i10nm")
 [node name="Logo" type="TextureRect" parent="."]
 auto_translate_mode = 1
 texture_filter = 1
-custom_minimum_size = Vector2(0, 100)
+custom_minimum_size = Vector2(0, 72)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -34,7 +33,7 @@ stretch_mode = 5
 auto_translate_mode = 1
 show_behind_parent = true
 texture_filter = 1
-custom_minimum_size = Vector2(0, 100)
+custom_minimum_size = Vector2(0, 72)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

@@ -19,6 +19,7 @@ layout_mode = 2
 
 [node name="InstrumentDock" parent="Layout" instance=ExtResource("2_qebn0")]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(380, 0)
 layout_mode = 2
 script = ExtResource("3_6nc7o")
 add_button_text = "ADD NEW INSTRUMENT"

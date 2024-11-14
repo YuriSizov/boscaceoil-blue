@@ -49,7 +49,7 @@ theme_type_variation = &"InstrumentWidgetPanel"
 
 [node name="CategoryPicker" parent="Layout/Metadata/Pickers/CategoryList" instance=ExtResource("3_f80nj")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(200, 0)
+custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 placeholder_text = "TYPE"
 
@@ -65,7 +65,7 @@ theme_type_variation = &"HBoxSpaced"
 
 [node name="InstrumentPicker" parent="Layout/Metadata/Pickers/InstrumentList/Layout" instance=ExtResource("3_f80nj")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(400, 0)
+custom_minimum_size = Vector2(360, 0)
 layout_mode = 2
 placeholder_text = "Instrument Name"
 
@@ -76,7 +76,7 @@ alignment = 2
 [node name="PrevInstrument" type="Button" parent="Layout/Metadata/Pickers/InstrumentList/Layout/Buttons"]
 unique_name_in_owner = true
 auto_translate_mode = 1
-custom_minimum_size = Vector2(40, 26)
+custom_minimum_size = Vector2(36, 23)
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"IncrementButton"
@@ -88,7 +88,7 @@ expand_icon = true
 [node name="NextInstrument" type="Button" parent="Layout/Metadata/Pickers/InstrumentList/Layout/Buttons"]
 unique_name_in_owner = true
 auto_translate_mode = 1
-custom_minimum_size = Vector2(40, 26)
+custom_minimum_size = Vector2(36, 23)
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"IncrementButton"
@@ -141,7 +141,7 @@ uppercase = true
 
 [node name="Volume" type="VBoxContainer" parent="Layout/TunerBox"]
 auto_translate_mode = 1
-custom_minimum_size = Vector2(100, 0)
+custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 theme_override_constants/separation = 12
 

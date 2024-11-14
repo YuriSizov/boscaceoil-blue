@@ -24,7 +24,7 @@ size_flags_horizontal = 3
 
 [node name="LeftPage" type="PanelContainer" parent="Layout"]
 auto_translate_mode = 1
-custom_minimum_size = Vector2(640, 0)
+custom_minimum_size = Vector2(540, 0)
 layout_mode = 2
 
 [node name="Layout" type="VBoxContainer" parent="Layout/LeftPage"]
@@ -61,7 +61,7 @@ size_flags_horizontal = 3
 
 [node name="RightPage" type="PanelContainer" parent="Layout"]
 auto_translate_mode = 1
-custom_minimum_size = Vector2(640, 0)
+custom_minimum_size = Vector2(540, 0)
 layout_mode = 2
 
 [node name="Layout" type="VBoxContainer" parent="Layout/RightPage"]
@@ -92,7 +92,7 @@ url = "https://github.com/YuriSizov/gdsion"
 
 [node name="Spacer2" type="Control" parent="Layout/RightPage/Layout"]
 auto_translate_mode = 1
-custom_minimum_size = Vector2(0, 16)
+custom_minimum_size = Vector2(0, 8)
 layout_mode = 2
 size_flags_horizontal = 0
 
@@ -118,7 +118,7 @@ size_flags_vertical = 3
 [node name="NavigateBack" parent="Layout/RightPage/Layout" instance=ExtResource("2_8gl33")]
 unique_name_in_owner = true
 physics_interpolation_mode = 2
-custom_minimum_size = Vector2(240, 0)
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 8
 text = "BACK"

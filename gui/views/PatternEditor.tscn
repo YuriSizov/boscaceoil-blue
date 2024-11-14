@@ -21,6 +21,7 @@ script = ExtResource("1_eqswn")
 layout_mode = 2
 
 [node name="PatternSettings" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(0, 29)
 layout_mode = 2
 theme_type_variation = &"PatternSettingsPanel"
 
@@ -35,7 +36,7 @@ theme_type_variation = &"PatternSettingsPickerPanel"
 
 [node name="InstrumentPicker" parent="PatternSettings/PropertyBar/PickerPanel" instance=ExtResource("3_g46lg")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(360, 0)
+custom_minimum_size = Vector2(320, 0)
 layout_mode = 2
 direction = 2
 placeholder_text = "Instrument Name"
@@ -53,7 +54,7 @@ text = "REC"
 [node name="RecordInstrument" type="Button" parent="PatternSettings/PropertyBar/ButtonBar"]
 unique_name_in_owner = true
 auto_translate_mode = 1
-custom_minimum_size = Vector2(28, 26)
+custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"RecordButton"
@@ -67,11 +68,15 @@ expand_icon = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="NoteShiftUp" type="Button" parent="PatternSettings/PropertyBar/ButtonBar"]
+[node name="NoteShiftBar" type="HBoxContainer" parent="PatternSettings/PropertyBar/ButtonBar"]
+layout_mode = 2
+
+[node name="NoteShiftUp" type="Button" parent="PatternSettings/PropertyBar/ButtonBar/NoteShiftBar"]
 unique_name_in_owner = true
 auto_translate_mode = 1
-custom_minimum_size = Vector2(40, 26)
+custom_minimum_size = Vector2(36, 23)
 layout_mode = 2
+size_flags_vertical = 4
 focus_mode = 0
 theme_type_variation = &"IncrementButton"
 icon = ExtResource("4_67s6m")
@@ -79,11 +84,12 @@ flat = true
 icon_alignment = 1
 expand_icon = true
 
-[node name="NoteShiftDown" type="Button" parent="PatternSettings/PropertyBar/ButtonBar"]
+[node name="NoteShiftDown" type="Button" parent="PatternSettings/PropertyBar/ButtonBar/NoteShiftBar"]
 unique_name_in_owner = true
 auto_translate_mode = 1
-custom_minimum_size = Vector2(40, 26)
+custom_minimum_size = Vector2(36, 23)
 layout_mode = 2
+size_flags_vertical = 4
 focus_mode = 0
 theme_type_variation = &"IncrementButton"
 icon = ExtResource("5_0tk4a")
@@ -98,7 +104,7 @@ theme_type_variation = &"PatternSettingsPickerPanel"
 [node name="ScalePicker" parent="PatternSettings/PropertyBar/PickerPanel2" instance=ExtResource("3_g46lg")]
 unique_name_in_owner = true
 auto_translate_mode = 1
-custom_minimum_size = Vector2(400, 0)
+custom_minimum_size = Vector2(360, 0)
 layout_mode = 2
 direction = 2
 placeholder_text = "Scale"
@@ -111,7 +117,7 @@ theme_type_variation = &"PatternSettingsPickerPanel"
 [node name="KeyPicker" parent="PatternSettings/PropertyBar/PickerPanel3" instance=ExtResource("3_g46lg")]
 unique_name_in_owner = true
 auto_translate_mode = 1
-custom_minimum_size = Vector2(90, 0)
+custom_minimum_size = Vector2(70, 0)
 layout_mode = 2
 direction = 2
 placeholder_text = "K"

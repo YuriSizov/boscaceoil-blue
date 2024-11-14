@@ -12,7 +12,7 @@ alignment = 1
 script = ExtResource("1_ng8l4")
 
 [node name="Decrease" type="Button" parent="."]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(28, 28)
 layout_mode = 2
 size_flags_vertical = 4
 focus_mode = 0
@@ -24,7 +24,7 @@ icon_alignment = 1
 expand_icon = true
 
 [node name="Label" type="Label" parent="."]
-custom_minimum_size = Vector2(18, 0)
+custom_minimum_size = Vector2(12, 0)
 layout_mode = 2
 text = "0"
 horizontal_alignment = 1
@@ -32,7 +32,7 @@ vertical_alignment = 1
 
 [node name="Increase" type="Button" parent="."]
 auto_translate_mode = 1
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(28, 28)
 layout_mode = 2
 size_flags_vertical = 4
 focus_mode = 0

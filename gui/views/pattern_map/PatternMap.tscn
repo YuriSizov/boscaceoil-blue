@@ -22,7 +22,7 @@ script = ExtResource("1_a0jjr")
 
 [node name="PatternMapTrack" type="Control" parent="."]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 18)
+custom_minimum_size = Vector2(0, 16)
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
@@ -36,7 +36,7 @@ script = ExtResource("2_wby5k")
 [node name="PatternMapTimeline" type="Control" parent="."]
 unique_name_in_owner = true
 auto_translate_mode = 1
-custom_minimum_size = Vector2(0, 18)
+custom_minimum_size = Vector2(0, 16)
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
@@ -80,13 +80,13 @@ script = ExtResource("5_0hb0q")
 [node name="RightButton" type="Button" parent="PatternMapScrollbar"]
 unique_name_in_owner = true
 auto_translate_mode = 1
-custom_minimum_size = Vector2(26, 26)
+custom_minimum_size = Vector2(22, 22)
 layout_mode = 1
 anchors_preset = 11
 anchor_left = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = 26.0
+offset_right = 22.0
 grow_horizontal = 0
 grow_vertical = 2
 focus_mode = 0
@@ -98,11 +98,11 @@ expand_icon = true
 [node name="LeftButton" type="Button" parent="PatternMapScrollbar"]
 unique_name_in_owner = true
 auto_translate_mode = 1
-custom_minimum_size = Vector2(26, 26)
+custom_minimum_size = Vector2(22, 22)
 layout_mode = 1
 anchors_preset = 9
 anchor_bottom = 1.0
-offset_left = -26.0
+offset_left = -22.0
 grow_vertical = 2
 focus_mode = 0
 theme_type_variation = &"ScrollbarButton"

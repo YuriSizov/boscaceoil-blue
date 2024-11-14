@@ -25,7 +25,7 @@ size_flags_horizontal = 3
 
 [node name="Tuning" type="PanelContainer" parent="Layout"]
 auto_translate_mode = 1
-custom_minimum_size = Vector2(640, 0)
+custom_minimum_size = Vector2(540, 0)
 layout_mode = 2
 
 [node name="Contents" type="VBoxContainer" parent="Layout/Tuning"]
@@ -68,7 +68,7 @@ placeholder_text = "NAME"
 
 [node name="EffectValueSlider" parent="Layout/Tuning/Contents/EffectSettings/Layout" instance=ExtResource("3_xr70i")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(160, 0)
+custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
 axis_mode = 1
 horizontal_range = Vector2i(0, 130)
@@ -108,7 +108,7 @@ size_flags_horizontal = 3
 
 [node name="ExtraControls" type="PanelContainer" parent="Layout"]
 auto_translate_mode = 1
-custom_minimum_size = Vector2(640, 0)
+custom_minimum_size = Vector2(540, 0)
 layout_mode = 2
 
 [node name="Contents" type="VBoxContainer" parent="Layout/ExtraControls"]
