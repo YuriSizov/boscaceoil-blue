@@ -41,6 +41,7 @@ enum DragSources {
 }
 
 var settings_manager: SettingsManager = null
+var window_manager: WindowManager = null
 var state_manager: StateManager = null
 var voice_manager: VoiceManager = null
 var music_player: MusicPlayer = null
@@ -75,6 +76,7 @@ var _controls_locked: bool = false
 
 func _init() -> void:
 	settings_manager = SettingsManager.new()
+	window_manager = WindowManager.new()
 	state_manager = StateManager.new()
 	voice_manager = VoiceManager.new()
 	music_player = MusicPlayer.new()

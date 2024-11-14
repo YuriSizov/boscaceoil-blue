@@ -6,39 +6,21 @@
 
 extends MarginContainer
 
-const SIZE_CHANGES_SAVE_DELAY := 0.3
-
-const THEME_FONT_NORMAL := preload("res://assets/fonts/fff-aquarius-bold-condensed.normal.ttf")
-const THEME_FONT_MSDF := preload("res://assets/fonts/fff-aquarius-bold-condensed.msdf.ttf")
-
 var _default_window_title: String = ""
-var _project_theme: Theme = null
 
 @onready var _pattern_editor: Control = %PatternEditor
 @onready var _locked_indicator: Control = %LockedIndicator
-@onready var _save_timer: Timer = %SaveTimer
 @onready var _highlight_manager: CanvasLayer = %HighlightManager
 
 
 func _enter_tree() -> void:
-	# Ensure that the minimum size of the UI is respected and
-	# the main window cannot go any lower.
-	get_window().wrap_controls = true
+	Controller.window_manager.register_window()
 	
 	_default_window_title = get_window().title
-	_project_theme = load("res://gui/theme/project_theme.tres") # By magic of Godot, this is a shared reference.
 
 
 func _ready() -> void:
-	_restore_window_size()
-	_update_window_size()
-	_update_project_theme()
-	
-	_save_timer.wait_time = SIZE_CHANGES_SAVE_DELAY
-	_save_timer.autostart = false
-	_save_timer.one_shot = true
-	_save_timer.timeout.connect(_save_window_size_debounced)
-	get_window().size_changed.connect(_save_window_size)
+	Controller.window_manager.restore_window()
 	
 	_pattern_editor.visible = true
 	_locked_indicator.visible = false
@@ -48,11 +30,6 @@ func _ready() -> void:
 	if not Engine.is_editor_hint():
 		if Controller.settings_manager.is_first_time():
 			Controller.show_welcome_message()
-		
-		Controller.settings_manager.gui_scale_changed.connect(_update_window_size)
-		Controller.settings_manager.fullscreen_changed.connect(_update_window_size)
-		
-		Controller.settings_manager.gui_scale_changed.connect(_update_project_theme)
 		
 		Controller.song_loaded.connect(_edit_current_song)
 		Controller.song_saved.connect(_update_window_title)
@@ -87,127 +64,6 @@ func _update_window_title() -> void:
 	var song_dirty := "* " if Controller.current_song.is_dirty() else ""
 	
 	get_window().title = "%s%s - %s" % [ song_dirty, song_name, _default_window_title ]
-
-
-# Sizing and window modes.
-
-func _update_window_size() -> void:
-	_update_window_mode()
-	
-	var main_window := get_window()
-	var neutral_size := main_window.size / main_window.content_scale_factor
-	main_window.content_scale_factor = Controller.settings_manager.get_gui_scale_factor()
-	
-	# We want to ensure that the UI always fits the screen, and downscale everything if we're
-	# exceeding the bounds.
-	
-	var window_minsize := main_window.get_contents_minimum_size()
-	var screen_size := DisplayServer.screen_get_usable_rect(main_window.current_screen).size
-	
-	if window_minsize.x > screen_size.x || window_minsize.y > screen_size.y:
-		var scale_factor_adjustment := minf(float(screen_size.x) / window_minsize.x, float(screen_size.y) / window_minsize.y)
-		scale_factor_adjustment = floorf(scale_factor_adjustment * 100.0) / 100.0 # Truncate excessive precision.
-		
-		main_window.content_scale_factor = main_window.content_scale_factor * scale_factor_adjustment
-	
-	main_window.min_size = main_window.get_contents_minimum_size()
-	_fit_window_size(neutral_size * main_window.content_scale_factor)
-
-
-func _fit_window_size(window_size: Vector2) -> void:
-	var main_window := get_window()
-	var window_mode := main_window.mode
-	if window_mode == Window.MODE_MAXIMIZED || OS.has_feature("web"):
-		return
-	
-	var screen_index := main_window.current_screen
-	
-	# Under certain conditions just set the window to the full screen size.
-	if window_mode == Window.MODE_FULLSCREEN || window_mode == Window.MODE_EXCLUSIVE_FULLSCREEN || OS.has_feature("android"):
-		main_window.size = DisplayServer.screen_get_size(screen_index)
-		return
-	
-	# Make sure our windowed mode window is displayed fully on screen.
-	# First, adjust the window size to fit the screen size (minus system flair).
-	
-	var screen_size := DisplayServer.screen_get_usable_rect(screen_index).size
-	window_size.x = minf(window_size.x, screen_size.x)
-	window_size.y = minf(window_size.y, screen_size.y)
-	
-	main_window.size = window_size
-	Controller.settings_manager.set_windowed_size(main_window.size)
-	
-	# Last, adjust the position (accounting for window decorations).
-	
-	var window_position := main_window.get_position_with_decorations()
-	
-	if window_position.x < 0:
-		main_window.position.x -= window_position.x
-	elif (window_position.x + main_window.size.x) > screen_size.x:
-		main_window.position.x -= (window_position.x + main_window.size.x) - screen_size.x
-	
-	if window_position.y < 0:
-		main_window.position.y -= window_position.y
-	elif (window_position.y + main_window.size.y) > screen_size.y:
-		main_window.position.y -= (window_position.y + main_window.size.y) - screen_size.y
-
-
-func _update_window_mode() -> void:
-	var main_window := get_window()
-	var is_actually_fullscreen := main_window.mode == Window.MODE_FULLSCREEN || main_window.mode == Window.MODE_EXCLUSIVE_FULLSCREEN
-	
-	if Controller.settings_manager.is_fullscreen() == is_actually_fullscreen:
-		return
-	
-	if Controller.settings_manager.is_fullscreen():
-		main_window.mode = Window.MODE_FULLSCREEN
-	else:
-		main_window.mode = Window.MODE_WINDOWED
-		main_window.size = Controller.settings_manager.get_windowed_size()
-		if Controller.settings_manager.is_windowed_maximized():
-			main_window.mode = Window.MODE_MAXIMIZED
-
-
-func _restore_window_size() -> void:
-	var main_window := get_window()
-	main_window.size = Controller.settings_manager.get_windowed_size()
-	main_window.content_scale_factor = Controller.settings_manager.get_gui_scale_factor()
-	
-	if Controller.settings_manager.is_windowed_maximized():
-		main_window.mode = Window.MODE_MAXIMIZED
-	
-	if Controller.settings_manager.is_fullscreen():
-		main_window.mode = Window.MODE_FULLSCREEN
-	
-	main_window.move_to_center()
-
-
-func _save_window_size() -> void:
-	_save_timer.start()
-
-
-func _save_window_size_debounced() -> void:
-	var main_window := get_window()
-	
-	if main_window.mode == Window.MODE_WINDOWED:
-		Controller.settings_manager.set_windowed_size(main_window.size)
-	
-	Controller.settings_manager.set_windowed_maximized(main_window.mode == Window.MODE_MAXIMIZED)
-	Controller.settings_manager.set_fullscreen(main_window.mode == Window.MODE_FULLSCREEN || main_window.mode == Window.MODE_EXCLUSIVE_FULLSCREEN, true)
-
-
-# Project theme.
-
-func _update_project_theme() -> void:
-	if not _project_theme:
-		return
-	
-	var scale_factor := Controller.settings_manager.get_gui_scale_factor()
-	
-	if scale_factor <= 1.0:
-		_project_theme.default_font.base_font = THEME_FONT_NORMAL
-	else:
-		_project_theme.default_font.base_font = THEME_FONT_MSDF
 
 
 # Editor locking.

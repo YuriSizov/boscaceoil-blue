@@ -27,7 +27,6 @@ const _buffer_size_descriptions := {
 }
 
 enum GUIScale {
-	GUI_SCALE_50  = 50,
 	GUI_SCALE_75  = 75,
 	GUI_SCALE_100 = 100,
 	GUI_SCALE_125 = 125,
@@ -36,7 +35,7 @@ enum GUIScale {
 	GUI_SCALE_200 = 200,
 }
 # Custom values are allowed, but must be reasonably restricted.
-const GUI_SCALE_MIN := 25
+const GUI_SCALE_MIN := 50
 const GUI_SCALE_MAX := 300
 
 # Indicates whether this is the first launch of the app.
@@ -83,9 +82,6 @@ func load_settings() -> void:
 	
 	# Restore saved values.
 	
-	# For compatibility with 3.0 beta 1.
-	_set_gui_scale_from_preset(_stored_file.get_value("gui", "scale_preset", 0))
-	
 	_set_gui_scale_safe(     _stored_file.get_value("gui", "scale",      _gui_scale))
 	_fullscreen =            _stored_file.get_value("gui", "fullscreen", _fullscreen)
 	_windowed_maximized =    _stored_file.get_value("gui", "maximized",  _windowed_maximized)
@@ -118,9 +114,6 @@ func _save_settings_debounced() -> void:
 		_stored_timer = null
 	
 	# Record current values.
-	
-	# For compatibility with 3.0 beta 1, erase an outdated setting.
-	_stored_file.set_value("gui", "scale_preset", null)
 	
 	_stored_file.set_value("gui", "scale",      _gui_scale)
 	_stored_file.set_value("gui", "fullscreen", _fullscreen)
@@ -165,14 +158,6 @@ func set_gui_scale(scale: int) -> void:
 
 func _set_gui_scale_safe(scale: int) -> void:
 	_gui_scale = clampi(scale, GUI_SCALE_MIN, GUI_SCALE_MAX)
-
-
-# For compatibility with 3.0 beta 1.
-func _set_gui_scale_from_preset(preset: int) -> void:
-	if preset == 0:
-		return
-	
-	_gui_scale = 125 if preset == 2 else 100
 
 
 func is_fullscreen() -> bool:
