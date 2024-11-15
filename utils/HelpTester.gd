@@ -15,6 +15,8 @@ var _guide_resource: HelpGuide = null
 var _guide_step_index: int = -1
 var _guide_step: HelpGuideStep = null
 
+var _presave_guide_step: int = -1
+
 @onready var _popup: InfoPopup = $Popup
 
 
@@ -24,9 +26,14 @@ func _ready() -> void:
 
 
 func _notification(what: int) -> void:
+	# Keeps the commit history clean.
 	if what == NOTIFICATION_EDITOR_PRE_SAVE:
-		# Keeps the commit history clean.
+		_presave_guide_step = _guide_step_index
 		set_guide_step(-1)
+	elif what == NOTIFICATION_EDITOR_POST_SAVE:
+		if _presave_guide_step != -1:
+			set_guide_step(_presave_guide_step)
+			_presave_guide_step = -1
 
 
 func _get_property_list() -> Array[Dictionary]:

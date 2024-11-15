@@ -20,7 +20,7 @@ node_target = 101
 trigger_target = 0
 position_anchor = Vector2(0.93, 0.135)
 position_direction = 1
-size = Vector2(540, 260)
+size = Vector2(480, 220)
 
 [sub_resource type="Resource" id="Resource_g4l2c"]
 script = ExtResource("2_dumha")
@@ -31,9 +31,9 @@ ref_image_position = 0
 navigation_target = 1
 node_target = 101
 trigger_target = 0
-position_anchor = Vector2(0.915, 0.22)
+position_anchor = Vector2(0.915, 0.17)
 position_direction = 1
-size = Vector2(500, 180)
+size = Vector2(480, 160)
 
 [sub_resource type="Resource" id="Resource_gaqu5"]
 script = ExtResource("2_dumha")
@@ -44,9 +44,9 @@ ref_image_position = 0
 navigation_target = 1
 node_target = 102
 trigger_target = 0
-position_anchor = Vector2(0.91, 0.85)
+position_anchor = Vector2(0.91, 0.9)
 position_direction = 3
-size = Vector2(570, 210)
+size = Vector2(480, 190)
 
 [sub_resource type="Resource" id="Resource_hofnx"]
 script = ExtResource("2_dumha")
@@ -60,9 +60,9 @@ ref_image_position = 2
 navigation_target = 1
 node_target = 101
 trigger_target = 0
-position_anchor = Vector2(0.09, 0.385)
+position_anchor = Vector2(0.09, 0.355)
 position_direction = 0
-size = Vector2(840, 240)
+size = Vector2(780, 210)
 
 [sub_resource type="Resource" id="Resource_wiyle"]
 script = ExtResource("2_dumha")
@@ -73,9 +73,9 @@ ref_image_position = 0
 navigation_target = 1
 node_target = 2
 trigger_target = 2
-position_anchor = Vector2(0.17, 0.22)
+position_anchor = Vector2(0.17, 0.16)
 position_direction = 0
-size = Vector2(460, 180)
+size = Vector2(420, 160)
 
 [sub_resource type="Resource" id="Resource_yq3xf"]
 script = ExtResource("2_dumha")
@@ -88,9 +88,9 @@ ref_image_position = 0
 navigation_target = 2
 node_target = 202
 trigger_target = 200
-position_anchor = Vector2(0.895, 0.39)
+position_anchor = Vector2(0.895, 0.355)
 position_direction = 1
-size = Vector2(620, 260)
+size = Vector2(560, 220)
 
 [sub_resource type="Resource" id="Resource_q7o8q"]
 script = ExtResource("2_dumha")
@@ -104,9 +104,9 @@ ref_image_position = 2
 navigation_target = 2
 node_target = 200
 trigger_target = 0
-position_anchor = Vector2(0.17, 0.375)
+position_anchor = Vector2(0.17, 0.335)
 position_direction = 0
-size = Vector2(860, 290)
+size = Vector2(780, 250)
 
 [sub_resource type="Resource" id="Resource_36r5k"]
 script = ExtResource("2_dumha")
@@ -118,9 +118,9 @@ ref_image_position = 1
 navigation_target = 2
 node_target = 201
 trigger_target = 0
-position_anchor = Vector2(0.205, 0.385)
+position_anchor = Vector2(0.205, 0.355)
 position_direction = 0
-size = Vector2(620, 300)
+size = Vector2(540, 290)
 
 [sub_resource type="Resource" id="Resource_t8m4y"]
 script = ExtResource("2_dumha")
@@ -133,7 +133,7 @@ node_target = 203
 trigger_target = 0
 position_anchor = Vector2(0.07, 0.365)
 position_direction = 0
-size = Vector2(560, 150)
+size = Vector2(520, 140)
 
 [sub_resource type="Resource" id="Resource_y11m4"]
 script = ExtResource("2_dumha")
@@ -146,7 +146,7 @@ node_target = 204
 trigger_target = 0
 position_anchor = Vector2(0.235, 0.365)
 position_direction = 0
-size = Vector2(570, 210)
+size = Vector2(560, 160)
 
 [sub_resource type="Resource" id="Resource_xwfey"]
 script = ExtResource("2_dumha")
@@ -160,7 +160,7 @@ node_target = 205
 trigger_target = 0
 position_anchor = Vector2(0.225, 0.36)
 position_direction = 0
-size = Vector2(560, 280)
+size = Vector2(500, 260)
 
 [sub_resource type="Resource" id="Resource_4och6"]
 script = ExtResource("2_dumha")
@@ -171,9 +171,9 @@ ref_image_position = 0
 navigation_target = 2
 node_target = 203
 trigger_target = 0
-position_anchor = Vector2(0.095, 0.37)
+position_anchor = Vector2(0.095, 0.34)
 position_direction = 0
-size = Vector2(580, 210)
+size = Vector2(520, 180)
 
 [sub_resource type="Resource" id="Resource_hal82"]
 script = ExtResource("2_dumha")
@@ -184,9 +184,9 @@ ref_image_position = 0
 navigation_target = 2
 node_target = 3
 trigger_target = 3
-position_anchor = Vector2(0.87, 0.255)
+position_anchor = Vector2(0.87, 0.205)
 position_direction = 1
-size = Vector2(500, 150)
+size = Vector2(460, 140)
 
 [sub_resource type="Resource" id="Resource_vdi1t"]
 script = ExtResource("2_dumha")
@@ -199,9 +199,9 @@ ref_image_position = 0
 navigation_target = 3
 node_target = 301
 trigger_target = 300
-position_anchor = Vector2(0.1, 0.4)
+position_anchor = Vector2(0.1, 0.35)
 position_direction = 0
-size = Vector2(540, 240)
+size = Vector2(480, 210)
 
 [sub_resource type="Resource" id="Resource_bmfds"]
 script = ExtResource("2_dumha")
@@ -214,7 +214,7 @@ node_target = 302
 trigger_target = 0
 position_anchor = Vector2(0.035, 0.2)
 position_direction = 0
-size = Vector2(480, 180)
+size = Vector2(460, 160)
 
 [sub_resource type="Resource" id="Resource_s5xb7"]
 script = ExtResource("2_dumha")
@@ -227,7 +227,7 @@ node_target = 303
 trigger_target = 0
 position_anchor = Vector2(0.93, 0.385)
 position_direction = 1
-size = Vector2(540, 180)
+size = Vector2(500, 160)
 
 [sub_resource type="Resource" id="Resource_sf4tw"]
 script = ExtResource("2_dumha")
@@ -240,7 +240,7 @@ node_target = 103
 trigger_target = 0
 position_anchor = Vector2(0.285, 0.895)
 position_direction = 2
-size = Vector2(500, 210)
+size = Vector2(460, 180)
 
 [sub_resource type="Resource" id="Resource_0fvlh"]
 script = ExtResource("2_dumha")
@@ -253,9 +253,9 @@ ref_image_position = 0
 navigation_target = 2
 node_target = 200
 trigger_target = 0
-position_anchor = Vector2(0.195, 0.415)
+position_anchor = Vector2(0.195, 0.37)
 position_direction = 0
-size = Vector2(640, 350)
+size = Vector2(600, 280)
 
 [sub_resource type="Resource" id="Resource_bplh8"]
 script = ExtResource("2_dumha")
@@ -270,7 +270,7 @@ node_target = 0
 trigger_target = 0
 position_anchor = Vector2(0.5, 0.5)
 position_direction = 4
-size = Vector2(560, 260)
+size = Vector2(500, 230)
 
 [resource]
 script = ExtResource("1_bxt1b")

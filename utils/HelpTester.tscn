@@ -26,7 +26,7 @@ grow_vertical = 2
 
 [node name="Popup" parent="." instance=ExtResource("3_j2h0f")]
 visible = false
-custom_minimum_size = Vector2(280, 200)
+custom_minimum_size = Vector2(320, 240)
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
