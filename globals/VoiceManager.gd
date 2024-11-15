@@ -9,7 +9,7 @@
 class_name VoiceManager extends RefCounted
 
 ## SiON tool with a bunch of pre-configured voices.
-var _preset_util: SiONVoicePresetUtil = SiONVoicePresetUtil.new()
+var _preset_util: SiONVoicePresetUtil = null
 ## Collection of registered voice data.
 var _voices: Array[VoiceData] = []
 ## Collection of categories for registered voices.
@@ -18,6 +18,9 @@ var _sub_categories: Array[SubCategory] = []
 
 
 func _init() -> void:
+	# Generate presets with default flags.
+	_preset_util = SiONVoicePresetUtil.generate_voices()
+
 	# NOTE: Order of registration is important, as it is used for the save data format.
 	# If we ever need to add more voices/instruments, this needs to be handled gracefully.
 	
