@@ -31,7 +31,9 @@ var _max_scroll_offset: int = -1
 var _following_playback_cursor: bool = false
 
 var _arrangement_channels: Array[ArrangementChannel] = []
-var _arrangement_bars: Array[ArrangementBar] = []
+# FIXME: Godot enters a dead loop if this array is typed.
+# Bisection points to https://github.com/godotengine/godot/pull/92609.
+var _arrangement_bars: Array[] = [] # of ArrangementBar
 var _active_patterns: Array[ActivePattern] = []
 
 # Theme cache.
