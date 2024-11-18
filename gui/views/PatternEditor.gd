@@ -190,11 +190,13 @@ func _change_instrument() -> void:
 	var pattern_state := Controller.state_manager.create_state_change(StateManager.StateChangeType.PATTERN, Controller.current_pattern_index)
 	var state_context := pattern_state.get_context()
 	state_context["affected"] = []
+	state_context["key"] = 0
 	
 	pattern_state.add_do_action(func() -> void:
 		var reference_pattern := Controller.current_song.patterns[pattern_state.reference_id]
 		var pattern_instrument := Controller.current_song.instruments[instrument_idx]
 		
+		state_context.key = reference_pattern.key # When changing to a drumkit, this is reset.
 		state_context.affected = reference_pattern.change_instrument(instrument_idx, pattern_instrument)
 	)
 	pattern_state.add_undo_action(func() -> void:
@@ -202,13 +204,8 @@ func _change_instrument() -> void:
 		var pattern_instrument := Controller.current_song.instruments[old_instrument_idx]
 		
 		reference_pattern.change_instrument(old_instrument_idx, pattern_instrument)
-		
-		for note_data: Vector3i in state_context.affected:
-			reference_pattern.add_note(note_data.x, note_data.y, note_data.z, false)
-		
-		reference_pattern.sort_notes()
-		reference_pattern.reindex_active_notes()
-		reference_pattern.notes_changed.emit()
+		reference_pattern.restore_notes(state_context.affected)
+		reference_pattern.change_key(state_context.key)
 	)
 	
 	Controller.state_manager.commit_state_change(pattern_state)
@@ -236,13 +233,7 @@ func _change_scale() -> void:
 	pattern_state.add_undo_action(func() -> void:
 		var reference_pattern := Controller.current_song.patterns[pattern_state.reference_id]
 		reference_pattern.change_scale(old_scale_id)
-		
-		for note_data: Vector3i in state_context.affected:
-			reference_pattern.add_note(note_data.x, note_data.y, note_data.z, false)
-		
-		reference_pattern.sort_notes()
-		reference_pattern.reindex_active_notes()
-		reference_pattern.notes_changed.emit()
+		reference_pattern.restore_notes(state_context.affected)
 	)
 	
 	Controller.state_manager.commit_state_change(pattern_state)

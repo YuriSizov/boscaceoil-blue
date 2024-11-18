@@ -177,6 +177,9 @@ func change_instrument(new_idx: int, instrument: Instrument) -> Array[Vector3i]:
 	
 	# Delete notes that don't fit the new instrument.
 	if instrument.type == Instrument.InstrumentType.INSTRUMENT_DRUMKIT:
+		# Key is not meaningful for drumkits, but can affect some features unintentionally.
+		change_key(0)
+
 		var drumkit_instrument := instrument as DrumkitInstrument
 		var i := 0
 		while i < note_amount:
@@ -297,6 +300,15 @@ func add_note(value: int, position: int, length: int, full_update: bool = true) 
 	if full_update:
 		note_added.emit(note_data)
 		notes_changed.emit()
+
+
+func restore_notes(stored_notes: Array[Vector3i]) -> void:
+	for note_data: Vector3i in stored_notes:
+		add_note(note_data.x, note_data.y, note_data.z, false)
+	
+	sort_notes()
+	reindex_active_notes()
+	notes_changed.emit()
 
 
 func sort_notes() -> void:

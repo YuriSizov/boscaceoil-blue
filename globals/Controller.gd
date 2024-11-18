@@ -627,6 +627,8 @@ func delete_instrument(instrument_index: int) -> void:
 	state_context["instrument"] = null
 	state_context["deleted_last"] = false
 	state_context["reset_patterns"] = []
+	state_context["reset_patterns_keys"] = []
+	state_context["reset_patterns_affected"] = []
 	state_context["shifted_patterns"] = []
 	
 	song_state.add_do_action(func() -> void:
@@ -646,6 +648,8 @@ func delete_instrument(instrument_index: int) -> void:
 			_change_current_instrument(current_song.instruments.size() - 1, false)
 		
 		state_context.reset_patterns.clear()
+		state_context.reset_patterns_keys.clear()
+		state_context.reset_patterns_affected.clear()
 		state_context.shifted_patterns.clear()
 		
 		# Validate instruments in available patterns.
@@ -658,8 +662,11 @@ func delete_instrument(instrument_index: int) -> void:
 			
 			# If we deleted this instrument, set the pattern to the first available.
 			if pattern.instrument_idx == instrument_index:
-				pattern.instrument_idx = 0
+				state_context.reset_patterns_keys.push_back(pattern.key) # When changing to a drumkit, this is reset.
+
+				var affected := pattern.change_instrument(0, current_song.instruments[0])
 				state_context.reset_patterns.push_back(pattern_idx)
+				state_context.reset_patterns_affected.push_back(affected)
 				
 				if pattern_idx == current_pattern_index:
 					current_pattern_affected = true
@@ -692,9 +699,16 @@ func delete_instrument(instrument_index: int) -> void:
 		# created this state. Same applies to do.
 		var current_pattern_affected := false
 		
-		for pattern_idx: int in state_context.reset_patterns:
-			current_song.patterns[pattern_idx].instrument_idx = instrument_index
+		for i: int in state_context.reset_patterns.size():
+			var pattern_idx: int = state_context.reset_patterns[i]
+			current_song.patterns[pattern_idx].change_instrument(instrument_index, current_song.instruments[instrument_index])
 			
+			var affected: Array[Vector3i] = state_context.reset_patterns_affected[i]
+			current_song.patterns[pattern_idx].restore_notes(affected)
+
+			var pattern_key: int = state_context.reset_patterns_keys[i]
+			current_song.patterns[pattern_idx].change_key(pattern_key)
+
 			if pattern_idx == current_pattern_index:
 				current_pattern_affected = true
 		
@@ -739,24 +753,46 @@ func _set_current_instrument_by_voice(voice_data: VoiceManager.VoiceData) -> voi
 	var old_instrument := current_song.instruments[instrument_idx]
 	
 	var song_state := state_manager.create_state_change(StateManager.StateChangeType.SONG)
+	var state_context := song_state.get_context()
+	state_context["reset_patterns"] = []
+	state_context["reset_patterns_keys"] = []
+	state_context["reset_patterns_affected"] = []
+
 	song_state.add_do_action(func() -> void:
 		var instrument := instance_instrument_by_voice(voice_data)
 		current_song.instruments[instrument_idx] = instrument
-		song_instrument_changed.emit()
 		
-		# Refresh the currently edited pattern, if necessary.
-		var current_pattern := get_current_pattern()
-		if current_pattern && current_pattern.instrument_idx == instrument_idx:
-			current_pattern.change_instrument(instrument_idx, instrument)
+		state_context.reset_patterns.clear()
+		state_context.reset_patterns_keys.clear()
+		state_context.reset_patterns_affected.clear()
+		
+		# Validate instruments in available patterns.
+		for pattern_idx in current_song.patterns.size():
+			var pattern := current_song.patterns[pattern_idx]
+			
+			if pattern.instrument_idx == instrument_idx:
+				state_context.reset_patterns_keys.push_back(pattern.key) # When changing to a drumkit, this is reset.
+
+				var affected := pattern.change_instrument(instrument_idx, instrument)
+				state_context.reset_patterns.push_back(pattern_idx)
+				state_context.reset_patterns_affected.push_back(affected)
+
+		song_instrument_changed.emit()
 	)
 	song_state.add_undo_action(func() -> void:
 		current_song.instruments[instrument_idx] = old_instrument
 		song_instrument_changed.emit()
 		
-		# Refresh the currently edited pattern, if necessary.
-		var current_pattern := get_current_pattern()
-		if current_pattern && current_pattern.instrument_idx == instrument_idx:
-			current_pattern.change_instrument(instrument_idx, old_instrument)
+		# Restore affected patterns and notes.
+		for i: int in state_context.reset_patterns.size():
+			var pattern_idx: int = state_context.reset_patterns[i]
+			current_song.patterns[pattern_idx].change_instrument(instrument_idx, old_instrument)
+			
+			var affected: Array[Vector3i] = state_context.reset_patterns_affected[i]
+			current_song.patterns[pattern_idx].restore_notes(affected)
+
+			var pattern_key: int = state_context.reset_patterns_keys[i]
+			current_song.patterns[pattern_idx].change_key(pattern_key)
 	)
 	
 	state_manager.commit_state_change(song_state)
