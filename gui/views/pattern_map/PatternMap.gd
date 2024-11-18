@@ -11,10 +11,10 @@ const PATTERN_WIDTH_MIN := 0.5
 const PATTERN_WIDTH_MAX := 1.0
 const PATTERN_WIDTH_STEP := 0.05
 
-## Currently edited pattern.
-var current_pattern: Pattern = null
 ## Currently edited arrangement for the song.
 var current_arrangement: Arrangement = null
+## Currently edited pattern.
+var current_pattern: Pattern = null
 
 var _hovering: bool = false
 
@@ -98,6 +98,7 @@ func _ready() -> void:
 		
 		Controller.song_loaded.connect(_edit_current_arrangement)
 		Controller.song_pattern_changed.connect(_edit_current_pattern)
+		Controller.song_sizes_changed.connect(_update_active_patterns)
 		
 		Controller.music_player.playback_tick.connect(_update_playback_cursor)
 		Controller.music_player.playback_stopped.connect(_update_playback_cursor)
@@ -470,8 +471,10 @@ func _update_active_patterns() -> void:
 			)
 			
 			if pattern.note_amount > 0:
+				var pattern_size := Controller.current_song.pattern_size
+
 				var note_span := pattern.get_active_note_span_size()
-				var note_width := active_pattern.notes_area.size.x / Controller.current_song.pattern_size
+				var note_width := active_pattern.notes_area.size.x / pattern_size
 				var note_height := active_pattern.notes_area.size.y / note_span
 				
 				var note_origin := active_pattern.notes_area.position
@@ -486,6 +489,9 @@ func _update_active_patterns() -> void:
 				var note_value_offset := pattern.active_note_span[0]
 				for j in pattern.note_amount:
 					var note := pattern.notes[j]
+					if note.x < 0 || note.y < 0 || note.y >= pattern_size || note.z < 1:
+						continue
+
 					var note_index := note.x - note_value_offset
 					var note_position := note_origin + Vector2(note_width * note.y, note_span_height - note_height * (note_index + 1))
 					var note_size := Vector2(note_width * note.z, note_height)
