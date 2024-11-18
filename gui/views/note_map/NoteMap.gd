@@ -46,9 +46,9 @@ var _note_cursor_size: int = 1
 
 var _note_drawing_mode: DrawingMode = DrawingMode.DRAWING_OFF
 
-@onready var _gutter: Control = $NoteMapGutter
-@onready var _scrollbar: Control = $NoteMapScrollbar
-@onready var _overlay: Control = $NoteMapOverlay
+@onready var _gutter: NoteMapGutter = $NoteMapGutter
+@onready var _scrollbar: NoteMapScrollbar = $NoteMapScrollbar
+@onready var _overlay: NoteMapOverlay = $NoteMapOverlay
 
 
 func _ready() -> void:
@@ -65,6 +65,7 @@ func _ready() -> void:
 	mouse_entered.connect(_show_note_cursor)
 	mouse_exited.connect(_hide_note_cursor)
 
+	_gutter.note_preview_requested.connect(_preview_note_at_cursor)
 	_scrollbar.shifted_up.connect(_change_scroll_offset.bind(1))
 	_scrollbar.shifted_down.connect(_change_scroll_offset.bind(-1))
 	
@@ -649,6 +650,15 @@ func _remove_note_at_cursor() -> void:
 	)
 	
 	Controller.state_manager.commit_state_change(pattern_state)
+
+
+func _preview_note_at_cursor(row_index: int) -> void:
+	if not Controller.current_song || not current_pattern:
+		return
+
+	var note := _note_rows[row_index]
+	var note_value := note.note_index + current_pattern.key
+	Controller.preview_pattern_note(note_value, _note_cursor_size)
 
 
 class NoteRow:

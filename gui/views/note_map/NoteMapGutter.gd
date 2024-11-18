@@ -5,7 +5,9 @@
 ###################################################
 
 @tool
-extends Control
+class_name NoteMapGutter extends Control
+
+signal note_preview_requested(row_index: int)
 
 var note_rows: Array[NoteMap.NoteRow] = []
 var _hovered_row: int = -1
@@ -17,8 +19,7 @@ func _gui_input(event: InputEvent) -> void:
 		
 		if mb.pressed && mb.button_index == MOUSE_BUTTON_LEFT:
 			if _hovered_row >= 0 && _hovered_row < note_rows.size():
-				var note := note_rows[_hovered_row]
-				Controller.preview_pattern_note(note.note_index)
+				note_preview_requested.emit(_hovered_row)
 
 
 func _physics_process(_delta: float) -> void:

@@ -369,6 +369,9 @@ func remove_note_at(index: int) -> void:
 	
 	# Erase the note by shifting the array.
 	for i in range(index, note_amount):
-		notes[i] = notes[i + 1] # Copy by value.
+		if (i + 1) < MAX_NOTE_NUMBER:
+			notes[i] = notes[i + 1] # Copy by value.
+		else:
+			notes[i] = Vector3i(-1, 0, 0)
 	
 	note_amount -= 1

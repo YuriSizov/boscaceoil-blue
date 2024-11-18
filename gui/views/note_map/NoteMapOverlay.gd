@@ -5,7 +5,7 @@
 ###################################################
 
 @tool
-extends Control
+class_name NoteMapOverlay extends Control
 
 const OCTAVE_BAR_INSET := 40
 

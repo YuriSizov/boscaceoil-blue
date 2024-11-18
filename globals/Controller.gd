@@ -508,8 +508,8 @@ func refresh_current_pattern_instrument() -> void:
 	current_pattern.change_instrument(current_pattern.instrument_idx, instrument)
 
 
-func preview_pattern_note(value: int) -> void:
-	var note_data := Vector3i(value, music_player.get_pattern_time(), 1)
+func preview_pattern_note(value: int, length: int) -> void:
+	var note_data := Vector3i(value, music_player.get_pattern_time(), length)
 	var current_pattern := get_current_pattern()
 	if current_pattern:
 		music_player.play_note(current_pattern, note_data)

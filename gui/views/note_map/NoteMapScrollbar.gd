@@ -5,7 +5,7 @@
 ###################################################
 
 @tool
-extends Control
+class_name NoteMapScrollbar extends Control
 
 signal shifted_up()
 signal shifted_down()
