@@ -31,9 +31,7 @@ var _max_scroll_offset: int = -1
 var _following_playback_cursor: bool = false
 
 var _arrangement_channels: Array[ArrangementChannel] = []
-# FIXME: Godot enters a dead loop if this array is typed.
-# Bisection points to https://github.com/godotengine/godot/pull/92609.
-var _arrangement_bars: Array[] = [] # of ArrangementBar
+var _arrangement_bars: Array[ArrangementBar] = []
 var _active_patterns: Array[ActivePattern] = []
 
 # Theme cache.
@@ -393,24 +391,30 @@ func _update_grid_layout() -> void:
 	var available_rect := get_available_rect()
 
 	# Iterate through all the patterns and complete collections.
-	var filled_width := 0.0
-	var index := 0
-	while filled_width < (available_rect.size.x + 2 * _pattern_width): # Give it some buffer.
-		var bar_index: int = index + _scroll_offset
-		if bar_index >= Arrangement.BAR_NUMBER:
-			break
 
-		# Create bar column data.
-		var bar := ArrangementBar.new()
-		bar.bar_index = bar_index
-		bar.position = Vector2(index * _pattern_width, 0)
-		bar.grid_position = bar.position + available_rect.position
-
-		_arrangement_bars.push_back(bar)
+	# HACK: Starting with 4.3 beta 3 this condition can happen on first import.
+	# This breaks CI and creates hurdles for new contributors. So adding guards to avoid infinite looping.
+	# Bisection points to https://github.com/godotengine/godot/pull/92609.
+	if _pattern_width > 0:
+		var filled_width := 0.0
+		var index := 0
 		
-		# Update counters.
-		filled_width += _pattern_width
-		index += 1
+		while filled_width < (available_rect.size.x + 2 * _pattern_width): # Give it some buffer.
+			var bar_index: int = index + _scroll_offset
+			if bar_index >= Arrangement.BAR_NUMBER:
+				break
+
+			# Create bar column data.
+			var bar := ArrangementBar.new()
+			bar.bar_index = bar_index
+			bar.position = Vector2(index * _pattern_width, 0)
+			bar.grid_position = bar.position + available_rect.position
+
+			_arrangement_bars.push_back(bar)
+			
+			# Update counters.
+			filled_width += _pattern_width
+			index += 1
 	
 	for i in Arrangement.CHANNEL_NUMBER:
 		var channel := ArrangementChannel.new()
