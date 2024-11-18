@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://1satggoreys0"]
+[gd_scene load_steps=8 format=3 uid="uid://1satggoreys0"]
 
 [ext_resource type="Script" path="res://gui/views/instrument_view/InstrumentSettings.gd" id="1_vna7b"]
 [ext_resource type="Theme" uid="uid://dkb62tku7dpgs" path="res://gui/theme/instruments/instrument_theme_gray.tres" id="1_x4dqd"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://dpno0cpboqdm0" path="res://gui/widgets/OptionPicker.tscn" id="3_f80nj"]
 [ext_resource type="Texture2D" uid="uid://os3udjkncg7b" path="res://assets/icons/minus.png" id="4_q813e"]
 [ext_resource type="Texture2D" uid="uid://34gjffqqcubk" path="res://assets/icons/plus.png" id="5_o6gqk"]
+[ext_resource type="Texture2D" uid="uid://hfvrvhr83y46" path="res://assets/icons/random.png" id="6_vodiv"]
 
 [node name="InstrumentSettings" type="PanelContainer"]
 auto_translate_mode = 1
@@ -93,6 +94,23 @@ layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"IncrementButton"
 icon = ExtResource("5_o6gqk")
+flat = true
+icon_alignment = 1
+expand_icon = true
+
+[node name="Separator" type="VSeparator" parent="Layout/Metadata/Pickers/InstrumentList/Layout/Buttons"]
+custom_minimum_size = Vector2(24, 0)
+layout_mode = 2
+theme_type_variation = &"InstrumentVSeparator"
+
+[node name="RandomizeInstrument" type="Button" parent="Layout/Metadata/Pickers/InstrumentList/Layout/Buttons"]
+unique_name_in_owner = true
+auto_translate_mode = 1
+custom_minimum_size = Vector2(28, 26)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"IncrementButton"
+icon = ExtResource("6_vodiv")
 flat = true
 icon_alignment = 1
 expand_icon = true

@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=5 format=3 uid="uid://dbtg5fe66mhr2"]
+[gd_resource type="Theme" load_steps=6 format=3 uid="uid://dbtg5fe66mhr2"]
 
 [ext_resource type="Texture2D" uid="uid://di3xykrb8awus" path="res://gui/theme/pad_slider_pattern.tres" id="1_16fbj"]
 
@@ -8,6 +8,11 @@ content_margin_top = 8.0
 content_margin_right = 16.0
 content_margin_bottom = 8.0
 bg_color = Color(0.168627, 0.129412, 0.592157, 1)
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_xtlde"]
+color = Color(0.168627, 0.129412, 0.592157, 1)
+thickness = 3
+vertical = true
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ujp82"]
 content_margin_left = 16.0
@@ -27,6 +32,8 @@ InstrumentDock/colors/item_color = Color(0.168627, 0.129412, 0.592157, 1)
 InstrumentDock/colors/item_gutter_color = Color(0.231373, 0.152941, 0.933333, 1)
 InstrumentSettingsPanel/base_type = &"PanelContainer"
 InstrumentSettingsPanel/styles/panel = SubResource("StyleBoxFlat_iavd2")
+InstrumentVSeparator/base_type = &"VSeparator"
+InstrumentVSeparator/styles/separator = SubResource("StyleBoxLine_xtlde")
 InstrumentWidgetPanel/base_type = &"PanelContainer"
 InstrumentWidgetPanel/styles/panel = SubResource("StyleBoxFlat_ujp82")
 NoteMap/colors/border_color = Color(0.0352941, 0.0509804, 0.235294, 1)

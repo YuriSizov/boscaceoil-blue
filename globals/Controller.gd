@@ -197,7 +197,7 @@ func show_file_dialog(dialog: FileDialog) -> void:
 
 func _clear_file_dialog_connections() -> void:
 	var connections := _file_dialog.file_selected.get_connections()
-	for connection : Dictionary in connections:
+	for connection: Dictionary in connections:
 		if connection["callable"] != _file_dialog_finalize_callable:
 			_file_dialog.file_selected.disconnect(connection["callable"])
 
@@ -597,6 +597,19 @@ func edit_instrument(instrument_index: int) -> void:
 		return
 	
 	_change_current_instrument(instrument_index)
+
+
+func randomize_current_instrument() -> void:
+	randomize_instrument(current_instrument_index)
+
+
+func randomize_instrument(instrument_index: int) -> void:
+	var instrument_index_ := ValueValidator.index(instrument_index, current_song.instruments.size())
+	if instrument_index != instrument_index_:
+		return
+
+	var voice_data := voice_manager.get_random_voice_data()
+	_set_current_instrument_by_voice(voice_data)
 
 
 func delete_instrument(instrument_index: int) -> void:
