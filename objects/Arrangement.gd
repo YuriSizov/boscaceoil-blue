@@ -143,6 +143,25 @@ func get_current_bar() -> PackedInt32Array:
 	return timeline_bars[current_bar_idx]
 
 
+func update_timeline_length() -> void:
+	timeline_length = 0
+
+	var i := BAR_NUMBER
+	while i > 0:
+		i -= 1
+
+		for j in CHANNEL_NUMBER:
+			if timeline_bars[i][j] != -1:
+				timeline_length = i + 1
+				break
+		
+		if timeline_length > 0:
+			break
+	
+	if timeline_length == 0:
+		timeline_length = 1
+
+
 # Patterns.
 
 func get_pattern(bar_idx: int, channel_idx: int) -> int:

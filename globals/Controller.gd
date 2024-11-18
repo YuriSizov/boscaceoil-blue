@@ -460,6 +460,7 @@ func delete_pattern(pattern_index: int) -> void:
 					bar[i] = bar[i] - 1
 					state_context.shifted_bars.push_back(Vector2i(bar_idx, i))
 		
+		current_song.arrangement.update_timeline_length()
 		song_pattern_changed.emit()
 	)
 	song_state.add_undo_action(func() -> void:
@@ -477,6 +478,7 @@ func delete_pattern(pattern_index: int) -> void:
 		for key: Vector2i in state_context.shifted_bars:
 			current_song.arrangement.timeline_bars[key.x][key.y] = current_song.arrangement.timeline_bars[key.x][key.y] + 1
 		
+		current_song.arrangement.update_timeline_length()
 		song_pattern_changed.emit()
 	)
 	
