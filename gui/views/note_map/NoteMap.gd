@@ -68,6 +68,7 @@ func _ready() -> void:
 	_gutter.note_preview_requested.connect(_preview_note_at_cursor)
 	_scrollbar.shifted_up.connect(_change_scroll_offset.bind(1))
 	_scrollbar.shifted_down.connect(_change_scroll_offset.bind(-1))
+	_scrollbar.centered.connect(_center_scroll_offset)
 	
 	if not Engine.is_editor_hint():
 		Controller.help_manager.reference_node(HelpManager.StepNodeRef.PATTERN_EDITOR_NOTEMAP, get_global_available_rect)
@@ -199,17 +200,17 @@ func get_global_available_rect() -> Rect2:
 
 # Scrolling.
 
-func _change_scroll_offset(delta: int) ->  void:
-	_scroll_offset = clampi(_scroll_offset + delta, 0, _max_scroll_offset)
-	_update_whole_grid()
-
-
 func _update_max_scroll_offset() -> void:
 	var available_rect := get_available_rect()
 	var note_height := get_theme_constant("note_height", "NoteMap")
 	var notes_on_screen := floori(available_rect.size.y / note_height)
 	_max_scroll_offset = maxi(0, _note_row_value_map.size() - notes_on_screen)
 	_scroll_offset = clampi(_scroll_offset, 0, _max_scroll_offset)
+
+
+func _change_scroll_offset(delta: int) ->  void:
+	_scroll_offset = clampi(_scroll_offset + delta, 0, _max_scroll_offset)
+	_update_scrollables()
 
 
 func _center_scroll_offset() -> void:
@@ -227,6 +228,12 @@ func _center_scroll_offset() -> void:
 		note_offset = scale_size * CENTER_OCTAVE - 2
 	
 	_scroll_offset = clampi(note_offset, 0, _max_scroll_offset)
+	_update_scrollables()
+
+
+func _reset_scroll_offset() -> void:
+	_scroll_offset = 0
+	_update_scrollables()
 
 
 # Editing and state visualization.
@@ -313,27 +320,27 @@ func _update_song_sizes() -> void:
 	queue_redraw()
 
 
+func _update_scrollables() -> void:
+	_update_grid_layout()
+	_update_active_notes()
+
+
 func _update_whole_grid() -> void:
 	_update_note_maps()
 	_update_max_scroll_offset()
-	_update_grid_layout()
-	_update_active_notes()
+	_update_scrollables()
 
 
 func _update_whole_grid_and_center() -> void:
 	_update_note_maps()
 	_update_max_scroll_offset()
 	_center_scroll_offset()
-	_update_grid_layout()
-	_update_active_notes()
 
 
 func _update_whole_grid_and_reset_scroll() -> void:
 	_update_note_maps()
 	_update_max_scroll_offset()
-	_scroll_offset = 0
-	_update_grid_layout()
-	_update_active_notes()
+	_reset_scroll_offset()
 
 
 func _update_pattern_instrument() -> void:

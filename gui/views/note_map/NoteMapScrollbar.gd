@@ -9,6 +9,7 @@ class_name NoteMapScrollbar extends Control
 
 signal shifted_up()
 signal shifted_down()
+signal centered()
 
 var octave_rows: Array[NoteMap.OctaveRow] = []
 
@@ -26,6 +27,14 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	_button_holder.process(delta)
+
+
+func _gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		var mb := event as InputEventMouseButton
+
+		if mb.button_index == MOUSE_BUTTON_LEFT && mb.pressed && mb.double_click:
+			centered.emit()
 
 
 func _shortcut_input(event: InputEvent) -> void:

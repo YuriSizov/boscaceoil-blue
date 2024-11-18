@@ -54,6 +54,20 @@ layout_mode = 2
 key_text = "bosca_notemap_down"
 description_text = "Scroll down"
 
+[node name="Filler" type="Control" parent="Layout/LeftPage/Layout"]
+auto_translate_mode = 1
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Layout/LeftPage/Layout"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabel"
+text = "DOUBLE CLICK on the scroll area to center
+the pattern view!"
+
 [node name="FillerMiddle" type="Control" parent="Layout"]
 auto_translate_mode = 1
 layout_mode = 2
@@ -129,7 +143,6 @@ size_flags_vertical = 3
 
 [node name="NavigateBack" parent="Layout/RightPage/Layout" instance=ExtResource("3_4kesk")]
 unique_name_in_owner = true
-physics_interpolation_mode = 2
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 8
