@@ -253,8 +253,7 @@ unique_name_in_owner = true
 layout_mode = 2
 value = 120
 min_value = 10
-max_value = 220
-step = 5
+max_value = 450
 
 [node name="FillerEnd" type="Control" parent="Layout"]
 auto_translate_mode = 1

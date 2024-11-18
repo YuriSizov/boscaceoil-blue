@@ -25,7 +25,7 @@ const DEFAULT_BAR_SIZE := 4
 
 const DEFAULT_BPM := 120
 const MIN_BPM := 10
-const MAX_BPM := 220
+const MAX_BPM := 450 # This is obscenely large.
 
 # Metadata.
 
