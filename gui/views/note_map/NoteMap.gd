@@ -8,6 +8,7 @@
 class_name NoteMap extends Control
 
 const CENTER_OCTAVE := 3
+const SMALLEST_PATTERN_SIZE := 8 # Must be power-of-2!
 
 enum DrawingMode {
 	DRAWING_OFF,
@@ -112,9 +113,9 @@ func _gui_input(event: InputEvent) -> void:
 
 
 func _shortcut_input(event: InputEvent) -> void:
-	if event.is_action_pressed("bosca_notemap_cursor_bigger", false, true):
+	if event.is_action_pressed("bosca_notemap_cursor_bigger", true, true):
 		_resize_note_cursor(1)
-	elif event.is_action_pressed("bosca_notemap_cursor_smaller", false, true):
+	elif event.is_action_pressed("bosca_notemap_cursor_smaller", true, true):
 		_resize_note_cursor(-1)
 
 
@@ -311,7 +312,12 @@ func _update_song_sizes() -> void:
 	bar_size = Controller.current_song.bar_size
 	
 	var available_rect := get_available_rect()
-	var effective_pattern_size := 16 if pattern_size <= 16 else 32
+	
+	# Round it up to the closes power-of-two, but no smaller than SMALLEST_PATTERN_SIZE.
+	var effective_pattern_size := SMALLEST_PATTERN_SIZE
+	while effective_pattern_size < pattern_size:
+		effective_pattern_size <<= 1
+	
 	_note_width = available_rect.size.x / effective_pattern_size
 	_overlay.note_unit_width = _note_width
 	
@@ -562,7 +568,7 @@ func _hide_note_cursor() -> void:
 
 
 func _resize_note_cursor(delta: int) -> void:
-	_note_cursor_size = clamp(_note_cursor_size + delta, 1, pattern_size)
+	_note_cursor_size = clamp(_note_cursor_size + delta, 1, Pattern.MAX_NOTE_LENGTH)
 	_overlay.note_cursor_size = _note_cursor_size
 	_overlay.queue_redraw()
 

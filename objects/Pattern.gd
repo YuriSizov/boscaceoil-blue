@@ -15,8 +15,9 @@ signal note_added(note_data: Vector3i)
 signal notes_changed()
 
 const OCTAVE_SIZE := 12
-const MAX_NOTE_NUMBER := 128
+const MAX_NOTES_IN_PATTERN := 128
 const MAX_NOTE_VALUE := 104
+const MAX_NOTE_LENGTH := 128
 
 ## Key index.
 @export var key: int = 0:
@@ -29,12 +30,13 @@ const MAX_NOTE_VALUE := 104
 	set(value): instrument_idx = ValueValidator.index(value, Instrument.INSTRUMENT_NUMBER)
 
 ## Note values as triplets: note index in the piano roll, note position in the pattern,
-## note length. Middle C has the index of 60. There can be at most MAX_NOTE_NUMBER notes.
+## note length. Middle C has the index of 60. There can be at most MAX_NOTES_IN_PATTERN
+## notes.
 @export var notes: Array[Vector3i] = []
 ## Number of active notes. The note array is always allocated to its maximum. This
 ## tracks how many notes there actually are.
 @export var note_amount: int = 0:
-	set(value): note_amount = ValueValidator.range(value, 0, MAX_NOTE_NUMBER)
+	set(value): note_amount = ValueValidator.range(value, 0, MAX_NOTES_IN_PATTERN)
 
 ## Flag whether the record filter is on.
 @export var record_instrument: bool = false
@@ -54,7 +56,7 @@ var _active_note_counts: Dictionary = {}
 
 
 func _init() -> void:
-	for i in MAX_NOTE_NUMBER:
+	for i in MAX_NOTES_IN_PATTERN:
 		notes.push_back(Vector3i(-1, 0, 0))
 
 	for i in Song.MAX_PATTERN_SIZE:
@@ -283,8 +285,8 @@ func add_note(value: int, position: int, length: int, full_update: bool = true) 
 	if value < 0 || position < 0:
 		printerr("Pattern: Cannot add a note %d at %d, values cannot be less than zero." % [ value, position ])
 		return
-	if note_amount >= MAX_NOTE_NUMBER:
-		printerr("Pattern: Cannot add a new note, a pattern can only contain %d notes." % [ MAX_NOTE_NUMBER ])
+	if note_amount >= MAX_NOTES_IN_PATTERN:
+		printerr("Pattern: Cannot add a new note, a pattern can only contain %d notes." % [ MAX_NOTES_IN_PATTERN ])
 		return
 
 	var note_data := Vector3i(value, position, length)
@@ -381,7 +383,7 @@ func remove_note_at(index: int) -> void:
 	
 	# Erase the note by shifting the array.
 	for i in range(index, note_amount):
-		if (i + 1) < MAX_NOTE_NUMBER:
+		if (i + 1) < MAX_NOTES_IN_PATTERN:
 			notes[i] = notes[i + 1] # Copy by value.
 		else:
 			notes[i] = Vector3i(-1, 0, 0)

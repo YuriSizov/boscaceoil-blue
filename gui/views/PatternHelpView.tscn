@@ -95,45 +95,37 @@ auto_translate_mode = 1
 layout_mode = 2
 theme_type_variation = &"CreditsBox"
 
-[node name="ShortcutLine3" parent="Layout/RightPage/Layout/ShortcutList" instance=ExtResource("2_p7qfp")]
-layout_mode = 2
-key_text = "MOUSE WHEEL"
-key_is_action = false
-description_text = "Change note size"
-
 [node name="ShortcutLine4" parent="Layout/RightPage/Layout/ShortcutList" instance=ExtResource("2_p7qfp")]
 layout_mode = 2
 key_text = "LEFT CLICK"
 key_is_action = false
-description_text = "Draw a note"
-
-[node name="Label" type="Label" parent="Layout/RightPage/Layout/ShortcutList"]
-auto_translate_mode = 1
-layout_mode = 2
-size_flags_horizontal = 8
-theme_type_variation = &"CreditsLabel"
-text = "(notes can overlap)"
-horizontal_alignment = 2
-
-[node name="Spacer" type="Control" parent="Layout/RightPage/Layout/ShortcutList"]
-auto_translate_mode = 1
-custom_minimum_size = Vector2(0, 12)
-layout_mode = 2
-size_flags_horizontal = 0
+description_text = "Draw a note (can overlap)"
 
 [node name="ShortcutLine5" parent="Layout/RightPage/Layout/ShortcutList" instance=ExtResource("2_p7qfp")]
 layout_mode = 2
 key_text = "RIGHT CLICK"
 key_is_action = false
-description_text = "Erase the note"
+description_text = "Erase a note at the cursor"
 
-[node name="Label2" type="Label" parent="Layout/RightPage/Layout/ShortcutList"]
-auto_translate_mode = 1
+[node name="Spacer" type="Control" parent="Layout/RightPage/Layout/ShortcutList"]
+custom_minimum_size = Vector2(0, 12)
 layout_mode = 2
-size_flags_horizontal = 8
-theme_type_variation = &"CreditsLabel"
-text = "(note must start at the cursor)"
-horizontal_alignment = 2
+
+[node name="ShortcutLine3" parent="Layout/RightPage/Layout/ShortcutList" instance=ExtResource("2_p7qfp")]
+layout_mode = 2
+key_text = "MOUSE WHEEL"
+key_is_action = false
+description_text = "Change cursor size"
+
+[node name="ShortcutLine" parent="Layout/RightPage/Layout/ShortcutList" instance=ExtResource("2_p7qfp")]
+layout_mode = 2
+key_text = "bosca_notemap_cursor_bigger"
+description_text = "Make cursor bigger"
+
+[node name="ShortcutLine2" parent="Layout/RightPage/Layout/ShortcutList" instance=ExtResource("2_p7qfp")]
+layout_mode = 2
+key_text = "bosca_notemap_cursor_smaller"
+description_text = "Make cursor smaller"
 
 [node name="Filler" type="Control" parent="Layout/RightPage/Layout"]
 auto_translate_mode = 1
