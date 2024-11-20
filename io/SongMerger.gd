@@ -79,6 +79,7 @@ static func encode_pattern(pattern: Pattern, instrument: Instrument, pattern_siz
 			# Use internal note value here, because it's unique. Mapped note values from a kit aren't.
 			var homogeneous_note := enc_note.raw_value if is_drumkit else -1
 			fitting_track = EncodedPatternTrack.new(pattern.instrument_idx, instrument.type, homogeneous_note)
+			fitting_track.set_minimum_notes(pattern_size)
 			enc_pattern.tracks.push_back(fitting_track)
 		
 		fitting_track.add_note(enc_note)
@@ -293,6 +294,15 @@ class EncodedPatternTrack:
 	
 	func get_track_last_sound() -> int:
 		return _track_last_sound
+	
+	
+	func get_track_time(pattern_size: int) -> int:
+		return maxi(1, floori(_track_last_sound / float(pattern_size)))
+	
+	
+	func get_track_residue(pattern_size: int) -> int:
+		var track_time := get_track_time(pattern_size)
+		return maxi(0, _track_last_sound - track_time * pattern_size)
 
 
 ## Encoded data of a pattern. It stores a collection of note tracks and instruments used by

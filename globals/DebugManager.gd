@@ -65,7 +65,7 @@ func _debug_song_merger() -> void:
 			var t := 0
 			for track in sequence.get_tracks():
 				print(" ".repeat(t * pattern_inset), track.get_track_mask_string())
-				t += 1
+				t += track.get_track_time(current_song.pattern_size)
 			
 			cs += 1
 	
@@ -82,6 +82,6 @@ func _debug_song_merger() -> void:
 		var t := 0
 		for track in sequence.get_tracks():
 			print(" ".repeat(t * pattern_inset), track.get_track_mask_string())
-			t += 1
+			t += track.get_track_time(current_song.pattern_size)
 		
 		ars += 1

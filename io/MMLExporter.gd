@@ -154,7 +154,7 @@ class MMLFileWriter:
 							write_instrument_config(instrument_index)
 					
 					if last_track:
-						write_track(enc_track, last_track.get_track_residue())
+						write_track(enc_track, last_track.get_track_residue(pattern_size))
 					else:
 						write_track(enc_track)
 					
@@ -174,14 +174,16 @@ class MMLFileWriter:
 		# has residue. Skipping sacrifices this track's rest commands.
 		var i := 0
 		var notes := track.get_notes()
-		while i < notes.size():
+		
+		var max_note := maxi(pattern_size, notes.size())
+		while i < max_note:
 			if i < skip_notes:
 				note_string += EMPTY_NOTE_COMMAND
 				i += 1
 				continue
 			
-			var note := notes[i]
-			if note:
+			if i < notes.size() && notes[i]:
+				var note := notes[i]
 				note_string += _stringify_note(note, last_octave)
 				last_octave = note.octave
 				i += note.length
