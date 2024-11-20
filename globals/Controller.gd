@@ -40,6 +40,7 @@ enum DragSources {
 	INSTRUMENT_DOCK,
 }
 
+var debug_manager: DebugManager = null
 var settings_manager: SettingsManager = null
 var window_manager: WindowManager = null
 var state_manager: StateManager = null
@@ -75,6 +76,7 @@ var _controls_locked: bool = false
 
 
 func _init() -> void:
+	debug_manager = DebugManager.new()
 	settings_manager = SettingsManager.new()
 	window_manager = WindowManager.new()
 	state_manager = StateManager.new()
@@ -152,6 +154,13 @@ func _shortcut_input(event: InputEvent) -> void:
 			state_manager.do_state_change()
 		
 		get_viewport().set_input_as_handled()
+
+	else:
+		var debug_actions: Array[String] = [ "bosca_debug_1" ]
+		for i in debug_actions.size():
+			var action_name := debug_actions[i]
+			if event.is_action_pressed(action_name, false, true):
+				debug_manager.activate_debug(i)
 
 
 # Navigation.

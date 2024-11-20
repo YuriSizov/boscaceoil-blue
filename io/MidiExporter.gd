@@ -63,29 +63,7 @@ static func _write(writer: MidiFileWriter, song: Song) -> void:
 	# Track chunk 3. Drumkit instrument and notes.
 	
 	var drum_track := writer.create_track()
-	
-	# Use special drumkit channel and a catch-all instrument.
-	drum_track.set_instrument(MidiFile.DRUMKIT_CHANNEL, 0)
-
-	# Write all drumkit notes.
-	for i in song.arrangement.timeline_length:
-		var note_offset := i * song.pattern_size
-		
-		for j in Arrangement.CHANNEL_NUMBER:
-			var pattern_index := song.arrangement.timeline_bars[i][j]
-			if pattern_index == -1:
-				continue
-			
-			var pattern := song.patterns[pattern_index]
-			var instrument := song.instruments[pattern.instrument_idx]
-			if instrument is DrumkitInstrument:
-				var drumkit_instrument := instrument as DrumkitInstrument
-				
-				for k in pattern.note_amount:
-					var note := pattern.notes[k]
-					var note_value := drumkit_instrument.get_midi_note(note.x)
-					
-					drum_track.add_note(MidiFile.DRUMKIT_CHANNEL, note_offset + note.y, note_value, note.z, instrument.volume)
+	_write_drumkits_to_track(drum_track, song)
 	
 	# Prepare the rest of the file for output.
 	writer.finalize()
@@ -119,6 +97,31 @@ static func _write_instruments_to_track(track: MidiTrack, song: Song, limit: int
 				var note := pattern.notes[k]
 				
 				track.add_note(pattern.instrument_idx - offset, note_offset + note.y, note.x, note.z, instrument.volume)
+
+
+static func _write_drumkits_to_track(track: MidiTrack, song: Song) -> void:
+	# Use special drumkit channel and a catch-all instrument.
+	track.set_instrument(MidiFile.DRUMKIT_CHANNEL, 0)
+
+	# Write all drumkit notes.
+	for i in song.arrangement.timeline_length:
+		var note_offset := i * song.pattern_size
+		
+		for j in Arrangement.CHANNEL_NUMBER:
+			var pattern_index := song.arrangement.timeline_bars[i][j]
+			if pattern_index == -1:
+				continue
+			
+			var pattern := song.patterns[pattern_index]
+			var instrument := song.instruments[pattern.instrument_idx]
+			if instrument is DrumkitInstrument:
+				var drumkit_instrument := instrument as DrumkitInstrument
+				
+				for k in pattern.note_amount:
+					var note := pattern.notes[k]
+					var note_value := drumkit_instrument.get_midi_note(note.x)
+					
+					track.add_note(MidiFile.DRUMKIT_CHANNEL, note_offset + note.y, note_value, note.z, instrument.volume)
 
 
 class MidiFileWriter:
