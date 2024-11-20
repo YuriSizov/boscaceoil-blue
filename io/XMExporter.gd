@@ -258,12 +258,12 @@ class XMFileWriter:
 		
 		# Each bar is converted to an XM pattern, containing all notes by all instruments played in it.
 		# Encoded data technically contains one extra "bar" for slurs/residual sounds, but we cannot
-		# support that (see _encode_pattern), so this is ignored. The size is capped at MAX_LENGTH.
+		# support that (see _encode_xm_pattern), so this is ignored. The size is capped at MAX_LENGTH.
 		_song_length = mini(MAX_LENGTH, arrangement.timeline_length)
 		
 		for bar_position in _song_length:
 			# Check if this is a repeated pattern.
-			# Since we cannot support notes extending beyond the pattern size (see _encode_pattern),
+			# Since we cannot support notes extending beyond the pattern size (see _encode_xm_pattern),
 			# we can simply use the bar's pattern index composition as a unique key.
 			
 			var bar_patterns := arrangement.timeline_bars[bar_position]

@@ -235,10 +235,12 @@ class MMLFileWriter:
 	# Data management.
 	
 	func encode_pattern(pattern: Pattern, instrument: Instrument) -> void:
-		# Note that GDSiON's MML parser doesn't support sequence macros. If support is introduced,
-		# there is a possibility to simplify the resulting MML file by assigning each repeated pattern
-		# to a custom macro. There can only be up to 52 macros, though, which is way below the limit
-		# on the number of Bosca Ceoil patterns.
+		# GDSiON's MML format supports sequence macros, which could be used here to simplify
+		# some of the output. However, there are only up to 26 macros available (they are encoded
+		# with a single capital letter, A-Z). This is way below the limit on the number of
+		# patterns supported by Bosca Ceoil, which is like 4096.
+		# So to utilize something like that we'd need to devise a sequence compressor that
+		# operates on the encoded data not Bosca Ceoil patterns. Which is a lot of work.
 		
 		var enc_pattern := SongMerger.encode_pattern(pattern, instrument, pattern_size)
 		_patterns.push_back(enc_pattern)

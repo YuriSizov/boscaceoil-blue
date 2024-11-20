@@ -101,3 +101,18 @@ static func read_vlen(file: FileAccess) -> int:
 		break
 	
 	return value
+
+
+# Misc.
+
+# This is only used for debugging, so the output is not something that you
+# might find useful when converting binary data as a string. It's not 0s
+# and 1s, it's xs and dots.
+static func binary_to_string(number: int, size: int = 8) -> String:
+	var bin_string := ""
+	var n := number
+	for i in size:
+		bin_string = ("x" if ( n & 1 ) else ".") + bin_string
+		n = n >> 1
+	
+	return bin_string
