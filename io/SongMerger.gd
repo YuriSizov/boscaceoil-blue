@@ -55,10 +55,8 @@ static func encode_pattern(pattern: Pattern, instrument: Instrument, pattern_siz
 		enc_note.length = note_data.z
 		enc_note.create_mask()
 		
-		@warning_ignore("integer_division")
-		enc_note.octave = enc_note.value / Pattern.OCTAVE_SIZE # SiON octaves are 0-based.
-		var note_label := Note.get_note_name(enc_note.value % Pattern.OCTAVE_SIZE)
-		enc_note.label = note_label.to_lower().replace("#", "+")
+		enc_note.octave = Note.get_note_octave(enc_note.value)
+		enc_note.label = Note.get_note_mml(enc_note.value)
 		
 		# Handled patterns with recorded instrument values.
 		if pattern.record_instrument:

@@ -16,73 +16,51 @@ const FILE_EXTENSION := "xm"
 
 const INT16_MAX := 32767
 
-var _file_path: String = ""
-var _writer: XMFileWriter = null
 
-
-func get_export_path() -> String:
-	return _file_path
-
-
-func prepare(song: Song, path: String) -> bool:
+static func save(song: Song, path: String) -> bool:
 	if path.get_extension() != FILE_EXTENSION:
 		printerr("XMExporter: The XM file must have a .%s extension." % [ FILE_EXTENSION ])
 		return false
 	
-	FileAccess.open(path, FileAccess.WRITE)
+	var file := FileAccess.open(path, FileAccess.WRITE)
 	var error := FileAccess.get_open_error()
 	if error != OK:
 		printerr("XMExporter: Failed to open the file at '%s' for writing (code %d)." % [ path, error ])
 		return false
 	
-	_file_path = path
-	
-	_writer = XMFileWriter.new(_file_path)
-	_writer.song_default_bpm = song.bpm
-	_writer.song_pattern_size = song.pattern_size
-	_writer.encode_song(song.arrangement, song.patterns, song.instruments)
-	
-	return true
-
-
-func get_queued_samples() -> Array[MusicPlayer.QueuedSample]:
-	var samples: Array[MusicPlayer.QueuedSample] = []
-	
-	for xm_instrument in _writer.get_instruments():
-		for xm_sample in xm_instrument.samples:
-			samples.push_back(xm_sample.get_for_queue())
-	
-	return samples
-
-
-func save() -> bool:
-	if _file_path.is_empty():
-		printerr("XMExporter: Export path cannot be empty.")
-		return false
-	
-	var file := FileAccess.open(_file_path, FileAccess.WRITE)
-	var error := FileAccess.get_open_error()
-	if error != OK:
-		printerr("XMExporter: Failed to open the file at '%s' for writing (code %d)." % [ _file_path, error ])
-		return false
-	
-	# Meta information about the file format.
-	_writer.write_file_header()
-	# Meta information about the encoded song.
-	_writer.write_song_header()
-	# Pattern and instrument data.
-	_writer.write_patterns()
-	_writer.write_instruments()
+	var writer := XMFileWriter.new(path)
+	_write(writer, song)
 	
 	# Try to write the file with the new contents.
 	
-	file.store_buffer(_writer.get_file_buffer())
+	file.store_buffer(writer.get_file_buffer())
 	error = file.get_error()
 	if error != OK:
-		printerr("XMExporter: Failed to write to the file at '%s' (code %d)." % [ _file_path, error ])
+		printerr("XMExporter: Failed to write to the file at '%s' (code %d)." % [ path, error ])
 		return false
 	
 	return true
+
+
+static func _write(writer: XMFileWriter, song: Song) -> void:
+	writer.song_default_bpm = song.bpm
+	writer.song_pattern_size = song.pattern_size
+	writer.encode_song(song.arrangement, song.patterns, song.instruments)
+	
+	# Render out the samples before proceeding.
+	var samples: Array[MusicPlayer.QueuedSample] = []
+	for xm_instrument in writer.get_instruments():
+		for xm_sample in xm_instrument.samples:
+			samples.push_back(xm_sample.get_for_queue())
+	Controller.music_player.render_samples(samples)
+	
+	# Meta information about the file format.
+	writer.write_file_header()
+	# Meta information about the encoded song.
+	writer.write_song_header()
+	# Pattern and instrument data.
+	writer.write_patterns()
+	writer.write_instruments()
 
 
 class XMFileWriter:
@@ -161,10 +139,10 @@ class XMFileWriter:
 			# Pattern section header.
 			ByteArrayUtil.write_int32(_output, 9) # Fixed size, as we don't store additional data before the body.
 			_output.append(0) # Packing type is always 0.
-			ByteArrayUtil.write_int16(_output, xm_pattern.note_lines.size()) # Number of lines in the note matrix.
+			ByteArrayUtil.write_int16(_output, xm_pattern.note_rows.size()) # Number of rows in the note matrix.
 			
 			var pattern_output := PackedByteArray()
-			for note_line: Array[XMPatternNote] in xm_pattern.note_lines:
+			for note_line: Array[XMPatternNote] in xm_pattern.note_rows:
 				for note: XMPatternNote in note_line:
 					pattern_output.append_array(note.get_compressed())
 			
@@ -223,12 +201,15 @@ class XMFileWriter:
 	# Data management.
 	
 	func encode_song(arrangement: Arrangement, patterns: Array[Pattern], instruments: Array[Instrument]) -> void:
-		var _bosca_patterns: Array[SongMerger.EncodedPattern] = []
+		# Each bar is converted to an XM pattern, containing all notes by all instruments played in it.
+		# One extra "bar" is added for slurs/residual sounds, but the total size is capped at MAX_LENGTH.
+		_song_length = mini(MAX_LENGTH, arrangement.timeline_length + 1)
 		
+		var bosca_patterns: Array[SongMerger.EncodedPattern] = []
 		for pattern in patterns:
 			var instrument := instruments[pattern.instrument_idx]
 			var enc_pattern := SongMerger.encode_pattern(pattern, instrument, song_pattern_size)
-			_bosca_patterns.push_back(enc_pattern)
+			bosca_patterns.push_back(enc_pattern)
 			
 			# Encode used instruments.
 			if enc_pattern.used_instrument:
@@ -254,69 +235,81 @@ class XMFileWriter:
 							var xm_instrument := _encode_xm_instrument(instrument_name, instrument_voice, drumkit_instrument.volume, instrument_note)
 							_instrument_index_map[unique_index] = xm_instrument.index
 		
-		_channels = SongMerger.encode_arrangement(arrangement, _bosca_patterns, song_pattern_size)
+		_channels = SongMerger.encode_arrangement(arrangement, bosca_patterns, song_pattern_size)
 		
-		# Each bar is converted to an XM pattern, containing all notes by all instruments played in it.
-		# Encoded data technically contains one extra "bar" for slurs/residual sounds, but we cannot
-		# support that (see _encode_xm_pattern), so this is ignored. The size is capped at MAX_LENGTH.
-		_song_length = mini(MAX_LENGTH, arrangement.timeline_length)
+		# Each XM pattern can have up to 256 rows. This means that with the pattern size of 16 we
+		# can only put 16 arrangement bars into one XM pattern. There can also only be at most 256
+		# unique patterns and at most 256 patterns chained together to make a song.
+		# These are pretty strict limitations and it is possible to have a Bosca song that will
+		# never export correctly into the XM format.
 		
-		for bar_position in _song_length:
-			# Check if this is a repeated pattern.
-			# Since we cannot support notes extending beyond the pattern size (see _encode_xm_pattern),
-			# we can simply use the bar's pattern index composition as a unique key.
-			
-			var bar_patterns := arrangement.timeline_bars[bar_position]
+		# So, given that, our approach here is to be simple but effective for the cases that we
+		# can support. In future it may be possible to do more effective packing and utilize
+		# these limits better, but for now we go with the most straightforward approach.
+		
+		# We take each arrangement bar and consider it to be an XM pattern. Its composition gives
+		# it a unique key, which we can use to reuse patterns. Notes which extend beyond the
+		# pattern size are left to be handled automatically. As a small improvement, we also add
+		# an empty pattern at the end of the song, letting residual sounds to play out.
+		
+		# Since encoded sequences respect residual notes, we have to get a bit creative with tracking
+		# our place in them. We track the time and the set of remaining tracks for each sequence.
+		var channel_times := PackedInt32Array()
+		channel_times.resize(_channels.size())
+		var channel_tracks: Array[Array] = []
+		for sequence in _channels:
+			channel_tracks.push_back(sequence.get_tracks())
+		
+		for current_time in _song_length:
+			var bar_patterns := arrangement.timeline_bars[current_time]
 			var unique_hash := 0
 			for pattern_idx in bar_patterns:
 				unique_hash = hash("%d" % [ unique_hash + pattern_idx ])
 			
 			if _pattern_unique_map.has(unique_hash):
-				_pattern_order_table[bar_position] = (_pattern_unique_map[unique_hash] as XMPattern).index
+				var known_pattern: XMPattern = _pattern_unique_map[unique_hash]
+				_pattern_order_table[current_time] = known_pattern.index
 				continue
 			
-			var xm_pattern := _encode_xm_pattern(bar_position)
+			var xm_pattern := _encode_xm_pattern(current_time, channel_times, channel_tracks)
 			_pattern_unique_map[unique_hash] = xm_pattern
-			_pattern_order_table[bar_position] = xm_pattern.index
+			_pattern_order_table[current_time] = xm_pattern.index
 	
 	
-	func _encode_xm_pattern(position: int) -> XMPattern:
+	func _encode_xm_pattern(current_time: int, channel_times: PackedInt32Array, channel_tracks: Array[Array]) -> XMPattern:
+		# Patterns are fixed at the Bosca pattern size for simplicity. See the explanation in encode_song().
 		var xm_pattern := XMPattern.new(song_pattern_size, _channels.size())
 		xm_pattern.index = _patterns.size()
 		_patterns.push_back(xm_pattern)
 		
 		for j in _channels.size():
-			var sequence := _channels[j]
-			var tracks := sequence.get_tracks()
-			var active_track := tracks[position]
+			var sequence_time := channel_times[j]
+			if sequence_time != current_time:
+				continue # This sequence is either ahead or behind the time cursor.
+			
+			var sequence_tracks := channel_tracks[j]
+			if sequence_tracks.is_empty():
+				continue # This sequence is exhausted and containes no more tracks.
+			
+			var active_track: SongMerger.EncodedPatternTrack = sequence_tracks.pop_front()
 			var track_notes := active_track.get_notes()
 			
-			for i in song_pattern_size:
+			for i in xm_pattern.note_rows.size():
 				if not track_notes[i]:
 					continue
 				
-				# TODO: It may be possible to support at least recorded volume values here.
-				# Filter values don't seem possible though. 
-				
-				var xm_note: XMPatternNote = xm_pattern.note_lines[i][j]
-				
-				# Zero means no value, so add one to match the range. Some notes will be too high
-				# for XM, we clamp them as a best-effort approach.
-				xm_note.value = clampi(track_notes[i].value + 1, 0, 96)
-				
+				var instrument_index := 0
 				# Use adjusted instrument index which accounts for drumkits expanded into unique voices.
 				if active_track.get_instrument_type() == Instrument.InstrumentType.INSTRUMENT_DRUMKIT:
-					xm_note.instrument = _get_xm_instrument_index(active_track.get_instrument_index(), active_track.get_homogeneous_note())
+					instrument_index = _get_xm_instrument_index(active_track.get_instrument_index(), active_track.get_homogeneous_note())
 				else:
-					xm_note.instrument = _get_xm_instrument_index(active_track.get_instrument_index())
+					instrument_index = _get_xm_instrument_index(active_track.get_instrument_index())
 				
-				# Assumption insofar is that at the end of the pattern all notes are turned off.
-				# This implies that we cannot support slurs/residual sounds, unfortunately.
-				var note_ends_at := i + track_notes[i].length
-				if note_ends_at < song_pattern_size:
-					var xm_note_off: XMPatternNote = xm_pattern.note_lines[note_ends_at][j]
-					xm_note_off.value = 97 # Special "Key off" value.
-		
+				xm_pattern.add_note(i, j, track_notes[i], instrument_index)
+			
+			# Progress the time.
+			channel_times[j] += active_track.get_track_time(song_pattern_size)
+			
 		return xm_pattern
 	
 	
@@ -365,18 +358,41 @@ class XMFileWriter:
 class XMPattern:
 	var index: int = -1
 	# Matrix of XMPatternNote.
-	var note_lines: Array[Array] = []
+	var note_rows: Array[Array] = []
 	
 	
-	func _init(row_number: int, cell_number: int) -> void:
-		for i in row_number:
+	func _init(row_amount: int, channel_amount: int) -> void:
+		for i in row_amount:
 			var note_row: Array[XMPatternNote] = []
 			
-			for j in cell_number:
+			for j in channel_amount:
 				var xm_note := XMPatternNote.new()
 				note_row.push_back(xm_note)
 			
-			note_lines.push_back(note_row)
+			note_rows.push_back(note_row)
+	
+	
+	func add_note(row_index: int, channel_index: int, enc_note: SongMerger.EncodedPatternNote, instrument_index: int) -> void:
+		# TODO: It may be possible to support at least recorded volume values here.
+		# Filter values don't seem possible though. 
+		
+		var xm_note: XMPatternNote = note_rows[row_index][channel_index]
+		
+		# Zero means no value, so add one to match the range. Some notes will be too high
+		# for XM, we clamp them as a best-effort approach.
+		xm_note.value = clampi(enc_note.value + 1, 0, 96)
+		xm_note.instrument = instrument_index
+		
+		# Notes that don't have an off signal before the end of the pattern are
+		# handled automatically. They are expected to play out and die off
+		# naturally, unless the entire song ends at this point.
+		# This is hopefully prevented by defining better patterns, such that all
+		# notes are handled within them without going beyond.
+		
+		var note_end_row := enc_note.position + enc_note.length
+		if note_end_row < note_rows.size():
+			var xm_note_off: XMPatternNote = note_rows[note_end_row][channel_index]
+			xm_note_off.value = 97 # Special "Key off" value.
 
 
 class XMPatternNote:
@@ -478,7 +494,6 @@ class XMInstrumentSample:
 		var queued_sample := MusicPlayer.QueuedSample.new()
 		queued_sample.voice = _voice
 		queued_sample.note_value = _note_value
-		queued_sample.note_length = 2
 		
 		queued_sample.callback = _append_data
 		
@@ -493,10 +508,9 @@ class XMInstrumentSample:
 		type = loopness + (bitness << 4)
 	
 	
-	func _append_data(event: SiONEvent) -> void:
-		# The output is in stereo, but we want mono here. There is no panning, so take either channel.
-		for stereo_value in event.get_stream_buffer():
-			_data.push_back(int(stereo_value.x * INT16_MAX))
+	func _append_data(data: PackedFloat64Array) -> void:
+		for value in data:
+			_data.push_back(int(value * INT16_MAX))
 	
 	
 	func convert_data_to_deltas() -> void:

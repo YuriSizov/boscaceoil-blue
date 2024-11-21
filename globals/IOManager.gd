@@ -311,27 +311,10 @@ func _export_xm_song_confirmed(path: String) -> void:
 	if not Controller.current_song:
 		return
 	
-	var exporter := XMExporter.new()
-	var success := exporter.prepare(Controller.current_song, path)
-	if not success:
-		Controller.update_status("FAILED TO EXPORT SONG: INVALID FILENAME", Controller.StatusLevel.ERROR)
-		return
-	
-	Controller.lock_song_editing("NOW EXPORTING AS XM, PLEASE WAIT")
-	Controller.music_player.stop_playback()
-	
-	var samples := exporter.get_queued_samples()
-	Controller.music_player.export_ended.connect(_save_xm_song.bind(exporter), CONNECT_ONE_SHOT)
-	Controller.music_player.start_rendering_samples(samples)
-
-
-func _save_xm_song(exporter: XMExporter) -> void:
-	var success := exporter.save()
+	var success := XMExporter.save(Controller.current_song, path)
 	if not success:
 		Controller.update_status("FAILED TO EXPORT SONG", Controller.StatusLevel.ERROR)
-		Controller.unlock_song_editing()
 		return
 	
-	Controller.unlock_song_editing()
 	Controller.update_status("SONG EXPORTED AS XM", Controller.StatusLevel.SUCCESS)
-	print("Successfully exported song to %s." % [ exporter.get_export_path() ])
+	print("Successfully exported song to %s." % [ path ])
