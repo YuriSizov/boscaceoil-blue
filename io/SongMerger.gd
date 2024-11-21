@@ -36,10 +36,7 @@ static func encode_pattern(pattern: Pattern, instrument: Instrument, pattern_siz
 	# Prepare note data.
 	for i in pattern.note_amount:
 		var note_data := pattern.notes[i]
-		if note_data.x < 0 || note_data.y < 0 || note_data.y >= pattern_size || note_data.z < 1:
-			# X — note number is invalid.
-			# Y — note position in the pattern is invalid.
-			# Z — note length is shorter than 1 unit of length.
+		if not pattern.is_note_valid(note_data, pattern_size):
 			continue
 		
 		# Encode the note itself.

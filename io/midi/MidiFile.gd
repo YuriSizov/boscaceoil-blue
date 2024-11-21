@@ -16,5 +16,7 @@ enum FileFormat {
 const DEFAULT_RESOLUTION := 120
 const DRUMKIT_CHANNEL := 9
 
+const TEMPO_BASE := 60_000_000
+
 const FILE_HEADER_MARKER := "MThd"
 const FILE_TRACK_MARKER := "MTrk"

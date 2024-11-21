@@ -50,6 +50,7 @@ enum MidiType {
 
 var type: Type = Type.META_EVENT
 var timestamp: int = 0
+var order: int = 0
 var payload: Payload = null
 
 

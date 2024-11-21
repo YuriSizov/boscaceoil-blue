@@ -65,6 +65,9 @@ func get_events() -> Array[MidiTrackEvent]:
 
 
 func _sort_events(a: MidiTrackEvent, b: MidiTrackEvent) -> bool:
+	if a.timestamp == b.timestamp:
+		return a.order < b.order # Preserve insertion order when timestamp is the same.
+	
 	return a.timestamp < b.timestamp
 
 
@@ -74,6 +77,7 @@ func add_meta_event(meta_type: MidiTrackEvent.MetaType, timestamp: int, data: Pa
 	var event := MidiTrackEvent.new()
 	event.type = MidiTrackEvent.Type.META_EVENT
 	event.timestamp = timestamp
+	event.order = _events.size()
 	
 	var payload := MidiTrackEvent.MetaPayload.new()
 	payload.meta_type = meta_type
@@ -84,22 +88,30 @@ func add_meta_event(meta_type: MidiTrackEvent.MetaType, timestamp: int, data: Pa
 	_events_unsorted = true
 
 
-func add_time_signature(numerator: int, denominator: int, clocks_per_click: int, notated_notes: int) -> void:
+func add_time_signature(numerator: int, denominator: int, clocks_per_click: int = 24, quarter_note_resolution: int = 8) -> void:
 	var event_data := PackedByteArray()
+	
+	# Denominator is stored as a power-of-2 value (e.g. 4 -> 2, 8 -> 3, etc).
+	var po2_denominator := 0
+	var n := denominator
+	while n > 1:
+		n >>= 1
+		po2_denominator += 1
+	
 	event_data.append(numerator)
-	event_data.append(denominator)
+	event_data.append(po2_denominator)
 	event_data.append(clocks_per_click)
-	event_data.append(notated_notes)
+	event_data.append(quarter_note_resolution)
 	
 	add_meta_event(MidiTrackEvent.MetaType.TIME_SIGNATURE, 0, event_data)
 
 
-func add_tempo(bpm: int) -> void:
+func add_tempo(bpm: int, denominator: int) -> void:
 	var event_data := PackedByteArray()
 	
 	# Tempo is stored in microseconds per MIDI quarter-note.
 	@warning_ignore("integer_division")
-	var misec_per_beat := 60_000_000 / bpm
+	var misec_per_beat := int(MidiFile.TEMPO_BASE / bpm * denominator / 4.0)
 	
 	# Value is always stored in 24 bits.
 	event_data.append((misec_per_beat >> 16) & 0xFF)
@@ -115,6 +127,7 @@ func add_midi_event(midi_type: MidiTrackEvent.MidiType, channel_num: int, timest
 	var event := MidiTrackEvent.new()
 	event.type = MidiTrackEvent.Type.MIDI_EVENT
 	event.timestamp = timestamp
+	event.order = _events.size()
 	
 	var payload := MidiTrackEvent.MidiPayload.new()
 	payload.midi_type = midi_type

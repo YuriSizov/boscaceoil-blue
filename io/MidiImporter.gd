@@ -117,6 +117,12 @@ class MidiFileReader:
 		var signature_found := false
 		var tempo_found := false
 		
+		# Default values per MIDI spec.
+		var signature_numerator := 4
+		var signature_denominator := 4
+		var tempo := 500_000
+		
+		# Look for the settings in any track. Usually it's the first one, but we can't be sure.
 		for track in _tracks:
 			var events := track.get_events()
 			
@@ -126,26 +132,56 @@ class MidiFileReader:
 				var meta_payload := event.payload as MidiTrackEvent.MetaPayload
 				
 				if not signature_found && meta_payload.meta_type == MidiTrackEvent.MetaType.TIME_SIGNATURE:
-					var numerator := meta_payload.data[0]
-					var denominator := 1 << meta_payload.data[1]
+					signature_numerator = meta_payload.data[0]
+					signature_denominator = 1 << meta_payload.data[1]
 					
-					# This is a bit dubious, but matches the original implementation.
-					song.pattern_size = clampi(numerator * denominator, 0, 32)
+					# Bosca only supports one time signature per song, which isn't necessarily
+					# true for MIDI files. Can't do much about it, so using the first one and praying.
+					print_verbose("MidiImporter: Found a time signature message (%d, %d)." % [ signature_numerator, signature_denominator ])
 					signature_found = true
 				
 				if not tempo_found && meta_payload.meta_type == MidiTrackEvent.MetaType.TEMPO_SETTING:
 					# Tempo is stored in 24 bits.
-					var tempo := 0
+					tempo = 0
 					tempo += meta_payload.data[0] << 16
 					tempo += meta_payload.data[1] << 8
 					tempo += meta_payload.data[2]
 					
-					@warning_ignore("integer_division")
-					song.bpm = 60_000_000 / tempo
+					print_verbose("MidiImporter: Found a tempo message (%d)." % [ tempo ])
 					tempo_found = true
 				
 				if signature_found && tempo_found:
-					return
+					break
+			if signature_found && tempo_found:
+				break
+		
+		# Compute pattern size and BPM based on our findings.
+		
+		# The original implementation tries to use the numerator and denominator
+		# from the time signature to guess a pattern size. This is obviously not
+		# a reliable method, and we cannot even recreate an original Bosca song
+		# exported as MIDI this way.
+		#
+		# This is because the time signature defines the nature of a beat (how
+		# many quarter* notes it has). For example, in Bosca Ceoil the time
+		# signature is ALWAYS 4/4, regardless of the pattern size or other settings.
+		#
+		# To determine the pattern size properly we'd have to inspect the notes.
+		# And, in the end, we have no guarantee that notes would neatly pack into
+		# patterns anyway. It'd be a complex task to try and build patterns out of
+		# random MIDI notes.
+		#
+		# So the best we can do is to use an arbitrary pattern size (which was,
+		# perhaps, what the original implementation did, in a way). We can use
+		# the numerator of the time signature alone, to try and turn a MIDI song
+		# into a bunch of beat-long patterns.
+		
+		# TODO: Perhaps expose a factor to this as an import setting somehow?
+		var beats_per_pattern := 1
+		song.pattern_size = clampi(signature_numerator * beats_per_pattern, 1, Song.MAX_PATTERN_SIZE)
+		
+		@warning_ignore("integer_division")
+		song.bpm = roundi(MidiFile.TEMPO_BASE / tempo * signature_denominator / 4.0)
 	
 	
 	func extract_composition(song: Song) -> void:
@@ -230,14 +266,32 @@ class MidiFileReader:
 		var midi_track := _tracks[track_idx]
 		var note_pitch := midi_payload.data[0]
 		
+		# We first try to find a note that has been around for a bit and turn it off.
+		# So we're skipping all notes which aren't valid. But in case we don't find
+		# any, we should turn off the first "not-so-valid" note at least. Hence,
+		# candidates.
+		var candidates: Array[MidiNote] = []
+		var check_candidates := true
+		
 		var i := instrument_notes.size() - 1
 		while i >= 0:
 			var midi_note := instrument_notes[i]
 			if midi_note.pitch == note_pitch && midi_note.length < 0:
+				candidates.push_back(midi_note)
+				
 				@warning_ignore("integer_division")
-				midi_note.length = (timestamp - midi_note.timestamp) / midi_track.note_time
+				var new_length := (timestamp - midi_note.timestamp) / midi_track.note_time
+				if new_length > 0:
+					midi_note.length = new_length
+					check_candidates = false
+					break
 			
 			i -= 1
+		
+		if check_candidates:
+			var midi_note: MidiNote = candidates.pop_front()
+			@warning_ignore("integer_division")
+			midi_note.length = (timestamp - midi_note.timestamp) / midi_track.note_time
 	
 	
 	func create_patterns(song: Song) -> void:

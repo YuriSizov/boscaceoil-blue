@@ -86,7 +86,7 @@ func _draw_item(on_control: Control, item_index: int, item_rect: Rect2) -> void:
 		Vector2(_item_gutter_width - _note_border_width, 2.0 * item_rect.size.y / 5.0)
 	)
 	on_control.draw_rect(label_underline, item_color)
-
+	
 	# Draw gutter string.
 	
 	var string_position := item_rect.position + _item_label_offset + Vector2(0, item_rect.size.y)
@@ -94,12 +94,12 @@ func _draw_item(on_control: Control, item_index: int, item_rect: Rect2) -> void:
 	var gutter_string := "%d" % [ item_index + 1 ]
 	on_control.draw_string(_font, shadow_position, gutter_string, HORIZONTAL_ALIGNMENT_LEFT, -1, _font_size, _shadow_color)
 	on_control.draw_string(_font, string_position, gutter_string, HORIZONTAL_ALIGNMENT_LEFT, -1, _font_size, _font_color)
-
+	
 	# Draw pattern note map.
 	
 	if pattern.note_amount > 0:
 		var pattern_size := Controller.current_song.pattern_size
-
+		
 		var note_span := pattern.get_active_note_span_size()
 		var note_width := note_area.size.x / pattern_size
 		var note_height := note_area.size.y / note_span
@@ -117,9 +117,9 @@ func _draw_item(on_control: Control, item_index: int, item_rect: Rect2) -> void:
 		
 		for i in pattern.note_amount:
 			var note := pattern.notes[i]
-			if note.x < 0 || note.y < 0 || note.y >= pattern_size || note.z < 1:
+			if not pattern.is_note_valid(note, pattern_size):
 				continue
-
+			
 			var note_index := note.x - note_value_offset
 			var note_position := note_origin + Vector2(note_width * note.y, note_span_height - note_height * (note_index + 1))
 			var note_size := Vector2(note_width * note.z, note_height)

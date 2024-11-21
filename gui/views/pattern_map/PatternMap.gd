@@ -489,9 +489,9 @@ func _update_active_patterns() -> void:
 				var note_value_offset := pattern.active_note_span[0]
 				for j in pattern.note_amount:
 					var note := pattern.notes[j]
-					if note.x < 0 || note.y < 0 || note.y >= pattern_size || note.z < 1:
+					if not pattern.is_note_valid(note, pattern_size):
 						continue
-
+					
 					var note_index := note.x - note_value_offset
 					var note_position := note_origin + Vector2(note_width * note.y, note_span_height - note_height * (note_index + 1))
 					var note_size := Vector2(note_width * note.z, note_height)

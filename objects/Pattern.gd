@@ -389,3 +389,9 @@ func remove_note_at(index: int) -> void:
 			notes[i] = Vector3i(-1, 0, 0)
 	
 	note_amount -= 1
+
+
+func is_note_valid(note: Vector3i, pattern_size: int) -> bool:
+	if note.x < 0 || note.y < 0 || note.y >= pattern_size || note.z < 1:
+		return false
+	return true

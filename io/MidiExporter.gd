@@ -45,8 +45,8 @@ static func _write(writer: MidiFileWriter, song: Song) -> void:
 	# Track chunk 1. Meta events.
 	
 	var meta_track := writer.create_track()
-	meta_track.add_time_signature(4, 2, 24, 8)
-	meta_track.add_tempo(song.bpm)
+	meta_track.add_time_signature(4, 4) # Bosca always operates with the 4/4 signature.
+	meta_track.add_tempo(song.bpm, 4)
 	
 	# Track chunk 2. Non-drumkit instruments and notes.
 	# Channel 9 is special and is used for drums, so we avoid it by splitting the list in two.
@@ -95,6 +95,8 @@ static func _write_instruments_to_track(track: MidiTrack, song: Song, limit: int
 			
 			for k in pattern.note_amount:
 				var note := pattern.notes[k]
+				if not pattern.is_note_valid(note, song.pattern_size):
+					continue
 				
 				track.add_note(pattern.instrument_idx - offset, note_offset + note.y, note.x, note.z, instrument.volume)
 
@@ -119,8 +121,10 @@ static func _write_drumkits_to_track(track: MidiTrack, song: Song) -> void:
 				
 				for k in pattern.note_amount:
 					var note := pattern.notes[k]
-					var note_value := drumkit_instrument.get_midi_note(note.x)
+					if not pattern.is_note_valid(note, song.pattern_size):
+						continue
 					
+					var note_value := drumkit_instrument.get_midi_note(note.x)
 					track.add_note(MidiFile.DRUMKIT_CHANNEL, note_offset + note.y, note_value, note.z, instrument.volume)
 
 
