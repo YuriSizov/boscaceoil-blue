@@ -39,12 +39,6 @@ var _pattern_time: int = -1
 var _note_residue: PackedInt32Array = PackedInt32Array()
 var _note_residue_time: int = 0
 
-## Sample queue for rendering, used during some exports.
-var _sample_queue: Array[QueuedSample] = []
-var _sample_queue_index: int = -1
-var _current_sample: QueuedSample = null
-var _current_sample_time: int = 0
-
 
 # Initialization.
 
@@ -370,65 +364,46 @@ func get_residue_time() -> int:
 	return _note_residue_time
 
 
-func start_rendering_samples(samples: Array[QueuedSample]) -> void:
+func render_samples(samples: Array[QueuedSample]) -> void:
 	if _music_exporting:
 		return
+	
+	# We are rendering the samples via the medium of MML. This is okay
+	# because we don't actually need to produce a sound matching the
+	# track in any way. Instead, we render a "neutral" sample which is
+	# then pitch corrected by the format player.
+	# This is pretty much only needed by XM and how XM works.
+	
+	# The rendering process is blocking, but pretty quick. So no extra
+	# logic is needed to handle the queue visually for the user. Maybe
+	# some really big compositions would noticeably hang, but we'll
+	# address that when we get there.
 	
 	_music_exporting = true
 	reset_driver() # Clears the output so there is no residue at the start.
 	
-	_sample_queue = samples
-	_sample_queue_index = -1
-	_current_sample = null
-	_current_sample_time = 0
-	_driver.timer_interval.connect(_render_next_sample)
+	for sample in samples:
+		var note_octave := Note.get_note_octave(sample.note_value)
+		var note_literal := Note.get_note_mml(sample.note_value)
 	
-	export_started.emit()
-
-
-func _stop_rendering_samples() -> void:
-	if not _music_exporting:
-		return
+		var sample_mml := ""
+		sample_mml += sample.voice.get_mml(0) + "\n"
+		sample_mml += "%%6@0 o%d%s;" % [ note_octave, note_literal ]
+		
+		print_verbose("MusicPlayer: Rendering a sample for export:")
+		print_verbose(sample_mml)
+		
+		var buffer := _driver.render(sample_mml, 0, 1)
+		print_verbose("MusicPlayer: Rendered %d bytes" % [ buffer.size() ])
+		sample.callback.call(buffer)
+		
+		_driver.clear_data()
 	
 	_music_exporting = false
-	_driver.timer_interval.disconnect(_render_next_sample)
-	
-	export_ended.emit()
-
-
-func _render_next_sample() -> void:
-	if _current_sample: # Check for the current sample first.
-		_current_sample_time -= 1
-		if _current_sample_time > 0:
-			return # Wait for it to finish.
-		
-		# It's done, stop collecting.
-		_driver.set_stream_event_enabled(false)
-		_driver.streaming.disconnect(_current_sample.callback)
-		_current_sample = null
-		#reset_driver() # Clears the output so there is no residue at the start.
-		
-		return # Give it a moment to reset.
-	
-	# Try the next sample.
-	_sample_queue_index += 1
-	if _sample_queue_index >= _sample_queue.size():
-		_stop_rendering_samples()
-		return # Rendering is complete.
-	
-	# There are still samples left, handle the next one.
-	
-	_current_sample = _sample_queue[_sample_queue_index]
-	_current_sample_time = _current_sample.note_length
-	
-	_driver.streaming.connect(_current_sample.callback)
-	_driver.set_stream_event_enabled(true)
-	_driver.note_on(_current_sample.note_value, _current_sample.voice, _current_sample.note_length * NOTE_LENGTH)
+	reset_driver() # Restarts the driver, because rendering stops it.
 
 
 class QueuedSample:
 	var voice: SiONVoice = null
-	var note_value: int = -1
-	var note_length: int = 1
-	
+	var note_value: int = -1	
 	var callback: Callable = Callable()
