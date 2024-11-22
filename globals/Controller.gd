@@ -235,7 +235,7 @@ func get_info_popup(override: bool = false) -> InfoPopup:
 	return _info_popup
 
 
-func show_info_popup(popup: InfoPopup, popup_size: Vector2) -> void:
+func show_window_popup(popup: WindowPopup, popup_size: Vector2) -> void:
 	popup.size = popup_size
 	popup.popup_anchored(Vector2(0.5, 0.5), PopupManager.Direction.OMNI, true)
 
@@ -251,7 +251,7 @@ func show_welcome_message() -> void:
 		help_manager.start_guide(HelpManager.GuideType.BASIC_GUIDE)
 	)
 	
-	show_info_popup(welcome_message, Vector2(600, 200))
+	show_window_popup(welcome_message, Vector2(600, 200))
 
 
 func show_blocker() -> void:

@@ -8,6 +8,29 @@
 ## exporting of songs.
 class_name IOManager extends RefCounted
 
+const IO_CONFIG_POPUP_SCENE := preload("res://gui/widgets/popups/IOConfigPopup.tscn")
+
+var _io_config_popup: IOConfigPopup = null
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_PREDELETE:
+		if is_instance_valid(_io_config_popup):
+			_io_config_popup.queue_free()
+
+
+# Popup management.
+
+func get_io_config_popup() -> IOConfigPopup:
+	if not _io_config_popup:
+		_io_config_popup = IO_CONFIG_POPUP_SCENE.instantiate()
+	
+	if _io_config_popup.is_visible_in_tree():
+		_io_config_popup.close_popup()
+	
+	_io_config_popup.clear()
+	return _io_config_popup
+
 
 # Creation.
 
@@ -47,7 +70,7 @@ func create_new_song_safe() -> void:
 			create_new_song()
 		)
 		
-		Controller.show_info_popup(unsaved_warning, Vector2(600, 190))
+		Controller.show_window_popup(unsaved_warning, Vector2(600, 190))
 		return
 	
 	create_new_song()
@@ -78,7 +101,7 @@ func load_ceol_song_safe() -> void:
 			load_ceol_song()
 		)
 		
-		Controller.show_info_popup(unsaved_warning, Vector2(640, 190))
+		Controller.show_window_popup(unsaved_warning, Vector2(640, 190))
 		return
 	
 	load_ceol_song()
@@ -137,7 +160,7 @@ func check_song_on_exit() -> void:
 			Controller.get_tree().quit()
 		)
 		
-		Controller.show_info_popup(unsaved_warning, Vector2(560, 190))
+		Controller.show_window_popup(unsaved_warning, Vector2(560, 190))
 		return
 	
 	Controller.get_tree().quit()
@@ -168,14 +191,38 @@ func import_mid_song_safe() -> void:
 			import_mid_song()
 		)
 		
-		Controller.show_info_popup(unsaved_warning, Vector2(640, 190))
+		Controller.show_window_popup(unsaved_warning, Vector2(640, 190))
 		return
 	
 	import_mid_song()
 
 
 func _import_mid_song_confirmed(path: String) -> void:
-	var imported_song: Song = MidiImporter.import(path)
+	var can_import_song := MidiImporter.prepare_import(path)
+	if not can_import_song:
+		Controller.update_status("FAILED TO IMPORT SONG", Controller.StatusLevel.ERROR)
+		return
+	
+	var import_dialog := get_io_config_popup()
+	import_dialog.title = "MIDI import settings"
+	import_dialog.activate_view(IOConfigPopup.View.MIDI_IMPORT)
+	import_dialog.add_button("Cancel", import_dialog.close_popup)
+	import_dialog.add_button("Import", func() -> void:
+		var import_config: MidiImporter.Config = import_dialog.get_view_config()
+		import_dialog.close_popup()
+		
+		if not import_config:
+			Controller.update_status("FAILED TO IMPORT SONG: CONFIG MISSING", Controller.StatusLevel.ERROR)
+			return
+		
+		_import_mid_song_configured(path, import_config)
+	)
+	
+	Controller.show_window_popup(import_dialog, import_dialog.get_view_size())
+
+
+func _import_mid_song_configured(path: String, import_config: MidiImporter.Config) -> void:
+	var imported_song := MidiImporter.import(path, import_config)
 	if not imported_song:
 		Controller.update_status("FAILED TO IMPORT SONG", Controller.StatusLevel.ERROR)
 		return

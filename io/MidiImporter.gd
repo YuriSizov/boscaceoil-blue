@@ -13,7 +13,24 @@ class_name MidiImporter extends RefCounted
 const FILE_EXTENSION := "mid"
 
 
-static func import(path: String) -> Song:
+static func prepare_import(path: String) -> bool:
+	var file := _open_file(path)
+	if not file:
+		return false
+	
+	return true
+
+
+static func import(path: String, config: Config) -> Song:
+	var file := _open_file(path)
+	if not file:
+		return null
+	
+	var reader := MidiFileReader.new(file, config)
+	return _read(reader)
+
+
+static func _open_file(path: String) -> FileAccess:
 	if path.get_extension() != FILE_EXTENSION:
 		printerr("MidiImporter: The MIDI file must have a .%s extension." % [ FILE_EXTENSION ])
 		return null
@@ -25,9 +42,7 @@ static func import(path: String) -> Song:
 		return null
 	
 	file.big_endian = true
-	var reader := MidiFileReader.new(file)
-	
-	return _read(reader)
+	return file
 
 
 static func _read(reader: MidiFileReader) -> Song:
@@ -46,6 +61,10 @@ static func _read(reader: MidiFileReader) -> Song:
 	return song
 
 
+class Config:
+	var pattern_size: int = 0
+
+
 class MidiFileReader:
 	var format: int = MidiFile.FileFormat.MULTI_TRACK
 	var resolution: int = MidiFile.DEFAULT_RESOLUTION
@@ -55,11 +74,13 @@ class MidiFileReader:
 	var _notes_instrument_map: Dictionary = {}
 	
 	var _file: FileAccess = null
+	var _config: Config = null
 	
 	
-	func _init(file: FileAccess) -> void:
+	func _init(file: FileAccess, config: Config) -> void:
 		_file = file
 		_file.seek(0)
+		_config = config
 	
 	
 	func read_midi_header() -> bool:
@@ -175,11 +196,16 @@ class MidiFileReader:
 		# previously exported from Bosca this means that the pattern size may be
 		# larger than it was originally, rounded up to the next best value. This
 		# leads to notes being badly grouped into patterns, but no data is lost.
-		# This is fixable, but perhaps we should add some mid-import UI to make
-		# adjustments before the data is set.
 		
-		var pattern_size := int(signature_numerator * 16 / MusicPlayer.NOTE_LENGTH)
-		song.pattern_size = clampi(pattern_size, 1, Song.MAX_PATTERN_SIZE)
+		# This is fixable, but we do one better — a configuration screen ahead of
+		# the import, where the user can specify any valid value to influence the
+		# importer.
+		
+		if _config && _config.pattern_size > 0:
+			song.pattern_size = _config.pattern_size
+		else:
+			var pattern_size := int(signature_numerator * 16 / MusicPlayer.NOTE_LENGTH)
+			song.pattern_size = clampi(pattern_size, 1, Song.MAX_PATTERN_SIZE)
 		
 		@warning_ignore("integer_division")
 		song.bpm = roundi(MidiFile.TEMPO_BASE / tempo * signature_denominator / 4.0)

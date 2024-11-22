@@ -97,9 +97,8 @@ static func _write_time_signature(track: MidiTrack, song: Song) -> void:
 	
 	# This shouldn't affect MIDI playback, only how the measure is displayed. On import
 	# back to Bosca this guarantees no data loss, but makes patterns padded to the
-	# rounded size. As a result, notes no longer group nicely into patterns. It's
-	# fixable, but perhaps we should add some mid-import UI to make adjustments before
-	# the data is set.
+	# rounded size. As a result, notes no longer group nicely into patterns. To address
+	# that we let the user decide before the import, what pattern size is preferable.
 	
 	var note_numerator := ceili((MusicPlayer.NOTE_LENGTH * song.pattern_size) / 16)
 	# This is a fixed value in GDSiON, as explained above.
