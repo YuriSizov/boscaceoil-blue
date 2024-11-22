@@ -26,7 +26,7 @@ signal navigation_requested(target: int)
 signal navigation_succeeded(target: int)
 
 const MAIN_WINDOW_SCRIPT := preload("res://gui/MainWindow.gd")
-const INFO_POPUP_SCENE := preload("res://gui/widgets/InfoPopup.tscn")
+const INFO_POPUP_SCENE := preload("res://gui/widgets/popups/InfoPopup.tscn")
 
 enum StatusLevel {
 	INFO,

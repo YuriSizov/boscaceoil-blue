@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://utils/HelpTester.gd" id="1_qy55u"]
 [ext_resource type="PackedScene" uid="uid://cf3nug1sfh1ix" path="res://Main.tscn" id="2_ihl17"]
-[ext_resource type="PackedScene" uid="uid://pte0alxv2p77" path="res://gui/widgets/InfoPopup.tscn" id="3_j2h0f"]
+[ext_resource type="PackedScene" uid="uid://bt23ijx7dg8iw" path="res://gui/widgets/popups/InfoPopup.tscn" id="3_j2h0f"]
 
 [node name="HelpTester" type="Control"]
 layout_mode = 3

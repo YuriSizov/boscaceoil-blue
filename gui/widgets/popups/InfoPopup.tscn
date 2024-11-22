@@ -1,0 +1,56 @@
+[gd_scene load_steps=5 format=3 uid="uid://bt23ijx7dg8iw"]
+
+[ext_resource type="PackedScene" uid="uid://brt3f2i74x70n" path="res://gui/widgets/popups/WindowPopup.tscn" id="1_p2e4k"]
+[ext_resource type="Script" path="res://gui/widgets/popups/InfoPopup.gd" id="2_3hir0"]
+[ext_resource type="Script" path="res://gui/widgets/AccentedContentEffect.gd" id="3_spm7g"]
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_ldctv"]
+script = ExtResource("3_spm7g")
+
+[node name="WindowPopup" instance=ExtResource("1_p2e4k")]
+theme_type_variation = &"InfoPopup"
+script = ExtResource("2_3hir0")
+
+[node name="ContentHBox" type="HBoxContainer" parent="Layout/Content" index="0"]
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"InfoPopupContentHBox"
+
+[node name="LeftImage" type="TextureRect" parent="Layout/Content/ContentHBox" index="0"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_vertical = 0
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ContentBox" type="VBoxContainer" parent="Layout/Content/ContentHBox" index="1"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_type_variation = &"InfoPopupContentBox"
+
+[node name="TopImage" type="TextureRect" parent="Layout/Content/ContentHBox/ContentBox" index="0"]
+unique_name_in_owner = true
+auto_translate_mode = 1
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ContentLabel" type="RichTextLabel" parent="Layout/Content/ContentHBox/ContentBox" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+bbcode_enabled = true
+custom_effects = [SubResource("RichTextEffect_ldctv")]
+
+[node name="ButtonBar" type="HBoxContainer" parent="Layout/Content/ContentHBox/ContentBox" index="2"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"HBoxSpaced"
+alignment = 2

@@ -1,0 +1,61 @@
+[gd_scene load_steps=3 format=3 uid="uid://brt3f2i74x70n"]
+
+[ext_resource type="Script" path="res://gui/widgets/popups/WindowPopup.gd" id="1_v6ml7"]
+[ext_resource type="Texture2D" uid="uid://dqatqvd3ie4cw" path="res://assets/icons/cross.png" id="2_cqnjm"]
+
+[node name="WindowPopup" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -782.0
+offset_bottom = -608.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"WindowPopup"
+script = ExtResource("1_v6ml7")
+
+[node name="Layout" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="TitleBar" type="MarginContainer" parent="Layout"]
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"WindowPopupTitleBar"
+
+[node name="TitleBox" type="HBoxContainer" parent="Layout/TitleBar"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="TitleLabel" type="Label" parent="Layout/TitleBar/TitleBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Information"
+vertical_alignment = 1
+text_overrun_behavior = 3
+
+[node name="CloseButton" type="Button" parent="Layout/TitleBar/TitleBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"WindowPopupTitleButton"
+icon = ExtResource("2_cqnjm")
+flat = true
+icon_alignment = 1
+expand_icon = true
+
+[node name="Content" type="MarginContainer" parent="Layout"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+theme_type_variation = &"WindowPopupContent"

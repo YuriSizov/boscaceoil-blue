@@ -10,7 +10,7 @@ class_name HelpManager extends RefCounted
 signal highlight_requested(callable: Callable)
 signal highlight_cleared()
 
-const INFO_POPUP_SCENE := preload("res://gui/widgets/InfoPopup.tscn")
+const INFO_POPUP_SCENE := preload("res://gui/widgets/popups/InfoPopup.tscn")
 const BASIC_GUIDE_RESOURCE := preload("res://help/basic_guide.tres")
 const ADVANCED_GUIDE_RESOURCE := preload("res://help/advanced_guide.tres")
 

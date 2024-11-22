@@ -109,32 +109,6 @@ content_margin_top = 3.0
 content_margin_right = 4.0
 content_margin_bottom = 3.0
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5q6jm"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ltu87"]
-content_margin_left = 8.0
-content_margin_top = 8.0
-content_margin_right = 8.0
-content_margin_bottom = 8.0
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_i6yl7"]
-content_margin_left = 8.0
-content_margin_top = 8.0
-content_margin_right = 8.0
-content_margin_bottom = 8.0
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_d1541"]
-content_margin_left = 8.0
-content_margin_top = 8.0
-content_margin_right = 8.0
-content_margin_bottom = 8.0
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1k2ot"]
-content_margin_left = 8.0
-content_margin_top = 8.0
-content_margin_right = 8.0
-content_margin_bottom = 8.0
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jn8kv"]
 content_margin_left = 16.0
 content_margin_top = 8.0
@@ -406,6 +380,32 @@ content_margin_right = 12.0
 content_margin_bottom = 3.0
 bg_color = Color(0.203922, 0.258824, 0.27451, 1)
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5q6jm"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ltu87"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_i6yl7"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_d1541"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1k2ot"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+
 [sub_resource type="FontVariation" id="FontVariation_ktmxc"]
 base_font = ExtResource("9_cvewl")
 spacing_glyph = 1
@@ -459,35 +459,12 @@ IncrementButton/styles/disabled = SubResource("StyleBoxEmpty_520ht")
 IncrementButton/styles/hover = SubResource("StyleBoxEmpty_8fwph")
 IncrementButton/styles/normal = SubResource("StyleBoxEmpty_wnhx7")
 IncrementButton/styles/pressed = SubResource("StyleBoxEmpty_ebj3h")
+InfoPopup/base_type = &"WindowPopup"
 InfoPopup/colors/accent_color = Color(1, 1, 0, 1)
-InfoPopup/colors/border_color = Color(0, 0, 0, 1)
-InfoPopup/colors/content_color = Color(0.427451, 0.521569, 0.552941, 1)
-InfoPopup/colors/shadow_color = Color(0, 0, 0, 1)
-InfoPopup/colors/title_color = Color(0.313726, 0.396078, 0.415686, 1)
-InfoPopup/constants/border_width = 8
-InfoPopup/constants/shadow_offset_x = 16
-InfoPopup/constants/shadow_offset_y = 16
-InfoPopup/constants/title_height = 30
-InfoPopupContent/base_type = &"MarginContainer"
-InfoPopupContent/constants/margin_bottom = 12
-InfoPopupContent/constants/margin_left = 16
-InfoPopupContent/constants/margin_right = 16
-InfoPopupContent/constants/margin_top = 12
 InfoPopupContentBox/base_type = &"VBoxContainer"
 InfoPopupContentBox/constants/separation = 10
 InfoPopupContentHBox/base_type = &"HBoxContainer"
 InfoPopupContentHBox/constants/separation = 10
-InfoPopupTitleBar/base_type = &"MarginContainer"
-InfoPopupTitleBar/constants/margin_bottom = 0
-InfoPopupTitleBar/constants/margin_left = 12
-InfoPopupTitleBar/constants/margin_right = 4
-InfoPopupTitleBar/constants/margin_top = 0
-InfoPopupTitleButton/base_type = &"Button"
-InfoPopupTitleButton/styles/disabled = SubResource("StyleBoxEmpty_5q6jm")
-InfoPopupTitleButton/styles/focus = SubResource("StyleBoxEmpty_ltu87")
-InfoPopupTitleButton/styles/hover = SubResource("StyleBoxEmpty_i6yl7")
-InfoPopupTitleButton/styles/normal = SubResource("StyleBoxEmpty_d1541")
-InfoPopupTitleButton/styles/pressed = SubResource("StyleBoxEmpty_1k2ot")
 InstrumentDock/colors/item_color = Color(0.376471, 0.376471, 0.376471, 1)
 InstrumentDock/colors/item_gutter_color = Color(0.54902, 0.54902, 0.54902, 1)
 InstrumentRecordingLabel/base_type = &"Label"
@@ -650,3 +627,28 @@ VBoxSpaced/constants/separation = 20
 VSeparator/styles/separator = SubResource("StyleBoxLine_m646a")
 WidgetPanel/base_type = &"PanelContainer"
 WidgetPanel/styles/panel = SubResource("StyleBoxFlat_cjrsp")
+WindowPopup/base_type = &"Control"
+WindowPopup/colors/border_color = Color(0, 0, 0, 1)
+WindowPopup/colors/content_color = Color(0.427451, 0.521569, 0.552941, 1)
+WindowPopup/colors/shadow_color = Color(0, 0, 0, 1)
+WindowPopup/colors/title_color = Color(0.313726, 0.396078, 0.415686, 1)
+WindowPopup/constants/border_width = 8
+WindowPopup/constants/shadow_offset_x = 16
+WindowPopup/constants/shadow_offset_y = 16
+WindowPopup/constants/title_height = 30
+WindowPopupContent/base_type = &"MarginContainer"
+WindowPopupContent/constants/margin_bottom = 12
+WindowPopupContent/constants/margin_left = 16
+WindowPopupContent/constants/margin_right = 16
+WindowPopupContent/constants/margin_top = 12
+WindowPopupTitleBar/base_type = &"MarginContainer"
+WindowPopupTitleBar/constants/margin_bottom = 0
+WindowPopupTitleBar/constants/margin_left = 12
+WindowPopupTitleBar/constants/margin_right = 4
+WindowPopupTitleBar/constants/margin_top = 0
+WindowPopupTitleButton/base_type = &"Button"
+WindowPopupTitleButton/styles/disabled = SubResource("StyleBoxEmpty_5q6jm")
+WindowPopupTitleButton/styles/focus = SubResource("StyleBoxEmpty_ltu87")
+WindowPopupTitleButton/styles/hover = SubResource("StyleBoxEmpty_i6yl7")
+WindowPopupTitleButton/styles/normal = SubResource("StyleBoxEmpty_d1541")
+WindowPopupTitleButton/styles/pressed = SubResource("StyleBoxEmpty_1k2ot")
