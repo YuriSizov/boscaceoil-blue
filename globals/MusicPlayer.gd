@@ -180,8 +180,14 @@ func play_note(pattern: Pattern, note_data: Vector3i) -> void:
 	if not song || song.instruments.is_empty() || song.patterns.is_empty():
 		return
 	
+	_cutoff_note()
+	
 	var active_instrument := song.instruments[pattern.instrument_idx]
 	_play_note(pattern, active_instrument, note_data, note_data.y)
+
+
+func _cutoff_note() -> void:
+	_driver.note_off(-1, 0, 0, 0, true)
 
 
 # Playback.
@@ -304,15 +310,19 @@ func pause_playback(pause_driver: bool = false) -> void:
 		return
 	
 	_music_playing = false
+	_cutoff_note()
 	_driver.timer_interval.disconnect(_playback_step)
+	
 	if pause_driver:
 		_driver.pause() # Make sure driver doesn't try to process anything.
+	
 	playback_paused.emit()
 
 
 func stop_playback() -> void:
 	if _music_playing:
 		_music_playing = false
+		_cutoff_note()
 		_driver.timer_interval.disconnect(_playback_step)
 	
 	if Controller.current_song:

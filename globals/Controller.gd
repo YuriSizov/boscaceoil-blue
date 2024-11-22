@@ -521,6 +521,9 @@ func refresh_current_pattern_instrument() -> void:
 
 func preview_pattern_note(value: int, length: int) -> void:
 	var note_data := Vector3i(value, music_player.get_pattern_time(), length)
+	if note_data.y < 0:
+		note_data.y = 0 # A small fix for when the playback is completely stopped.
+	
 	var current_pattern := get_current_pattern()
 	if current_pattern:
 		music_player.play_note(current_pattern, note_data)
