@@ -13,7 +13,7 @@ enum FileFormat {
 	MULTI_SONG,
 }
 
-const DEFAULT_RESOLUTION := 120
+const DEFAULT_RESOLUTION := 96
 const DRUMKIT_CHANNEL := 9
 
 const TEMPO_BASE := 60_000_000

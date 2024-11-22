@@ -45,8 +45,7 @@ static func _write(writer: MidiFileWriter, song: Song) -> void:
 	# Track chunk 1. Meta events.
 	
 	var meta_track := writer.create_track()
-	meta_track.add_time_signature(4, 4) # Bosca always operates with the 4/4 signature.
-	meta_track.add_tempo(song.bpm, 4)
+	_write_time_signature(meta_track, song)
 	
 	# Track chunk 2. Non-drumkit instruments and notes.
 	# Channel 9 is special and is used for drums, so we avoid it by splitting the list in two.
@@ -67,6 +66,47 @@ static func _write(writer: MidiFileWriter, song: Song) -> void:
 	
 	# Prepare the rest of the file for output.
 	writer.finalize()
+
+
+static func _write_time_signature(track: MidiTrack, song: Song) -> void:
+	# The time signature consists of two parts: the numerator and the denominator:
+	# - The denominator is the size of the beat in parts of a whole tone (note). In
+	#   GDSiON that's always 1/4th, i.e. a quarter note. This is also the default in
+	#   MIDI.
+	# - The numerator is the number of beats that compose one measure of a song
+	#   (song's meter). As far as I can appreciate it, this value is for humans to
+	#   help structure music sheets, and doesn't affect the actual timing of notes
+	#   being played. In Bosca the whole measure can be assumed to be the pattern size.
+	
+	# To calculate the number of beats per pattrn size we need to know the unit size
+	# of Bosca's notes (not to be confused with the whole tone/note referenced above).
+	# Luckily, this is a fixed value. GDSiON uses 1/16th of a beat as its basic timing
+	# unit, and Bosca defines its note as 4/16th of a beat respectively. So one square
+	# on a pattern grid in Bosca is a quarter of a beat.
+	
+	# With this understood the numerator computation becomes trivial. It is the number
+	# of beats per pattern, where the pattern consists of the pattern_size number of
+	# items, each with the length of 4/16th of a beat.
+	
+	# One caveat here is that the pattern size can be irregular, which would lead to
+	# an uneven number of beats per pattern (e.g. with patter_size of 13 we have 3.25
+	# beats per pattern). I don't think that this can be addressed by changing the
+	# denominator, as that directly affects timing and the meaning of a beat. So we
+	# do the next best thing and round up the number of beats in these cases. (e.g
+	# the above gives us 4 beats per pattern instead).
+	
+	# This shouldn't affect MIDI playback, only how the measure is displayed. On import
+	# back to Bosca this guarantees no data loss, but makes patterns padded to the
+	# rounded size. As a result, notes no longer group nicely into patterns. It's
+	# fixable, but perhaps we should add some mid-import UI to make adjustments before
+	# the data is set.
+	
+	var note_numerator := ceili((MusicPlayer.NOTE_LENGTH * song.pattern_size) / 16)
+	# This is a fixed value in GDSiON, as explained above.
+	var note_denominator := 4
+	
+	track.add_time_signature(note_numerator, note_denominator)
+	track.add_tempo(song.bpm, note_denominator)
 
 
 static func _write_instruments_to_track(track: MidiTrack, song: Song, limit: int, offset: int) -> void:
@@ -147,6 +187,7 @@ class MidiFileWriter:
 	
 	func create_track() -> MidiTrack:
 		var track := MidiTrack.new()
+		track.beat_resolution = resolution
 		_tracks.push_back(track)
 		
 		return track

@@ -75,7 +75,9 @@ class MidiFileReader:
 		resolution = _file.get_16()
 		
 		for i in track_num:
-			_tracks.push_back(MidiTrack.new())
+			var track := MidiTrack.new()
+			track.beat_resolution = resolution
+			_tracks.push_back(track)
 		
 		return true
 	
@@ -147,6 +149,8 @@ class MidiFileReader:
 					tempo += meta_payload.data[1] << 8
 					tempo += meta_payload.data[2]
 					
+					# Similarly, only one tempo setting is used, even though songs can contain
+					# many which change throughout the tracks.
 					print_verbose("MidiImporter: Found a tempo message (%d)." % [ tempo ])
 					tempo_found = true
 				
@@ -157,28 +161,25 @@ class MidiFileReader:
 		
 		# Compute pattern size and BPM based on our findings.
 		
-		# The original implementation tries to use the numerator and denominator
-		# from the time signature to guess a pattern size. This is obviously not
-		# a reliable method, and we cannot even recreate an original Bosca song
-		# exported as MIDI this way.
-		#
-		# This is because the time signature defines the nature of a beat (how
-		# many quarter* notes it has). For example, in Bosca Ceoil the time
-		# signature is ALWAYS 4/4, regardless of the pattern size or other settings.
-		#
-		# To determine the pattern size properly we'd have to inspect the notes.
-		# And, in the end, we have no guarantee that notes would neatly pack into
-		# patterns anyway. It'd be a complex task to try and build patterns out of
-		# random MIDI notes.
-		#
-		# So the best we can do is to use an arbitrary pattern size (which was,
-		# perhaps, what the original implementation did, in a way). We can use
-		# the numerator of the time signature alone, to try and turn a MIDI song
-		# into a bunch of beat-long patterns.
+		# For starters, see the long explanation on the relation between the
+		# pattern size and the time signature in MidiExporter._write_time_signature.
 		
-		# TODO: Perhaps expose a factor to this as an import setting somehow?
-		var beats_per_pattern := 1
-		song.pattern_size = clampi(signature_numerator * beats_per_pattern, 1, Song.MAX_PATTERN_SIZE)
+		# In short, the numerator is the number of beats per one song measure/meter.
+		# On Bosca terms we assume that the whole measure is the pattern size. Which
+		# makes the numerator the number of beats per pattern. So we can get the
+		# pattern size by utilizing our knowledge of GDSiON's time units and Bosca's
+		# note length.
+		
+		# The number of beats is a whole, integer number, which means that irregular
+		# patterns are not possible as a result of the import process. For songs
+		# previously exported from Bosca this means that the pattern size may be
+		# larger than it was originally, rounded up to the next best value. This
+		# leads to notes being badly grouped into patterns, but no data is lost.
+		# This is fixable, but perhaps we should add some mid-import UI to make
+		# adjustments before the data is set.
+		
+		var pattern_size := int(signature_numerator * 16 / MusicPlayer.NOTE_LENGTH)
+		song.pattern_size = clampi(pattern_size, 1, Song.MAX_PATTERN_SIZE)
 		
 		@warning_ignore("integer_division")
 		song.bpm = roundi(MidiFile.TEMPO_BASE / tempo * signature_denominator / 4.0)
@@ -253,7 +254,7 @@ class MidiFileReader:
 		midi_note.pitch = midi_payload.data[0]
 		midi_note.volume = midi_volume * 2
 		@warning_ignore("integer_division")
-		midi_note.position = timestamp / midi_track.note_time
+		midi_note.position = midi_track.get_note_units_from_timestamp(timestamp)
 		
 		var instrument_key := midi_note.get_instrument_key()
 		var instrument_notes: Array[MidiNote] = _notes_instrument_map[instrument_key]
@@ -280,7 +281,7 @@ class MidiFileReader:
 				candidates.push_back(midi_note)
 				
 				@warning_ignore("integer_division")
-				var new_length := (timestamp - midi_note.timestamp) / midi_track.note_time
+				var new_length := midi_track.get_note_units_from_timestamp(timestamp - midi_note.timestamp)
 				if new_length > 0:
 					midi_note.length = new_length
 					check_candidates = false
@@ -291,7 +292,7 @@ class MidiFileReader:
 		if check_candidates:
 			var midi_note: MidiNote = candidates.pop_front()
 			@warning_ignore("integer_division")
-			midi_note.length = (timestamp - midi_note.timestamp) / midi_track.note_time
+			midi_note.length = midi_track.get_note_units_from_timestamp(timestamp - midi_note.timestamp)
 	
 	
 	func create_patterns(song: Song) -> void:

@@ -10,8 +10,12 @@ var _events: Array[MidiTrackEvent] = []
 var _events_unsorted: bool = false
 var _end_of_track: MidiTrackEvent = null
 
-@warning_ignore("integer_division")
-var note_time: int = MidiFile.DEFAULT_RESOLUTION / 4
+## A resolution of a beat or a quarter note (assuming the x/4 time signature
+## and standard 8/32th notation).
+var beat_resolution: int = MidiFile.DEFAULT_RESOLUTION
+## A note resolution factor. In Bosca the basic note timing unit is 1/4th of
+## a beat, defined by MusicPlayer.NOTE_LENGTH.
+var note_factor: int = int(16 / MusicPlayer.NOTE_LENGTH)
 
 
 func _init() -> void:
@@ -149,7 +153,7 @@ func set_instrument(channel_num: int, voice_index: int) -> void:
 	add_midi_event(MidiTrackEvent.MidiType.PROGRAM_CHANGE, channel_num, 0, event_data)
 
 
-func add_note(channel_num: int, timestamp: int, pitch: int, length: int, volume: int) -> void:
+func add_note(channel_num: int, position: int, pitch: int, length: int, volume: int) -> void:
 	var midi_pitch := clampi(pitch, 0, 127)
 	var midi_volume := clampi(floori(volume / 2.0), 0, 127)
 	
@@ -158,11 +162,26 @@ func add_note(channel_num: int, timestamp: int, pitch: int, length: int, volume:
 	on_data.append(midi_pitch)
 	on_data.append(midi_volume)
 	
-	add_midi_event(MidiTrackEvent.MidiType.NOTE_ON, channel_num, timestamp * note_time, on_data)
+	add_midi_event(MidiTrackEvent.MidiType.NOTE_ON, channel_num, get_timestamp_from_note_units(position), on_data)
 	
 	# Note OFF event.
 	var off_data := PackedByteArray()
 	off_data.append(midi_pitch)
 	off_data.append(0x00) # By convention OFF velocity is 0, which means release as quickly as possible.
 	
-	add_midi_event(MidiTrackEvent.MidiType.NOTE_OFF, channel_num, (timestamp + length) * note_time, on_data)
+	add_midi_event(MidiTrackEvent.MidiType.NOTE_OFF, channel_num, get_timestamp_from_note_units(position + length), on_data)
+
+
+func get_timestamp_from_note_units(value: int) -> int:
+	@warning_ignore("integer_division")
+	var note_resolution := beat_resolution / note_factor
+	
+	return value * note_resolution
+
+
+func get_note_units_from_timestamp(timestamp: int) -> int:
+	@warning_ignore("integer_division")
+	var note_resolution := beat_resolution / note_factor
+	
+	@warning_ignore("integer_division")
+	return timestamp / note_resolution
