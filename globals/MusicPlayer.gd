@@ -78,14 +78,14 @@ func finalize_driver() -> void:
 
 
 func reset_driver() -> void:
-	# SiONDriver.play enables endless streaming. We use the timer callback (a.k.a. a metronome)
+	# SiONDriver.stream enables endless streaming. We use the timer callback (a.k.a. a metronome)
 	# to supply the stream with new notes to play based on the composition of the current song.
 	
 	_driver.stop()
 
 	update_driver_bpm()
+	_driver.stream()
 	update_driver_effects()
-	_driver.play(null, false)
 	print("Synthesizer driver streaming started.")
 
 
@@ -135,9 +135,10 @@ func update_driver_effects() -> void:
 		_driver.get_effector().clear_slot_effects(0)
 		return
 	
-	# If the effect type is different, replace it in the effector.
+	# If the effect type is different, replace it in the effector. Or if the list is
+	# empty, like after a driver reset.
 	var next_effect := _effects[song.global_effect]
-	if next_effect != _active_effect:
+	if next_effect != _active_effect || _driver.get_effector().get_slot_effects(0).is_empty():
 		_active_effect = next_effect
 		_driver.get_effector().clear_slot_effects(0)
 		_driver.get_effector().add_slot_effect(0, _active_effect)
@@ -327,12 +328,10 @@ func start_playback() -> void:
 
 
 func pause_playback(pause_driver: bool = false) -> void:
-	if not _music_playing:
-		return
-	
-	_music_playing = false
-	_cutoff_note()
-	_driver.timer_interval.disconnect(_playback_step)
+	if _music_playing:
+		_music_playing = false
+		_cutoff_note()
+		_driver.timer_interval.disconnect(_playback_step)
 	
 	if pause_driver:
 		_driver.pause() # Make sure driver doesn't try to process anything.

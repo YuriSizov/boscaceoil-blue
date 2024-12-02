@@ -195,8 +195,8 @@ func get_file_dialog() -> FileDialog:
 
 
 func show_file_dialog(dialog: FileDialog) -> void:
-	# Temporarily pausing playback can prevent issues with the synthesizer, as the file dialog
-	# block the main window's execution.
+	# Temporarily pausing playback can prevent issues with the synthesizer, as
+	# the file dialog blocks the execution of the main window.
 	_file_dialog_was_playing = music_player.is_playing()
 	music_player.pause_playback(true)
 	
