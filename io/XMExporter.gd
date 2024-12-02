@@ -187,8 +187,7 @@ class XMFileWriter:
 		ByteArrayUtil.write_int32(_output, xm_sample.get_deltas_size())
 		ByteArrayUtil.write_int32(_output, xm_sample.loop_start)
 		ByteArrayUtil.write_int32(_output, xm_sample.loop_length)
-		
-		_output.append(xm_sample.volume)
+		ByteArrayUtil.write_uint8(_output, xm_sample.volume)
 		_output.append(xm_sample.finetune)
 		_output.append(xm_sample.type)
 		_output.append(xm_sample.panning)
@@ -327,8 +326,7 @@ class XMFileWriter:
 		xm_sample.set_name(voice.name)
 		xm_sample.set_type(XMInstrumentSample.Loopness.NO_LOOP, XMInstrumentSample.Bitness.BIT_16)
 		
-		@warning_ignore("integer_division")
-		xm_sample.volume = int(volume / 4)
+		xm_sample.volume = clamp(volume, 0, 255) # One uint byte.
 		
 		xm_instrument.samples.push_back(xm_sample)
 		

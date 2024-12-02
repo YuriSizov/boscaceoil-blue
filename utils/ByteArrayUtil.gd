@@ -51,6 +51,21 @@ static func write_int16(array: PackedByteArray, value: int, big_endian: bool = f
 	array.encode_s16(offset, value)
 
 
+static func write_uint8(array: PackedByteArray, value: int, big_endian: bool = false) -> void:
+	if big_endian: # PackedByteArray encodes in Little Endian with no setting to change that.
+		var temp := PackedByteArray()
+		temp.resize(1)
+		temp.encode_u8(0, value)
+		temp.reverse() # So we encode it using a temp array which we then reverse.
+		
+		array.append_array(temp)
+		return
+	
+	var offset := array.size()
+	array.resize(offset + 1)
+	array.encode_u8(offset, value)
+
+
 static func write_vlen(array: PackedByteArray, value: int) -> void:
 	# Variable-length values are used by MIDI to compactly store unsigned integers up to the 32-bit
 	# limit. Numbers are represented by a sequence of bytes. Each byte uses its 7 low-order bits to
