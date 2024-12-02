@@ -97,8 +97,7 @@ static func _load_v1(reader: SongFileReader) -> Song:
 	# Arrangement.
 	
 	song.arrangement.timeline_length = reader.read_int()
-	song.arrangement.loop_start = reader.read_int()
-	song.arrangement.loop_end = reader.read_int()
+	song.arrangement.set_loop(reader.read_int(), reader.read_int())
 	
 	for i in song.arrangement.timeline_length:
 		var channels := song.arrangement.timeline_bars[i]
@@ -178,8 +177,7 @@ static func _load_v2(reader: SongFileReader) -> Song:
 	# Arrangement.
 	
 	song.arrangement.timeline_length = reader.read_int()
-	song.arrangement.loop_start = reader.read_int()
-	song.arrangement.loop_end = reader.read_int()
+	song.arrangement.set_loop(reader.read_int(), reader.read_int())
 	
 	for i in song.arrangement.timeline_length:
 		var channels := song.arrangement.timeline_bars[i]
@@ -262,8 +260,7 @@ static func _load_v3(reader: SongFileReader) -> Song:
 	# Arrangement.
 	
 	song.arrangement.timeline_length = reader.read_int()
-	song.arrangement.loop_start = reader.read_int()
-	song.arrangement.loop_end = reader.read_int()
+	song.arrangement.set_loop(reader.read_int(), reader.read_int())
 	
 	for i in song.arrangement.timeline_length:
 		var channels := song.arrangement.timeline_bars[i]
