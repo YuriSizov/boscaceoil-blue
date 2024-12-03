@@ -358,7 +358,6 @@ func create_pattern() -> void:
 	)
 	song_state.add_undo_action(func() -> void:
 		delete_pattern_nocheck(state_context.id)
-		song_pattern_changed.emit()
 	)
 	
 	state_manager.commit_state_change(song_state)
@@ -369,7 +368,7 @@ func create_pattern_nocheck(instrument_index: int) -> int:
 	
 	var pattern := Pattern.new()
 	pattern.instrument_idx = instrument_index
-	current_song.patterns.push_back(pattern)
+	current_song.add_pattern(pattern)
 	
 	return pattern_index
 
@@ -411,7 +410,7 @@ func can_clone_pattern(pattern_index: int) -> bool:
 func clone_pattern_nocheck(pattern_index: int) -> int:
 	var cloned_index := current_song.patterns.size()
 	var pattern := current_song.patterns[pattern_index].clone()
-	current_song.patterns.push_back(pattern)
+	current_song.add_pattern(pattern)
 
 	_change_current_pattern(cloned_index)
 	return cloned_index
@@ -438,7 +437,7 @@ func delete_pattern(pattern_index: int) -> void:
 		# Delete the pattern itself from the list.
 		state_context.pattern = current_song.patterns[pattern_index]
 		_disconnect_pattern(pattern_index)
-		current_song.patterns.remove_at(pattern_index)
+		current_song.remove_pattern(pattern_index)
 		
 		# There is nothing left, create a new one.
 		if current_song.patterns.is_empty():
@@ -476,10 +475,10 @@ func delete_pattern(pattern_index: int) -> void:
 		# Delete the replacement pattern, if it was created.
 		if state_context.deleted_last:
 			_disconnect_pattern(0)
-			current_song.patterns.remove_at(0)
+			current_song.remove_pattern(0)
 		
 		# Restore the original pattern.
-		current_song.patterns.insert(pattern_index, state_context.pattern)
+		current_song.add_pattern(state_context.pattern, pattern_index)
 		
 		# Restore cleared and shifted bars.
 		for key: Vector2i in state_context.cleared_bars:
@@ -496,11 +495,11 @@ func delete_pattern(pattern_index: int) -> void:
 
 func delete_pattern_nocheck(pattern_index: int) -> void:
 	_disconnect_pattern(pattern_index)
-	current_song.patterns.remove_at(pattern_index)
+	current_song.remove_pattern(pattern_index)
 	
 	# Make sure the edited pattern is valid.
 	if current_pattern_index >= current_song.patterns.size():
-		_change_current_pattern(current_song.patterns.size() - 1, false)
+		_change_current_pattern(current_song.patterns.size() - 1)
 
 
 func get_current_pattern() -> Pattern:

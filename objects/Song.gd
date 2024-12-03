@@ -9,6 +9,8 @@
 class_name Song extends Resource
 
 signal song_changed()
+signal pattern_added(pattern: Pattern)
+signal pattern_removed(pattern: Pattern)
 
 const FILE_FORMAT := 3
 const FILE_EXTENSION := "ceol"
@@ -104,6 +106,23 @@ func get_safe_filename(extension: String = FILE_EXTENSION) -> String:
 	
 	var base_name := filename.get_file().get_basename()
 	return "%s.%s" % [ base_name, extension ]
+
+
+# Patterns.
+
+func add_pattern(pattern: Pattern, pattern_idx: int = -1) -> void:
+	if pattern_idx < 0:
+		patterns.push_back(pattern)
+	else:
+		patterns.insert(pattern_idx, pattern)
+	
+	pattern_added.emit(pattern)
+
+
+func remove_pattern(pattern_idx: int) -> void:
+	var pattern := patterns[pattern_idx]
+	patterns.remove_at(pattern_idx)
+	pattern_removed.emit(pattern)
 
 
 # Composition.

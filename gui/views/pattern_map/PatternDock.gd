@@ -7,8 +7,8 @@
 @tool
 extends ItemDock
 
-## Current edited pattern.
-var current_pattern: Pattern = null
+## Current edited song.
+var current_song: Song = null
 
 # Theme cache.
 
@@ -28,7 +28,7 @@ func _ready() -> void:
 	super()
 	drag_source_id = Controller.DragSources.PATTERN_DOCK
 	
-	_edit_current_pattern()
+	_edit_current_song()
 	
 	_update_theme()
 	theme_changed.connect(_update_theme)
@@ -40,10 +40,9 @@ func _ready() -> void:
 		item_selected.connect(Controller.edit_pattern)
 		item_deleted.connect(Controller.delete_pattern)
 
-		Controller.song_loaded.connect(_edit_current_pattern)
+		Controller.song_loaded.connect(_edit_current_song)
 		Controller.song_pattern_created.connect(queue_redraw)
-		Controller.song_pattern_changed.connect(_edit_current_pattern)
-		Controller.song_instrument_changed.connect(queue_redraw)
+		Controller.song_pattern_changed.connect(queue_redraw)
 		Controller.song_sizes_changed.connect(queue_redraw)
 
 
@@ -143,24 +142,57 @@ func _get_current_item_index() -> int:
 	return Controller.current_pattern_index
 
 
-func _edit_current_pattern() -> void:
+func _edit_current_song() -> void:
 	if Engine.is_editor_hint():
 		return
+	
+	if current_song:
+		current_song.pattern_added.disconnect(_track_pattern_changes)
+		current_song.pattern_removed.disconnect(_untrack_pattern_changes)
+		_untrack_all_patterns()
+	
 	if not Controller.current_song:
 		return
 	
-	if current_pattern:
-		current_pattern.key_changed.disconnect(queue_redraw)
-		current_pattern.scale_changed.disconnect(queue_redraw)
-		current_pattern.instrument_changed.disconnect(queue_redraw)
-		current_pattern.notes_changed.disconnect(queue_redraw)
+	current_song = Controller.current_song
 	
-	current_pattern = Controller.get_current_pattern()
+	if current_song:
+		current_song.pattern_added.connect(_track_pattern_changes)
+		current_song.pattern_removed.connect(_untrack_pattern_changes)
+		_track_all_patterns()
+	
+	queue_redraw()
 
-	if current_pattern:
-		current_pattern.key_changed.connect(queue_redraw)
-		current_pattern.scale_changed.connect(queue_redraw)
-		current_pattern.instrument_changed.connect(queue_redraw)
-		current_pattern.notes_changed.connect(queue_redraw)
+
+func _track_all_patterns() -> void:
+	if not current_song:
+		return
+	
+	for pattern in current_song.patterns:
+		_track_pattern_changes(pattern)
+
+
+func _untrack_all_patterns() -> void:
+	if not current_song:
+		return
+	
+	for pattern in current_song.patterns:
+		_untrack_pattern_changes(pattern)
+
+
+func _track_pattern_changes(pattern: Pattern) -> void:
+	pattern.key_changed.connect(queue_redraw)
+	pattern.scale_changed.connect(queue_redraw)
+	pattern.instrument_changed.connect(queue_redraw)
+	pattern.notes_changed.connect(queue_redraw)
+	
+	queue_redraw()
+
+
+func _untrack_pattern_changes(pattern: Pattern) -> void:
+	pattern.key_changed.disconnect(queue_redraw)
+	pattern.scale_changed.disconnect(queue_redraw)
+	pattern.instrument_changed.disconnect(queue_redraw)
+	pattern.notes_changed.disconnect(queue_redraw)
 	
 	queue_redraw()
