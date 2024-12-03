@@ -7,6 +7,9 @@
 @tool
 extends ItemDock
 
+## Current edited song.
+var current_song: Song = null
+
 # Theme cache.
 
 var _font: Font = null
@@ -24,6 +27,8 @@ func _ready() -> void:
 	super()
 	drag_source_id = Controller.DragSources.INSTRUMENT_DOCK
 	
+	_edit_current_song()
+	
 	_update_theme()
 	theme_changed.connect(_update_theme)
 	
@@ -34,7 +39,7 @@ func _ready() -> void:
 		item_selected.connect(Controller.edit_instrument)
 		item_deleted.connect(Controller.delete_instrument)
 		
-		Controller.song_loaded.connect(queue_redraw)
+		Controller.song_loaded.connect(_edit_current_song)
 		Controller.song_instrument_created.connect(queue_redraw)
 		Controller.song_instrument_changed.connect(queue_redraw)
 
@@ -95,3 +100,23 @@ func _get_current_item_index() -> int:
 		return -1
 	
 	return Controller.current_instrument_index
+
+
+func _edit_current_song() -> void:
+	if Engine.is_editor_hint():
+		return
+	
+	if current_song:
+		current_song.instrument_added.disconnect(queue_redraw.unbind(1))
+		current_song.instrument_removed.disconnect(queue_redraw.unbind(1))
+	
+	if not Controller.current_song:
+		return
+	
+	current_song = Controller.current_song
+	
+	if current_song:
+		current_song.instrument_added.connect(queue_redraw.unbind(1))
+		current_song.instrument_removed.connect(queue_redraw.unbind(1))
+	
+	queue_redraw()

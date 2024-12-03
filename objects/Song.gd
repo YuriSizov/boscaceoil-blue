@@ -11,6 +11,8 @@ class_name Song extends Resource
 signal song_changed()
 signal pattern_added(pattern: Pattern)
 signal pattern_removed(pattern: Pattern)
+signal instrument_added(instrument: Instrument)
+signal instrument_removed(instrument: Instrument)
 
 const FILE_FORMAT := 3
 const FILE_EXTENSION := "ceol"
@@ -123,6 +125,23 @@ func remove_pattern(pattern_idx: int) -> void:
 	var pattern := patterns[pattern_idx]
 	patterns.remove_at(pattern_idx)
 	pattern_removed.emit(pattern)
+
+
+# Instruments.
+
+func add_instrument(instrument: Instrument, instrument_idx: int = -1) -> void:
+	if instrument_idx < 0:
+		instruments.push_back(instrument)
+	else:
+		instruments.insert(instrument_idx, instrument)
+	
+	instrument_added.emit(instrument)
+
+
+func remove_instrument(instrument_idx: int) -> void:
+	var instrument := instruments[instrument_idx]
+	instruments.remove_at(instrument_idx)
+	instrument_removed.emit(instrument)
 
 
 # Composition.

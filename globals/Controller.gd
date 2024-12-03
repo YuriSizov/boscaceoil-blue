@@ -579,7 +579,6 @@ func create_instrument() -> void:
 	)
 	song_state.add_undo_action(func() -> void:
 		delete_instrument_nocheck(state_context.id)
-		song_instrument_changed.emit()
 	)
 	
 	state_manager.commit_state_change(song_state)
@@ -589,7 +588,7 @@ func create_instrument_nocheck(voice_data: VoiceManager.VoiceData) -> int:
 	var instrument_index := current_song.instruments.size()
 	
 	var instrument := instance_instrument_by_voice(voice_data)
-	current_song.instruments.push_back(instrument)
+	current_song.add_instrument(instrument)
 	
 	return instrument_index
 
@@ -647,7 +646,7 @@ func delete_instrument(instrument_index: int) -> void:
 	song_state.add_do_action(func() -> void:
 		# Delete the instrument itself from the list.
 		state_context.instrument = current_song.instruments[instrument_index]
-		current_song.instruments.remove_at(instrument_index)
+		current_song.remove_instrument(instrument_index)
 		
 		# There is nothing left, create a new one.
 		if current_song.instruments.is_empty():
@@ -701,10 +700,10 @@ func delete_instrument(instrument_index: int) -> void:
 	song_state.add_undo_action(func() -> void:
 		# Delete the replacement instrument, if it was created.
 		if state_context.deleted_last:
-			current_song.instruments.remove_at(0)
+			current_song.remove_instrument(0)
 		
 		# Restore the original instrument.
-		current_song.instruments.insert(instrument_index, state_context.instrument)
+		current_song.add_instrument(state_context.instrument, instrument_index)
 		
 		# Restore reset and shifted patterns.
 		
@@ -742,11 +741,11 @@ func delete_instrument(instrument_index: int) -> void:
 
 
 func delete_instrument_nocheck(instrument_index: int) -> void:
-	current_song.instruments.remove_at(instrument_index)
+	current_song.remove_instrument(instrument_index)
 	
 	# Make sure the edited instrument is valid.
 	if current_instrument_index >= current_song.instruments.size():
-		_change_current_instrument(current_song.instruments.size() - 1, false)
+		_change_current_instrument(current_song.instruments.size() - 1)
 
 
 func get_current_instrument() -> Instrument:
