@@ -65,24 +65,31 @@ func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton && event.is_pressed():
 		var mb := event as InputEventMouseButton
 		
-		if mb.button_index != MOUSE_BUTTON_LEFT:
+		if mb.button_index == MOUSE_BUTTON_WHEEL_UP:
+			_change_scroll_offset(-1)
 			accept_event()
-			return
 		
-		var item_index := 0
-		for item_rect in _item_rects:
-			if item_rect.has_point(mb.position):
-				if item_index == 0 && _has_prev_pager:
-					_change_scroll_offset(-1)
-				elif item_index == (_max_item_amount - 1) && _has_next_pager:
-					_change_scroll_offset(1)
-				else:
-					item_selected.emit(item_index + _scroll_offset)
+		elif mb.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+			_change_scroll_offset(1)
+			accept_event()
+		
+		elif mb.button_index == MOUSE_BUTTON_LEFT:
+			var item_index := 0
+			for item_rect in _item_rects:
+				if item_rect.has_point(mb.position):
+					if item_index == 0 && _has_prev_pager:
+						_change_scroll_offset(-1)
+					elif item_index == (_max_item_amount - 1) && _has_next_pager:
+						_change_scroll_offset(1)
+					else:
+						item_selected.emit(item_index + _scroll_offset)
+					
+					accept_event()
+					break
 				
-				accept_event()
-				break
-			
-			item_index += 1
+				item_index += 1
+		else:
+			accept_event()
 
 
 func _physics_process(_delta: float) -> void:
