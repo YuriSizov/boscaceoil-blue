@@ -19,6 +19,7 @@ enum NavigationTarget {
 	GENERAL_HELP,
 	PATTERN_HELP,
 	ARRANGEMENT_HELP,
+	TIMELINE_HELP,
 }
 
 var _current_tab: int = 0
@@ -39,6 +40,7 @@ var _current_tab: int = 0
 @onready var _general_help_tab_button: Button = %GeneralHelpTab
 @onready var _pattern_help_tab_button: Button = %PatternHelpTab
 @onready var _arrangement_help_tab_button: Button = %ArrangementHelpTab
+@onready var _timeline_help_tab_button: Button = %TimelineHelpTab
 
 # Menu collections.
 
@@ -57,6 +59,7 @@ var _current_tab: int = 0
 	_general_help_tab_button,
 	_pattern_help_tab_button,
 	_arrangement_help_tab_button,
+	_timeline_help_tab_button,
 ]
 
 

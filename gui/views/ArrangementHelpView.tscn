@@ -37,40 +37,38 @@ auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 4
 theme_type_variation = &"CreditsLabelHeader"
-text = "Arrangement editor"
+text = "Arrangement grid"
 
 [node name="ShortcutList" type="VBoxContainer" parent="Layout/LeftPage/Layout"]
 auto_translate_mode = 1
 layout_mode = 2
 theme_type_variation = &"CreditsBox"
 
+[node name="ShortcutLine6" parent="Layout/LeftPage/Layout/ShortcutList" instance=ExtResource("2_6rnau")]
+layout_mode = 2
+key_text = "MOUSE WHEEL"
+key_is_action = false
+description_text = "Scroll arrangement grid"
+
 [node name="ShortcutLine" parent="Layout/LeftPage/Layout/ShortcutList" instance=ExtResource("2_6rnau")]
 layout_mode = 2
 key_text = "bosca_patternmap_left"
-description_text = "Scroll left"
+description_text = "Scroll it left"
 
 [node name="ShortcutLine2" parent="Layout/LeftPage/Layout/ShortcutList" instance=ExtResource("2_6rnau")]
 layout_mode = 2
 key_text = "bosca_patternmap_right"
-description_text = "Scroll right"
+description_text = "Scroll it right"
+
+[node name="Spacer" type="Control" parent="Layout/LeftPage/Layout/ShortcutList"]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
 
 [node name="ShortcutLine5" parent="Layout/LeftPage/Layout/ShortcutList" instance=ExtResource("2_6rnau")]
 layout_mode = 2
-key_text = "MOUSE WHEEL"
+key_text = "CTRL + MOUSE WHEEL"
 key_is_action = false
 description_text = "Change grid scale"
-
-[node name="ShortcutLine3" parent="Layout/LeftPage/Layout/ShortcutList" instance=ExtResource("2_6rnau")]
-layout_mode = 2
-key_text = "RIGHT CLICK"
-key_is_action = false
-description_text = "Remove the pattern"
-
-[node name="ShortcutLine4" parent="Layout/LeftPage/Layout/ShortcutList" instance=ExtResource("2_6rnau")]
-layout_mode = 2
-key_text = "MIDDLE CLICK"
-key_is_action = false
-description_text = "Create a pattern variant"
 
 [node name="Filler" type="Control" parent="Layout/LeftPage/Layout"]
 auto_translate_mode = 1
@@ -106,48 +104,36 @@ auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 4
 theme_type_variation = &"CreditsLabelHeader"
-text = "Arrangement timeline"
+text = "Arrangement building"
 
 [node name="ShortcutList" type="VBoxContainer" parent="Layout/RightPage/Layout"]
 auto_translate_mode = 1
 layout_mode = 2
 theme_type_variation = &"CreditsBox"
 
-[node name="ShortcutLine5" parent="Layout/RightPage/Layout/ShortcutList" instance=ExtResource("2_6rnau")]
-layout_mode = 2
-key_text = "LEFT CLICK"
-key_is_action = false
-description_text = "Select and play the bar"
-
 [node name="Label" type="Label" parent="Layout/RightPage/Layout/ShortcutList"]
 auto_translate_mode = 1
 layout_mode = 2
-size_flags_horizontal = 8
+size_flags_horizontal = 0
 theme_type_variation = &"CreditsLabel"
-text = "(drag plays multiple, double plays to end)"
-horizontal_alignment = 2
+text = "DRAG'N'DROP patterns from the dock onto
+the grid to add them."
+
+[node name="Spacer" type="Control" parent="Layout/RightPage/Layout/ShortcutList"]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
 
 [node name="ShortcutLine3" parent="Layout/RightPage/Layout/ShortcutList" instance=ExtResource("2_6rnau")]
 layout_mode = 2
 key_text = "RIGHT CLICK"
 key_is_action = false
-description_text = "Remove the bar"
+description_text = "Remove the pattern"
 
 [node name="ShortcutLine4" parent="Layout/RightPage/Layout/ShortcutList" instance=ExtResource("2_6rnau")]
 layout_mode = 2
 key_text = "MIDDLE CLICK"
 key_is_action = false
-description_text = "Insert an empty bar"
-
-[node name="ShortcutLine" parent="Layout/RightPage/Layout/ShortcutList" instance=ExtResource("2_6rnau")]
-layout_mode = 2
-key_text = "ui_copy"
-description_text = "Copy selected bars"
-
-[node name="ShortcutLine2" parent="Layout/RightPage/Layout/ShortcutList" instance=ExtResource("2_6rnau")]
-layout_mode = 2
-key_text = "ui_paste"
-description_text = "Paste copied bars"
+description_text = "Create a pattern variant"
 
 [node name="Filler" type="Control" parent="Layout/RightPage/Layout"]
 auto_translate_mode = 1

@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://l0bjoy6vwtbx"]
+[gd_scene load_steps=16 format=3 uid="uid://l0bjoy6vwtbx"]
 
 [ext_resource type="Script" path="res://gui/Menu.gd" id="1_pjxdv"]
 [ext_resource type="PackedScene" uid="uid://7lvvn5lu3ywt" path="res://gui/widgets/NavigationButton.tscn" id="2_l3q7q"]
@@ -14,6 +14,7 @@
 [ext_resource type="PackedScene" uid="uid://c0a2d6er3rr81" path="res://gui/views/LegacyView.tscn" id="11_vw4b6"]
 [ext_resource type="PackedScene" uid="uid://dx08w2jjjtnag" path="res://gui/views/PatternHelpView.tscn" id="13_4cens"]
 [ext_resource type="PackedScene" uid="uid://dwl0v0nsr8r2n" path="res://gui/views/ArrangementHelpView.tscn" id="14_hrknx"]
+[ext_resource type="PackedScene" uid="uid://b78pyknxb23fd" path="res://gui/views/TimelineHelpView.tscn" id="15_3ona3"]
 
 [node name="Menu" type="VBoxContainer"]
 auto_translate_mode = 1
@@ -125,6 +126,16 @@ focus_mode = 0
 button_group = ExtResource("3_kmmx3")
 label_text = "ARRANGEMENTS"
 
+[node name="TimelineHelpTab" parent="Navigation" instance=ExtResource("2_l3q7q")]
+unique_name_in_owner = true
+auto_translate_mode = 1
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+button_group = ExtResource("3_kmmx3")
+label_text = "TIMELINE"
+
 [node name="FullscreenToggle" type="Button" parent="Navigation"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(52, 20)
@@ -187,6 +198,11 @@ visible = false
 layout_mode = 2
 
 [node name="ArrangementHelpView" parent="Contents" instance=ExtResource("14_hrknx")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="TimelineHelpView" parent="Contents" instance=ExtResource("15_3ona3")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2

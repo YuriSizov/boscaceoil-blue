@@ -131,15 +131,36 @@ func _gui_input(event: InputEvent) -> void:
 		
 		if mb.pressed:
 			if mb.button_index == MOUSE_BUTTON_WHEEL_UP:
-				_resize_pattern_width(1)
+				if mb.shift_pressed:
+					_resize_pattern_width(1)
+				else:
+					_change_scroll_offset(-1)
 			elif mb.button_index == MOUSE_BUTTON_WHEEL_DOWN:
-				_resize_pattern_width(-1)
-			elif mb.button_index == MOUSE_BUTTON_LEFT && not mb.shift_pressed:
-				_select_pattern_at_cursor()
+				if mb.shift_pressed:
+					_resize_pattern_width(-1)
+				else:
+					_change_scroll_offset(1)
+			elif mb.button_index == MOUSE_BUTTON_WHEEL_LEFT:
+				_change_scroll_offset(-1)
+			elif mb.button_index == MOUSE_BUTTON_WHEEL_RIGHT:
+				_change_scroll_offset(1)
+			
+			elif mb.button_index == MOUSE_BUTTON_LEFT:
+				if mb.shift_pressed:
+					_clone_pattern_at_cursor()
+				else:
+					_select_pattern_at_cursor()
 			elif mb.button_index == MOUSE_BUTTON_RIGHT:
 				_clear_pattern_at_cursor()
-			elif mb.button_index == MOUSE_BUTTON_MIDDLE || (mb.button_index == MOUSE_BUTTON_LEFT && mb.shift_pressed):
+			elif mb.button_index == MOUSE_BUTTON_MIDDLE:
 				_clone_pattern_at_cursor()
+
+
+func _shortcut_input(event: InputEvent) -> void:
+	if event.is_action_pressed("bosca_patternmap_scale_bigger", true, true):
+		_resize_pattern_width(1)
+	elif event.is_action_pressed("bosca_patternmap_scale_smaller", true, true):
+		_resize_pattern_width(-1)
 
 
 func _physics_process(_delta: float) -> void:

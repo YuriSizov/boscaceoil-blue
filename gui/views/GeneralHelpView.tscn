@@ -113,8 +113,17 @@ theme_type_variation = &"CreditsBox"
 
 [node name="ShortcutLine" parent="Layout/RightPage/Layout/ShortcutList" instance=ExtResource("3_1pvp8")]
 layout_mode = 2
+key_text = "bosca_playstop"
+description_text = "Play/Stop"
+
+[node name="ShortcutLine7" parent="Layout/RightPage/Layout/ShortcutList" instance=ExtResource("3_1pvp8")]
+layout_mode = 2
 key_text = "bosca_pause"
-description_text = "Play/Pause"
+description_text = "Pause/Resume"
+
+[node name="Spacer" type="Control" parent="Layout/RightPage/Layout/ShortcutList"]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
 
 [node name="ShortcutLine5" parent="Layout/RightPage/Layout/ShortcutList" instance=ExtResource("3_1pvp8")]
 layout_mode = 2
@@ -136,13 +145,9 @@ layout_mode = 2
 key_text = "bosca_save_as"
 description_text = "Save as a copy"
 
-[node name="ShortcutLine4" parent="Layout/RightPage/Layout/ShortcutList" instance=ExtResource("3_1pvp8")]
-layout_mode = 2
-key_text = "bosca_exit"
-description_text = "Quit Bosca Ceoil"
-
 [node name="Filler" type="Control" parent="Layout/RightPage/Layout"]
 auto_translate_mode = 1
+custom_minimum_size = Vector2(0, 6)
 layout_mode = 2
 size_flags_vertical = 3
 

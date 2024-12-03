@@ -99,12 +99,19 @@ func _gui_input(event: InputEvent) -> void:
 		
 		if _note_cursor_visible && mb.pressed:
 			if mb.button_index == MOUSE_BUTTON_WHEEL_UP:
-				_resize_note_cursor(1)
+				if mb.ctrl_pressed:
+					_resize_note_cursor(1)
+				else:
+					_change_scroll_offset(1)
 			elif mb.button_index == MOUSE_BUTTON_WHEEL_DOWN:
-				_resize_note_cursor(-1)
-			elif mb.button_index == MOUSE_BUTTON_LEFT && not mb.ctrl_pressed:
+				if mb.ctrl_pressed:
+					_resize_note_cursor(-1)
+				else:
+					_change_scroll_offset(-1)
+			
+			elif mb.button_index == MOUSE_BUTTON_LEFT:
 				_start_drawing_notes(DrawingMode.DRAWING_ADD)
-			elif mb.button_index == MOUSE_BUTTON_RIGHT || (mb.button_index == MOUSE_BUTTON_LEFT && mb.ctrl_pressed):
+			elif mb.button_index == MOUSE_BUTTON_RIGHT:
 				_start_drawing_notes(DrawingMode.DRAWING_REMOVE)
 		
 		if _note_drawing_mode != DrawingMode.DRAWING_OFF && not mb.pressed:

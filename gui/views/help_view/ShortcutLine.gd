@@ -34,9 +34,44 @@ func _update_labels() -> void:
 	_description_label.text = description_text
 
 
+func _get_bound_action_events(action_text: String) -> Array[InputEvent]:
+	# No need for a fallback outide of the editor.
+	if not Engine.is_editor_hint():
+		return InputMap.action_get_events(action_text)
+	
+	# Try to get the built-in events first.
+	var events := InputMap.action_get_events(action_text)
+	if not events.is_empty():
+		return events
+	
+	# Got nothing, so falling back to manual parsing of ProjectSettings.
+	
+	var project_settings := ProjectSettings.get_property_list()
+	for info in project_settings:
+		# No dedicated method for fetching all input settings, so filter
+		# them all by the prefix.
+		if not info["name"].begins_with("input/"):
+			continue
+		
+		# Extract the action name from the string. This is the key used in
+		# InputMap.action_* methods.
+		var raw_name: String = info["name"]
+		var action_name := raw_name.substr(raw_name.find("/") + 1, raw_name.length())
+		if action_name != action_text:
+			continue
+		
+		# Get the value of the setting, this is pretty much the exact same
+		# array. InputMap filters out invalid events, but we shouldn't have
+		# any.
+		var action: Dictionary = ProjectSettings.get_setting_with_override(info["name"])
+		events.append_array(action["events"])
+	
+	return events
+
+
 func _get_action_as_string(action_text: String) -> String:
-	var bound_events := InputMap.action_get_events(action_text)
-	if bound_events.size() <= 0:
+	var bound_events := _get_bound_action_events(action_text)
+	if bound_events.is_empty():
 		return "[UNBOUND]"
 	
 	var first_event := bound_events[0]

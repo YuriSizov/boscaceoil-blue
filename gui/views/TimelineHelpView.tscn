@@ -1,17 +1,17 @@
-[gd_scene load_steps=4 format=3 uid="uid://dx08w2jjjtnag"]
+[gd_scene load_steps=4 format=3 uid="uid://b78pyknxb23fd"]
 
-[ext_resource type="Script" path="res://gui/views/PatternHelpView.gd" id="1_bhcok"]
-[ext_resource type="PackedScene" uid="uid://cinwiem08gkak" path="res://gui/views/help_view/ShortcutLine.tscn" id="2_p7qfp"]
-[ext_resource type="PackedScene" uid="uid://71sw1mddco3" path="res://gui/widgets/SquishyButton.tscn" id="3_4kesk"]
+[ext_resource type="Script" path="res://gui/views/TimelineHelpView.gd" id="1_o1unk"]
+[ext_resource type="PackedScene" uid="uid://cinwiem08gkak" path="res://gui/views/help_view/ShortcutLine.tscn" id="2_i61gm"]
+[ext_resource type="PackedScene" uid="uid://71sw1mddco3" path="res://gui/widgets/SquishyButton.tscn" id="3_hplmm"]
 
-[node name="ShortcutsView" type="MarginContainer"]
+[node name="TimelineHelpView" type="MarginContainer"]
 auto_translate_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_bhcok")
+script = ExtResource("1_o1unk")
 
 [node name="Layout" type="HBoxContainer" parent="."]
 auto_translate_mode = 1
@@ -37,28 +37,32 @@ auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 4
 theme_type_variation = &"CreditsLabelHeader"
-text = "Pattern view"
+text = "Arrangement timeline"
 
 [node name="ShortcutList" type="VBoxContainer" parent="Layout/LeftPage/Layout"]
 auto_translate_mode = 1
 layout_mode = 2
 theme_type_variation = &"CreditsBox"
 
-[node name="ShortcutLine3" parent="Layout/LeftPage/Layout/ShortcutList" instance=ExtResource("2_p7qfp")]
+[node name="ShortcutLine5" parent="Layout/LeftPage/Layout/ShortcutList" instance=ExtResource("2_i61gm")]
 layout_mode = 2
-key_text = "MOUSE WHEEL"
+key_text = "LEFT CLICK"
 key_is_action = false
-description_text = "Scroll pattern view"
+description_text = "Select and play the bar"
 
-[node name="ShortcutLine" parent="Layout/LeftPage/Layout/ShortcutList" instance=ExtResource("2_p7qfp")]
+[node name="Label" type="Label" parent="Layout/LeftPage/Layout/ShortcutList"]
+auto_translate_mode = 1
 layout_mode = 2
-key_text = "bosca_notemap_up"
-description_text = "Scroll it up"
+size_flags_horizontal = 8
+theme_type_variation = &"CreditsLabel"
+text = "(hold and drag to select multiple bars)"
+horizontal_alignment = 2
 
-[node name="ShortcutLine2" parent="Layout/LeftPage/Layout/ShortcutList" instance=ExtResource("2_p7qfp")]
+[node name="ShortcutLine6" parent="Layout/LeftPage/Layout/ShortcutList" instance=ExtResource("2_i61gm")]
 layout_mode = 2
-key_text = "bosca_notemap_down"
-description_text = "Scroll it down"
+key_text = "DOUBLE CLICK"
+key_is_action = false
+description_text = "Select and play to the end"
 
 [node name="Filler" type="Control" parent="Layout/LeftPage/Layout"]
 auto_translate_mode = 1
@@ -71,8 +75,8 @@ auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 0
 theme_type_variation = &"CreditsLabel"
-text = "DOUBLE CLICK on the scroll bar to center
-the pattern view!"
+text = "MIDDLE CLICK can be replaced with
+SHIFT + LEFT CLICK!"
 
 [node name="FillerMiddle" type="Control" parent="Layout"]
 auto_translate_mode = 1
@@ -94,44 +98,34 @@ auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 4
 theme_type_variation = &"CreditsLabelHeader"
-text = "Pattern drawing"
+text = "Arrangement timeline"
 
 [node name="ShortcutList" type="VBoxContainer" parent="Layout/RightPage/Layout"]
 auto_translate_mode = 1
 layout_mode = 2
 theme_type_variation = &"CreditsBox"
 
-[node name="ShortcutLine4" parent="Layout/RightPage/Layout/ShortcutList" instance=ExtResource("2_p7qfp")]
+[node name="ShortcutLine4" parent="Layout/RightPage/Layout/ShortcutList" instance=ExtResource("2_i61gm")]
 layout_mode = 2
-key_text = "LEFT CLICK"
+key_text = "MIDDLE CLICK"
 key_is_action = false
-description_text = "Draw a note (can overlap)"
+description_text = "Insert an empty bar"
 
-[node name="ShortcutLine5" parent="Layout/RightPage/Layout/ShortcutList" instance=ExtResource("2_p7qfp")]
+[node name="ShortcutLine3" parent="Layout/RightPage/Layout/ShortcutList" instance=ExtResource("2_i61gm")]
 layout_mode = 2
 key_text = "RIGHT CLICK"
 key_is_action = false
-description_text = "Erase the note at the cursor"
+description_text = "Remove the bar"
 
-[node name="Spacer" type="Control" parent="Layout/RightPage/Layout/ShortcutList"]
-custom_minimum_size = Vector2(0, 8)
+[node name="ShortcutLine" parent="Layout/RightPage/Layout/ShortcutList" instance=ExtResource("2_i61gm")]
 layout_mode = 2
+key_text = "ui_copy"
+description_text = "Copy selected bars"
 
-[node name="ShortcutLine3" parent="Layout/RightPage/Layout/ShortcutList" instance=ExtResource("2_p7qfp")]
+[node name="ShortcutLine2" parent="Layout/RightPage/Layout/ShortcutList" instance=ExtResource("2_i61gm")]
 layout_mode = 2
-key_text = "CTRL + MOUSE WHEEL"
-key_is_action = false
-description_text = "Change cursor size"
-
-[node name="ShortcutLine" parent="Layout/RightPage/Layout/ShortcutList" instance=ExtResource("2_p7qfp")]
-layout_mode = 2
-key_text = "bosca_notemap_cursor_bigger"
-description_text = "Make it bigger"
-
-[node name="ShortcutLine2" parent="Layout/RightPage/Layout/ShortcutList" instance=ExtResource("2_p7qfp")]
-layout_mode = 2
-key_text = "bosca_notemap_cursor_smaller"
-description_text = "Make it smaller"
+key_text = "ui_paste"
+description_text = "Paste copied bars"
 
 [node name="Filler" type="Control" parent="Layout/RightPage/Layout"]
 auto_translate_mode = 1
@@ -139,7 +133,7 @@ custom_minimum_size = Vector2(0, 6)
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="NavigateBack" parent="Layout/RightPage/Layout" instance=ExtResource("3_4kesk")]
+[node name="NavigateBack" parent="Layout/RightPage/Layout" instance=ExtResource("3_hplmm")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
