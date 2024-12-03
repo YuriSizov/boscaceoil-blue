@@ -24,10 +24,13 @@ func _init(owner: Control, first_button: Button, second_button: Button) -> void:
 	_owner = owner
 	_owner.set_process(false)
 	
-	first_button.button_down.connect(_button_press_started.bind(first_button))
-	second_button.button_down.connect(_button_press_started.bind(second_button))
-	first_button.button_up.connect(_button_press_stopped)
-	second_button.button_up.connect(_button_press_stopped)
+	if is_instance_valid(first_button):
+		first_button.button_down.connect(_button_press_started.bind(first_button))
+		first_button.button_up.connect(_button_press_stopped)
+	
+	if is_instance_valid(second_button):
+		second_button.button_down.connect(_button_press_started.bind(second_button))
+		second_button.button_up.connect(_button_press_stopped)
 
 
 func set_press_callback(callback: Callable) -> void:

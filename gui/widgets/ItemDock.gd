@@ -38,12 +38,19 @@ var _hovering: bool = false
 var _hovered_item: int = -1
 var drag_source_id: int = -1
 
+var _button_holder: ButtonHolder = null
+var _fake_scroll_up_button: Button = Button.new()
+var _fake_scroll_down_button: Button = Button.new()
+
 @onready var _add_button: SquishyButton = %AddItem
 @onready var _delete_area: DeleteArea = %DeleteArea
 
 
 func _init() -> void:
 	drag_source_id = hash(get_canvas_item().get_id())
+	
+	_button_holder = ButtonHolder.new(self, _fake_scroll_up_button, _fake_scroll_down_button)
+	_button_holder.set_press_callback(_hold_change_scroll_offset)
 
 
 func _ready() -> void:
@@ -61,26 +68,49 @@ func _ready() -> void:
 	_add_button.pressed.connect(item_created.emit)
 
 
-func _gui_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton && event.is_pressed():
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_PREDELETE:
+		if is_instance_valid(_fake_scroll_up_button):
+			_fake_scroll_up_button.queue_free()
+		if is_instance_valid(_fake_scroll_down_button):
+			_fake_scroll_down_button.queue_free()
+
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
 		var mb := event as InputEventMouseButton
 		
-		if mb.button_index == MOUSE_BUTTON_WHEEL_UP:
+		if mb.button_index == MOUSE_BUTTON_LEFT && not mb.pressed:
+			if is_instance_valid(_button_holder._hold_button):
+				_button_holder._hold_button.button_up.emit()
+
+
+func _gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		var mb := event as InputEventMouseButton
+		
+		if mb.button_index == MOUSE_BUTTON_WHEEL_UP && mb.pressed:
 			_change_scroll_offset(-1)
 			accept_event()
 		
-		elif mb.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+		elif mb.button_index == MOUSE_BUTTON_WHEEL_DOWN && mb.pressed:
 			_change_scroll_offset(1)
 			accept_event()
 		
-		elif mb.button_index == MOUSE_BUTTON_LEFT:
+		elif mb.button_index == MOUSE_BUTTON_LEFT && mb.pressed:
+			# Due to how its rendered this widget doesn't have dedicated
+			# buttons. However, we want to piggyback off of the button
+			# holder util that we have. So fake buttons are used which
+			# are never added to the scene tree. We emit their signals
+			# manually.
+			
 			var item_index := 0
 			for item_rect in _item_rects:
 				if item_rect.has_point(mb.position):
 					if item_index == 0 && _has_prev_pager:
-						_change_scroll_offset(-1)
+						_fake_scroll_up_button.button_down.emit()
 					elif item_index == (_max_item_amount - 1) && _has_next_pager:
-						_change_scroll_offset(1)
+						_fake_scroll_down_button.button_down.emit()
 					else:
 						item_selected.emit(item_index + _scroll_offset)
 					
@@ -88,8 +118,13 @@ func _gui_input(event: InputEvent) -> void:
 					break
 				
 				item_index += 1
+		
 		else:
 			accept_event()
+
+
+func _process(delta: float) -> void:
+	_button_holder.process(delta)
 
 
 func _physics_process(_delta: float) -> void:
@@ -287,6 +322,16 @@ func _change_scroll_offset(delta: int) -> void:
 	var max_scroll_offset := maxi(0, total_item_amount - _max_item_amount)
 	_scroll_offset = clampi(_scroll_offset + delta, 0, max_scroll_offset)
 	queue_redraw()
+
+
+func _hold_change_scroll_offset(fake_button: Button) -> void:
+	if not fake_button:
+		return
+	
+	if fake_button == _fake_scroll_up_button:
+		_change_scroll_offset(-1)
+	elif fake_button == _fake_scroll_down_button:
+		_change_scroll_offset(1)
 
 
 func _validate_scroll_offset() -> void:
