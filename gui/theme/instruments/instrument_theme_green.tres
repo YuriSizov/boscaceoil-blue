@@ -15,10 +15,10 @@ thickness = 3
 vertical = true
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ujp86"]
-content_margin_left = 16.0
-content_margin_top = 4.0
-content_margin_right = 16.0
-content_margin_bottom = 4.0
+content_margin_left = 12.0
+content_margin_top = 3.0
+content_margin_right = 12.0
+content_margin_bottom = 3.0
 bg_color = Color(0.211765, 0.843137, 0.141176, 1)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_2vm56"]

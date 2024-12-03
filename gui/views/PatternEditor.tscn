@@ -74,7 +74,7 @@ layout_mode = 2
 [node name="NoteShiftUp" type="Button" parent="PatternSettings/PropertyBar/ButtonBar/NoteShiftBar"]
 unique_name_in_owner = true
 auto_translate_mode = 1
-custom_minimum_size = Vector2(36, 23)
+custom_minimum_size = Vector2(36, 26)
 layout_mode = 2
 size_flags_vertical = 4
 focus_mode = 0
@@ -87,7 +87,7 @@ expand_icon = true
 [node name="NoteShiftDown" type="Button" parent="PatternSettings/PropertyBar/ButtonBar/NoteShiftBar"]
 unique_name_in_owner = true
 auto_translate_mode = 1
-custom_minimum_size = Vector2(36, 23)
+custom_minimum_size = Vector2(36, 26)
 layout_mode = 2
 size_flags_vertical = 4
 focus_mode = 0

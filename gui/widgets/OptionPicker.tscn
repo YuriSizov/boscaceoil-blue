@@ -15,7 +15,7 @@ layout_mode = 2
 theme_type_variation = &"OptionPickerBox"
 
 [node name="Arrow" type="TextureRect" parent="Layout"]
-custom_minimum_size = Vector2(22, 18)
+custom_minimum_size = Vector2(22, 28)
 layout_mode = 2
 size_flags_vertical = 4
 texture = ExtResource("2_5j6us")
