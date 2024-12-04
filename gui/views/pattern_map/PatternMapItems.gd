@@ -77,6 +77,12 @@ func draw_item(on_control: Control, pattern: PatternMap.ActivePattern, item_orig
 	var string_position := item_origin + pattern.label_position
 	var shadow_position := string_position + _shadow_size
 	var gutter_string := "%d" % [ pattern.pattern_index + 1 ]
+	
+	# A bit of a hack, but it lets us use any Control-derivative for drawing. If it has
+	# this property, we use it. If not, then not.
+	if on_control.get("cloned"):
+		gutter_string += "*"
+	
 	on_control.draw_string(_font, shadow_position, gutter_string, HORIZONTAL_ALIGNMENT_LEFT, -1, _font_size, _shadow_color)
 	on_control.draw_string(_font, string_position, gutter_string, HORIZONTAL_ALIGNMENT_LEFT, -1, _font_size, _font_color)
 	

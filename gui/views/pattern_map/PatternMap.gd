@@ -146,13 +146,15 @@ func _gui_input(event: InputEvent) -> void:
 				_change_scroll_offset(1)
 			
 			elif mb.button_index == MOUSE_BUTTON_LEFT:
-				if mb.shift_pressed:
-					_clone_pattern_at_cursor()
+				if mb.alt_pressed:
+					pass # Handled on release.
 				else:
 					_select_pattern_at_cursor()
 			elif mb.button_index == MOUSE_BUTTON_RIGHT:
 				_clear_pattern_at_cursor()
-			elif mb.button_index == MOUSE_BUTTON_MIDDLE:
+		
+		else:
+			if mb.button_index == MOUSE_BUTTON_LEFT && mb.alt_pressed:
 				_clone_pattern_at_cursor()
 
 
@@ -599,7 +601,10 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 	drag_data.pattern_index = pattern_idx
 	
 	var pattern := _active_patterns[pattern_idx]
-	var preview := Control.new()
+	
+	var preview := DraggedPatternPreview.new()
+	preview.reflect_transient_state = true
+	preview.cloned = Input.is_key_pressed(KEY_ALT)
 	preview.size = pattern.item_size
 	preview.draw.connect(_items.draw_item.bind(preview, pattern, Vector2.ZERO, true))
 	set_drag_preview(preview)
@@ -624,7 +629,11 @@ func _drop_data(_at_position: Vector2, data: Variant) -> void:
 	
 	if data is DraggedPattern:
 		var pattern_data := data as DraggedPattern
-		_set_pattern_at_cursor(pattern_data.pattern_index)
+		
+		if Input.is_key_pressed(KEY_ALT):
+			_clone_pattern_at_cursor(pattern_data.pattern_index)
+		else:
+			_set_pattern_at_cursor(pattern_data.pattern_index)
 
 
 # Editing.
@@ -768,14 +777,14 @@ func _clear_pattern_at_cursor() -> void:
 	Controller.state_manager.commit_state_change(arrangement_state)
 
 
-func _clone_pattern_at_cursor() -> void:
+func _clone_pattern_at_cursor(pattern_idx: int = -1) -> void:
 	if not current_arrangement || not Controller.current_song:
 		return
 	
-	var pattern_idx := _get_pattern_at_cursor()
 	if pattern_idx < 0:
-		return
-	if not Controller.can_clone_pattern(pattern_idx):
+		pattern_idx = _get_pattern_at_cursor()
+	
+	if pattern_idx < 0 || not Controller.can_clone_pattern(pattern_idx):
 		return
 	
 	var cell := _get_cell_at_cursor()
@@ -946,3 +955,19 @@ class ActivePattern:
 
 class DraggedPattern:
 	var pattern_index: int = -1
+
+
+class DraggedPatternPreview extends Control:
+	var cloned: bool = false
+	var reflect_transient_state: bool = false
+	
+	
+	func _input(event: InputEvent) -> void:
+		if not reflect_transient_state:
+			return
+		
+		if event is InputEventKey:
+			var ke := event as InputEventKey
+			if ke.keycode == KEY_ALT:
+				cloned = ke.pressed
+				queue_redraw()

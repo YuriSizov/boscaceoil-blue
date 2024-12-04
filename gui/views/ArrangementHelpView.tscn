@@ -70,20 +70,6 @@ key_text = "CTRL + MOUSE WHEEL"
 key_is_action = false
 description_text = "Change grid scale"
 
-[node name="Filler" type="Control" parent="Layout/LeftPage/Layout"]
-auto_translate_mode = 1
-custom_minimum_size = Vector2(0, 6)
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="Label" type="Label" parent="Layout/LeftPage/Layout"]
-auto_translate_mode = 1
-layout_mode = 2
-size_flags_horizontal = 0
-theme_type_variation = &"CreditsLabel"
-text = "MIDDLE CLICK can be replaced with
-SHIFT + LEFT CLICK!"
-
 [node name="FillerMiddle" type="Control" parent="Layout"]
 auto_translate_mode = 1
 layout_mode = 2
@@ -116,8 +102,21 @@ auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 0
 theme_type_variation = &"CreditsLabel"
-text = "DRAG'N'DROP patterns from the dock onto
-the grid to add them."
+text = "DRAG'N'DROP patterns from to add/copy
+them."
+
+[node name="Spacer2" type="Control" parent="Layout/RightPage/Layout/ShortcutList"]
+visible = false
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="Layout/RightPage/Layout/ShortcutList"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabel"
+text = "Hold ALT while dragging to create a
+variant instead."
 
 [node name="Spacer" type="Control" parent="Layout/RightPage/Layout/ShortcutList"]
 custom_minimum_size = Vector2(0, 6)
@@ -131,9 +130,9 @@ description_text = "Remove the pattern"
 
 [node name="ShortcutLine4" parent="Layout/RightPage/Layout/ShortcutList" instance=ExtResource("2_6rnau")]
 layout_mode = 2
-key_text = "MIDDLE CLICK"
+key_text = "ALT + LEFT CLICK"
 key_is_action = false
-description_text = "Create a pattern variant"
+description_text = "Create pattern variant"
 
 [node name="Filler" type="Control" parent="Layout/RightPage/Layout"]
 auto_translate_mode = 1
