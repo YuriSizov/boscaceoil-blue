@@ -306,6 +306,21 @@ func get_pattern_time() -> int:
 	return _pattern_time
 
 
+func get_next_pattern_time() -> int:
+	# When it's stopped, it's stopped.
+	if _pattern_time < 0:
+		return _pattern_time
+	
+	var song := Controller.current_song
+	if not song:
+		return -1
+	
+	# When it's playing, it's wrapped.
+	if _pattern_time >= song.pattern_size:
+		return 0
+	return _pattern_time
+
+
 func get_note_time_length() -> float:
 	if not Controller.current_song:
 		return 0.0

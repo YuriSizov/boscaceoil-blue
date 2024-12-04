@@ -235,7 +235,7 @@ func _instrument_filter_changed() -> void:
 	var slider_value := _lowpass_slider.get_current_value()
 	
 	if _is_instrument_recording():
-		var current_position := Controller.music_player.get_pattern_time()
+		var current_position := Controller.music_player.get_next_pattern_time()
 		if current_position >= 0:
 			var pattern_state := Controller.state_manager.create_state_change(StateManager.StateChangeType.PATTERN, Controller.current_pattern_index, "pattern_recorded_filter%d" % [ current_position ])
 			pattern_state.add_setget_property(current_pattern, "instrument_filter", slider_value,
@@ -267,7 +267,7 @@ func _instrument_volume_changed() -> void:
 	var slider_value := _volume_slider.get_current_value()
 	
 	if _is_instrument_recording():
-		var current_position := Controller.music_player.get_pattern_time()
+		var current_position := Controller.music_player.get_next_pattern_time()
 		if current_position >= 0:
 			var pattern_state := Controller.state_manager.create_state_change(StateManager.StateChangeType.PATTERN, Controller.current_pattern_index, "pattern_recorded_volume%d" % [ current_position ])
 			pattern_state.add_setget_property(current_pattern, "instrument_volume", slider_value.y,
@@ -324,7 +324,7 @@ func _update_sliders() -> void:
 	
 	# Update values in the recoding mode. Use pattern values if the pattern is being played, use
 	# instrument values otherwise.
-	var current_position := Controller.music_player.get_pattern_time()
+	var current_position := Controller.music_player.get_next_pattern_time()
 	if current_pattern.is_playing && current_position >= 0:
 		var recorded_values := current_pattern.recorded_instrument_values[current_position]
 		
