@@ -176,6 +176,32 @@ layout_mode = 2
 direction = 1
 placeholder_text = "100%"
 
+[node name="NoteFormatSettings" type="PanelContainer" parent="Layout/ExtraControls/Contents"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_type_variation = &"WidgetPanel"
+
+[node name="Layout" type="HBoxContainer" parent="Layout/ExtraControls/Contents/NoteFormatSettings"]
+auto_translate_mode = 1
+layout_mode = 2
+theme_type_variation = &"HBoxSpaced"
+alignment = 1
+
+[node name="Label" type="Label" parent="Layout/ExtraControls/Contents/NoteFormatSettings/Layout"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 3
+text = "NOTE FORMAT"
+uppercase = true
+
+[node name="NoteFormatPicker" parent="Layout/ExtraControls/Contents/NoteFormatSettings/Layout" instance=ExtResource("3_ttw6g")]
+unique_name_in_owner = true
+layout_mode = 2
+direction = 1
+placeholder_text = "CDEFGAB"
+
 [node name="FillerEnd" type="Control" parent="Layout"]
 auto_translate_mode = 1
 layout_mode = 2

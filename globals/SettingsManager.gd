@@ -12,6 +12,7 @@ const CONFIG_SAVE_DELAY := 0.5
 signal settings_loaded()
 signal buffer_size_changed()
 signal gui_scale_changed()
+signal note_format_changed()
 signal fullscreen_changed()
 
 enum BufferSize {
@@ -20,7 +21,7 @@ enum BufferSize {
 	BUFFER_LARGE  = 8192,
 }
 
-const _buffer_size_descriptions := {
+const BUFFER_SIZE_DESCRIPTION := {
 	BufferSize.BUFFER_SMALL:  "default, high performance",
 	BufferSize.BUFFER_MEDIUM: "try if you get cracking on .wav exports",
 	BufferSize.BUFFER_LARGE:  "slow, not recommended",
@@ -38,6 +39,16 @@ enum GUIScale {
 const GUI_SCALE_MIN := 50
 const GUI_SCALE_MAX := 300
 
+enum NoteFormat {
+	FORMAT_CDEFGAB = 0,
+	FORMAT_DOREMI = 1,
+}
+
+const NOTE_FORMAT_NAME := {
+	NoteFormat.FORMAT_CDEFGAB: "CDEFGAB",
+	NoteFormat.FORMAT_DOREMI: "DoReMi",
+}
+
 # Indicates whether this is the first launch of the app.
 var _first_time: bool = true
 
@@ -53,6 +64,8 @@ var _windowed_size: Vector2 = Vector2.ZERO
 var _windowed_maximized: bool = false
 # Settings: Synth.
 var _buffer_size: int = BufferSize.BUFFER_SMALL
+# Settings: Customization.
+var _note_format: int = NoteFormat.FORMAT_CDEFGAB
 # Settings: Files.
 var _last_opened_folder: String = ""
 
@@ -89,6 +102,8 @@ func load_settings() -> void:
 	
 	_set_buffer_size_safe(   _stored_file.get_value("synth", "driver_buffer", _buffer_size))
 	
+	_set_note_format_safe(   _stored_file.get_value("customization", "note_format", _note_format))
+	
 	_last_opened_folder =    _stored_file.get_value("files", "last_folder", _last_opened_folder)
 	
 	_first_time = false
@@ -121,6 +136,8 @@ func _save_settings_debounced() -> void:
 	_stored_file.set_value("gui", "last_size",  _windowed_size)
 	
 	_stored_file.set_value("synth", "driver_buffer", _buffer_size)
+	
+	_stored_file.set_value("customization", "note_format", _note_format)
 	
 	_stored_file.set_value("files", "last_folder", _last_opened_folder)
 	
@@ -205,8 +222,9 @@ func get_buffer_size() -> int:
 
 
 func get_buffer_size_text(value: int) -> String:
-	if _buffer_size_descriptions.has(value):
-		return "%d (%s)" % [ value, _buffer_size_descriptions[value] ]
+	if BUFFER_SIZE_DESCRIPTION.has(value):
+		return "%d (%s)" % [ value, BUFFER_SIZE_DESCRIPTION[value] ]
+	
 	return "%d" % [ value ]
 
 
@@ -225,7 +243,35 @@ func _set_buffer_size_safe(value: int) -> void:
 	_buffer_size = BufferSize.BUFFER_SMALL
 
 
-# Settings: Files
+# Settings: Customization.
+
+func get_note_format() -> int:
+	return _note_format
+
+
+func get_note_format_text(value: int) -> String:
+	if NOTE_FORMAT_NAME.has(value):
+		return NOTE_FORMAT_NAME[value]
+	
+	return "UNKNOWN (%d)" % [ value ]
+
+
+func set_note_format(value: int) -> void:
+	_set_note_format_safe(value)
+	note_format_changed.emit()
+	save_settings()
+
+
+func _set_note_format_safe(value: int) -> void:
+	for key: String in NoteFormat:
+		if value == NoteFormat[key]:
+			_note_format = value
+			return
+	
+	_note_format = NoteFormat.FORMAT_CDEFGAB
+
+
+# Settings: Files.
 
 func get_last_opened_folder() -> String:
 	return _last_opened_folder

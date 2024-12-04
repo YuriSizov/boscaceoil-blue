@@ -10,6 +10,9 @@ class_name NoteMap extends Control
 const CENTER_OCTAVE := 3
 const SMALLEST_PATTERN_SIZE := 8 # Must be power-of-2!
 
+const GUTTER_CDEFGAB_SIZE := 50
+const GUTTER_DOREMI_SIZE := 64
+
 enum DrawingMode {
 	DRAWING_OFF,
 	DRAWING_ADD,
@@ -55,6 +58,7 @@ var _note_drawing_mode: DrawingMode = DrawingMode.DRAWING_OFF
 func _ready() -> void:
 	set_physics_process(false)
 	
+	_update_gutter_size()
 	_update_song_sizes()
 	_update_playback_cursor()
 	_edit_current_pattern()
@@ -62,6 +66,10 @@ func _ready() -> void:
 	resized.connect(_update_song_sizes)
 	resized.connect(_update_playback_cursor)
 	resized.connect(_update_whole_grid)
+
+	_gutter.resized.connect(_update_song_sizes)
+	_gutter.resized.connect(_update_playback_cursor)
+	_gutter.resized.connect(_update_whole_grid)
 	
 	mouse_entered.connect(_show_note_cursor)
 	mouse_exited.connect(_hide_note_cursor)
@@ -74,6 +82,8 @@ func _ready() -> void:
 	if not Engine.is_editor_hint():
 		Controller.help_manager.reference_node(HelpManager.StepNodeRef.PATTERN_EDITOR_NOTEMAP, get_global_available_rect)
 		Controller.help_manager.reference_node(HelpManager.StepNodeRef.PATTERN_EDITOR_SCROLLBAR, _scrollbar.get_global_rect)
+		
+		Controller.settings_manager.note_format_changed.connect(_update_gutter_size)
 		
 		Controller.song_loaded.connect(_update_song_sizes)
 		Controller.song_loaded.connect(_edit_current_pattern)
@@ -468,13 +478,11 @@ func _update_grid_layout() -> void:
 		var note := NoteRow.new()
 		note.note_index = note_index
 		note.label = Note.get_note_name(note_in_key)
-		note.sharp = false
+		note.sharp = Note.is_note_sharp(note_in_key)
 		note.position = origin - Vector2(0, row_index * note_height)
 		note.grid_position = note.position + available_rect.position
 		note.label_position = note.position + Vector2(0, -6)
 
-		if note.label.ends_with("#"):
-			note.sharp = true
 		if drumkit_instrument:
 			note.label = drumkit_instrument.get_note_name(note_index)
 			note.sharp = (note_index + 1) % 2
@@ -558,6 +566,18 @@ func _update_active_notes() -> void:
 	# Update children with the new data.
 	_overlay.active_notes = _active_notes
 	_overlay.queue_redraw()
+
+
+func _update_gutter_size() -> void:
+	if Engine.is_editor_hint():
+		_gutter.custom_minimum_size.x = GUTTER_CDEFGAB_SIZE
+		return
+	
+	var note_format := Controller.settings_manager.get_note_format()
+	if note_format == SettingsManager.NoteFormat.FORMAT_DOREMI:
+		_gutter.custom_minimum_size.x = GUTTER_DOREMI_SIZE
+	else:
+		_gutter.custom_minimum_size.x = GUTTER_CDEFGAB_SIZE
 
 
 # Note cursor and drawing.

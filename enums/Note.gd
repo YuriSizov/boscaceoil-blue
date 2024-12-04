@@ -20,30 +20,31 @@ const NOTE_AS := 10
 const NOTE_B  := 11
 const MAX     := 12
 
-const _note_name_map := {
-	NOTE_C:  "C",
-	NOTE_CS: "C#",
-	NOTE_D:  "D",
-	NOTE_DS: "D#",
-	NOTE_E:  "E",
-	NOTE_F:  "F",
-	NOTE_FS: "F#",
-	NOTE_G:  "G",
-	NOTE_GS: "G#",
-	NOTE_A:  "A",
-	NOTE_AS: "A#",
-	NOTE_B:  "B",
-}
+# We don't expect the note enum to change, so we just assume the same order here, for compactness.
+const _note_name_map_cdefgab := [ "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" ]
+const _note_name_map_doremi :=  [ "Do", "Do#", "Re", "Re#", "Mi", "Fa", "Fa#", "Sol", "Sol#", "La", "La#", "Si" ]
+const _note_name_map_mml :=     [ "c", "c+", "d", "d+", "e", "f", "f+", "g", "g+", "a", "a+", "b" ]
 
 
 static func get_note_name(note: int) -> String:
 	var normalized := note % MAX
-	return _note_name_map[normalized]
+	
+	var note_format := -1
+	if not Engine.is_editor_hint():
+		note_format = Controller.settings_manager.get_note_format()
+	
+	match note_format:
+		SettingsManager.NoteFormat.FORMAT_CDEFGAB:
+			return _note_name_map_cdefgab[normalized]
+		SettingsManager.NoteFormat.FORMAT_DOREMI:
+			return _note_name_map_doremi[normalized]
+	
+	return _note_name_map_cdefgab[normalized]
 
 
 static func get_note_mml(note: int) -> String:
 	var normalized := note % MAX
-	return _note_name_map[normalized].to_lower().replace("#", "+")
+	return _note_name_map_mml[normalized]
 
 
 static func get_note_octave(note: int) -> int:

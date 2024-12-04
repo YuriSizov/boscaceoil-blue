@@ -117,7 +117,7 @@ theme_type_variation = &"PatternSettingsPickerPanel"
 [node name="KeyPicker" parent="PatternSettings/PropertyBar/PickerPanel3" instance=ExtResource("3_g46lg")]
 unique_name_in_owner = true
 auto_translate_mode = 1
-custom_minimum_size = Vector2(70, 0)
+custom_minimum_size = Vector2(90, 0)
 layout_mode = 2
 direction = 2
 placeholder_text = "K"

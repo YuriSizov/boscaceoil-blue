@@ -12,12 +12,14 @@ extends MarginContainer
 
 @onready var _buffer_size_picker: OptionPicker = %BufferPicker
 @onready var _gui_scale_picker: OptionPicker = %GUIScalePicker
+@onready var _note_format_picker: OptionPicker = %NoteFormatPicker
 
 
 func _ready() -> void:
 	_populate_effect_options()
 	_populate_buffer_size_options()
 	_populate_gui_scale_options()
+	_populate_note_format_options()
 	
 	_effect_picker.selected.connect(_change_effect)
 	_effect_value_slider.changed.connect(_change_effect)
@@ -25,6 +27,7 @@ func _ready() -> void:
 	
 	_buffer_size_picker.selected.connect(_change_buffer_size)
 	_gui_scale_picker.selected.connect(_change_gui_scale)
+	_note_format_picker.selected.connect(_change_note_format)
 	
 	if not Engine.is_editor_hint():
 		_update_song_widgets()
@@ -117,11 +120,34 @@ func _populate_gui_scale_options() -> void:
 	_gui_scale_picker.set_selected(selected_item)
 
 
+func _populate_note_format_options() -> void:
+	var selected_item: OptionListPopup.Item = null
+	
+	for key: String in SettingsManager.NoteFormat:
+		var value: int = SettingsManager.NoteFormat[key]
+		
+		var item := OptionListPopup.Item.new()
+		item.id = value
+		item.text = Controller.settings_manager.get_note_format_text(value)
+		
+		if not selected_item:
+			selected_item = item
+		
+		_note_format_picker.options.push_back(item)
+	
+	_note_format_picker.commit_options()
+	_note_format_picker.set_selected(selected_item)
+
+
 func _restore_app_settings() -> void:
+	# Buffer size.
+	
 	for item: OptionListPopup.Item in _buffer_size_picker.options:
 		if item.id == Controller.settings_manager.get_buffer_size():
 			_buffer_size_picker.set_selected(item)
 			break
+	
+	# GUI scale.
 	
 	var gui_scale_selected := false
 	for item: OptionListPopup.Item in _gui_scale_picker.options:
@@ -142,6 +168,13 @@ func _restore_app_settings() -> void:
 		_gui_scale_picker.options.push_back(item)
 		_gui_scale_picker.commit_options()
 		_gui_scale_picker.set_selected(item)
+	
+	# Note format.
+	
+	for item: OptionListPopup.Item in _note_format_picker.options:
+		if item.id == Controller.settings_manager.get_note_format():
+			_note_format_picker.set_selected(item)
+			break
 
 
 func _change_buffer_size() -> void:
@@ -150,3 +183,7 @@ func _change_buffer_size() -> void:
 
 func _change_gui_scale() -> void:
 	Controller.settings_manager.set_gui_scale(_gui_scale_picker.get_selected().id)
+
+
+func _change_note_format() -> void:
+	Controller.settings_manager.set_note_format(_note_format_picker.get_selected().id)

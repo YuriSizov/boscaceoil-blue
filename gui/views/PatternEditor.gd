@@ -40,6 +40,8 @@ func _ready() -> void:
 		Controller.help_manager.reference_node(HelpManager.StepNodeRef.PATTERN_EDITOR_NOTE_SHIFTER, _get_global_note_shifter_rect)
 		Controller.help_manager.reference_node(HelpManager.StepNodeRef.PATTERN_EDITOR_RECORD_BUTTON, _get_global_record_instrument_rect)
 		
+		Controller.settings_manager.note_format_changed.connect(_update_key_options)
+		
 		Controller.song_loaded.connect(_edit_current_pattern)
 		Controller.song_pattern_changed.connect(_edit_current_pattern)
 		Controller.song_instrument_created.connect(_update_pattern_instrument)
@@ -105,7 +107,7 @@ func _update_key_options() -> void:
 		_key_picker.options.push_back(item)
 	
 	_key_picker.commit_options()
-	_scale_picker.set_selected(selected_item)
+	_key_picker.set_selected(selected_item)
 
 
 func _edit_current_pattern() -> void:
