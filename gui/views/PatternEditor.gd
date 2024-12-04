@@ -200,6 +200,9 @@ func _change_instrument() -> void:
 		
 		state_context.key = reference_pattern.key # When changing to a drumkit, this is reset.
 		state_context.affected = reference_pattern.change_instrument(instrument_idx, pattern_instrument)
+		
+		if not state_context.affected.is_empty():
+			Controller.update_status_notes_dropped(state_context.affected.size())
 	)
 	pattern_state.add_undo_action(func() -> void:
 		var reference_pattern := Controller.current_song.patterns[pattern_state.reference_id]
@@ -231,6 +234,9 @@ func _change_scale() -> void:
 	pattern_state.add_do_action(func() -> void:
 		var reference_pattern := Controller.current_song.patterns[pattern_state.reference_id]
 		state_context.affected = reference_pattern.change_scale(scale_id)
+		
+		if not state_context.affected.is_empty():
+			Controller.update_status_notes_dropped(state_context.affected.size())
 	)
 	pattern_state.add_undo_action(func() -> void:
 		var reference_pattern := Controller.current_song.patterns[pattern_state.reference_id]

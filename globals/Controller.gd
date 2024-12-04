@@ -281,6 +281,16 @@ func update_status(message: String, level: StatusLevel = StatusLevel.INFO) -> vo
 	status_updated.emit(level, message)
 
 
+func update_status_notes_dropped(dropped_amount: int) -> void:
+	if dropped_amount <= 0:
+		return
+	
+	if dropped_amount == 1:
+		update_status("%d NOTE WAS REMOVED (CTRL + Z TO UNDO)" % [ dropped_amount ], Controller.StatusLevel.WARNING)
+	else:
+		update_status("%d NOTES WERE REMOVED (CTRL + Z TO UNDO)" % [ dropped_amount ], Controller.StatusLevel.WARNING)
+
+
 # Song editing.
 
 func set_current_song(song: Song) -> void:
@@ -672,6 +682,8 @@ func delete_instrument(instrument_index: int) -> void:
 		state_context.reset_patterns_affected.clear()
 		state_context.shifted_patterns.clear()
 		
+		var total_affected_count := 0
+		
 		# Validate instruments in available patterns.
 		
 		# Note that we actually want the current pattern here, not the one that was current when we
@@ -683,10 +695,11 @@ func delete_instrument(instrument_index: int) -> void:
 			# If we deleted this instrument, set the pattern to the first available.
 			if pattern.instrument_idx == instrument_index:
 				state_context.reset_patterns_keys.push_back(pattern.key) # When changing to a drumkit, this is reset.
-
+				
 				var affected := pattern.change_instrument(0, current_song.instruments[0])
 				state_context.reset_patterns.push_back(pattern_idx)
 				state_context.reset_patterns_affected.push_back(affected)
+				total_affected_count += affected.size()
 				
 				if pattern_idx == current_pattern_index:
 					current_pattern_affected = true
@@ -700,6 +713,9 @@ func delete_instrument(instrument_index: int) -> void:
 					current_pattern_affected = true
 		
 		song_instrument_changed.emit()
+		
+		if total_affected_count > 0:
+			update_status_notes_dropped(total_affected_count)
 		
 		# Properly signal that the instrument has changed for the currently edited pattern.
 		if current_pattern_affected:
@@ -786,18 +802,24 @@ func _set_current_instrument_by_voice(voice_data: VoiceManager.VoiceData) -> voi
 		state_context.reset_patterns_keys.clear()
 		state_context.reset_patterns_affected.clear()
 		
+		var total_affected_count := 0
+		
 		# Validate instruments in available patterns.
 		for pattern_idx in current_song.patterns.size():
 			var pattern := current_song.patterns[pattern_idx]
 			
 			if pattern.instrument_idx == instrument_idx:
 				state_context.reset_patterns_keys.push_back(pattern.key) # When changing to a drumkit, this is reset.
-
+				
 				var affected := pattern.change_instrument(instrument_idx, instrument)
 				state_context.reset_patterns.push_back(pattern_idx)
 				state_context.reset_patterns_affected.push_back(affected)
-
+				total_affected_count += affected.size()
+		
 		song_instrument_changed.emit()
+		
+		if total_affected_count > 0:
+			update_status_notes_dropped(total_affected_count)
 	)
 	song_state.add_undo_action(func() -> void:
 		current_song.instruments[instrument_idx] = old_instrument
