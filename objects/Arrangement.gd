@@ -107,6 +107,10 @@ func get_copied_bar_range() -> Array[PackedInt32Array]:
 	return _copied_range_buffer
 
 
+func clear_copied_bar_range() -> void:
+	_copied_range_buffer.clear()
+
+
 func copy_bar_range(from_bar: int, to_bar: int) -> void:
 	var from_bar_index_ := ValueValidator.index(from_bar, BAR_NUMBER, "Arrangement: Cannot copy bars in a range starting from %d, index is outside of the valid range [%d, %d]." % [ from_bar, 0, BAR_NUMBER - 1 ])
 	var to_bar_index_ := ValueValidator.index(to_bar, BAR_NUMBER, "Arrangement: Cannot copy bars in a range ending at %d, index is outside of the valid range [%d, %d]." % [ to_bar, 0, BAR_NUMBER - 1 ])

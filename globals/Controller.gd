@@ -349,7 +349,7 @@ func _change_current_pattern(pattern_index: int, notify: bool = true, force: boo
 		song_pattern_changed.emit()
 
 
-func _disconnect_pattern(pattern_index: int) -> void:
+func _untrack_pattern_changes(pattern_index: int) -> void:
 	if not current_song || pattern_index >= current_song.patterns.size():
 		return
 	
@@ -454,7 +454,7 @@ func delete_pattern(pattern_index: int) -> void:
 	song_state.add_do_action(func() -> void:
 		# Delete the pattern itself from the list.
 		state_context.pattern = current_song.patterns[pattern_index]
-		_disconnect_pattern(pattern_index)
+		_untrack_pattern_changes(pattern_index)
 		current_song.remove_pattern(pattern_index)
 		
 		# There is nothing left, create a new one.
@@ -492,7 +492,7 @@ func delete_pattern(pattern_index: int) -> void:
 	song_state.add_undo_action(func() -> void:
 		# Delete the replacement pattern, if it was created.
 		if state_context.deleted_last:
-			_disconnect_pattern(0)
+			_untrack_pattern_changes(0)
 			current_song.remove_pattern(0)
 		
 		# Restore the original pattern.
@@ -512,7 +512,7 @@ func delete_pattern(pattern_index: int) -> void:
 
 
 func delete_pattern_nocheck(pattern_index: int) -> void:
-	_disconnect_pattern(pattern_index)
+	_untrack_pattern_changes(pattern_index)
 	current_song.remove_pattern(pattern_index)
 	
 	# Make sure the edited pattern is valid.

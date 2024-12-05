@@ -125,6 +125,13 @@ func remove_pattern(pattern_idx: int) -> void:
 	var pattern := patterns[pattern_idx]
 	patterns.remove_at(pattern_idx)
 	pattern_removed.emit(pattern)
+	
+	# When we remove patterns, the copied range may become invalid, so
+	# we clear it at this point. In theory, some changes can be recoverable,
+	# and we could adjust indices. But the case when the removed pattern
+	# is in the range is unclear. Should we recreate a pattern on paste?
+	# Keeping it simple until someone reports this as a problem.
+	arrangement.clear_copied_bar_range()
 
 
 # Instruments.
