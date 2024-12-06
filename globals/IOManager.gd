@@ -61,6 +61,8 @@ func create_new_song(silent: bool = false) -> void:
 func create_new_song_safe() -> void:
 	if Controller.current_song && Controller.current_song.is_dirty():
 		var unsaved_warning := Controller.get_info_popup()
+		if not unsaved_warning:
+			return # Popup is busy.
 		
 		unsaved_warning.title = "WARNING — Unsaved changes"
 		unsaved_warning.content = "Current song has [accent]UNSAVED CHANGES[/accent].\n\nAre you sure you want to create a new one?"
@@ -92,6 +94,8 @@ func load_ceol_song() -> void:
 func load_ceol_song_safe() -> void:
 	if Controller.current_song && Controller.current_song.is_dirty():
 		var unsaved_warning := Controller.get_info_popup()
+		if not unsaved_warning:
+			return # Popup is busy.
 		
 		unsaved_warning.title = "WARNING — Unsaved changes"
 		unsaved_warning.content = "Current song has [accent]UNSAVED CHANGES[/accent].\n\nAre you sure you want to load a different one?"
@@ -149,9 +153,11 @@ func _save_ceol_song_confirmed(path: String) -> void:
 	print("Successfully saved song to %s." % [ path ])
 
 
-func check_song_on_exit() -> void:
+func check_song_on_exit(always_confirm: bool = false) -> void:
 	if Controller.current_song && Controller.current_song.is_dirty():
-		var unsaved_warning := Controller.get_info_popup(true)
+		var unsaved_warning := Controller.get_info_popup()
+		if not unsaved_warning:
+			return # Popup is busy.
 		
 		unsaved_warning.title = "WARNING — Unsaved changes"
 		unsaved_warning.content = "Current song has [accent]UNSAVED CHANGES[/accent].\n\nAre you sure you want to quit?"
@@ -161,6 +167,21 @@ func check_song_on_exit() -> void:
 		)
 		
 		Controller.show_window_popup(unsaved_warning, Vector2(560, 190))
+		return
+	
+	if always_confirm:
+		var final_warning := Controller.get_info_popup()
+		if not final_warning:
+			return # Popup is busy.
+		
+		final_warning.title = "Quitting Bosca Ceoil"
+		final_warning.content = "Are you sure you want to quit?"
+		final_warning.add_button("Cancel", final_warning.close_popup)
+		final_warning.add_button("I'm sure!", func() -> void:
+			Controller.get_tree().quit()
+		)
+		
+		Controller.show_window_popup(final_warning, Vector2(420, 160))
 		return
 	
 	Controller.get_tree().quit()
@@ -182,6 +203,8 @@ func import_mid_song() -> void:
 func import_mid_song_safe() -> void:
 	if Controller.current_song && Controller.current_song.is_dirty():
 		var unsaved_warning := Controller.get_info_popup()
+		if not unsaved_warning:
+			return # Popup is busy.
 		
 		unsaved_warning.title = "WARNING — Unsaved changes"
 		unsaved_warning.content = "Current song has [accent]UNSAVED CHANGES[/accent].\n\nAre you sure you want to import a different one?"

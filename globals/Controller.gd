@@ -118,7 +118,7 @@ func _shortcut_input(event: InputEvent) -> void:
 		return
 	
 	if event.is_action_pressed("bosca_exit", false, true):
-		io_manager.check_song_on_exit()
+		io_manager.check_song_on_exit(true)
 	
 	elif event.is_action_pressed("bosca_playstop", false, true):
 		if music_player.is_playing():
@@ -133,6 +133,16 @@ func _shortcut_input(event: InputEvent) -> void:
 			music_player.pause_playback()
 		else:
 			music_player.start_playback()
+		
+		get_viewport().set_input_as_handled()
+	
+	elif event.is_action_pressed("bosca_new", false, true):
+		io_manager.create_new_song_safe()
+		
+		get_viewport().set_input_as_handled()
+	
+	elif event.is_action_pressed("bosca_open", false, true):
+		io_manager.load_ceol_song_safe()
 		
 		get_viewport().set_input_as_handled()
 	
@@ -235,7 +245,7 @@ func get_info_popup(override: bool = false) -> InfoPopup:
 	
 	if _info_popup.is_visible_in_tree():
 		if not override:
-			return
+			return null
 		
 		_info_popup.close_popup()
 	
@@ -250,6 +260,8 @@ func show_window_popup(popup: WindowPopup, popup_size: Vector2) -> void:
 
 func show_welcome_message() -> void:
 	var welcome_message := get_info_popup()
+	if not welcome_message:
+		return # Popup is busy.
 	
 	welcome_message.title = "WELCOME to Bosca Ceoil"
 	welcome_message.content = "Looks like this is your [accent]FIRST TIME[/accent]!\nWould you like a quick introduction?\n\n(You can access this tour later by clicking [accent]HELP[/accent].)"
