@@ -10,7 +10,7 @@ class_name WindowPopup extends PopupManager.PopupControl
 const DEFAULT_TITLE := "Information"
 const BUTTON_SCENE := preload("res://gui/widgets/SquishyButton.tscn")
 
-var title: String = DEFAULT_TITLE:
+@export var title: String = DEFAULT_TITLE:
 	set = set_title
 
 var _buttons: Array[SquishyButton] = []

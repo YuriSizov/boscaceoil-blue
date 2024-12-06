@@ -13,13 +13,7 @@ enum NavigationTarget {
 	ARRANGEMENT,
 	INSTRUMENT,
 	ADVANCED,
-	CREDITS,
-	THIRD_PARTY,
-	LEGACY_CREDITS,
 	GENERAL_HELP,
-	PATTERN_HELP,
-	ARRANGEMENT_HELP,
-	TIMELINE_HELP,
 }
 
 var _current_tab: int = 0
@@ -33,14 +27,8 @@ var _current_tab: int = 0
 @onready var _instrument_tab_button: Button = %InstrumentTab
 @onready var _advanced_tab_button: Button = %AdvancedTab
 
-@onready var _credits_tab_button: Button = %CreditsTab
-@onready var _thirdparty_tab_button: Button = %ThirdPartyTab
-@onready var _legacy_tab_button: Button = %LegacyTab
-
 @onready var _general_help_tab_button: Button = %GeneralHelpTab
-@onready var _pattern_help_tab_button: Button = %PatternHelpTab
-@onready var _arrangement_help_tab_button: Button = %ArrangementHelpTab
-@onready var _timeline_help_tab_button: Button = %TimelineHelpTab
+@onready var _navigation_filler: PanelContainer = %NavigationFiller
 
 # Menu collections.
 
@@ -50,16 +38,8 @@ var _current_tab: int = 0
 	_instrument_tab_button,
 	_advanced_tab_button,
 ]
-@onready var CREDITS_MENU: Array[Button] = [
-	_credits_tab_button,
-	_thirdparty_tab_button,
-	_legacy_tab_button,
-]
 @onready var HELP_MENU: Array[Button] = [
 	_general_help_tab_button,
-	_pattern_help_tab_button,
-	_arrangement_help_tab_button,
-	_timeline_help_tab_button,
 ]
 
 
@@ -102,8 +82,6 @@ func _navigate(target: NavigationTarget) -> void:
 	
 	if button in MAIN_MENU:
 		_update_menu_collection(MAIN_MENU)
-	elif button in CREDITS_MENU:
-		_update_menu_collection(CREDITS_MENU)
 	elif button in HELP_MENU:
 		_update_menu_collection(HELP_MENU)
 	
@@ -116,6 +94,8 @@ func _update_menu_collection(menu_buttons: Array[Button]) -> void:
 	
 	for button in menu_buttons:
 		button.visible = true
+	
+	_navigation_filler.visible = (menu_buttons.size() < 3)
 
 
 func _update_current_tab() -> void:

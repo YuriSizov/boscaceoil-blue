@@ -1,0 +1,471 @@
+[gd_scene load_steps=3 format=3 uid="uid://blh06bj8g5ei8"]
+
+[ext_resource type="PackedScene" uid="uid://brt3f2i74x70n" path="res://gui/widgets/popups/WindowPopup.tscn" id="1_ghnl1"]
+[ext_resource type="PackedScene" uid="uid://x2nsv2sot0hk" path="res://gui/widgets/LinkLabel.tscn" id="2_balfi"]
+
+[node name="CreditsPopup" instance=ExtResource("1_ghnl1")]
+custom_minimum_size = Vector2(720, 500)
+offset_right = -480.0
+offset_bottom = -400.0
+title = "Credits & License"
+
+[node name="TitleLabel" parent="Layout/TitleBar/TitleBox" index="0"]
+text = "Credits & License"
+
+[node name="ContentBox" type="VBoxContainer" parent="Layout/Content" index="0"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Layout/Content/ContentBox" index="0"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Layout/Content/ContentBox/ScrollContainer" index="0"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"HelpMarginContainer"
+
+[node name="Layout" type="VBoxContainer" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer" index="0"]
+layout_mode = 2
+
+[node name="Section" type="VBoxContainer" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout" index="0"]
+auto_translate_mode = 1
+layout_mode = 2
+theme_type_variation = &"CreditsSectionBox"
+
+[node name="MainBigTitle" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section" index="0"]
+auto_translate_mode = 1
+layout_mode = 2
+theme_type_variation = &"CreditsLabelHeaderPanel"
+text = "BOSCA CEOIL BLUE"
+
+[node name="FirstSpacer" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section" index="1"]
+layout_mode = 2
+
+[node name="MainList" type="VBoxContainer" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section" index="2"]
+auto_translate_mode = 1
+layout_mode = 2
+theme_type_variation = &"CreditsBox"
+
+[node name="Label" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section/MainList" index="0"]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabelHeader"
+text = "Provided under an MIT license"
+
+[node name="Label2" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section/MainList" index="1"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabel"
+text = "(c) 2024 Yuri Sizov and contributors"
+
+[node name="Spacer" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section/MainList" index="2"]
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="Label3" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section/MainList" index="3"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabelHeader"
+text = "Original Bosca Ceoil by Terry Cavanagh"
+
+[node name="LinkLabel" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section/MainList" index="4" instance=ExtResource("2_balfi")]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabelLink"
+text = "distractionware.com/"
+url = "https://distractionware.com/"
+
+[node name="Spacer" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section" index="3"]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+
+[node name="SupportList" type="VBoxContainer" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section" index="4"]
+auto_translate_mode = 1
+layout_mode = 2
+theme_type_variation = &"CreditsBox"
+
+[node name="SupportLine" type="HBoxContainer" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section/SupportList" index="0"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section/SupportList/SupportLine" index="0"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabelAccented"
+text = "Support the project!"
+
+[node name="LinkLabel" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section/SupportList/SupportLine" index="1" instance=ExtResource("2_balfi")]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_type_variation = &"CreditsLabelLink"
+text = "patreon.com/YuriSizov/"
+url = "https://patreon.com/YuriSizov"
+
+[node name="Spacer" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section/SupportList" index="1"]
+auto_translate_mode = 1
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="SupportLine2" type="HBoxContainer" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section/SupportList" index="2"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section/SupportList/SupportLine2" index="0"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabelAccented"
+text = "Report issues"
+
+[node name="LinkLabel" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section/SupportList/SupportLine2" index="1" instance=ExtResource("2_balfi")]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_type_variation = &"CreditsLabelLink"
+text = "github.com/YuriSizov/boscaceoil-blue/"
+url = "https://github.com/YuriSizov/boscaceoil-blue/issues"
+
+[node name="LastSpacer" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section" index="5"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+
+[node name="Section2" type="VBoxContainer" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout" index="1"]
+auto_translate_mode = 1
+layout_mode = 2
+theme_type_variation = &"CreditsSectionBox"
+
+[node name="ThirdPartyBigTitle" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2" index="0"]
+auto_translate_mode = 1
+layout_mode = 2
+theme_type_variation = &"CreditsLabelHeaderPanel"
+text = "THIRD PARTY"
+
+[node name="FirstSpacer" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2" index="1"]
+layout_mode = 2
+
+[node name="ThirdPartyList" type="VBoxContainer" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2" index="2"]
+auto_translate_mode = 1
+layout_mode = 2
+theme_type_variation = &"CreditsBox"
+
+[node name="Label" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2/ThirdPartyList" index="0"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabelHeader"
+text = "Made with Godot Engine"
+
+[node name="Label2" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2/ThirdPartyList" index="1"]
+auto_translate_mode = 1
+layout_mode = 2
+theme_type_variation = &"CreditsLabel"
+text = "(c) 2014-present Godot Engine contributors.
+(c) 2007-2014 Juan Linietsky, Ariel Manzur."
+autowrap_mode = 2
+
+[node name="LinkLabel" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2/ThirdPartyList" index="2" instance=ExtResource("2_balfi")]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabelLink"
+text = "godotengine.org/"
+url = "https://godotengine.org"
+
+[node name="Spacer" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2/ThirdPartyList" index="3"]
+auto_translate_mode = 1
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="Label5" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2/ThirdPartyList" index="4"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabelHeader"
+text = "GDSiON software synthesizer for Godot"
+
+[node name="Label6" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2/ThirdPartyList" index="5"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabel"
+text = "(c) 2024 Yuri Sizov and contributors"
+
+[node name="LinkLabel2" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2/ThirdPartyList" index="6" instance=ExtResource("2_balfi")]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabelLink"
+text = "github.com/YuriSizov/gdsion/"
+url = "https://github.com/YuriSizov/gdsion"
+
+[node name="Spacer2" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2/ThirdPartyList" index="7"]
+auto_translate_mode = 1
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="Label3" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2/ThirdPartyList" index="8"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabelHeader"
+text = "FFF Aquarius font"
+
+[node name="Label4" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2/ThirdPartyList" index="9"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabel"
+text = "FontsForFlash & Randy Caldwell"
+
+[node name="LastSpacer" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2" index="3"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+
+[node name="Section3" type="VBoxContainer" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout" index="2"]
+auto_translate_mode = 1
+layout_mode = 2
+theme_type_variation = &"CreditsSectionBox"
+
+[node name="LegacyBigTitle" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3" index="0"]
+auto_translate_mode = 1
+layout_mode = 2
+theme_type_variation = &"CreditsLabelHeaderPanel"
+text = "LEGACY CREDITS"
+
+[node name="FirstSpacer" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3" index="1"]
+layout_mode = 2
+
+[node name="LegacyList" type="VBoxContainer" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3" index="2"]
+auto_translate_mode = 1
+layout_mode = 2
+theme_type_variation = &"CreditsBox"
+
+[node name="Label" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/LegacyList" index="0"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabel"
+text = "Original Bosca Ceoil was made possible thanks to these
+contributors!"
+
+[node name="Spacer" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/LegacyList" index="1"]
+auto_translate_mode = 1
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="CreditLine" type="HBoxContainer" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/LegacyList" index="2"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/LegacyList/CreditLine" index="0"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabelHeader"
+text = "Rob Hunter"
+
+[node name="Filler" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/LegacyList/CreditLine" index="1"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label3" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/LegacyList/CreditLine" index="2"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabel"
+text = "XM, MML exporters"
+
+[node name="LinkLabel" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/LegacyList" index="3" instance=ExtResource("2_balfi")]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabelLink"
+text = "about.me/rjhunter/"
+url = "https://about.me/rjhunter"
+
+[node name="Spacer2" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/LegacyList" index="4"]
+auto_translate_mode = 1
+visible = false
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="CreditLine2" type="HBoxContainer" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/LegacyList" index="5"]
+auto_translate_mode = 1
+layout_mode = 2
+
+[node name="Label4" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/LegacyList/CreditLine2" index="0"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabelHeader"
+text = "Damien L"
+
+[node name="Filler" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/LegacyList/CreditLine2" index="1"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label5" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/LegacyList/CreditLine2" index="2"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabel"
+text = "Linux port"
+
+[node name="LinkLabel2" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/LegacyList" index="6" instance=ExtResource("2_balfi")]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabelLink"
+text = "uncovergame.com/"
+url = "https://uncovergame.com/"
+
+[node name="Spacer3" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/LegacyList" index="7"]
+auto_translate_mode = 1
+visible = false
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="CreditLine6" type="HBoxContainer" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/LegacyList" index="8"]
+auto_translate_mode = 1
+layout_mode = 2
+
+[node name="Label6" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/LegacyList/CreditLine6" index="0"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabelHeader"
+text = "Stephen Lavelle"
+
+[node name="Filler" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/LegacyList/CreditLine6" index="1"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label7" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/LegacyList/CreditLine6" index="2"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabel"
+text = "Swing function"
+
+[node name="LinkLabel4" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/LegacyList" index="9" instance=ExtResource("2_balfi")]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabelLink"
+text = "increpare.com/"
+url = "https://increpare.com/"
+
+[node name="Spacer4" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/LegacyList" index="10"]
+auto_translate_mode = 1
+visible = false
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="CreditLine3" type="HBoxContainer" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/LegacyList" index="11"]
+auto_translate_mode = 1
+layout_mode = 2
+
+[node name="Label6" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/LegacyList/CreditLine3" index="0"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabelHeader"
+text = "Chris Kim"
+
+[node name="Filler" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/LegacyList/CreditLine3" index="1"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label7" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/LegacyList/CreditLine3" index="2"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabel"
+text = "Online version"
+
+[node name="LinkLabel3" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/LegacyList" index="12" instance=ExtResource("2_balfi")]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabelLink"
+text = "dy-dx.com/"
+url = "https://dy-dx.com/"
+
+[node name="Spacer5" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/LegacyList" index="13"]
+auto_translate_mode = 1
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="CreditLine4" type="HBoxContainer" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/LegacyList" index="14"]
+auto_translate_mode = 1
+layout_mode = 2
+
+[node name="Label8" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/LegacyList/CreditLine4" index="0"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabelHeader"
+text = "Ryusui"
+
+[node name="Filler" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/LegacyList/CreditLine4" index="1"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label9" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/LegacyList/CreditLine4" index="2"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabel"
+text = "Filepath memory"
+
+[node name="Spacer6" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/LegacyList" index="15"]
+auto_translate_mode = 1
+visible = false
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="CreditLine5" type="HBoxContainer" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/LegacyList" index="16"]
+auto_translate_mode = 1
+layout_mode = 2
+
+[node name="Label10" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/LegacyList/CreditLine5" index="0"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabelHeader"
+text = "thomcc"
+
+[node name="Filler" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/LegacyList/CreditLine5" index="1"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label11" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/LegacyList/CreditLine5" index="2"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabel"
+text = "Pattern editor fixes"
+
+[node name="LastSpacer" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3" index="3"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+
+[node name="ButtonBar" type="HBoxContainer" parent="Layout/Content/ContentBox" index="1"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"HBoxSpaced"
+alignment = 2

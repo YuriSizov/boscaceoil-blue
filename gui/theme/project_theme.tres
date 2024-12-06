@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=72 format=3 uid="uid://chpsnl8o0raaf"]
+[gd_resource type="Theme" load_steps=81 format=3 uid="uid://chpsnl8o0raaf"]
 
 [ext_resource type="Texture2D" uid="uid://n8jw4gat8tg7" path="res://assets/icons/arrow_down_small.png" id="1_1ij5d"]
 [ext_resource type="Texture2D" uid="uid://d2aswndmtik56" path="res://assets/overlap-dither.png" id="1_4kypt"]
@@ -52,6 +52,15 @@ shadow_color = Color(0, 0, 0, 1)
 shadow_size = 2
 shadow_offset = Vector2(2, 2)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6nexf"]
+content_margin_left = 8.0
+content_margin_top = 3.0
+content_margin_right = 8.0
+content_margin_bottom = 3.0
+bg_color = Color(0.203922, 0.258824, 0.27451, 1)
+expand_margin_left = 4.0
+expand_margin_right = 8.0
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lg4yk"]
 content_margin_left = 24.0
 content_margin_top = 3.0
@@ -88,6 +97,10 @@ content_margin_top = 2.0
 content_margin_right = 1.0
 content_margin_bottom = 2.0
 bg_color = Color(0.415113, 0.478785, 0.504881, 1)
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_rqga1"]
+color = Color(0.203922, 0.258824, 0.27451, 1)
+thickness = 3
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_520ht"]
 
@@ -176,6 +189,9 @@ content_margin_top = 1.0
 content_margin_right = 24.0
 content_margin_bottom = 1.0
 bg_color = Color(0.313726, 0.396078, 0.415686, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_odn4q"]
+bg_color = Color(0.203922, 0.258824, 0.27451, 1)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_lgaqy"]
 content_margin_left = 8.0
@@ -277,6 +293,9 @@ content_margin_top = 4.0
 content_margin_right = 4.0
 content_margin_bottom = 4.0
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3pybi"]
+bg_color = Color(0.313726, 0.396078, 0.415686, 1)
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_kv1pc"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3fj3y"]
@@ -369,6 +388,25 @@ content_margin_right = 12.0
 content_margin_bottom = 1.0
 bg_color = Color(0.8, 0.533333, 0, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dp3tg"]
+bg_color = Color(0.203922, 0.258824, 0.27451, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yn8qv"]
+bg_color = Color(0.203922, 0.258824, 0.27451, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0noio"]
+bg_color = Color(0.203922, 0.258824, 0.27451, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3jpdy"]
+content_margin_left = 8.0
+content_margin_right = 8.0
+bg_color = Color(0.427451, 0.521569, 0.552941, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bivqn"]
+content_margin_left = 8.0
+content_margin_right = 8.0
+bg_color = Color(0.427451, 0.521569, 0.552941, 1)
+
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_m646a"]
 thickness = 3
 vertical = true
@@ -427,7 +465,7 @@ Button/styles/hover = SubResource("StyleBoxFlat_bd2w5")
 Button/styles/normal = SubResource("StyleBoxFlat_5mfai")
 Button/styles/pressed = SubResource("StyleBoxFlat_2x6kt")
 CreditsBox/base_type = &"VBoxContainer"
-CreditsBox/constants/separation = 3
+CreditsBox/constants/separation = 4
 CreditsLabel/base_type = &"Label"
 CreditsLabel/colors/font_color = Color(0.737255, 0.784314, 0.8, 1)
 CreditsLabel/colors/font_shadow_color = Color(0, 0, 0, 1)
@@ -435,8 +473,12 @@ CreditsLabelAccented/base_type = &"CreditsLabel"
 CreditsLabelAccented/colors/font_color = Color(1, 1, 0, 1)
 CreditsLabelHeader/base_type = &"CreditsLabel"
 CreditsLabelHeader/colors/font_color = Color(1, 1, 1, 1)
+CreditsLabelHeaderPanel/base_type = &"CreditsLabelHeader"
+CreditsLabelHeaderPanel/styles/normal = SubResource("StyleBoxFlat_6nexf")
 CreditsLabelLink/base_type = &"CreditsLabel"
 CreditsLabelLink/colors/font_color = Color(0.524228, 0.680104, 0.824375, 1)
+CreditsSectionBox/base_type = &"VBoxContainer"
+CreditsSectionBox/constants/separation = 10
 DeleteArea/base_type = &"Label"
 DeleteArea/colors/hover_color = Color(0.890395, 0.382085, 0.507052, 0.235294)
 DeleteArea/styles/normal = SubResource("StyleBoxFlat_lg4yk")
@@ -451,6 +493,12 @@ FullscreenButton/styles/pressed = SubResource("StyleBoxFlat_dqdf2")
 HBoxContainer/constants/separation = 0
 HBoxSpaced/base_type = &"HBoxContainer"
 HBoxSpaced/constants/separation = 20
+HSeparator/styles/separator = SubResource("StyleBoxLine_rqga1")
+HelpMarginContainer/base_type = &"MarginContainer"
+HelpMarginContainer/constants/margin_bottom = 8
+HelpMarginContainer/constants/margin_left = 12
+HelpMarginContainer/constants/margin_right = 16
+HelpMarginContainer/constants/margin_top = 8
 HighlightManager/colors/highlight_bevel_color = Color(0.891203, 0.891203, 0, 1)
 HighlightManager/colors/highlight_color = Color(1, 1, 0, 1)
 HighlightManager/constants/highlight_thickness = 4
@@ -510,6 +558,8 @@ NavigationButton/styles/pressed = SubResource("StyleBoxFlat_llx58")
 NavigationLabel/base_type = &"Label"
 NavigationLabel/colors/font_shadow_color = Color(0, 0, 0, 0.784314)
 NavigationLabel/font_sizes/font_size = 16
+NavigationPanel/base_type = &"PanelContainer"
+NavigationPanel/styles/panel = SubResource("StyleBoxFlat_odn4q")
 NoteMap/colors/active_note_bevel_color = Color(1, 0.72549, 0.372549, 1)
 NoteMap/colors/active_note_color = Color(1, 1, 0.752941, 1)
 NoteMap/colors/gutter_color = Color(0.427451, 0.521569, 0.552941, 1)
@@ -597,6 +647,7 @@ RichTextLabel/colors/default_color = Color(1, 1, 1, 1)
 RichTextLabel/colors/font_shadow_color = Color(0, 0, 0, 1)
 RichTextLabel/constants/shadow_offset_x = 2
 RichTextLabel/constants/shadow_offset_y = 1
+ScrollContainer/styles/panel = SubResource("StyleBoxFlat_3pybi")
 ScrollbarButton/base_type = &"Button"
 ScrollbarButton/styles/disabled = SubResource("StyleBoxEmpty_kv1pc")
 ScrollbarButton/styles/focus = SubResource("StyleBoxEmpty_3fj3y")
@@ -624,6 +675,11 @@ ToastMessageWarning/styles/normal = SubResource("StyleBoxFlat_sndmm")
 VBoxContainer/constants/separation = 0
 VBoxSpaced/base_type = &"VBoxContainer"
 VBoxSpaced/constants/separation = 20
+VScrollBar/styles/grabber = SubResource("StyleBoxFlat_dp3tg")
+VScrollBar/styles/grabber_highlight = SubResource("StyleBoxFlat_yn8qv")
+VScrollBar/styles/grabber_pressed = SubResource("StyleBoxFlat_0noio")
+VScrollBar/styles/scroll = SubResource("StyleBoxFlat_3jpdy")
+VScrollBar/styles/scroll_focus = SubResource("StyleBoxFlat_bivqn")
 VSeparator/styles/separator = SubResource("StyleBoxLine_m646a")
 WidgetPanel/base_type = &"PanelContainer"
 WidgetPanel/styles/panel = SubResource("StyleBoxFlat_cjrsp")

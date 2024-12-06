@@ -101,10 +101,11 @@ theme_type_variation = &"CreditsBox"
 
 [node name="TitleLabel" type="Label" parent="Layout/RightPage/Layout"]
 auto_translate_mode = 1
+visible = false
 layout_mode = 2
 size_flags_horizontal = 4
 theme_type_variation = &"CreditsLabelHeader"
-text = "General shortcuts"
+text = "Basic shortcuts"
 
 [node name="ShortcutList" type="VBoxContainer" parent="Layout/RightPage/Layout"]
 auto_translate_mode = 1
@@ -116,38 +117,47 @@ layout_mode = 2
 key_text = "bosca_playstop"
 description_text = "Play/Stop"
 
-[node name="ShortcutLine7" parent="Layout/RightPage/Layout/ShortcutList" instance=ExtResource("3_1pvp8")]
-layout_mode = 2
-key_text = "bosca_pause"
-description_text = "Pause/Resume"
-
-[node name="Spacer" type="Control" parent="Layout/RightPage/Layout/ShortcutList"]
-custom_minimum_size = Vector2(0, 6)
-layout_mode = 2
-
 [node name="ShortcutLine5" parent="Layout/RightPage/Layout/ShortcutList" instance=ExtResource("3_1pvp8")]
 layout_mode = 2
 key_text = "ui_undo"
 description_text = "Undo last action"
-
-[node name="ShortcutLine6" parent="Layout/RightPage/Layout/ShortcutList" instance=ExtResource("3_1pvp8")]
-layout_mode = 2
-key_text = "ui_redo"
-description_text = "Redo last action"
 
 [node name="ShortcutLine2" parent="Layout/RightPage/Layout/ShortcutList" instance=ExtResource("3_1pvp8")]
 layout_mode = 2
 key_text = "bosca_save"
 description_text = "Save current song"
 
-[node name="ShortcutLine3" parent="Layout/RightPage/Layout/ShortcutList" instance=ExtResource("3_1pvp8")]
+[node name="Spacer2" type="Control" parent="Layout/RightPage/Layout"]
+auto_translate_mode = 1
+custom_minimum_size = Vector2(0, 6)
 layout_mode = 2
-key_text = "bosca_save_as"
-description_text = "Save as a copy"
+size_flags_horizontal = 0
+
+[node name="Label2" type="Label" parent="Layout/RightPage/Layout"]
+auto_translate_mode = 1
+custom_minimum_size = Vector2(460, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"CreditsLabelHeader"
+text = "...And there are many more!"
+horizontal_alignment = 1
+
+[node name="Spacer3" type="Control" parent="Layout/RightPage/Layout"]
+auto_translate_mode = 1
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="ShowShortcutsButton" parent="Layout/RightPage/Layout" instance=ExtResource("2_y870o")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "SHOW ALL"
 
 [node name="Filler" type="Control" parent="Layout/RightPage/Layout"]
 auto_translate_mode = 1
-custom_minimum_size = Vector2(0, 6)
+custom_minimum_size = Vector2(0, 12)
 layout_mode = 2
 size_flags_vertical = 3
 
@@ -157,6 +167,9 @@ custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 8
 text = "BACK"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Layout/RightPage/Layout"]
+layout_mode = 2
 
 [node name="FillerEnd" type="Control" parent="Layout"]
 auto_translate_mode = 1

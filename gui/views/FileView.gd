@@ -6,6 +6,8 @@
 
 extends MarginContainer
 
+const CREDITS_POPUP_SCENE := preload("res://gui/widgets/popups/CreditsPopup.tscn")
+
 enum ImportOption {
 	IMPORT_MID,
 }
@@ -18,6 +20,8 @@ enum ExportOption {
 }
 
 var _subtitle_easter_egg: bool = false
+
+var _credits_popup: WindowPopup = null
 
 @onready var _version_number: Label = %VersionNumber
 @onready var _version_subtitle: Label = %VersionSubtitle
@@ -40,14 +44,20 @@ var _subtitle_easter_egg: bool = false
 @onready var _bpm_stepper: Stepper = %BPMStepper
 
 
+func _init() -> void:
+	_credits_popup = CREDITS_POPUP_SCENE.instantiate()
+
+
 func _ready() -> void:
+	_credits_popup.add_button("Close", _credits_popup.close_popup)
+	
 	_update_version_flair()
 	_populate_import_options()
 	_populate_export_options()
 	
 	_version_subtitle.gui_input.connect(_subtitle_gui_input)
 	
-	_credits_button.pressed.connect(Controller.navigate_to.bind(Menu.NavigationTarget.CREDITS))
+	_credits_button.pressed.connect(_show_credits)
 	_help_button.pressed.connect(Controller.navigate_to.bind(Menu.NavigationTarget.GENERAL_HELP))
 	
 	_play_button.pressed.connect(Controller.music_player.start_playback)
@@ -69,6 +79,12 @@ func _ready() -> void:
 		Controller.song_loaded.connect(_update_song_steppers)
 		Controller.song_sizes_changed.connect(_update_song_steppers)
 		Controller.song_bpm_changed.connect(_update_song_steppers)
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_PREDELETE:
+		if is_instance_valid(_credits_popup):
+			_credits_popup.queue_free()
 
 
 func _subtitle_gui_input(event: InputEvent) -> void:
@@ -133,6 +149,11 @@ func _update_song_steppers() -> void:
 	_pattern_size_stepper.value = Controller.current_song.pattern_size
 	_bar_size_stepper.value = Controller.current_song.bar_size
 	_bpm_stepper.value = Controller.current_song.bpm
+
+
+func _show_credits() -> void:
+	# Extra size to compensate for some things.
+	Controller.show_window_popup(_credits_popup, _credits_popup.custom_minimum_size + Vector2(10, 10))
 
 
 # Import and export.

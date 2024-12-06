@@ -1,0 +1,456 @@
+[gd_scene load_steps=3 format=3 uid="uid://bf0mew4xbsbvx"]
+
+[ext_resource type="PackedScene" uid="uid://brt3f2i74x70n" path="res://gui/widgets/popups/WindowPopup.tscn" id="1_vfevv"]
+[ext_resource type="PackedScene" uid="uid://cinwiem08gkak" path="res://gui/views/help_view/ShortcutLine.tscn" id="2_1wrnf"]
+
+[node name="ShortcutHelpPopup" instance=ExtResource("1_vfevv")]
+custom_minimum_size = Vector2(720, 500)
+offset_right = -480.0
+offset_bottom = -400.0
+title = "Bosca Ceoil Shortcuts"
+
+[node name="TitleLabel" parent="Layout/TitleBar/TitleBox" index="0"]
+text = "Bosca Ceoil Shortcuts"
+
+[node name="ContentBox" type="VBoxContainer" parent="Layout/Content" index="0"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Layout/Content/ContentBox" index="0"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Layout/Content/ContentBox/ScrollContainer" index="0"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"HelpMarginContainer"
+
+[node name="Layout" type="VBoxContainer" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer" index="0"]
+layout_mode = 2
+
+[node name="Section" type="VBoxContainer" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout" index="0"]
+auto_translate_mode = 1
+layout_mode = 2
+theme_type_variation = &"CreditsSectionBox"
+
+[node name="GeneralBigTitle" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section" index="0"]
+auto_translate_mode = 1
+layout_mode = 2
+theme_type_variation = &"CreditsLabelHeaderPanel"
+text = "GENERAL"
+
+[node name="GeneralTitle" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section" index="1"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"CreditsLabelHeader"
+text = "General shortcuts"
+
+[node name="GeneralList" type="VBoxContainer" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section" index="2"]
+auto_translate_mode = 1
+layout_mode = 2
+theme_type_variation = &"CreditsBox"
+
+[node name="ShortcutLine" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section/GeneralList" index="0" instance=ExtResource("2_1wrnf")]
+layout_mode = 2
+key_text = "bosca_new"
+description_text = "Create new song"
+
+[node name="ShortcutLine2" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section/GeneralList" index="1" instance=ExtResource("2_1wrnf")]
+layout_mode = 2
+key_text = "bosca_open"
+description_text = "Load existing song"
+
+[node name="ShortcutLine3" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section/GeneralList" index="2" instance=ExtResource("2_1wrnf")]
+layout_mode = 2
+key_text = "bosca_save"
+description_text = "Save current song"
+
+[node name="ShortcutLine4" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section/GeneralList" index="3" instance=ExtResource("2_1wrnf")]
+layout_mode = 2
+key_text = "bosca_save_as"
+description_text = "Save as a copy"
+
+[node name="Spacer" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section/GeneralList" index="4"]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+
+[node name="ShortcutLine5" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section/GeneralList" index="5" instance=ExtResource("2_1wrnf")]
+layout_mode = 2
+key_text = "ui_undo"
+description_text = "Undo last action"
+
+[node name="ShortcutLine6" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section/GeneralList" index="6" instance=ExtResource("2_1wrnf")]
+layout_mode = 2
+key_text = "ui_redo"
+description_text = "Redo last action"
+
+[node name="Spacer2" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section/GeneralList" index="7"]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+
+[node name="ShortcutLine7" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section/GeneralList" index="8" instance=ExtResource("2_1wrnf")]
+layout_mode = 2
+key_text = "bosca_exit"
+description_text = "Quit Bosca Ceoil"
+
+[node name="Spacer" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section" index="3"]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+
+[node name="PlaybackTitle" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section" index="4"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"CreditsLabelHeader"
+text = "Playback"
+
+[node name="PlaybackList" type="VBoxContainer" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section" index="5"]
+auto_translate_mode = 1
+layout_mode = 2
+theme_type_variation = &"CreditsBox"
+
+[node name="ShortcutLine" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section/PlaybackList" index="0" instance=ExtResource("2_1wrnf")]
+layout_mode = 2
+key_text = "bosca_playstop"
+description_text = "Play/Stop"
+
+[node name="ShortcutLine2" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section/PlaybackList" index="1" instance=ExtResource("2_1wrnf")]
+layout_mode = 2
+key_text = "bosca_pause"
+description_text = "Pause/Resume"
+
+[node name="LastSpacer" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section" index="6"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+
+[node name="Separator" type="HSeparator" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout" index="1"]
+visible = false
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+
+[node name="Section2" type="VBoxContainer" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout" index="2"]
+auto_translate_mode = 1
+layout_mode = 2
+theme_type_variation = &"CreditsSectionBox"
+
+[node name="PatternsBigTitle" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2" index="0"]
+auto_translate_mode = 1
+layout_mode = 2
+theme_type_variation = &"CreditsLabelHeaderPanel"
+text = "PATTERNS"
+
+[node name="PatternViewTitle2" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2" index="1"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"CreditsLabelHeader"
+text = "Pattern view"
+
+[node name="PatternViewList" type="VBoxContainer" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2" index="2"]
+auto_translate_mode = 1
+layout_mode = 2
+theme_type_variation = &"CreditsBox"
+
+[node name="ShortcutLine3" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2/PatternViewList" index="0" instance=ExtResource("2_1wrnf")]
+layout_mode = 2
+key_text = "MOUSE WHEEL"
+key_is_action = false
+description_text = "Scroll pattern view"
+
+[node name="ShortcutLine" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2/PatternViewList" index="1" instance=ExtResource("2_1wrnf")]
+layout_mode = 2
+key_text = "bosca_notemap_up"
+description_text = "Scroll it up"
+
+[node name="ShortcutLine2" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2/PatternViewList" index="2" instance=ExtResource("2_1wrnf")]
+layout_mode = 2
+key_text = "bosca_notemap_down"
+description_text = "Scroll it down"
+
+[node name="Spacer" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2/PatternViewList" index="3"]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2/PatternViewList" index="4"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabel"
+text = "DOUBLE CLICK on the scroll bar to center the pattern view!"
+
+[node name="Spacer" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2" index="3"]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+
+[node name="PatternDrawingTitle" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2" index="4"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"CreditsLabelHeader"
+text = "Pattern drawing"
+
+[node name="PatternDrawingList" type="VBoxContainer" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2" index="5"]
+auto_translate_mode = 1
+layout_mode = 2
+theme_type_variation = &"CreditsBox"
+
+[node name="ShortcutLine4" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2/PatternDrawingList" index="0" instance=ExtResource("2_1wrnf")]
+layout_mode = 2
+key_text = "LEFT CLICK"
+key_is_action = false
+description_text = "Draw a note"
+
+[node name="Label" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2/PatternDrawingList" index="1"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 8
+theme_type_variation = &"CreditsLabel"
+text = "(notes can partially overlap)"
+horizontal_alignment = 2
+
+[node name="ShortcutLine5" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2/PatternDrawingList" index="2" instance=ExtResource("2_1wrnf")]
+layout_mode = 2
+key_text = "RIGHT CLICK"
+key_is_action = false
+description_text = "Erase the note at the cursor"
+
+[node name="Spacer" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2/PatternDrawingList" index="3"]
+custom_minimum_size = Vector2(0, 8)
+layout_mode = 2
+
+[node name="ShortcutLine3" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2/PatternDrawingList" index="4" instance=ExtResource("2_1wrnf")]
+layout_mode = 2
+key_text = "CTRL + MOUSE WHEEL"
+key_is_action = false
+description_text = "Change cursor size"
+
+[node name="ShortcutLine" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2/PatternDrawingList" index="5" instance=ExtResource("2_1wrnf")]
+layout_mode = 2
+key_text = "bosca_notemap_cursor_bigger"
+description_text = "Make it bigger"
+
+[node name="ShortcutLine2" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2/PatternDrawingList" index="6" instance=ExtResource("2_1wrnf")]
+layout_mode = 2
+key_text = "bosca_notemap_cursor_smaller"
+description_text = "Make it smaller"
+
+[node name="LastSpacer" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2" index="6"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+
+[node name="Separator2" type="HSeparator" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout" index="3"]
+visible = false
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+
+[node name="Section3" type="VBoxContainer" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout" index="4"]
+auto_translate_mode = 1
+layout_mode = 2
+theme_type_variation = &"CreditsSectionBox"
+
+[node name="ArrangementBigTitle" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3" index="0"]
+auto_translate_mode = 1
+layout_mode = 2
+theme_type_variation = &"CreditsLabelHeaderPanel"
+text = "ARRANGEMENT"
+
+[node name="ArrangementGridTitle" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3" index="1"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"CreditsLabelHeader"
+text = "Arrangement grid"
+
+[node name="ArrangementGridList" type="VBoxContainer" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3" index="2"]
+auto_translate_mode = 1
+layout_mode = 2
+theme_type_variation = &"CreditsBox"
+
+[node name="ShortcutLine6" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/ArrangementGridList" index="0" instance=ExtResource("2_1wrnf")]
+layout_mode = 2
+key_text = "MOUSE WHEEL"
+key_is_action = false
+description_text = "Scroll arrangement grid"
+
+[node name="ShortcutLine" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/ArrangementGridList" index="1" instance=ExtResource("2_1wrnf")]
+layout_mode = 2
+key_text = "bosca_patternmap_left"
+description_text = "Scroll it left"
+
+[node name="ShortcutLine2" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/ArrangementGridList" index="2" instance=ExtResource("2_1wrnf")]
+layout_mode = 2
+key_text = "bosca_patternmap_right"
+description_text = "Scroll it right"
+
+[node name="Spacer" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/ArrangementGridList" index="3"]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+
+[node name="ShortcutLine5" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/ArrangementGridList" index="4" instance=ExtResource("2_1wrnf")]
+layout_mode = 2
+key_text = "CTRL + MOUSE WHEEL"
+key_is_action = false
+description_text = "Change grid scale"
+
+[node name="Spacer" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3" index="3"]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+
+[node name="ArrangementBuildingTitle" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3" index="4"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"CreditsLabelHeader"
+text = "Arrangement building"
+
+[node name="ArrangementBuildingList" type="VBoxContainer" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3" index="5"]
+auto_translate_mode = 1
+layout_mode = 2
+theme_type_variation = &"CreditsBox"
+
+[node name="Label" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/ArrangementBuildingList" index="0"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabel"
+text = "DRAG'N'DROP patterns from to add/copy them."
+
+[node name="Label2" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/ArrangementBuildingList" index="1"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabel"
+text = "Hold ALT while dragging to create a variant instead!"
+
+[node name="Spacer" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/ArrangementBuildingList" index="2"]
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+
+[node name="ShortcutLine3" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/ArrangementBuildingList" index="3" instance=ExtResource("2_1wrnf")]
+layout_mode = 2
+key_text = "RIGHT CLICK"
+key_is_action = false
+description_text = "Remove the pattern"
+
+[node name="ShortcutLine4" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/ArrangementBuildingList" index="4" instance=ExtResource("2_1wrnf")]
+layout_mode = 2
+key_text = "ALT + LEFT CLICK"
+key_is_action = false
+description_text = "Create pattern variant"
+
+[node name="LastSpacer" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3" index="6"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+
+[node name="Separator3" type="HSeparator" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout" index="5"]
+visible = false
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+
+[node name="Section4" type="VBoxContainer" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout" index="6"]
+auto_translate_mode = 1
+layout_mode = 2
+theme_type_variation = &"CreditsSectionBox"
+
+[node name="TimelineBigTitle" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section4" index="0"]
+auto_translate_mode = 1
+layout_mode = 2
+theme_type_variation = &"CreditsLabelHeaderPanel"
+text = "TIMELINE"
+
+[node name="TimelineTitle" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section4" index="1"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"CreditsLabelHeader"
+text = "Timeline loop"
+
+[node name="TimelineList" type="VBoxContainer" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section4" index="2"]
+auto_translate_mode = 1
+layout_mode = 2
+theme_type_variation = &"CreditsBox"
+
+[node name="ShortcutLine5" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section4/TimelineList" index="0" instance=ExtResource("2_1wrnf")]
+layout_mode = 2
+key_text = "LEFT CLICK"
+key_is_action = false
+description_text = "Select and play the bar"
+
+[node name="Label" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section4/TimelineList" index="1"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 8
+theme_type_variation = &"CreditsLabel"
+text = "(hold and drag to select multiple bars)"
+horizontal_alignment = 2
+
+[node name="ShortcutLine6" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section4/TimelineList" index="2" instance=ExtResource("2_1wrnf")]
+layout_mode = 2
+key_text = "DOUBLE CLICK"
+key_is_action = false
+description_text = "Select and play to the end"
+
+[node name="Spacer" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section4" index="3"]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+
+[node name="TimelineTitle2" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section4" index="4"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"CreditsLabelHeader"
+text = "Timeline editing"
+
+[node name="TimelineList2" type="VBoxContainer" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section4" index="5"]
+auto_translate_mode = 1
+layout_mode = 2
+theme_type_variation = &"CreditsBox"
+
+[node name="ShortcutLine4" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section4/TimelineList2" index="0" instance=ExtResource("2_1wrnf")]
+layout_mode = 2
+key_text = "MIDDLE CLICK"
+key_is_action = false
+description_text = "Insert an empty bar"
+
+[node name="ShortcutLine3" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section4/TimelineList2" index="1" instance=ExtResource("2_1wrnf")]
+layout_mode = 2
+key_text = "RIGHT CLICK"
+key_is_action = false
+description_text = "Remove the bar"
+
+[node name="ShortcutLine" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section4/TimelineList2" index="2" instance=ExtResource("2_1wrnf")]
+layout_mode = 2
+key_text = "ui_copy"
+description_text = "Copy selected bars"
+
+[node name="ShortcutLine2" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section4/TimelineList2" index="3" instance=ExtResource("2_1wrnf")]
+layout_mode = 2
+key_text = "ui_paste"
+description_text = "Paste copied bars"
+
+[node name="Spacer2" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section4/TimelineList2" index="4"]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section4/TimelineList2" index="5"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabel"
+text = "MIDDLE CLICK can be replaced with SHIFT + LEFT CLICK!"
+
+[node name="LastSpacer" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section4" index="6"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+
+[node name="ButtonBar" type="HBoxContainer" parent="Layout/Content/ContentBox" index="1"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"HBoxSpaced"
+alignment = 2
