@@ -118,9 +118,17 @@ class MidiFileReader:
 				return false
 			
 			var event_timestamp := 0
+			var last_event_type := -1
 			while _file.get_position() < track_end_position:
 				var event_delta := ByteArrayUtil.read_vlen(_file)
 				var event_type := _file.get_8()
+				
+				# Running status, use the previous type and make sure the cursor is in the correct place.
+				if event_type < 0x80:
+					event_type = last_event_type
+					_file.seek(_file.get_position() - 1)
+				else:
+					last_event_type = event_type
 				
 				event_timestamp += event_delta
 				if not track.parse_event(event_type, event_timestamp, _file):
