@@ -31,8 +31,8 @@ static func save(song: Song, path: String) -> bool:
 		printerr("MMLExporter: The MML file must have a .%s extension." % [ FILE_EXTENSION ])
 		return false
 	
-	var file := FileAccess.open(path, FileAccess.WRITE)
-	var error := FileAccess.get_open_error()
+	var file := FileWrapper.new()
+	var error := file.open(path, FileAccess.WRITE)
 	if error != OK:
 		printerr("MMLExporter: Failed to open the file at '%s' for writing (code %d)." % [ path, error ])
 		return false
@@ -42,10 +42,14 @@ static func save(song: Song, path: String) -> bool:
 	
 	# Try to write the file with the new contents.
 	
-	file.store_string(writer.get_file_string())
-	error = file.get_error()
+	error = file.write_text_contents(writer.get_file_string())
 	if error != OK:
 		printerr("MMLExporter: Failed to write to the file at '%s' (code %d)." % [ path, error ])
+		return false
+	
+	error = file.finalize_write()
+	if error != OK:
+		printerr("MMLExporter: Failed to finalize write to the file at '%s' (code %d)." % [ path, error ])
 		return false
 	
 	return true

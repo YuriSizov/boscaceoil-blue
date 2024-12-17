@@ -68,8 +68,8 @@ func save() -> bool:
 		printerr("WavExporter: Export path cannot be empty.")
 		return false
 	
-	var file := FileAccess.open(_file_path, FileAccess.WRITE)
-	var error := FileAccess.get_open_error()
+	var file := FileWrapper.new()
+	var error := file.open(_file_path, FileAccess.WRITE)
 	if error != OK:
 		printerr("WavExporter: Failed to open the file at '%s' for writing (code %d)." % [ _file_path, error ])
 		return false
@@ -81,10 +81,14 @@ func save() -> bool:
 
 	# Try to write the file with the new contents.
 	
-	file.store_buffer(_file)
-	error = file.get_error()
+	error = file.write_buffer_contents(_file)
 	if error != OK:
 		printerr("WavExporter: Failed to write to the file at '%s' (code %d)." % [ _file_path, error ])
+		return false
+	
+	error = file.finalize_write()
+	if error != OK:
+		printerr("WavExporter: Failed to finalize write to the file at '%s' (code %d)." % [ _file_path, error ])
 		return false
 	
 	return true

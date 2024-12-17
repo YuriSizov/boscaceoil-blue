@@ -12,21 +12,25 @@ static func save(song: Song, path: String) -> bool:
 		printerr("SongSaver: The song file must have a .%s extension." % [ Song.FILE_EXTENSION ])
 		return false
 	
-	var file := FileAccess.open(path, FileAccess.WRITE)
-	var error := FileAccess.get_open_error()
+	var file := FileWrapper.new()
+	var error := file.open(path, FileAccess.WRITE)
 	if error != OK:
 		printerr("SongSaver: Failed to open the file at '%s' for writing (code %d)." % [ path, error ])
 		return false
 	
 	var writer := SongFileWriter.new(path)
 	_write(writer, song)
-
+	
 	# Try to write the file with the new contents.
 	
-	file.store_string(writer.get_file_string())
-	error = file.get_error()
+	error = file.write_text_contents(writer.get_file_string())
 	if error != OK:
 		printerr("SongSaver: Failed to write to the file at '%s' (code %d)." % [ path, error ])
+		return false
+	
+	error = file.finalize_write()
+	if error != OK:
+		printerr("SongSaver: Failed to finalize write to the file at '%s' (code %d)." % [ path, error ])
 		return false
 	
 	song.filename = path

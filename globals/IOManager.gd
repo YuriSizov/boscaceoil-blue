@@ -129,11 +129,19 @@ func save_ceol_song(save_as: bool = false) -> void:
 	if not Controller.current_song:
 		return
 	
+	var file_name := Controller.current_song.get_safe_filename()
+	
+	# On web we don't show a file dialog, since it can only access a virtual
+	# file system.
+	if OS.has_feature("web"):
+		_save_ceol_song_confirmed("/tmp/" + file_name)
+		return
+	
 	var save_dialog := Controller.get_file_dialog()
 	save_dialog.file_mode = FileDialog.FILE_MODE_SAVE_FILE
 	save_dialog.title = "Save .ceol Song As" if save_as else "Save .ceol Song"
 	save_dialog.add_filter("*.ceol", "Bosca Ceoil Song")
-	save_dialog.current_file = Controller.current_song.get_safe_filename()
+	save_dialog.current_file = file_name
 	save_dialog.file_selected.connect(_save_ceol_song_confirmed, CONNECT_ONE_SHOT)
 	
 	Controller.show_file_dialog(save_dialog)
@@ -263,11 +271,19 @@ func export_wav_song() -> void:
 	if not Controller.current_song:
 		return
 	
+	var file_name := Controller.current_song.get_safe_filename("wav")
+	
+	# On web we don't show a file dialog, since it can only access a virtual
+	# file system.
+	if OS.has_feature("web"):
+		_export_wav_song_confirmed("/tmp/" + file_name)
+		return
+	
 	var export_dialog := Controller.get_file_dialog()
 	export_dialog.file_mode = FileDialog.FILE_MODE_SAVE_FILE
 	export_dialog.title = "Export .wav File"
 	export_dialog.add_filter("*.wav", "Waveform Audio File")
-	export_dialog.current_file = Controller.current_song.get_safe_filename("wav")
+	export_dialog.current_file = file_name
 	export_dialog.file_selected.connect(_export_wav_song_confirmed, CONNECT_ONE_SHOT)
 	
 	Controller.show_file_dialog(export_dialog)
@@ -313,11 +329,19 @@ func export_mid_song() -> void:
 	if not Controller.current_song:
 		return
 	
+	var file_name := Controller.current_song.get_safe_filename("mid")
+	
+	# On web we don't show a file dialog, since it can only access a virtual
+	# file system.
+	if OS.has_feature("web"):
+		_export_mid_song_confirmed("/tmp/" + file_name)
+		return
+	
 	var export_dialog := Controller.get_file_dialog()
 	export_dialog.file_mode = FileDialog.FILE_MODE_SAVE_FILE
 	export_dialog.title = "Export .mid File"
 	export_dialog.add_filter("*.mid", "MIDI File")
-	export_dialog.current_file = Controller.current_song.get_safe_filename("mid")
+	export_dialog.current_file = file_name
 	export_dialog.file_selected.connect(_export_mid_song_confirmed, CONNECT_ONE_SHOT)
 	
 	Controller.show_file_dialog(export_dialog)
@@ -340,11 +364,19 @@ func export_mml_song() -> void:
 	if not Controller.current_song:
 		return
 	
+	var file_name := Controller.current_song.get_safe_filename("mml")
+	
+	# On web we don't show a file dialog, since it can only access a virtual
+	# file system.
+	if OS.has_feature("web"):
+		_export_mml_song_confirmed("/tmp/" + file_name)
+		return
+	
 	var export_dialog := Controller.get_file_dialog()
 	export_dialog.file_mode = FileDialog.FILE_MODE_SAVE_FILE
 	export_dialog.title = "Export SiON .mml File"
 	export_dialog.add_filter("*.mml", "MML File")
-	export_dialog.current_file = Controller.current_song.get_safe_filename("mml")
+	export_dialog.current_file = file_name
 	export_dialog.file_selected.connect(_export_mml_song_confirmed, CONNECT_ONE_SHOT)
 	
 	Controller.show_file_dialog(export_dialog)
@@ -367,11 +399,19 @@ func export_xm_song() -> void:
 	if not Controller.current_song:
 		return
 	
+	var file_name := Controller.current_song.get_safe_filename("xm")
+	
+	# On web we don't show a file dialog, since it can only access a virtual
+	# file system.
+	if OS.has_feature("web"):
+		_export_xm_song_confirmed("/tmp/" + file_name)
+		return
+	
 	var export_dialog := Controller.get_file_dialog()
 	export_dialog.file_mode = FileDialog.FILE_MODE_SAVE_FILE
 	export_dialog.title = "Export .xm File"
 	export_dialog.add_filter("*.xm", "XM Tracker File")
-	export_dialog.current_file = Controller.current_song.get_safe_filename("xm")
+	export_dialog.current_file = file_name
 	export_dialog.file_selected.connect(_export_xm_song_confirmed, CONNECT_ONE_SHOT)
 	
 	Controller.show_file_dialog(export_dialog)
