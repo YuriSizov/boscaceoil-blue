@@ -81,6 +81,14 @@ func create_new_song_safe() -> void:
 # Ceol loading and saving.
 
 func load_ceol_song() -> void:
+	if OS.has_feature("web"):
+		var load_dialog_web := Controller.get_file_dialog_web()
+		load_dialog_web.add_filter(".ceol")
+		load_dialog_web.file_selected.connect(_load_ceol_song_confirmed, CONNECT_ONE_SHOT)
+		
+		load_dialog_web.popup()
+		return
+	
 	var load_dialog := Controller.get_file_dialog()
 	load_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
 	load_dialog.title = "Load .ceol Song"
@@ -198,6 +206,14 @@ func check_song_on_exit(always_confirm: bool = false) -> void:
 # External format import.
 
 func import_mid_song() -> void:
+	if OS.has_feature("web"):
+		var import_dialog_web := Controller.get_file_dialog_web()
+		import_dialog_web.add_filter(".mid")
+		import_dialog_web.file_selected.connect(_import_mid_song_confirmed, CONNECT_ONE_SHOT)
+		
+		import_dialog_web.popup()
+		return
+	
 	var import_dialog := Controller.get_file_dialog()
 	import_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
 	import_dialog.title = "Import .mid File"

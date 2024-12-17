@@ -69,6 +69,7 @@ var instrument_themes: Dictionary = {
 var _file_dialog: FileDialog = null
 var _file_dialog_finalize_callable: Callable = Callable()
 var _file_dialog_was_playing: bool = false
+var _file_dialog_web: FileDialogNativeWeb = null
 var _info_popup: InfoPopup = null
 var _controls_blocker: PopupManager.PopupControl = null
 
@@ -104,9 +105,12 @@ func _ready() -> void:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
 		io_manager.check_song_on_exit()
+	
 	elif what == NOTIFICATION_PREDELETE:
 		if is_instance_valid(_file_dialog):
 			_file_dialog.queue_free()
+		if is_instance_valid(_file_dialog_web):
+			_file_dialog_web.free()
 		if is_instance_valid(_info_popup):
 			_info_popup.queue_free()
 		if is_instance_valid(_controls_blocker):
@@ -243,6 +247,22 @@ func _finalize_file_dialog() -> void:
 		music_player.start_playback()
 	
 	settings_manager.set_last_opened_folder(_file_dialog.current_dir)
+
+
+# Godot doesn't support native file dialogs on web yet.
+func get_file_dialog_web() -> FileDialogNativeWeb:
+	if not _file_dialog_web:
+		_file_dialog_web = FileDialogNativeWeb.new()
+		_file_dialog_web.canceled.connect(_clear_file_dialog_web_connections)
+	
+	_file_dialog_web.clear_filters()
+	return _file_dialog_web
+
+
+func _clear_file_dialog_web_connections() -> void:
+	var connections := _file_dialog_web.file_selected.get_connections()
+	for connection: Dictionary in connections:
+		_file_dialog_web.file_selected.disconnect(connection["callable"])
 
 
 func get_info_popup() -> InfoPopup:
