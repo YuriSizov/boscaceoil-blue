@@ -13,13 +13,21 @@ class_name ShortcutLine extends HBoxContainer
 	set = set_key_is_action
 @export var description_text: String = "Description":
 	set = set_description_text
+@export var hide_on_web: bool = false:
+	set = set_hide_on_web
 
 @onready var _key_label: Label = $KeyLabel
 @onready var _description_label: Label = $DescriptionLabel
 
 
 func _ready() -> void:
+	_update_visibility()
 	_update_labels()
+
+
+func _update_visibility() -> void:
+	if hide_on_web && OS.has_feature("web"):
+		visible = false
 
 
 func _update_labels() -> void:
@@ -116,3 +124,8 @@ func set_key_is_action(value: bool) -> void:
 func set_description_text(value: String) -> void:
 	description_text = value
 	_update_labels()
+
+
+func set_hide_on_web(value: bool) -> void:
+	hide_on_web = value
+	_update_visibility()

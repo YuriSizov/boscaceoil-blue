@@ -118,7 +118,13 @@ func _shortcut_input(event: InputEvent) -> void:
 		return
 	
 	if event.is_action_pressed("bosca_exit", false, true):
-		io_manager.check_song_on_exit(true)
+		# Ignore this shortcut on web, as it doesn't make much sense
+		# when you can close the tab. Even in fullscreen this probably
+		# isn't an expected path — Esc is usually used to exit the
+		# fullscreen.
+		
+		if not OS.has_feature("web"):
+			io_manager.check_song_on_exit(true)
 	
 	elif event.is_action_pressed("bosca_playstop", false, true):
 		if music_player.is_playing():

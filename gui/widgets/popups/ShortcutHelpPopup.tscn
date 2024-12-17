@@ -96,6 +96,7 @@ layout_mode = 2
 layout_mode = 2
 key_text = "bosca_exit"
 description_text = "Quit Bosca Ceoil"
+hide_on_web = true
 
 [node name="Spacer" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section" index="3"]
 custom_minimum_size = Vector2(0, 6)
