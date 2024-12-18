@@ -56,7 +56,8 @@ func restore_window() -> void:
 # Window state management.
 
 func _restore_window_size() -> void:
-	_main_window.size = Controller.settings_manager.get_windowed_size()
+	if not OS.has_feature("web"): # On web the size is dictated by the browser window, we have no control over it.
+		_main_window.size = Controller.settings_manager.get_windowed_size()
 	_main_window.content_scale_factor = Controller.settings_manager.get_gui_scale_factor()
 
 	if Controller.settings_manager.is_windowed_maximized():
