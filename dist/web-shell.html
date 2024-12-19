@@ -85,9 +85,15 @@ button:active {
 }
 
 #boot-progress {
-	bottom: 10%;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	gap: 8px;
 	width: 50%;
-	margin: 0 auto;
+}
+
+#boot-progress-bar {
+	width: 100%;
 }
 
 #boot-fatal-error {
@@ -190,7 +196,10 @@ button:active {
 
 	<div id="boot-overlay">
 		<img class="boot-splash" src="$GODOT_SPLASH" alt="">
-		<progress id="boot-progress"></progress>
+		<div id="boot-progress">
+			<progress id="boot-progress-bar"></progress>
+			<span>It may take a minute to load, don't go anywhere!</span>
+		</div>
 		<div id="boot-fatal-error"></div>
 		<div id="boot-menu">
 			<div class="boot-compat">
@@ -237,6 +246,53 @@ button:active {
 	<script>
 		const GODOT_CONFIG = $GODOT_CONFIG;
 		const GODOT_THREADS_ENABLED = $GODOT_THREADS_ENABLED;
+		const BOSCA_FILE_SIZES = $BOSCA_FILE_SIZES;
+		
+		// Monkey-patch fetch to intercept Godot loading its bits and pieces.
+		const _orig_fetch = window.fetch;
+		window.fetch = async function(resource, options) {
+			if (!(resource in BOSCA_FILE_SIZES)) {
+				return await _orig_fetch(resource, options);
+			}
+			
+			const response = await _orig_fetch(resource, options);
+			const innerStream = new ReadableStream(
+				{
+					async start(controller) {
+						const totalBytes = BOSCA_FILE_SIZES[resource];
+						let loadedBytes = 0;
+						
+						const reader = response.body.getReader();
+						
+						while (true) {
+							const { value, done } = await reader.read();
+							if (done) {
+								bosca.setLoadingProgress(resource, (totalBytes - loadedBytes));
+								break;
+							}
+							
+							loadedBytes += value.byteLength
+							bosca.setLoadingProgress(resource, loadedBytes);
+							controller.enqueue(value);
+						}
+						
+						reader.releaseLock();
+						controller.close();
+					}
+				},
+				{
+					status: response.status,
+					statusText: response.statusText
+				}
+			)
+			
+			const forwardedResponse = new Response(innerStream);
+			for (const pair of response.headers.entries()) {
+				forwardedResponse.headers.set(pair[0], pair[1]);
+			}
+			
+			return forwardedResponse;
+		}
 		
 		const BOSCAWEB_STATE_INITIAL  = 0;
 		const BOSCAWEB_STATE_PROGRESS = 1;
@@ -257,6 +313,13 @@ button:active {
 				this._bootButton.addEventListener('click', () => {
 					this.init();
 				});
+				
+				this._progressBar = document.getElementById('boot-progress-bar');
+				
+				this._progressValues = {};
+				for (const filename in BOSCA_FILE_SIZES) {
+					this._progressValues[filename] = { 'total': BOSCA_FILE_SIZES[filename], 'loaded': 0 };
+				}
 				
 				this._compat_passedState = document.getElementById('boot-compat-passed');
 				this._compat_failedState = document.getElementById('boot-compat-failed');
@@ -346,19 +409,11 @@ button:active {
 			}
 			
 			async init() {
+				this._updateBootProgress();
 				this.setState(BOSCAWEB_STATE_PROGRESS);
+				
 				try {
-					await this.engine.startGame({
-						'onProgress': (current, total) => {
-							if (current > 0 && total > 0) {
-								this._boot_progressState.value = current;
-								this._boot_progressState.max = total;
-							} else {
-								this._boot_progressState.removeAttribute('value');
-								this._boot_progressState.removeAttribute('max');
-							}
-						},
-					});
+					await this.engine.startGame();
 					this.setState(BOSCAWEB_STATE_READY);
 				} catch (err) {
 					this._fatalError(err);
@@ -378,8 +433,26 @@ button:active {
 				}
 				
 				this._boot_initialState.style.display  = (this.state === BOSCAWEB_STATE_INITIAL  ? 'flex'  : 'none');
-				this._boot_progressState.style.display = (this.state === BOSCAWEB_STATE_PROGRESS ? 'block' : 'none');
+				this._boot_progressState.style.display = (this.state === BOSCAWEB_STATE_PROGRESS ? 'flex' : 'none');
 				this._boot_failedState.style.display   = (this.state === BOSCAWEB_STATE_FAILED   ? 'block' : 'none');
+			}
+			
+			setLoadingProgress(file, chunkSize) {
+				this._progressValues[file].loaded += chunkSize;
+				requestAnimationFrame(this._updateBootProgress.bind(this));
+			}
+			
+			_updateBootProgress() {
+				let total = Object.values(this._progressValues).reduce((sum, val) => sum + val.total, 0);
+				let loaded = Object.values(this._progressValues).reduce((sum, val) => sum + val.loaded, 0);
+				
+				if (loaded > 0 && total > 0) {
+					this._progressBar.value = loaded;
+					this._progressBar.max = total;
+				} else {
+					this._progressBar.removeAttribute('value');
+					this._progressBar.removeAttribute('max');
+				}
 			}
 			
 			_setErrorText(element, text) {

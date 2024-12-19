@@ -44,6 +44,10 @@ run/main_run_args="--verbose"
 naming/scene_name_casing=1
 naming/script_name_casing=1
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/bosca_exports/plugin.cfg")
+
 [gui]
 
 theme/custom="res://gui/theme/project_theme.tres"
