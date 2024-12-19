@@ -56,8 +56,10 @@ func restore_window() -> void:
 # Window state management.
 
 func _restore_window_size() -> void:
-	if not OS.has_feature("web"): # On web the size is dictated by the browser window, we have no control over it.
+	# On web the size is dictated by the browser window, we have no control over it.
+	if not OS.has_feature("web"):
 		_main_window.size = Controller.settings_manager.get_windowed_size()
+	
 	_main_window.content_scale_factor = Controller.settings_manager.get_gui_scale_factor()
 
 	if Controller.settings_manager.is_windowed_maximized():
@@ -66,7 +68,9 @@ func _restore_window_size() -> void:
 	if Controller.settings_manager.is_fullscreen():
 		_main_window.mode = Window.MODE_FULLSCREEN
 
-	_main_window.move_to_center()
+	# On web the position is meaningless and should be zero, if it's not then mouse position becomes misaligned.
+	if not OS.has_feature("web"):
+		_main_window.move_to_center()
 
 
 func _fit_window_size(window_size: Vector2) -> void:
