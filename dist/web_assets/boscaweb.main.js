@@ -44,9 +44,11 @@ class BoscaWeb {
 	}
 	
 	checkCompatibility() {
+		this._bootButton.classList.remove('boot-init-suppressed');
 		this._compat_passedState.style.display = 'none';
 		this._compat_failedState.style.display = 'none';
 		this._compat_tryfixButton.style.display = 'none';
+		this._compat_failedList.style.display = 'none';
 		this._setErrorText(this._compat_failedList, '');
 		
 		const missingFeatures = Engine.getMissingFeatures({
@@ -55,25 +57,28 @@ class BoscaWeb {
 		
 		if (missingFeatures.length > 0) {
 			this._compatible = false;
+			this._bootButton.classList.add('boot-init-suppressed');
 			this._compat_failedState.style.display = 'flex';
+			this._compat_failedList.style.display = 'block';
 			this._compat_tryfixButton.style.display = (this._compatFixable ? 'inline-block' : 'none');
 			
-			const sectionHeader = document.createElement('h4');
-			sectionHeader.textContent = 'Your browser is missing following features:';
+			const sectionHeader = document.createElement('strong');
+			sectionHeader.textContent = 'Your browser is missing following features: ';
 			this._compat_failedList.appendChild(sectionHeader);
 			
-			const sectionList = document.createElement('ul');
+			const sectionList = document.createElement('span');
 			this._compat_failedList.appendChild(sectionList);
-			missingFeatures.forEach((item) => {
-				const itemElement = document.createElement('li');
-				sectionList.appendChild(itemElement);
-				
+			missingFeatures.forEach((item, index) => {
 				const itemParts = item.split(' - ');
 				
 				const annotatedElement = document.createElement('abbr');
 				annotatedElement.textContent = itemParts[0];
 				annotatedElement.title = itemParts[1];
-				itemElement.appendChild(annotatedElement);
+				sectionList.appendChild(annotatedElement);
+				
+				if (index < missingFeatures.length - 1) {
+					sectionList.appendChild(document.createTextNode(", "));
+				}
 			});
 		} else {
 			this._compatible = true;

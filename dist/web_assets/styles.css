@@ -15,7 +15,7 @@ body {
 	background-color: var(--background-color);
 	color: var(--font-color);
 	font-family: 'Noto Sans', Helvetica, 'Segoe UI', 'Droid Sans', sans-serif;
-	font-size: 16px;
+	font-size: 15px;
 	line-height: 1.3;
 	overflow: hidden;
 	touch-action: none;
@@ -49,6 +49,10 @@ button:active {
 	transform: translate(3px, 3px);
 }
 
+ul {
+	margin: 8px 0;
+}
+
 #canvas {
 	display: block;
 }
@@ -62,7 +66,7 @@ button:active {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	gap: 16px;
+	gap: 36px;
 	visibility: hidden;
 	position: absolute;
 	left: 0;
@@ -72,7 +76,7 @@ button:active {
 }
 
 .boot-splash {
-	max-height: 320px;
+	max-height: 240px;
 	max-width: 100%;
 	margin: 0 auto;
 }
@@ -97,7 +101,7 @@ button:active {
 #boot-fatal-error {
 	background-color: #2f1f24;
 	border: 3px solid #ac323f;
-	font-size: 18px;
+	font-size: 16px;
 	font-weight: 700;
 	margin: 0 2rem;
 	overflow: hidden;
@@ -108,7 +112,7 @@ button:active {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	gap: 32px;
+	gap: 48px;
 	line-height: 1.5;
 	margin: 0 16px;
 }
@@ -120,25 +124,49 @@ button:active {
 	display: none;
 }
 
+.boot-init {
+	display: flex;
+	align-items: flex-start;
+	justify-content: center;
+}
+
+#boot-init-button {
+	font-size: 20px;
+	text-transform: uppercase;
+}
+
+#boot-init-button:not(.boot-init-suppressed) {
+	background-color: #3f85be;
+}
+#boot-init-button:not(.boot-init-suppressed):hover {
+	background-color: #4d9fe1;
+}
+#boot-init-button:not(.boot-init-suppressed):active {
+	background-color: #396486;
+}
+
 .boot-compat {
 	display: flex;
 	flex-direction: row;
-	gap: 24px;
+	gap: 72px;
 }
 
 .boot-compat-notice {
-	border-left: 3px solid var(--font-color);
 	color: #b3b9cb;
-	font-size: 15px;
-	padding-left: 24px;
-	max-width: 380px;
+	font-size: 14px;
+}
+.boot-compat-notice hr {
+	border: none;
+	border-top: 3px solid #525765;
+	max-width: 50%;
+	margin-bottom: 24px;
 }
 .boot-compat-notice strong {
 	color: #cdd0d5;
 }
 
 .boot-compat-check {
-	font-size: 16px;
+	font-size: 15px;
 	min-width: 380px;
 }
 .boot-compat-check h3 {
@@ -156,7 +184,7 @@ button:active {
 }
 
 #boot-compat-tryfix {
-	font-size: 16px;
+	font-size: 15px;
 	padding: 6px 18px;
 	width: auto;
 }
@@ -172,12 +200,6 @@ button:active {
 @media (max-width: 720px) {
 	.boot-compat {
 		flex-direction: column;
-	}
-	
-	.boot-compat-notice {
-		border-left: none;
-		border-top: 3px solid var(--font-color);
-		padding-left: 0;
-		padding-top: 24px;
+		gap: 48px;
 	}
 }

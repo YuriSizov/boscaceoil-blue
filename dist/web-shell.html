@@ -24,7 +24,7 @@
 	</noscript>
 
 	<div id="boot-overlay">
-		<img class="boot-splash" src="$GODOT_SPLASH" alt="">
+		<img class="boot-splash" src="logo.png" alt="Bosca Ceoil Blue logo">
 		<div id="boot-progress">
 			<progress id="boot-progress-bar"></progress>
 			<span id="boot-progress-status">Loading dependencies...</span>
@@ -47,26 +47,28 @@
 							You can still try to launch Bosca, but probably it will not work.<br>
 							For now, please use one of the compatible browsers.
 						</p>
-						<div id="boot-compat-list"></div>
 						<button id="boot-compat-tryfix">Try auto-fix?</button>
 					</div>
 				</div>
-				<div class="boot-compat-notice">
-					<p>
-						<strong>Bosca Ceoil Blue</strong> relies on certain browser features to work.
-						The following browsers have been confirmed to work:
-					</p>
-					<ul>
-						<li><strong>Chrome</strong> and <strong>Chromium-based</strong> browsers,</li>
-						<li><strong>Firefox</strong>.</li>
-					</ul>
-					<p>
-						Other browsers may still work, especially as they get updated and improved.
-					</p>
+				<div class="boot-init">
+					<button id="boot-init-button">Launch Bosca Ceoil</button>
 				</div>
 			</div>
-			<div>
-				<button id="boot-init-button">Launch Bosca Ceoil Blue</button>
+			
+			<div class="boot-compat-notice">
+				<hr>
+				<div id="boot-compat-list"></div>
+				<p>
+					<strong>Bosca Ceoil Blue</strong> relies on certain browser features to work.
+					The following browsers have been confirmed to work:
+				</p>
+				<ul>
+					<li><strong>Chrome</strong> and <strong>Chromium-based</strong> browsers,</li>
+					<li><strong>Firefox</strong>.</li>
+				</ul>
+				<p>
+					Other browsers may still work, especially as they get updated and improved.
+				</p>
 			</div>
 		</div>
 	</div>
