@@ -7,10 +7,11 @@
 @tool
 extends EditorExportPlugin
 
+const WEB_ASSETS_PATH := "res://dist/web_assets"
 const TARGET_SUFFIXES := [ "pck", "wasm", "side.wasm" ]
 
 var _target_path: String = ""
-var _target_extensions: PackedStringArray = PackedStringArray()
+var _target_gdextensions: PackedStringArray = PackedStringArray()
 
 
 func _get_name() -> String:
@@ -23,15 +24,37 @@ func _supports_platform(platform: EditorExportPlatform) -> bool:
 
 func _export_begin(features: PackedStringArray, is_debug: bool, path: String, flags: int) -> void:
 	_target_path = path
-	_target_extensions.clear()
+	_target_gdextensions.clear()
 
 
 func _export_file(path: String, type: String, features: PackedStringArray) -> void:
 	if type == "GDExtension":
-		_target_extensions.push_back(path.get_file().get_basename())
+		_target_gdextensions.push_back(path.get_file().get_basename())
 
 
 func _export_end() -> void:
+	_copy_assets()
+	_update_html_shell()
+
+
+func _copy_assets() -> void:
+	var target_dir := _target_path.get_base_dir()
+	
+	var fs := DirAccess.open(WEB_ASSETS_PATH)
+	var asset_names := fs.get_files()
+	
+	for file_name in asset_names:
+		if file_name == ".gdignore":
+			continue
+		
+		var source_path := WEB_ASSETS_PATH.path_join(file_name)
+		var target_path := target_dir.path_join(file_name)
+		fs.copy(source_path, target_path)
+		
+		print("BoscaWebExportPlugin: Copying asset %s to %s" % [ file_name, target_path ])
+
+
+func _update_html_shell() -> void:
 	# Collect extra data to pass to the HTML shell.
 	var bosca_file_sizes := {}
 	
@@ -46,17 +69,19 @@ func _export_end() -> void:
 		
 		var file := FileAccess.open(file_path, FileAccess.READ)
 		bosca_file_sizes[file_name] = file.get_length()
+		print("BoscaWebExportPlugin: Calculated size for %s (%d)" % [ file_name, bosca_file_sizes[file_name] ])
 	
-	if not _target_extensions.is_empty():
+	if not _target_gdextensions.is_empty():
 		var fs := DirAccess.open(target_dir)
 		var files := fs.get_files()
 		
-		for extension in _target_extensions:
+		for gdextension in _target_gdextensions:
 			for file_name in files:
-				if file_name.begins_with(extension):
+				if file_name.begins_with(gdextension):
 					var file_path := target_dir.path_join(file_name)
 					var file := FileAccess.open(file_path, FileAccess.READ)
 					bosca_file_sizes[file_name] = file.get_length()
+					print("BoscaWebExportPlugin: Calculated size for %s (%d)" % [ file_name, bosca_file_sizes[file_name] ])
 	
 	# Prepare the HTML shell for editing.
 	var html_file := FileAccess.open(_target_path, FileAccess.READ_WRITE)

@@ -1,0 +1,183 @@
+:root {
+	--background-color: #0f121a;
+	--font-color: #e0e0e0;
+	--link-color: #81c9ec;
+	--link-color-hover: #529bbe;
+}
+
+html, body, #canvas {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+body {
+	background-color: var(--background-color);
+	color: var(--font-color);
+	font-family: 'Noto Sans', Helvetica, 'Segoe UI', 'Droid Sans', sans-serif;
+	font-size: 16px;
+	line-height: 1.3;
+	overflow: hidden;
+	touch-action: none;
+}
+
+a {
+	color: var(--link-color);
+}
+a:hover {
+	color: var(--link-color-hover);
+}
+
+button {
+	background-color: #50656A;
+	border: none;
+	box-shadow: 3px 3px black;
+	color: var(--font-color);
+	cursor: pointer;
+	font-size: 18px;
+	font-weight: 700;
+	padding: 8px 24px;
+	text-shadow: 2px 1px black;
+	transition: transform .1s, box-shadow .1s;
+}
+button:hover {
+	background-color: #6D858D;
+}
+button:active {
+	background-color: #344246;
+	box-shadow: none;
+	transform: translate(3px, 3px);
+}
+
+#canvas {
+	display: block;
+}
+#canvas:focus {
+	outline: none;
+}
+
+#boot-overlay {
+	background-color: var(--background-color);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 16px;
+	visibility: hidden;
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+}
+
+.boot-splash {
+	max-height: 320px;
+	max-width: 100%;
+	margin: 0 auto;
+}
+
+#boot-progress {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	gap: 8px;
+	max-width: 500px;
+	width: 80%;
+}
+
+#boot-progress-bar {
+	width: 100%;
+}
+
+#boot-progress-status {
+	text-align: right;
+}
+
+#boot-fatal-error {
+	background-color: #2f1f24;
+	border: 3px solid #ac323f;
+	font-size: 18px;
+	font-weight: 700;
+	margin: 0 2rem;
+	overflow: hidden;
+	padding: 1rem;
+}
+
+#boot-menu {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 32px;
+	line-height: 1.5;
+	margin: 0 16px;
+}
+#boot-menu h3, #boot-menu h4, #boot-menu p {
+	margin: 0;
+}
+
+#boot-progress, #boot-fatal-error, #boot-menu {
+	display: none;
+}
+
+.boot-compat {
+	display: flex;
+	flex-direction: row;
+	gap: 24px;
+}
+
+.boot-compat-notice {
+	border-left: 3px solid var(--font-color);
+	color: #b3b9cb;
+	font-size: 15px;
+	padding-left: 24px;
+	max-width: 380px;
+}
+.boot-compat-notice strong {
+	color: #cdd0d5;
+}
+
+.boot-compat-check {
+	font-size: 16px;
+	min-width: 380px;
+}
+.boot-compat-check h3 {
+	font-size: 20px;
+}
+
+#boot-compat-passed, #boot-compat-failed {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 16px;
+}
+#boot-compat-passed > *, #boot-compat-failed > * {
+	width: 100%;
+}
+
+#boot-compat-tryfix {
+	font-size: 16px;
+	padding: 6px 18px;
+	width: auto;
+}
+
+#boot-compat-list abbr {
+	cursor: help;
+}
+
+#boot-compat-passed, #boot-compat-failed, #boot-compat-tryfix {
+	display: none;
+}
+
+@media (max-width: 720px) {
+	.boot-compat {
+		flex-direction: column;
+	}
+	
+	.boot-compat-notice {
+		border-left: none;
+		border-top: 3px solid var(--font-color);
+		padding-left: 0;
+		padding-top: 24px;
+	}
+}
