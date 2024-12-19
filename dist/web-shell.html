@@ -89,11 +89,16 @@ button:active {
 	flex-direction: column;
 	align-items: flex-end;
 	gap: 8px;
-	width: 50%;
+	max-width: 500px;
+	width: 80%;
 }
 
 #boot-progress-bar {
 	width: 100%;
+}
+
+#boot-progress-status {
+	text-align: right;
 }
 
 #boot-fatal-error {
@@ -198,7 +203,7 @@ button:active {
 		<img class="boot-splash" src="$GODOT_SPLASH" alt="">
 		<div id="boot-progress">
 			<progress id="boot-progress-bar"></progress>
-			<span>It may take a minute to load, don't go anywhere!</span>
+			<span id="boot-progress-status">Loading dependencies...</span>
 		</div>
 		<div id="boot-fatal-error"></div>
 		<div id="boot-menu">
@@ -315,6 +320,7 @@ button:active {
 				});
 				
 				this._progressBar = document.getElementById('boot-progress-bar');
+				this._progressStatus = document.getElementById('boot-progress-status');
 				
 				this._progressValues = {};
 				for (const filename in BOSCA_FILE_SIZES) {
@@ -449,6 +455,10 @@ button:active {
 				if (loaded > 0 && total > 0) {
 					this._progressBar.value = loaded;
 					this._progressBar.max = total;
+					
+					if (loaded >= total) {
+						this._progressStatus.textContent = "Launching, it may take a moment...";
+					}
 				} else {
 					this._progressBar.removeAttribute('value');
 					this._progressBar.removeAttribute('max');
