@@ -20,4 +20,3 @@ func _enter_tree() -> void:
 func _exit_tree() -> void:
 	if is_instance_valid(_export_plugin_web):
 		remove_export_plugin(_export_plugin_web)
-		_export_plugin_web.free()

@@ -25,3 +25,13 @@ runs:
       run: |
         curl -JLO ${{ env.GDSION_PATH }}
         unzip libgdsion-${{ inputs.platform }}.zip
+    
+    # Web platform is exported via Linux, so install that version of GDSiON as well.
+    - name: Install GDSiON Linux (Web)
+      if: ${{ inputs.platform == 'web' }}
+      shell: bash
+      env:
+        GDSION_PATH: https://github.com/YuriSizov/gdsion/releases/download/${{ inputs.gdsion-version }}/libgdsion-linux.zip
+      run: |
+        curl -JLO ${{ env.GDSION_PATH }}
+        unzip -n libgdsion-linux.zip
