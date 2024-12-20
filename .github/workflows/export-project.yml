@@ -49,6 +49,13 @@ jobs:
             output: "boscaceoil-blue.exe"
             app-name: "boscaceoil-blue.exe"
             runs-on: windows-latest
+          
+          - platform: web
+            arch: universal
+            preset: "Web - Universal"
+            output: "index.html"
+            app-name: "boscaceoil-blue"
+            runs-on: ubuntu-latest
 
     name: Export the project (${{ matrix.preset }})
     runs-on: ${{ matrix.runs-on }}
@@ -113,7 +120,7 @@ jobs:
       # Upload the results.
 
       # This step helps to preserve file permissions.
-      - name: Tar up the example project
+      - name: Tar up the exported project
         shell: bash
         working-directory: "${{ steps.export-project-step.outputs.export-path }}"
         run: |
