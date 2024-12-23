@@ -46,8 +46,7 @@ func _handle_catcher_clicked(event: InputEvent) -> void:
 	if event is InputEventMouseButton && not event.is_pressed(): # Activate on mouse release.
 		var mb := event as InputEventMouseButton
 		if mb.button_index == MOUSE_BUTTON_LEFT:
-			PopupManager.hide_all_popups()
-			_click_catcher.hide()
+			PopupManager.hide_all_blocking_popups()
 			return
 
 
@@ -262,12 +261,12 @@ static func hide_popup(popup: PopupControl) -> void:
 	_instance.destroy_popup(popup)
 
 
-static func hide_all_popups() -> void:
+static func hide_all_blocking_popups() -> void:
 	if not _instance:
 		return
 	
-	for i in range(_instance._active_popups.size() - 1, -1, -1):
-		var active_popup := _instance._active_popups[i]
+	for i in range(_instance._blocking_popups.size() - 1, -1, -1):
+		var active_popup := _instance._blocking_popups[i]
 		_instance.destroy_popup(active_popup)
 
 
