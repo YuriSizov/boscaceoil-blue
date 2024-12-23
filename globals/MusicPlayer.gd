@@ -210,6 +210,11 @@ func play_note(pattern: Pattern, note_data: Vector3i) -> void:
 
 func _cutoff_note() -> void:
 	_driver.note_off(-1, 0, 0, 0, true)
+	
+	# This ensures no residual sound is produced by the effector, even
+	# after the note has been cut off.
+	_driver.get_effector().clear_slot_effects(0)
+	update_driver_effects()
 
 
 # Playback.
