@@ -50,6 +50,10 @@ var _note_cursor_size: int = 1
 
 var _note_drawing_mode: DrawingMode = DrawingMode.DRAWING_OFF
 
+var _note_selecting: bool = false
+var _note_selecting_rect: Rect2 = Rect2(-1, -1, 0, 0)
+var _note_copied_buffer: PackedVector3Array = PackedVector3Array()
+
 @onready var _gutter: NoteMapGutter = $NoteMapGutter
 @onready var _scrollbar: NoteMapScrollbar = $NoteMapScrollbar
 @onready var _overlay: NoteMapOverlay = $NoteMapOverlay
@@ -98,9 +102,15 @@ func _notification(what: int) -> void:
 	if Engine.is_editor_hint():
 		return
 	
-	if what == NOTIFICATION_APPLICATION_FOCUS_OUT:
+	if what == NOTIFICATION_DRAG_END:
+		if _note_selecting:
+			_stop_selecting_notes()
+	
+	elif what == NOTIFICATION_APPLICATION_FOCUS_OUT:
 		if _note_drawing_mode != DrawingMode.DRAWING_OFF:
 			_stop_drawing_notes()
+		if _note_selecting:
+			_stop_selecting_notes()
 
 
 func _gui_input(event: InputEvent) -> void:
@@ -120,25 +130,46 @@ func _gui_input(event: InputEvent) -> void:
 					_change_scroll_offset(-1)
 			
 			elif mb.button_index == MOUSE_BUTTON_LEFT:
-				_start_drawing_notes(DrawingMode.DRAWING_ADD)
+				if mb.shift_pressed:
+					_start_selecting_notes()
+				else:
+					_clear_note_selection()
+					_start_drawing_notes(DrawingMode.DRAWING_ADD)
 			elif mb.button_index == MOUSE_BUTTON_RIGHT:
+				_clear_note_selection()
 				_start_drawing_notes(DrawingMode.DRAWING_REMOVE)
 		
-		if _note_drawing_mode != DrawingMode.DRAWING_OFF && not mb.pressed:
-			if mb.button_index == MOUSE_BUTTON_LEFT || mb.button_index == MOUSE_BUTTON_RIGHT:
+		if not mb.pressed:
+			if _note_drawing_mode != DrawingMode.DRAWING_OFF && (mb.button_index == MOUSE_BUTTON_LEFT || mb.button_index == MOUSE_BUTTON_RIGHT):
 				_stop_drawing_notes()
+			elif _note_selecting && mb.button_index == MOUSE_BUTTON_LEFT:
+				_stop_selecting_notes()
 
 
 func _shortcut_input(event: InputEvent) -> void:
+	if Controller.is_song_editing_locked():
+		return
+	
 	if event.is_action_pressed("bosca_notemap_cursor_bigger", true, true):
 		_resize_note_cursor(1)
 	elif event.is_action_pressed("bosca_notemap_cursor_smaller", true, true):
 		_resize_note_cursor(-1)
+	elif event.is_action_pressed("ui_copy"):
+		_copy_selected_notes()
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("ui_paste"):
+		_paste_selected_notes()
+		get_viewport().set_input_as_handled()
 
 
 func _physics_process(_delta: float) -> void:
 	_process_note_cursor()
 	_process_note_drawing()
+	_process_note_selecting()
+
+
+func _update_processing_state() -> void:
+	set_physics_process(_note_cursor_visible || _note_selecting)
 
 
 func _draw() -> void:
@@ -413,17 +444,20 @@ func _update_playback_cursor() -> void:
 # Grid layout and coordinates.
 
 func _get_cell_at_cursor() -> Vector2i:
+	return _get_cell_at_position(get_local_mouse_position())
+
+
+func _get_cell_at_position(at_position: Vector2) -> Vector2i:
 	var available_rect: Rect2 = get_available_rect()
 	var note_height := get_theme_constant("note_height", "NoteMap")
 	
-	var mouse_position := get_local_mouse_position()
-	if not available_rect.has_point(mouse_position):
+	if not available_rect.has_point(at_position):
 		return Vector2i(-1, -1)
 	
-	var mouse_normalized := mouse_position - available_rect.position
+	var position_normalized := at_position - available_rect.position
 	var cell_indexed := Vector2i(0, 0)
-	cell_indexed.x = clampi(floori(mouse_normalized.x / _note_width), 0, pattern_size - 1)
-	cell_indexed.y = clampi(floori((available_rect.size.y - mouse_normalized.y) / note_height), 0, _note_rows.size() - 1)
+	cell_indexed.x = clampi(floori(position_normalized.x / _note_width), 0, pattern_size - 1)
+	cell_indexed.y = clampi(floori((available_rect.size.y - position_normalized.y) / note_height), 0, _note_rows.size() - 1)
 	return cell_indexed
 
 
@@ -558,7 +592,8 @@ func _update_active_notes() -> void:
 		var note := ActiveNote.new()
 		note.note_value = note_value_normalized
 		note.note_index = note_data.y
-		note.position = _get_cell_position(Vector2i(note_data.y, row_index - _scroll_offset))
+		note.cell_index = Vector2i(note_data.y, row_index - _scroll_offset)
+		note.position = _get_cell_position(note.cell_index)
 		note.length = note_data.z
 		_active_notes.push_back(note)
 	
@@ -585,12 +620,12 @@ func _update_gutter_size() -> void:
 func _show_note_cursor() -> void:
 	_note_cursor_visible = true
 	_process_note_cursor()
-	set_physics_process(true)
+	_update_processing_state()
 
 
 func _hide_note_cursor() -> void:
-	set_physics_process(false)
 	_note_cursor_visible = false
+	_update_processing_state()
 	_process_note_cursor()
 
 
@@ -701,6 +736,136 @@ func _preview_note_at_cursor(row_index: int) -> void:
 	Controller.preview_pattern_note(note_value, _note_cursor_size)
 
 
+# Note selecting.
+
+func _start_selecting_notes() -> void:
+	_note_selecting = true
+	_update_processing_state()
+	
+	_note_selecting_rect = Rect2()
+	_note_selecting_rect.position = get_local_mouse_position()
+	_process_note_selecting()
+
+
+func _stop_selecting_notes() -> void:
+	_note_selecting = false
+	_update_processing_state()
+	_note_selecting_rect = Rect2(-1, -1, 0, 0)
+	
+	_overlay.note_selecting_rect = _note_selecting_rect
+	_overlay.queue_redraw()
+
+
+func _process_note_selecting() -> void:
+	if not _note_selecting:
+		return
+	
+	_note_selecting_rect.end = get_local_mouse_position()
+	
+	# Convert the pixel rect to a grid/cell index rect.
+	var grid_rect := Rect2i()
+	grid_rect.position = _get_cell_at_position(_note_selecting_rect.position)
+	grid_rect.end = _get_cell_at_position(_note_selecting_rect.end)
+	# Normalize the rect so we can check the points.
+	var grid_rect_normalized := grid_rect.abs()
+	grid_rect_normalized.size += Vector2i(1, 1) # Far edges must be inclusive.
+	
+	for active_note in _active_notes:
+		active_note.selected = grid_rect_normalized.has_point(active_note.cell_index)
+	
+	_overlay.note_selecting_rect = _note_selecting_rect
+	_overlay.queue_redraw()
+
+
+func _clear_note_selection() -> void:
+	for active_note in _active_notes:
+		active_note.selected = false
+
+
+func _copy_selected_notes() -> void:
+	_note_copied_buffer.clear()
+	
+	# Find the coordinates to zero out against.
+	var top_left := Vector2(-1, -1)
+	
+	# Extract all selected notes. We don't really care for their actual values, as
+	# all the data is interpreted relatively.
+	for active_note in _active_notes:
+		if not active_note.selected:
+			continue
+		
+		var relative_data := Vector3(active_note.cell_index.y, active_note.cell_index.x, active_note.length)
+		_note_copied_buffer.push_back(relative_data)
+		
+		if top_left.x == -1 || top_left.x > relative_data.x:
+			top_left.x = relative_data.x
+		if top_left.y == -1 || top_left.y > relative_data.y:
+			top_left.y = relative_data.y
+	
+	# Zero out the data.
+	for i in _note_copied_buffer.size():
+		var relative_data := _note_copied_buffer[i]
+		relative_data.x -= top_left.x
+		relative_data.y -= top_left.y
+		
+		_note_copied_buffer[i] = relative_data
+	
+	Controller.update_status("SELECTED NOTES COPIED", Controller.StatusLevel.INFO)
+
+
+func _paste_selected_notes() -> void:
+	if not Controller.current_song || not current_pattern:
+		return
+	if _note_copied_buffer.is_empty():
+		return
+	
+	var base_indexed := _get_cell_at_cursor()
+	if base_indexed.x < 0 || base_indexed.y < 0:
+		return
+	
+	# First, prepare the copied notes for the placement. Some may not fit well and have
+	# to be skipped. We override existing values with this operation, as this seems to
+	# be the most expected behavior.
+	
+	var notes_to_add: Array[Vector3i] = []
+	var notes_to_remove: Array[Vector3i] = []
+	
+	for copied_note: Vector3i in _note_copied_buffer:
+		var note_indexed := base_indexed + Vector2i(copied_note.y, copied_note.x)
+		var note_value_index := note_indexed.y + _scroll_offset
+		if note_value_index >= _note_row_value_map.size():
+			continue
+		
+		var note_value: int = _note_row_value_map[note_value_index] + current_pattern.key
+		var note_data := Vector3i(note_value, note_indexed.x, copied_note.z)
+		
+		var existing_note := current_pattern.get_note(note_value, note_indexed.x, true)
+		if current_pattern.is_note_valid(existing_note, Controller.current_song.pattern_size):
+			notes_to_remove.push_back(existing_note)
+		
+		notes_to_add.push_back(note_data)
+	
+	# Generate the undo/redo action.
+	
+	var pattern_state := Controller.state_manager.create_state_change(StateManager.StateChangeType.PATTERN, Controller.current_pattern_index)
+	var state_context := pattern_state.get_context()
+	state_context["removed"] = notes_to_remove
+	state_context["added"] = notes_to_add
+	
+	pattern_state.add_do_action(func() -> void:
+		var reference_pattern := Controller.current_song.patterns[pattern_state.reference_id]
+		reference_pattern.remove_notes(state_context.removed)
+		reference_pattern.restore_notes(state_context.added)
+	)
+	pattern_state.add_undo_action(func() -> void:
+		var reference_pattern := Controller.current_song.patterns[pattern_state.reference_id]
+		reference_pattern.remove_notes(state_context.added)
+		reference_pattern.restore_notes(state_context.removed)
+	)
+	
+	Controller.state_manager.commit_state_change(pattern_state)
+
+
 class NoteRow:
 	var note_index: int = -1
 	var label: String = ""
@@ -719,5 +884,8 @@ class OctaveRow:
 class ActiveNote:
 	var note_value: int = -1
 	var note_index: int = -1
+	var cell_index: Vector2i = Vector2i(-1, -1)
 	var position: Vector2 = Vector2.ZERO
 	var length: int = 1
+	
+	var selected: bool = false

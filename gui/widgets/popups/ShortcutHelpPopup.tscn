@@ -239,7 +239,58 @@ layout_mode = 2
 key_text = "bosca_notemap_cursor_smaller"
 description_text = "Make it smaller"
 
-[node name="LastSpacer" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2" index="6"]
+[node name="Spacer2" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2" index="6"]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+
+[node name="PatternStampingTitle" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2" index="7"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"CreditsLabelHeader"
+text = "Pattern stamping"
+
+[node name="PatternStampingList" type="VBoxContainer" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2" index="8"]
+auto_translate_mode = 1
+layout_mode = 2
+theme_type_variation = &"CreditsBox"
+
+[node name="ShortcutLine8" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2/PatternStampingList" index="0" instance=ExtResource("2_1wrnf")]
+layout_mode = 2
+key_text = "SHIFT + LEFT CLICK"
+key_is_action = false
+description_text = "Select the note"
+
+[node name="Label3" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2/PatternStampingList" index="1"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 8
+theme_type_variation = &"CreditsLabel"
+text = "(HOLD and DRAG to select multiple notes)"
+horizontal_alignment = 2
+
+[node name="ShortcutLine6" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2/PatternStampingList" index="2" instance=ExtResource("2_1wrnf")]
+layout_mode = 2
+key_text = "ui_copy"
+description_text = "Copy selected notes"
+
+[node name="ShortcutLine7" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2/PatternStampingList" index="3" instance=ExtResource("2_1wrnf")]
+layout_mode = 2
+key_text = "ui_paste"
+description_text = "Paste copied notes"
+
+[node name="Spacer2" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2/PatternStampingList" index="4"]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2/PatternStampingList" index="5"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabel"
+text = "This works across different patterns too!"
+
+[node name="LastSpacer" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2" index="9"]
 custom_minimum_size = Vector2(0, 16)
 layout_mode = 2
 
@@ -386,7 +437,7 @@ auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 8
 theme_type_variation = &"CreditsLabel"
-text = "(hold and drag to select multiple bars)"
+text = "(HOLD and DRAG to select multiple bars)"
 horizontal_alignment = 2
 
 [node name="ShortcutLine6" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section4/TimelineList" index="2" instance=ExtResource("2_1wrnf")]

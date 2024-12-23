@@ -343,6 +343,22 @@ func has_note(value: int, position: int, exact: bool = false) -> bool:
 	return false
 
 
+func get_note(value: int, position: int, exact: bool = false) -> Vector3i:
+	if value < 0 || position < 0:
+		return Vector3i(-1, -1, -1)
+	
+	for i in note_amount:
+		if notes[i].x != value:
+			continue
+		
+		if exact && position == notes[i].y:
+			return notes[i]
+		if not exact && position >= notes[i].y && position < (notes[i].y + notes[i].z):
+			return notes[i]
+	
+	return Vector3i(-1, -1, -1)
+
+
 func get_note_length(value: int, position: int) -> int:
 	if value < 0 || position < 0:
 		return 0
@@ -354,7 +370,7 @@ func get_note_length(value: int, position: int) -> int:
 	return 0
 
 
-func remove_note(value: int, position: int, exact: bool = false) -> void:
+func remove_note(value: int, position: int, exact: bool = false, full_update: bool = true) -> void:
 	if value < 0 || position < 0:
 		printerr("Pattern: Cannot remove a note %d at %d, values cannot be less than zero." % [ value, position ])
 		return
@@ -363,23 +379,33 @@ func remove_note(value: int, position: int, exact: bool = false) -> void:
 	while i < note_amount:
 		if notes[i].x == value:
 			if exact && position == notes[i].y:
-				remove_note_at(i)
+				remove_note_at(i, full_update)
 				i -= 1
 			
 			if not exact && position >= notes[i].y && position < (notes[i].y + notes[i].z):
-				remove_note_at(i)
+				remove_note_at(i, full_update)
 				i -= 1
 		i += 1
 	
+	if full_update:
+		notes_changed.emit()
+
+
+func remove_notes(removed_notes: Array[Vector3i]) -> void:
+	for note_data: Vector3i in removed_notes:
+		remove_note(note_data.x, note_data.y, true, false)
+	
+	reindex_active_notes()
 	notes_changed.emit()
 
 
-func remove_note_at(index: int) -> void:
+func remove_note_at(index: int, full_update: bool = true) -> void:
 	var index_ := ValueValidator.index(index, note_amount, "Pattern: Cannot remove a note at index %d, index is outside of the valid range [%d, %d]." % [ index, 0, note_amount - 1 ])
 	if index_ != index:
 		return
 	
-	_unindex_note(notes[index].x)
+	if full_update:
+		_unindex_note(notes[index].x)
 	
 	# Erase the note by shifting the array.
 	for i in range(index, note_amount):
