@@ -369,16 +369,19 @@ func _update_playback_cursor() -> void:
 # Grid layout and coordinates.
 
 func _get_cell_at_cursor() -> Vector2i:
+	return _get_cell_at_position(get_local_mouse_position())
+
+
+func _get_cell_at_position(at_position: Vector2) -> Vector2i:
 	var available_rect: Rect2 = get_available_rect()
 	
-	var mouse_position := get_local_mouse_position()
-	if not available_rect.has_point(mouse_position):
+	if not available_rect.has_point(at_position):
 		return Vector2i(-1, -1)
 	
-	var mouse_normalized := mouse_position - available_rect.position
+	var position_normalized := at_position - available_rect.position
 	var cell_indexed := Vector2i(0, 0)
-	cell_indexed.x = clampi(floori(mouse_normalized.x / _pattern_width), 0, _arrangement_bars.size() - 1)
-	cell_indexed.y = clampi(floori(mouse_normalized.y / _pattern_height), 0, Arrangement.CHANNEL_NUMBER - 1)
+	cell_indexed.x = clampi(floori(position_normalized.x / _pattern_width), 0, _arrangement_bars.size() - 1)
+	cell_indexed.y = clampi(floori(position_normalized.y / _pattern_height), 0, Arrangement.CHANNEL_NUMBER - 1)
 	return cell_indexed
 
 
@@ -592,8 +595,8 @@ func _process_pattern_cursor() -> void:
 	_overlay.queue_redraw()
 
 
-func _get_drag_data(_at_position: Vector2) -> Variant:
-	var pattern_idx := _get_pattern_at_cursor()
+func _get_drag_data(at_position: Vector2) -> Variant:
+	var pattern_idx := _get_pattern_at_position(at_position)
 	if pattern_idx < 0:
 		return null
 	
@@ -697,10 +700,14 @@ func _edit_current_pattern() -> void:
 
 
 func _get_pattern_at_cursor() -> int:
+	return _get_pattern_at_position(get_local_mouse_position())
+
+
+func _get_pattern_at_position(at_position: Vector2) -> int:
 	if not current_arrangement:
 		return -1
 	
-	var cell := _get_cell_at_cursor()
+	var cell := _get_cell_at_position(at_position)
 	var bar_index := cell.x + _scroll_offset
 	if bar_index < 0 || bar_index >= current_arrangement.timeline_length:
 		return -1
