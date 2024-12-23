@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="HelpGuide" load_steps=26 format=3 uid="uid://c8snyulwofxh0"]
+[gd_resource type="Resource" script_class="HelpGuide" load_steps=28 format=3 uid="uid://c8snyulwofxh0"]
 
 [ext_resource type="Script" path="res://objects/HelpGuide.gd" id="1_bxt1b"]
 [ext_resource type="Script" path="res://objects/HelpGuideStep.gd" id="2_dumha"]
@@ -25,7 +25,7 @@ size = Vector2(480, 220)
 [sub_resource type="Resource" id="Resource_g4l2c"]
 script = ExtResource("2_dumha")
 title = "HELP - Placing Notes"
-description = "You can delete notes with [accent]RIGHT CLICK[/accent], or [accent]CTRL + LEFT CLICK[/accent]."
+description = "You can delete notes with [accent]RIGHT CLICK[/accent]."
 ref_image_size = Vector2(0, 0)
 ref_image_position = 0
 navigation_target = 1
@@ -35,25 +35,53 @@ position_anchor = Vector2(0.915, 0.17)
 position_direction = 1
 size = Vector2(480, 160)
 
-[sub_resource type="Resource" id="Resource_gaqu5"]
+[sub_resource type="Resource" id="Resource_q7fna"]
 script = ExtResource("2_dumha")
 title = "HELP - Placing Notes"
-description = "You can reach higher and lower notes with the [accent]scrollbar[/accent], or by pressing the [accent]UP and DOWN[/accent] arrow keys."
+description = "If you made a mistake, you can undo your last action by pressing [accent]CTRL + Z[/accent].
+
+You can undo just about any change you make!"
 ref_image_size = Vector2(0, 0)
 ref_image_position = 0
 navigation_target = 1
-node_target = 102
+node_target = 0
+trigger_target = 0
+position_anchor = Vector2(0.5, 0.5)
+position_direction = 4
+size = Vector2(480, 230)
+
+[sub_resource type="Resource" id="Resource_gaqu5"]
+script = ExtResource("2_dumha")
+title = "HELP - Placing Notes"
+description = "You can reach higher and lower notes with the [accent]MOUSE WHEEL[/accent], or by pressing the [accent]UP and DOWN[/accent] arrow keys."
+ref_image_size = Vector2(0, 0)
+ref_image_position = 0
+navigation_target = 1
+node_target = 0
 trigger_target = 0
 position_anchor = Vector2(0.91, 0.9)
 position_direction = 3
 size = Vector2(480, 190)
 
+[sub_resource type="Resource" id="Resource_m1di7"]
+script = ExtResource("2_dumha")
+title = "HELP - Placing Notes"
+description = "Or you can use the [accent]scrollbar[/accent]. Holding buttons makes it scroll faster."
+ref_image_size = Vector2(0, 0)
+ref_image_position = 0
+navigation_target = 0
+node_target = 102
+trigger_target = 0
+position_anchor = Vector2(0.915, 0.89)
+position_direction = 3
+size = Vector2(440, 190)
+
 [sub_resource type="Resource" id="Resource_hofnx"]
 script = ExtResource("2_dumha")
 title = "HELP - Placing Notes"
-description = "Use the [accent]MOUSE WHEEL[/accent] to change the length of the note.
+description = "Use [accent]CTRL + MOUSE WHEEL[/accent] to change the length of the note.
 
-(Or press [accent]SHIFT + ARROW[/accent] keys.)"
+(Or press [accent]CTRL + LEFT or RIGHT[/accent] arrow key.)"
 ref_image = ExtResource("3_5vxqq")
 ref_image_size = Vector2(340, 130)
 ref_image_position = 2
@@ -62,7 +90,7 @@ node_target = 101
 trigger_target = 0
 position_anchor = Vector2(0.09, 0.355)
 position_direction = 0
-size = Vector2(780, 210)
+size = Vector2(780, 220)
 
 [sub_resource type="Resource" id="Resource_wiyle"]
 script = ExtResource("2_dumha")
@@ -95,7 +123,7 @@ size = Vector2(560, 220)
 [sub_resource type="Resource" id="Resource_q7o8q"]
 script = ExtResource("2_dumha")
 title = "HELP - Arrangements"
-description = "[accent]DRAG[/accent] your new pattern from the list on the right to below the original pattern.
+description = "[accent]DRAG[/accent] your new pattern from the list on the right to the row below the original pattern.
 
 Now you can edit this pattern and hear both playing together!"
 ref_image = ExtResource("4_d3ksy")
@@ -111,7 +139,7 @@ size = Vector2(780, 250)
 [sub_resource type="Resource" id="Resource_36r5k"]
 script = ExtResource("2_dumha")
 title = "HELP - Arrangements"
-description = "You can copy patterns by [accent]DRAGGING[/accent] them, and remove them with [accent]RIGHT CLICK[/accent]."
+description = "You can copy patterns between bars by [accent]DRAGGING[/accent] them, and remove them with [accent]RIGHT CLICK[/accent]."
 ref_image = ExtResource("5_6t0bx")
 ref_image_size = Vector2(450, 120)
 ref_image_position = 1
@@ -120,7 +148,7 @@ node_target = 201
 trigger_target = 0
 position_anchor = Vector2(0.205, 0.355)
 position_direction = 0
-size = Vector2(540, 290)
+size = Vector2(620, 290)
 
 [sub_resource type="Resource" id="Resource_t8m4y"]
 script = ExtResource("2_dumha")
@@ -206,7 +234,9 @@ size = Vector2(480, 210)
 [sub_resource type="Resource" id="Resource_bmfds"]
 script = ExtResource("2_dumha")
 title = "HELP - Instruments"
-description = "Or, if you don't like that one, pick a new one from the menu!"
+description = "If you don't like that one, pick a different one from the list...
+
+...or keep experimenting with the [accent]randomizer[/accent] button!"
 ref_image_size = Vector2(0, 0)
 ref_image_position = 0
 navigation_target = 3
@@ -214,7 +244,7 @@ node_target = 302
 trigger_target = 0
 position_anchor = Vector2(0.035, 0.2)
 position_direction = 0
-size = Vector2(460, 160)
+size = Vector2(460, 220)
 
 [sub_resource type="Resource" id="Resource_s5xb7"]
 script = ExtResource("2_dumha")
@@ -245,9 +275,11 @@ size = Vector2(460, 180)
 [sub_resource type="Resource" id="Resource_0fvlh"]
 script = ExtResource("2_dumha")
 title = "HELP - Arrangements"
-description = "One last thing: when you're arranging your song, something you'll probably want to do a lot is to make slight variations of your patterns.
+description = "One last thing!
 
-You can do this by making [accent]DUPLICATES[/accent]. To duplicate a pattern, [accent]MIDDLE CLICK[/accent] on it. (You can also use [accent]SHIFT + LEFT CLICK[/accent].)"
+As you compose your song, something you'll probably want to do a lot is to make slight variations of your patterns.
+
+You can do this by making [accent]DUPLICATES[/accent]. To duplicate a pattern, hold [accent]ALT[/accent] as you [accent]CLICK or DRAG[/accent] it in the arrangement."
 ref_image_size = Vector2(0, 0)
 ref_image_position = 0
 navigation_target = 2
@@ -255,14 +287,14 @@ node_target = 200
 trigger_target = 0
 position_anchor = Vector2(0.195, 0.37)
 position_direction = 0
-size = Vector2(600, 280)
+size = Vector2(600, 310)
 
 [sub_resource type="Resource" id="Resource_bplh8"]
 script = ExtResource("2_dumha")
 title = "HELP - Tutorial Complete"
 description = "That's everything you need to know! Have fun making music!
 
-(For more info and advanced tips, click [accent]HELP[/accent] on the main menu.)"
+For advanced tips and a full list of available shortcuts, click [accent]HELP[/accent] on the main menu."
 ref_image_size = Vector2(0, 0)
 ref_image_position = 0
 navigation_target = 0
@@ -270,8 +302,8 @@ node_target = 0
 trigger_target = 0
 position_anchor = Vector2(0.5, 0.5)
 position_direction = 4
-size = Vector2(500, 230)
+size = Vector2(510, 250)
 
 [resource]
 script = ExtResource("1_bxt1b")
-steps = Array[ExtResource("2_dumha")]([SubResource("Resource_bgi50"), SubResource("Resource_g4l2c"), SubResource("Resource_gaqu5"), SubResource("Resource_hofnx"), SubResource("Resource_wiyle"), SubResource("Resource_yq3xf"), SubResource("Resource_q7o8q"), SubResource("Resource_36r5k"), SubResource("Resource_t8m4y"), SubResource("Resource_y11m4"), SubResource("Resource_xwfey"), SubResource("Resource_4och6"), SubResource("Resource_hal82"), SubResource("Resource_vdi1t"), SubResource("Resource_bmfds"), SubResource("Resource_s5xb7"), SubResource("Resource_sf4tw"), SubResource("Resource_0fvlh"), SubResource("Resource_bplh8")])
+steps = Array[ExtResource("2_dumha")]([SubResource("Resource_bgi50"), SubResource("Resource_g4l2c"), SubResource("Resource_q7fna"), SubResource("Resource_gaqu5"), SubResource("Resource_m1di7"), SubResource("Resource_hofnx"), SubResource("Resource_wiyle"), SubResource("Resource_yq3xf"), SubResource("Resource_q7o8q"), SubResource("Resource_36r5k"), SubResource("Resource_t8m4y"), SubResource("Resource_y11m4"), SubResource("Resource_xwfey"), SubResource("Resource_4och6"), SubResource("Resource_hal82"), SubResource("Resource_vdi1t"), SubResource("Resource_bmfds"), SubResource("Resource_s5xb7"), SubResource("Resource_sf4tw"), SubResource("Resource_0fvlh"), SubResource("Resource_bplh8")])
