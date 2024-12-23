@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="HelpGuide" load_steps=15 format=3 uid="uid://dpyar3sq303xm"]
+[gd_resource type="Resource" script_class="HelpGuide" load_steps=18 format=3 uid="uid://dpyar3sq303xm"]
 
 [ext_resource type="Script" path="res://objects/HelpGuide.gd" id="1_6yyxb"]
 [ext_resource type="Script" path="res://objects/HelpGuideStep.gd" id="2_6a2si"]
@@ -7,14 +7,10 @@
 
 [sub_resource type="Resource" id="Resource_ig3qc"]
 script = ExtResource("2_6a2si")
-title = "HELP - Tips and Tricks"
-description = "Some useful keys to know:
+title = "TIPS & TRICKS - Playback"
+description = "You can quickly stop and restart the playback by pressing [accent]SPACE[/accent].
 
-[accent]SPACE[/accent] - Pause/unpause the current song;
-[accent]ARROW UP[/accent]/[accent]DOWN[/accent] - Scroll the pattern editor;
-[accent]ARROW LEFT[/accent]/[accent]RIGHT[/accent] - Scroll the arrangement editor.
-
-(More shortcuts in the HELP menu!)"
+Hold [accent]CTRL[/accent] to pause instead."
 ref_image_size = Vector2(0, 0)
 ref_image_position = 0
 navigation_target = 2
@@ -22,15 +18,60 @@ node_target = 0
 trigger_target = 0
 position_anchor = Vector2(0.5, 0.5)
 position_direction = 4
-size = Vector2(640, 270)
+size = Vector2(500, 200)
 
-[sub_resource type="Resource" id="Resource_5l0n3"]
+[sub_resource type="Resource" id="Resource_fwmv4"]
 script = ExtResource("2_6a2si")
-title = "HELP - Tips and Tricks"
-description = "These little [accent]PLUS[/accent] and [accent]MINUS[/accent] buttons [accent]transpose[/accent] notes in the current pattern moving them higher or lower!"
+title = "TIPS & TRICKS - Saving and Loading"
+description = "Save your progress with [accent]CTRL + S[/accent]. Holding [accent]ALT[/accent] prompts the [accent]Save As[/accent] dialog instead.
+
+You can create a new song by pressing [accent]CTRL + N[/accent], or open an existing one with [accent]CTRL + O[/accent]."
+ref_image_size = Vector2(0, 0)
+ref_image_position = 0
+navigation_target = 1
+node_target = 0
+trigger_target = 0
+position_anchor = Vector2(0.64, 0.41)
+position_direction = 4
+size = Vector2(550, 240)
+
+[sub_resource type="Resource" id="Resource_uprl4"]
+script = ExtResource("2_6a2si")
+title = "TIPS & TRICKS - Action History"
+description = "You can undo up to [accent]40[/accent] changes by pressing [accent]CTRL + Z[/accent]. You can also redo the actions you have just undone with [accent]CTRL + SHIFT + Z[/accent].
+
+Note: Making any changes clears future actions!"
 ref_image_size = Vector2(0, 0)
 ref_image_position = 0
 navigation_target = 0
+node_target = 0
+trigger_target = 0
+position_anchor = Vector2(0.92, 0.225)
+position_direction = 1
+size = Vector2(520, 270)
+
+[sub_resource type="Resource" id="Resource_ie5ya"]
+script = ExtResource("2_6a2si")
+title = "TIPS & TRICKS - Shortcuts"
+description = "Bosca Ceoil has many shortcuts and contextual interactions!
+
+You can find all of them listed in the [accent]HELP[/accent] section."
+ref_image_size = Vector2(0, 0)
+ref_image_position = 0
+navigation_target = 5
+node_target = 0
+trigger_target = 0
+position_anchor = Vector2(0.5, 0.5)
+position_direction = 4
+size = Vector2(430, 230)
+
+[sub_resource type="Resource" id="Resource_5l0n3"]
+script = ExtResource("2_6a2si")
+title = "TIPS & TRICKS - Patterns"
+description = "These little [accent]PLUS[/accent] and [accent]MINUS[/accent] buttons [accent]transpose[/accent] notes in the current pattern moving them higher or lower!"
+ref_image_size = Vector2(0, 0)
+ref_image_position = 0
+navigation_target = 1
 node_target = 105
 trigger_target = 0
 position_anchor = Vector2(0.54, 0.905)
@@ -39,7 +80,7 @@ size = Vector2(480, 180)
 
 [sub_resource type="Resource" id="Resource_38vdh"]
 script = ExtResource("2_6a2si")
-title = "HELP - Tips and Tricks"
+title = "TIPS & TRICKS - Patterns"
 description = "You can change the [accent]SCALE[/accent] and [accent]KEY[/accent] of a pattern with this menu in the bottom right.
 When you're using a [accent]SCALE[/accent], notes which are not in that scale are removed from the pattern!
 
@@ -55,10 +96,10 @@ size = Vector2(620, 300)
 
 [sub_resource type="Resource" id="Resource_y7c54"]
 script = ExtResource("2_6a2si")
-title = "HELP - Tips and Tricks"
-description = "You can [accent]RIGHT CLICK[/accent] on a timeline section to delete the entire column (bar).
+title = "TIPS & TRICKS - Timeline"
+description = "You can [accent]RIGHT CLICK[/accent] on a timeline section to delete the entire bar.
 
-You can [accent]MIDDLE CLICK[/accent] on the timeline to insert a blank bar."
+You can [accent]MIDDLE CLICK[/accent] (or [accent]SHIFT + LEFT CLICK[/accent]) on the timeline to insert a blank bar."
 ref_image_size = Vector2(0, 0)
 ref_image_position = 0
 navigation_target = 2
@@ -70,11 +111,12 @@ size = Vector2(560, 230)
 
 [sub_resource type="Resource" id="Resource_ggls6"]
 script = ExtResource("2_6a2si")
-title = "HELP - Tips and Tricks"
+title = "TIPS & TRICKS - Timeline"
 description = "You can [accent]COPY[/accent] and [accent]PASTE[/accent] arrangement bars.
 
-Just select the sections of the timeline you want, and press [accent]CTRL + C[/accent] to copy.
-To paste, hover the mouse over the timeline section you want to insert from, and press [accent]CTRL + V[/accent]."
+[accent]HOLD and DRAG[/accent] to select the sections of the timeline you want, and press [accent]CTRL + C[/accent] to copy.
+
+To paste, [accent]HOVER[/accent] the mouse over the timeline section you want to insert at, and press [accent]CTRL + V[/accent]."
 ref_image_size = Vector2(0, 0)
 ref_image_position = 0
 navigation_target = 2
@@ -82,11 +124,11 @@ node_target = 203
 trigger_target = 0
 position_anchor = Vector2(0.24, 0.355)
 position_direction = 0
-size = Vector2(640, 260)
+size = Vector2(640, 270)
 
 [sub_resource type="Resource" id="Resource_isqye"]
 script = ExtResource("2_6a2si")
-title = "HELP - Tips and Tricks"
+title = "TIPS & TRICKS - Instruments"
 description = "[accent]TWEAK[/accent] how your instrument sounds with the filter pad!
 Move the square around to play with cutoff and resonance values."
 ref_image_size = Vector2(0, 0)
@@ -100,10 +142,10 @@ size = Vector2(560, 200)
 
 [sub_resource type="Resource" id="Resource_flqw8"]
 script = ExtResource("2_6a2si")
-title = "HELP - Tips and Tricks"
+title = "TIPS & TRICKS - Instruments"
 description = "You can completely [accent]DELETE[/accent] instruments and patterns that you don't want.
 
-Start dragging the item from the [accent]side list[/accent], and a [accent]delete area[/accent] will appear below the panel. Let go of your instrument or pattern there to confirm the deletion."
+Start [accent]DRAGGING[/accent] the item from the [accent]side list[/accent], and a [accent]delete area[/accent] will appear below the panel. [accent]LET GO[/accent] of your instrument or pattern there to confirm the deletion."
 ref_image = ExtResource("3_7bj3b")
 ref_image_size = Vector2(480, 180)
 ref_image_position = 1
@@ -116,7 +158,7 @@ size = Vector2(620, 460)
 
 [sub_resource type="Resource" id="Resource_03vci"]
 script = ExtResource("2_6a2si")
-title = "HELP - Tips and Tricks"
+title = "TIPS & TRICKS - Advanced Tuning"
 description = "Alright, last one, but this one's really fancy!
 
 Spot this [accent]RECORD[/accent] button next to the instrument picker down below."
@@ -131,11 +173,11 @@ size = Vector2(580, 200)
 
 [sub_resource type="Resource" id="Resource_2arx2"]
 script = ExtResource("2_6a2si")
-title = "HELP - Tips and Tricks"
+title = "TIPS & TRICKS - Advanced Tuning"
 description = "This button enables [accent]FILTER RECORDING[/accent] for the current pattern.
-When [accent]FILTER RECORDING[/accent] is on, the filter and volume values in this pattern can be changed over time!
+When [accent]FILTER RECORDING[/accent] is on, the filter and volume values of the instrument in this pattern can be changed over time!
 
-Try clicking the button and playing with the filter pad and the volume slider."
+Try clicking the [accent]RECORD[/accent] button and playing with the filter pad and the volume slider as the song plays."
 ref_image = ExtResource("4_f2mo2")
 ref_image_size = Vector2(590, 200)
 ref_image_position = 1
@@ -144,11 +186,11 @@ node_target = 305
 trigger_target = 0
 position_anchor = Vector2(0.9, 0.375)
 position_direction = 1
-size = Vector2(680, 480)
+size = Vector2(680, 500)
 
 [sub_resource type="Resource" id="Resource_goh2j"]
 script = ExtResource("2_6a2si")
-title = "HELP - Tips and Tricks"
+title = "TIPS & TRICKS - Tutorial Complete"
 description = "I think that's everything! Have fun creating music.
 
 And thanks for using Bosca Ceoil!"
@@ -159,8 +201,8 @@ node_target = 0
 trigger_target = 0
 position_anchor = Vector2(0.5, 0.5)
 position_direction = 4
-size = Vector2(460, 210)
+size = Vector2(480, 210)
 
 [resource]
 script = ExtResource("1_6yyxb")
-steps = Array[ExtResource("2_6a2si")]([SubResource("Resource_ig3qc"), SubResource("Resource_5l0n3"), SubResource("Resource_38vdh"), SubResource("Resource_y7c54"), SubResource("Resource_ggls6"), SubResource("Resource_isqye"), SubResource("Resource_flqw8"), SubResource("Resource_03vci"), SubResource("Resource_2arx2"), SubResource("Resource_goh2j")])
+steps = Array[ExtResource("2_6a2si")]([SubResource("Resource_ig3qc"), SubResource("Resource_fwmv4"), SubResource("Resource_uprl4"), SubResource("Resource_ie5ya"), SubResource("Resource_5l0n3"), SubResource("Resource_38vdh"), SubResource("Resource_y7c54"), SubResource("Resource_ggls6"), SubResource("Resource_isqye"), SubResource("Resource_flqw8"), SubResource("Resource_03vci"), SubResource("Resource_2arx2"), SubResource("Resource_goh2j")])
