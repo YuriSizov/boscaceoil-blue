@@ -11,6 +11,13 @@ class_name IOManager extends RefCounted
 const IO_CONFIG_POPUP_SCENE := preload("res://gui/widgets/popups/IOConfigPopup.tscn")
 
 var _io_config_popup: IOConfigPopup = null
+# We must keep references around, otherwise they get silently destroyed.
+# JavaScriptBridge doesn't tick the reference counter, it seems.
+var _check_song_on_browser_close_ref: JavaScriptObject = null
+
+func _init() -> void:
+	if OS.has_feature("web"):
+		_connect_to_browser_close()
 
 
 func _notification(what: int) -> void:
@@ -201,6 +208,26 @@ func check_song_on_exit(always_confirm: bool = false) -> void:
 		return
 	
 	Controller.get_tree().quit()
+
+
+func _connect_to_browser_close() -> void:
+	if not OS.has_feature("web"):
+		return
+	
+	_check_song_on_browser_close_ref = JavaScriptBridge.create_callback(func(args: Array) -> void:
+		_check_song_on_browser_close.call(args[0]) # The event object.
+	)
+	
+	var window := JavaScriptBridge.get_interface("window")
+	window.addEventListener("beforeunload", _check_song_on_browser_close_ref)
+
+
+func _check_song_on_browser_close(event: JavaScriptObject) -> void:
+	if Controller.current_song && Controller.current_song.is_dirty():
+		# This may not work in every browser.
+		event.returnValue = "Current song has UNSAVED CHANGES.\n\nAre you sure you want to quit?"
+		# But this will always work, just with the standard message.
+		event.preventDefault()
 
 
 # External format import.
