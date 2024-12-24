@@ -120,20 +120,23 @@ func _gui_input(event: InputEvent) -> void:
 		if _note_cursor_visible && mb.pressed:
 			if mb.button_index == MOUSE_BUTTON_WHEEL_UP:
 				if mb.ctrl_pressed:
-					_resize_note_cursor(1)
+					_adjust_note_cursor(1)
 				else:
 					_change_scroll_offset(1)
 			elif mb.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 				if mb.ctrl_pressed:
-					_resize_note_cursor(-1)
+					_adjust_note_cursor(-1)
 				else:
 					_change_scroll_offset(-1)
 			
 			elif mb.button_index == MOUSE_BUTTON_LEFT:
+				_clear_note_selection()
+				
 				if mb.shift_pressed:
 					_start_selecting_notes()
+				elif mb.ctrl_pressed:
+					_set_cursor_size_at_cursor()
 				else:
-					_clear_note_selection()
 					_start_drawing_notes(DrawingMode.DRAWING_ADD)
 			elif mb.button_index == MOUSE_BUTTON_RIGHT:
 				_clear_note_selection()
@@ -151,9 +154,9 @@ func _shortcut_input(event: InputEvent) -> void:
 		return
 	
 	if event.is_action_pressed("bosca_notemap_cursor_bigger", true, true):
-		_resize_note_cursor(1)
+		_adjust_note_cursor(1)
 	elif event.is_action_pressed("bosca_notemap_cursor_smaller", true, true):
-		_resize_note_cursor(-1)
+		_adjust_note_cursor(-1)
 	elif event.is_action_pressed("ui_copy"):
 		_copy_selected_notes()
 		get_viewport().set_input_as_handled()
@@ -369,7 +372,7 @@ func _update_song_sizes() -> void:
 	_note_width = available_rect.size.x / effective_pattern_size
 	_overlay.note_unit_width = _note_width
 	
-	_resize_note_cursor(0)
+	_adjust_note_cursor(0)
 	_update_active_notes()
 	queue_redraw()
 
@@ -629,10 +632,36 @@ func _hide_note_cursor() -> void:
 	_process_note_cursor()
 
 
-func _resize_note_cursor(delta: int) -> void:
+func _adjust_note_cursor(delta: int) -> void:
 	_note_cursor_size = clamp(_note_cursor_size + delta, 1, Pattern.MAX_NOTE_LENGTH)
 	_overlay.note_cursor_size = _note_cursor_size
 	_overlay.queue_redraw()
+
+
+func _resize_note_cursor(value: int) -> void:
+	_note_cursor_size = clamp(value, 1, Pattern.MAX_NOTE_LENGTH)
+	_overlay.note_cursor_size = _note_cursor_size
+	_overlay.queue_redraw()
+
+
+func _set_cursor_size_at_cursor() -> void:
+	if not Controller.current_song || not current_pattern:
+		return
+
+	var note_indexed := _get_cell_at_cursor()
+	if note_indexed.x < 0 || note_indexed.y < 0:
+		return
+	var note_value_index := note_indexed.y + _scroll_offset
+	if note_value_index >= _note_row_value_map.size():
+		return
+	
+	var note_value: int = _note_row_value_map[note_value_index] + current_pattern.key
+	var note_data := current_pattern.get_note(note_value, note_indexed.x)
+	
+	if current_pattern.is_note_valid(note_data, Controller.current_song.pattern_size):
+		_resize_note_cursor(note_data.z)
+	else:
+		_resize_note_cursor(1)
 
 
 func _process_note_cursor() -> void:
