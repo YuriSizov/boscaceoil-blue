@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="HelpGuide" load_steps=28 format=3 uid="uid://c8snyulwofxh0"]
+[gd_resource type="Resource" script_class="HelpGuide" load_steps=29 format=3 uid="uid://c8snyulwofxh0"]
 
 [ext_resource type="Script" path="res://objects/HelpGuide.gd" id="1_bxt1b"]
 [ext_resource type="Script" path="res://objects/HelpGuideStep.gd" id="2_dumha"]
@@ -272,6 +272,22 @@ position_anchor = Vector2(0.285, 0.895)
 position_direction = 2
 size = Vector2(460, 180)
 
+[sub_resource type="Resource" id="Resource_trdfe"]
+script = ExtResource("2_dumha")
+title = "HELP - Saving"
+description = "When you're done, don't forget to save your progress!
+
+You can do this any time by pressing
+[accent]CTRL + S[/accent]. Holding [accent]ALT[/accent] prompts the [accent]Save As[/accent] dialog instead."
+ref_image_size = Vector2(0, 0)
+ref_image_position = 0
+navigation_target = 1
+node_target = 0
+trigger_target = 0
+position_anchor = Vector2(0.64, 0.41)
+position_direction = 4
+size = Vector2(550, 240)
+
 [sub_resource type="Resource" id="Resource_0fvlh"]
 script = ExtResource("2_dumha")
 title = "HELP - Arrangements"
@@ -306,4 +322,4 @@ size = Vector2(510, 250)
 
 [resource]
 script = ExtResource("1_bxt1b")
-steps = Array[ExtResource("2_dumha")]([SubResource("Resource_bgi50"), SubResource("Resource_g4l2c"), SubResource("Resource_q7fna"), SubResource("Resource_gaqu5"), SubResource("Resource_m1di7"), SubResource("Resource_hofnx"), SubResource("Resource_wiyle"), SubResource("Resource_yq3xf"), SubResource("Resource_q7o8q"), SubResource("Resource_36r5k"), SubResource("Resource_t8m4y"), SubResource("Resource_y11m4"), SubResource("Resource_xwfey"), SubResource("Resource_4och6"), SubResource("Resource_hal82"), SubResource("Resource_vdi1t"), SubResource("Resource_bmfds"), SubResource("Resource_s5xb7"), SubResource("Resource_sf4tw"), SubResource("Resource_0fvlh"), SubResource("Resource_bplh8")])
+steps = Array[ExtResource("2_dumha")]([SubResource("Resource_bgi50"), SubResource("Resource_g4l2c"), SubResource("Resource_q7fna"), SubResource("Resource_gaqu5"), SubResource("Resource_m1di7"), SubResource("Resource_hofnx"), SubResource("Resource_wiyle"), SubResource("Resource_yq3xf"), SubResource("Resource_q7o8q"), SubResource("Resource_36r5k"), SubResource("Resource_t8m4y"), SubResource("Resource_y11m4"), SubResource("Resource_xwfey"), SubResource("Resource_4och6"), SubResource("Resource_hal82"), SubResource("Resource_vdi1t"), SubResource("Resource_bmfds"), SubResource("Resource_s5xb7"), SubResource("Resource_sf4tw"), SubResource("Resource_trdfe"), SubResource("Resource_0fvlh"), SubResource("Resource_bplh8")])

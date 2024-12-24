@@ -239,6 +239,20 @@ layout_mode = 2
 key_text = "bosca_notemap_cursor_smaller"
 description_text = "Make it smaller"
 
+[node name="ShortcutLine6" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2/PatternDrawingList" index="7" instance=ExtResource("2_1wrnf")]
+layout_mode = 2
+key_text = "CTRL + LEFT CLICK"
+key_is_action = false
+description_text = "Set it to the length of the note"
+
+[node name="Label2" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2/PatternDrawingList" index="8"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 8
+theme_type_variation = &"CreditsLabel"
+text = "(CLICK on empty space to reset the size)"
+horizontal_alignment = 2
+
 [node name="Spacer2" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section2" index="6"]
 custom_minimum_size = Vector2(0, 6)
 layout_mode = 2

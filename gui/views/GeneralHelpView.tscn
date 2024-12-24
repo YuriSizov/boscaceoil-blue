@@ -107,33 +107,38 @@ size_flags_horizontal = 4
 theme_type_variation = &"CreditsLabelHeader"
 text = "Basic shortcuts"
 
-[node name="ShortcutList" type="VBoxContainer" parent="Layout/RightPage/Layout"]
+[node name="ShortShortcutList" type="VBoxContainer" parent="Layout/RightPage/Layout"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"CreditsBox"
+
+[node name="ShortcutList" type="VBoxContainer" parent="Layout/RightPage/Layout/ShortShortcutList"]
 auto_translate_mode = 1
 layout_mode = 2
 theme_type_variation = &"CreditsBox"
 
-[node name="ShortcutLine" parent="Layout/RightPage/Layout/ShortcutList" instance=ExtResource("3_1pvp8")]
+[node name="ShortcutLine" parent="Layout/RightPage/Layout/ShortShortcutList/ShortcutList" instance=ExtResource("3_1pvp8")]
 layout_mode = 2
 key_text = "bosca_playstop"
 description_text = "Play/Stop"
 
-[node name="ShortcutLine5" parent="Layout/RightPage/Layout/ShortcutList" instance=ExtResource("3_1pvp8")]
+[node name="ShortcutLine5" parent="Layout/RightPage/Layout/ShortShortcutList/ShortcutList" instance=ExtResource("3_1pvp8")]
 layout_mode = 2
 key_text = "ui_undo"
 description_text = "Undo last action"
 
-[node name="ShortcutLine2" parent="Layout/RightPage/Layout/ShortcutList" instance=ExtResource("3_1pvp8")]
+[node name="ShortcutLine2" parent="Layout/RightPage/Layout/ShortShortcutList/ShortcutList" instance=ExtResource("3_1pvp8")]
 layout_mode = 2
 key_text = "bosca_save"
 description_text = "Save current song"
 
-[node name="Spacer2" type="Control" parent="Layout/RightPage/Layout"]
+[node name="Spacer2" type="Control" parent="Layout/RightPage/Layout/ShortShortcutList"]
 auto_translate_mode = 1
 custom_minimum_size = Vector2(0, 6)
 layout_mode = 2
 size_flags_horizontal = 0
 
-[node name="Label2" type="Label" parent="Layout/RightPage/Layout"]
+[node name="Label2" type="Label" parent="Layout/RightPage/Layout/ShortShortcutList"]
 auto_translate_mode = 1
 custom_minimum_size = Vector2(460, 0)
 layout_mode = 2
@@ -142,13 +147,13 @@ theme_type_variation = &"CreditsLabelHeader"
 text = "...And there are many more!"
 horizontal_alignment = 1
 
-[node name="Spacer3" type="Control" parent="Layout/RightPage/Layout"]
+[node name="Spacer3" type="Control" parent="Layout/RightPage/Layout/ShortShortcutList"]
 auto_translate_mode = 1
 custom_minimum_size = Vector2(0, 6)
 layout_mode = 2
 size_flags_horizontal = 0
 
-[node name="ShowShortcutsButton" parent="Layout/RightPage/Layout" instance=ExtResource("2_y870o")]
+[node name="ShowShortcutsButton" parent="Layout/RightPage/Layout/ShortShortcutList" instance=ExtResource("2_y870o")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2

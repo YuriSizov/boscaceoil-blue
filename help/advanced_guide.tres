@@ -1,9 +1,26 @@
-[gd_resource type="Resource" script_class="HelpGuide" load_steps=18 format=3 uid="uid://dpyar3sq303xm"]
+[gd_resource type="Resource" script_class="HelpGuide" load_steps=20 format=3 uid="uid://dpyar3sq303xm"]
 
 [ext_resource type="Script" path="res://objects/HelpGuide.gd" id="1_6yyxb"]
 [ext_resource type="Script" path="res://objects/HelpGuideStep.gd" id="2_6a2si"]
 [ext_resource type="Texture2D" uid="uid://r26ibp33l6if" path="res://help/advanced_guide_delete_instrument.png" id="3_7bj3b"]
+[ext_resource type="Texture2D" uid="uid://dlmdhoaldml2c" path="res://help/advanced_guide_note_selection.png" id="3_8j5sp"]
 [ext_resource type="Texture2D" uid="uid://dotqpsqiueyqi" path="res://help/advanced_guide_rec_filter.png" id="4_f2mo2"]
+
+[sub_resource type="Resource" id="Resource_ie5ya"]
+script = ExtResource("2_6a2si")
+title = "TIPS & TRICKS - Shortcuts"
+description = "Did you know you can quickly open an existing song using [accent]CTRL + O[/accent]?
+
+Bosca Ceoil has many shortcuts and contextual interactions!
+You can find all of them listed in the [accent]HELP[/accent] section."
+ref_image_size = Vector2(0, 0)
+ref_image_position = 0
+navigation_target = 5
+node_target = 401
+trigger_target = 0
+position_anchor = Vector2(0.5, 0.5)
+position_direction = 4
+size = Vector2(480, 270)
 
 [sub_resource type="Resource" id="Resource_ig3qc"]
 script = ExtResource("2_6a2si")
@@ -20,25 +37,11 @@ position_anchor = Vector2(0.5, 0.5)
 position_direction = 4
 size = Vector2(500, 200)
 
-[sub_resource type="Resource" id="Resource_fwmv4"]
-script = ExtResource("2_6a2si")
-title = "TIPS & TRICKS - Saving and Loading"
-description = "Save your progress with [accent]CTRL + S[/accent]. Holding [accent]ALT[/accent] prompts the [accent]Save As[/accent] dialog instead.
-
-You can create a new song by pressing [accent]CTRL + N[/accent], or open an existing one with [accent]CTRL + O[/accent]."
-ref_image_size = Vector2(0, 0)
-ref_image_position = 0
-navigation_target = 1
-node_target = 0
-trigger_target = 0
-position_anchor = Vector2(0.64, 0.41)
-position_direction = 4
-size = Vector2(550, 240)
-
 [sub_resource type="Resource" id="Resource_uprl4"]
 script = ExtResource("2_6a2si")
 title = "TIPS & TRICKS - Action History"
-description = "You can undo up to [accent]40[/accent] changes by pressing [accent]CTRL + Z[/accent]. You can also redo the actions you have just undone with [accent]CTRL + SHIFT + Z[/accent].
+description = "You can undo up to [accent]40[/accent] changes by pressing [accent]CTRL + Z[/accent]. You can also redo the actions you have just undone with
+[accent]CTRL + SHIFT + Z[/accent].
 
 Note: Making any changes clears future actions!"
 ref_image_size = Vector2(0, 0)
@@ -49,21 +52,6 @@ trigger_target = 0
 position_anchor = Vector2(0.92, 0.225)
 position_direction = 1
 size = Vector2(520, 270)
-
-[sub_resource type="Resource" id="Resource_ie5ya"]
-script = ExtResource("2_6a2si")
-title = "TIPS & TRICKS - Shortcuts"
-description = "Bosca Ceoil has many shortcuts and contextual interactions!
-
-You can find all of them listed in the [accent]HELP[/accent] section."
-ref_image_size = Vector2(0, 0)
-ref_image_position = 0
-navigation_target = 5
-node_target = 0
-trigger_target = 0
-position_anchor = Vector2(0.5, 0.5)
-position_direction = 4
-size = Vector2(430, 230)
 
 [sub_resource type="Resource" id="Resource_5l0n3"]
 script = ExtResource("2_6a2si")
@@ -93,6 +81,40 @@ trigger_target = 0
 position_anchor = Vector2(0.82, 0.91)
 position_direction = 3
 size = Vector2(620, 300)
+
+[sub_resource type="Resource" id="Resource_svu76"]
+script = ExtResource("2_6a2si")
+title = "TIPS & TRICKS - Patterns"
+description = "You can [accent]SELECT[/accent] placed notes and [accent]COPY[/accent] them around, even across different patterns!
+
+[accent]HOLD SHIFT and DRAG[/accent] across the pattern grid to select notes. Press [accent]CTRL + C[/accent] to copy and then
+[accent]CTRL + V[/accent] to paste them.
+Notes are pasted relative to the cursor, starting from the bottom-left corner."
+ref_image = ExtResource("3_8j5sp")
+ref_image_size = Vector2(320, 180)
+ref_image_position = 1
+navigation_target = 0
+node_target = 0
+trigger_target = 0
+position_anchor = Vector2(0.056, 0.09)
+position_direction = 0
+size = Vector2(620, 480)
+
+[sub_resource type="Resource" id="Resource_g1nbs"]
+script = ExtResource("2_6a2si")
+title = "TIPS & TRICKS - Patterns"
+description = "If you work with notes of different lengths, especially very long ones, there is one neat shortcut for you!
+
+Use [accent]CTRL + LEFT CLICK[/accent] on any existing note to change the cursor size to the length of that note.
+Click on the [accent]empty space[/accent] to reset the cursor size instead."
+ref_image_size = Vector2(0, 0)
+ref_image_position = 0
+navigation_target = 0
+node_target = 0
+trigger_target = 0
+position_anchor = Vector2(0.08, 0.17)
+position_direction = 0
+size = Vector2(590, 300)
 
 [sub_resource type="Resource" id="Resource_y7c54"]
 script = ExtResource("2_6a2si")
@@ -205,4 +227,4 @@ size = Vector2(480, 210)
 
 [resource]
 script = ExtResource("1_6yyxb")
-steps = Array[ExtResource("2_6a2si")]([SubResource("Resource_ig3qc"), SubResource("Resource_fwmv4"), SubResource("Resource_uprl4"), SubResource("Resource_ie5ya"), SubResource("Resource_5l0n3"), SubResource("Resource_38vdh"), SubResource("Resource_y7c54"), SubResource("Resource_ggls6"), SubResource("Resource_isqye"), SubResource("Resource_flqw8"), SubResource("Resource_03vci"), SubResource("Resource_2arx2"), SubResource("Resource_goh2j")])
+steps = Array[ExtResource("2_6a2si")]([SubResource("Resource_ie5ya"), SubResource("Resource_ig3qc"), SubResource("Resource_uprl4"), SubResource("Resource_5l0n3"), SubResource("Resource_38vdh"), SubResource("Resource_svu76"), SubResource("Resource_g1nbs"), SubResource("Resource_y7c54"), SubResource("Resource_ggls6"), SubResource("Resource_isqye"), SubResource("Resource_flqw8"), SubResource("Resource_03vci"), SubResource("Resource_2arx2"), SubResource("Resource_goh2j")])
