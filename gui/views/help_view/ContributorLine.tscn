@@ -1,0 +1,31 @@
+[gd_scene load_steps=3 format=3 uid="uid://duiytn30lva8o"]
+
+[ext_resource type="Script" path="res://gui/views/help_view/ContributorLine.gd" id="1_m4ay6"]
+[ext_resource type="PackedScene" uid="uid://x2nsv2sot0hk" path="res://gui/widgets/LinkLabel.tscn" id="2_ru8gd"]
+
+[node name="ContributorLine" type="HBoxContainer"]
+auto_translate_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 28.0
+grow_horizontal = 2
+script = ExtResource("1_m4ay6")
+
+[node name="UsernameLabel" type="Label" parent="."]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabelHeader"
+text = "username"
+
+[node name="Filler" type="Control" parent="."]
+auto_translate_mode = 1
+custom_minimum_size = Vector2(8, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LinkLabel" parent="." instance=ExtResource("2_ru8gd")]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_type_variation = &"CreditsLabelLink"
+text = "0 contributions"

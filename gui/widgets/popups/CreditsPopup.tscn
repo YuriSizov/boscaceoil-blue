@@ -1,12 +1,14 @@
-[gd_scene load_steps=3 format=3 uid="uid://blh06bj8g5ei8"]
+[gd_scene load_steps=4 format=3 uid="uid://blh06bj8g5ei8"]
 
 [ext_resource type="PackedScene" uid="uid://brt3f2i74x70n" path="res://gui/widgets/popups/WindowPopup.tscn" id="1_ghnl1"]
 [ext_resource type="PackedScene" uid="uid://x2nsv2sot0hk" path="res://gui/widgets/LinkLabel.tscn" id="2_balfi"]
+[ext_resource type="Script" path="res://gui/widgets/popups/CreditsPopup.gd" id="2_cg7xl"]
 
 [node name="CreditsPopup" instance=ExtResource("1_ghnl1")]
 custom_minimum_size = Vector2(720, 500)
 offset_right = -480.0
 offset_bottom = -400.0
+script = ExtResource("2_cg7xl")
 title = "Credits & License"
 
 [node name="TitleLabel" parent="Layout/TitleBar/TitleBox" index="0"]
@@ -98,8 +100,8 @@ layout_mode = 2
 auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 0
-theme_type_variation = &"CreditsLabelAccented"
-text = "Support the project!"
+theme_type_variation = &"CreditsLabelLove"
+text = "Support the project <3"
 
 [node name="LinkLabel" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section/SupportList/SupportLine" index="1" instance=ExtResource("2_balfi")]
 layout_mode = 2
@@ -110,7 +112,6 @@ url = "https://patreon.com/YuriSizov"
 
 [node name="Spacer" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section/SupportList" index="1"]
 auto_translate_mode = 1
-custom_minimum_size = Vector2(0, 12)
 layout_mode = 2
 size_flags_horizontal = 0
 
@@ -131,7 +132,23 @@ theme_type_variation = &"CreditsLabelLink"
 text = "github.com/YuriSizov/boscaceoil-blue/"
 url = "https://github.com/YuriSizov/boscaceoil-blue/issues"
 
-[node name="LastSpacer" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section" index="5"]
+[node name="Spacer2" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section" index="5"]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+
+[node name="ContributorsTitle" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section" index="6"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"CreditsLabelHeader"
+text = "Contributors"
+
+[node name="ContributorsList" type="VBoxContainer" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section" index="7"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"CreditsBox"
+
+[node name="LastSpacer" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section" index="8"]
 custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
 
