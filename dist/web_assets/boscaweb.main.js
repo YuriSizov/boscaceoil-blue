@@ -1,3 +1,9 @@
+/***************************************************/
+/* Part of Bosca Ceoil Blue                        */
+/* Copyright (c) 2024 Yuri Sizov and contributors  */
+/* Provided under MIT                              */
+/***************************************************/
+
 const BOSCAWEB_STATE_INITIAL  = 0;
 const BOSCAWEB_STATE_PROGRESS = 1;
 const BOSCAWEB_STATE_READY    = 2;
