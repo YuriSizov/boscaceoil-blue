@@ -277,8 +277,7 @@ func get_info_popup() -> InfoPopup:
 
 
 func show_window_popup(popup: WindowPopup, popup_size: Vector2) -> void:
-	popup.size = popup_size
-	popup.popup_anchored(Vector2(0.5, 0.5), PopupManager.Direction.OMNI, true)
+	popup.popup_anchored(Vector2(0.5, 0.5), popup_size, PopupManager.Direction.OMNI, true)
 
 
 func show_welcome_message() -> void:

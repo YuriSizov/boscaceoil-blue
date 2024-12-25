@@ -171,7 +171,7 @@ func _show_current_step() -> void:
 		return
 	
 	_clear_trigger()
-	_info_popup.clear()
+	_info_popup.clear(true) # Avoid resetting size and position, as this breaks animations.
 	
 	var step := _current_guide.steps[_current_step]
 	_info_popup.title = step.title
@@ -189,17 +189,12 @@ func _show_current_step() -> void:
 	else:
 		_info_popup.add_button("FINISH", _finish_guide)
 	
-	# Resize, position, and show the popup.
+	# Resize, reposition, and show the popup.
 	
-	_info_popup.size = step.size
 	if _info_popup.is_popped():
-		# TODO: It would be nice to have these transitions animated, but that requires additional work.
-		# The final size and the final position are calculated behind the scenes as we adjust anchors.
-		# Working around this would require us to replicate anchor calculations in scripts, and then
-		# change position instead. Maybe some day...
-		_info_popup.move_anchored(step.position_anchor, step.position_direction)
+		_info_popup.transform_anchored(step.position_anchor, step.size, step.position_direction)
 	else:
-		_info_popup.popup_anchored(step.position_anchor, step.position_direction, false)
+		_info_popup.popup_anchored(step.position_anchor, step.size, step.position_direction, false)
 	
 	# Navigate to the target view and highlight the target control, if there is one.
 	Controller.navigate_to(step.navigation_target)

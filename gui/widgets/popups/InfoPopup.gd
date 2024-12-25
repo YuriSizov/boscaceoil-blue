@@ -34,7 +34,7 @@ func _ready() -> void:
 # Lifecycle.
 
 ## Override.
-func clear() -> void:
+func clear(keep_size: bool = false) -> void:
 	content = ""
 	_ref_image = null
 	_ref_image_size = Vector2.ZERO
@@ -43,7 +43,7 @@ func clear() -> void:
 	if is_node_ready():
 		_update_image()
 	
-	super()
+	super(keep_size)
 
 
 # Content.

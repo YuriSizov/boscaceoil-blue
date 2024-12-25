@@ -33,10 +33,10 @@ func _notification(what: int) -> void:
 # Lifecycle.
 
 ## Override.
-func clear() -> void:
+func clear(keep_size: bool = false) -> void:
 	activate_view(View.NONE)
 	
-	super()
+	super(keep_size)
 
 
 # Config views.

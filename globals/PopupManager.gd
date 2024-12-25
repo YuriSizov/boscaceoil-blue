@@ -121,7 +121,7 @@ func create_anchored_popup(popup: PopupControl, anchor_position: Vector2, direct
 		_click_catcher.visible = true
 
 
-func translate_popup(popup: PopupControl, delta: Vector2) -> void:
+func adjust_popup_position(popup: PopupControl, delta: Vector2) -> void:
 	if not has_popup(popup):
 		printerr("PopupManager: Popup %s is not shown." % [ popup ])
 		return
@@ -131,14 +131,21 @@ func translate_popup(popup: PopupControl, delta: Vector2) -> void:
 	anchor.update_absolute_position(next_position, popup.size, popup._last_direction)
 
 
-func translate_anchored_popup(popup: PopupControl, anchor_position: Vector2, direction: Direction) -> void:
+func transform_anchored_popup(popup: PopupControl, anchor_position: Vector2, popup_size: Vector2, direction: Direction, smooth: bool = false) -> void:
 	if not has_popup(popup):
 		printerr("PopupManager: Popup %s is not shown." % [ popup ])
 		return
 	
+	var original_position := popup.global_position
+	var original_size := popup.size
+	
+	popup.size = popup_size
 	var anchor := popup.get_popup_anchor()
-	anchor.update_relative_position(anchor_position, popup.size, direction)
+	anchor.update_relative_position(anchor_position, popup_size, direction)
 	popup.align_popup(direction)
+	
+	if smooth:
+		popup.animate_transform(original_position, original_size)
 
 
 func has_popup(popup: PopupControl) -> bool:
@@ -184,14 +191,14 @@ static func move_popup(popup: PopupControl, delta: Vector2) -> void:
 	if not _instance:
 		return
 	
-	_instance.translate_popup(popup, delta)
+	_instance.adjust_popup_position(popup, delta)
 
 
-static func move_popup_anchored(popup: PopupControl, anchor_position: Vector2, direction: Direction) -> void:
+static func transform_popup_anchored(popup: PopupControl, anchor_position: Vector2, popup_size: Vector2, direction: Direction, smooth: bool = false) -> void:
 	if not _instance:
 		return
 	
-	_instance.translate_anchored_popup(popup, anchor_position, direction)
+	_instance.transform_anchored_popup(popup, anchor_position, popup_size, direction, smooth)
 
 
 static func hide_popup(popup: PopupControl) -> void:
@@ -229,7 +236,10 @@ class PopupControl extends Control:
 	signal about_to_popup()
 	signal about_to_hide()
 	
+	const TRANSFORM_DURATION := 0.18
+	
 	var _last_direction: Direction = Direction.BOTTOM_RIGHT
+	var _tween: Tween = null
 	
 	
 	# Input events.
@@ -272,6 +282,25 @@ class PopupControl extends Control:
 				set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_KEEP_SIZE)
 				grow_horizontal = Control.GROW_DIRECTION_BOTH
 				grow_vertical = Control.GROW_DIRECTION_BOTH
+	
+	
+	func animate_transform(original_position: Vector2, original_size: Vector2) -> void:
+		# We immediately reset position and size to their old values. This all
+		# happens in the same frame, so it should be seamless. New position and
+		# size are our tweening targets.
+		
+		var target_position := global_position
+		var target_size := size
+		
+		global_position = original_position
+		size = original_size
+		
+		if _tween:
+			_tween.kill()
+		
+		_tween = get_tree().create_tween().set_parallel()
+		_tween.tween_property(self, "global_position", target_position, TRANSFORM_DURATION)
+		_tween.tween_property(self, "size", target_size, TRANSFORM_DURATION)
 
 
 class PopupAnchor extends Control:

@@ -109,13 +109,14 @@ func is_popped() -> bool:
 	return PopupManager.is_popup_shown(self)
 
 
-func popup_anchored(anchor_position: Vector2, direction: PopupManager.Direction = PopupManager.Direction.BOTTOM_RIGHT, blocking: bool = true) -> void:
+func popup_anchored(anchor_position: Vector2, popup_size: Vector2, direction: PopupManager.Direction = PopupManager.Direction.BOTTOM_RIGHT, blocking: bool = true) -> void:
+	size = popup_size
 	_update_before_popup()
 	PopupManager.show_popup_anchored(self, anchor_position, direction, blocking)
 
 
-func move_anchored(anchor_position: Vector2, direction: PopupManager.Direction = PopupManager.Direction.BOTTOM_RIGHT) -> void:
-	PopupManager.move_popup_anchored(self, anchor_position, direction)
+func transform_anchored(anchor_position: Vector2, popup_size: Vector2, direction: PopupManager.Direction = PopupManager.Direction.BOTTOM_RIGHT) -> void:
+	PopupManager.transform_popup_anchored(self, anchor_position, popup_size, direction, true)
 
 
 func close_popup() -> void:
@@ -123,13 +124,14 @@ func close_popup() -> void:
 	PopupManager.hide_popup(self)
 
 
-func clear() -> void:
+func clear(keep_size: bool = false) -> void:
 	title = DEFAULT_TITLE
 	_clear_buttons()
 	
-	custom_minimum_size = Vector2.ZERO
-	set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT, Control.PRESET_MODE_MINSIZE)
-	size = Vector2.ZERO
+	if not keep_size:
+		custom_minimum_size = Vector2.ZERO
+		set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT, Control.PRESET_MODE_MINSIZE)
+		size = Vector2.ZERO
 
 
 # Content.
