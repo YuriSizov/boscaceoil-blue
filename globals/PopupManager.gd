@@ -26,6 +26,7 @@ var _blocking_popups: Array[PopupControl] = []
 func _init() -> void:
 	if _instance:
 		printerr("PopupManager: Only one instance of PopupManager is allowed.")
+		return
 	
 	_instance = self
 
@@ -37,10 +38,11 @@ func _ready() -> void:
 
 
 func _draw_catcher() -> void:
-	_click_catcher.draw_rect(Rect2(Vector2.ZERO, _click_catcher.size), _click_catcher.get_theme_color("click_catcher_color", "PopupManager"))
+	var background_color := _click_catcher.get_theme_color("click_catcher_color", "PopupManager")
+	_click_catcher.draw_rect(Rect2(Vector2.ZERO, _click_catcher.size), background_color)
 
 
-# Popup management.
+# Input events.
 
 func _handle_catcher_clicked(event: InputEvent) -> void:
 	if event is InputEventMouseButton && not event.is_pressed(): # Activate on mouse release.
@@ -60,54 +62,11 @@ func _handle_popup_clicked(popup: PopupControl) -> void:
 		destroy_popup(active_popup)
 
 
-func has_popup(popup: PopupControl) -> bool:
-	return _active_popups.has(popup)
+# Popup management.
 
-
-func fit_popup_to_screen(position: Vector2, size: Vector2, direction: Direction) -> Vector2:
-	# Apply smart adjustments if the desired position + size would put the popup out of screen.
-	# We trust the hardcoded direction, so the solution is to nudge it back in.
-	var valid_position := position
-	
-	var effective_popup_rect := Rect2()
-	effective_popup_rect.size.x = size.x
-	effective_popup_rect.size.y = size.y
-	
-	match direction:
-		Direction.BOTTOM_RIGHT:
-			effective_popup_rect.position.x = position.x
-			effective_popup_rect.position.y = position.y
-		Direction.BOTTOM_LEFT:
-			effective_popup_rect.position.x = position.x - size.x
-			effective_popup_rect.position.y = position.y
-		Direction.TOP_RIGHT:
-			effective_popup_rect.position.x = position.x
-			effective_popup_rect.position.y = position.y - size.y
-		Direction.TOP_LEFT:
-			effective_popup_rect.position.x = position.x - size.x
-			effective_popup_rect.position.y = position.y - size.y
-		Direction.OMNI:
-			effective_popup_rect.position.x = position.x - size.x / 2.0
-			effective_popup_rect.position.y = position.y - size.y / 2.0
-	
-	if effective_popup_rect.position.x < 0:
-		valid_position.x -= effective_popup_rect.position.x
-	elif effective_popup_rect.end.x > _click_catcher.size.x:
-		valid_position.x -= effective_popup_rect.end.x - _click_catcher.size.x
-	
-	if effective_popup_rect.position.y < 0:
-		valid_position.y -= effective_popup_rect.position.y
-	elif effective_popup_rect.end.y > _click_catcher.size.y:
-		valid_position.y -= effective_popup_rect.end.y - _click_catcher.size.y
-	
-	return valid_position
-
-
-func _anchor_popup(popup: PopupControl) -> Control:
+func _anchor_popup(popup: PopupControl) -> PopupAnchor:
 	# Add a node to align the popup against.
-	var anchor := Control.new()
-	anchor.name = "PopupAnchor"
-	anchor.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var anchor := PopupAnchor.new()
 	add_child(anchor)
 	
 	# Anchor the popup to that node.
@@ -122,30 +81,6 @@ func _anchor_popup(popup: PopupControl) -> Control:
 	return anchor
 
 
-func _align_popup(popup: PopupControl, direction: Direction) -> void:
-	match direction:
-		Direction.BOTTOM_RIGHT:
-			popup.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT, Control.PRESET_MODE_KEEP_SIZE)
-			popup.grow_horizontal = Control.GROW_DIRECTION_END
-			popup.grow_vertical = Control.GROW_DIRECTION_END
-		Direction.BOTTOM_LEFT:
-			popup.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT, Control.PRESET_MODE_KEEP_SIZE)
-			popup.grow_horizontal = Control.GROW_DIRECTION_BEGIN
-			popup.grow_vertical = Control.GROW_DIRECTION_END
-		Direction.TOP_RIGHT:
-			popup.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT, Control.PRESET_MODE_KEEP_SIZE)
-			popup.grow_horizontal = Control.GROW_DIRECTION_END
-			popup.grow_vertical = Control.GROW_DIRECTION_BEGIN
-		Direction.TOP_LEFT:
-			popup.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT, Control.PRESET_MODE_KEEP_SIZE)
-			popup.grow_horizontal = Control.GROW_DIRECTION_BEGIN
-			popup.grow_vertical = Control.GROW_DIRECTION_BEGIN
-		Direction.OMNI:
-			popup.set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_KEEP_SIZE)
-			popup.grow_horizontal = Control.GROW_DIRECTION_BOTH
-			popup.grow_vertical = Control.GROW_DIRECTION_BOTH
-
-
 func create_positioned_popup(popup: PopupControl, position: Vector2, direction: Direction, blocking: bool) -> void:
 	if has_popup(popup):
 		printerr("PopupManager: Popup %s is already shown." % [ popup ])
@@ -155,9 +90,8 @@ func create_positioned_popup(popup: PopupControl, position: Vector2, direction: 
 		return
 	
 	var anchor := _anchor_popup(popup)
-	anchor.global_position = fit_popup_to_screen(position, popup.size, direction)
-	
-	_align_popup(popup, direction)
+	anchor.update_absolute_position(position, popup.size, direction)
+	popup.align_popup(direction)
 	
 	popup.click_handled.connect(_handle_popup_clicked.bind(popup))
 	popup.show()
@@ -176,12 +110,8 @@ func create_anchored_popup(popup: PopupControl, anchor_position: Vector2, direct
 		return
 	
 	var anchor := _anchor_popup(popup)
-	anchor.anchor_left = anchor_position.x
-	anchor.anchor_right = anchor_position.x
-	anchor.anchor_top = anchor_position.y
-	anchor.anchor_bottom = anchor_position.y
-	
-	_align_popup(popup, direction)
+	anchor.update_relative_position(anchor_position, popup.size, direction)
+	popup.align_popup(direction)
 	
 	popup.click_handled.connect(_handle_popup_clicked.bind(popup))
 	popup.show()
@@ -191,18 +121,28 @@ func create_anchored_popup(popup: PopupControl, anchor_position: Vector2, direct
 		_click_catcher.visible = true
 
 
+func translate_popup(popup: PopupControl, delta: Vector2) -> void:
+	if not has_popup(popup):
+		printerr("PopupManager: Popup %s is not shown." % [ popup ])
+		return
+	
+	var anchor := popup.get_popup_anchor()
+	var next_position := anchor.global_position + delta
+	anchor.update_absolute_position(next_position, popup.size, popup._last_direction)
+
+
 func translate_anchored_popup(popup: PopupControl, anchor_position: Vector2, direction: Direction) -> void:
 	if not has_popup(popup):
 		printerr("PopupManager: Popup %s is not shown." % [ popup ])
 		return
 	
-	var anchor: Control = popup.get_parent()
-	anchor.anchor_left = anchor_position.x
-	anchor.anchor_right = anchor_position.x
-	anchor.anchor_top = anchor_position.y
-	anchor.anchor_bottom = anchor_position.y
-	
-	_align_popup(popup, direction)
+	var anchor := popup.get_popup_anchor()
+	anchor.update_relative_position(anchor_position, popup.size, direction)
+	popup.align_popup(direction)
+
+
+func has_popup(popup: PopupControl) -> bool:
+	return _active_popups.has(popup)
 
 
 func destroy_popup(popup: PopupControl) -> void:
@@ -218,20 +158,13 @@ func destroy_popup(popup: PopupControl) -> void:
 	popup.about_to_hide.emit()
 	popup.hide()
 	
-	var anchor := popup.get_parent()
+	var anchor := popup.get_popup_anchor()
 	anchor.remove_child(popup)
 	anchor.get_parent().remove_child(anchor)
 	anchor.queue_free()
 
 
 # Public API.
-
-static func fit_popup(popup: PopupControl, position: Vector2, direction: Direction) -> Vector2:
-	if not _instance:
-		return position
-	
-	return _instance.fit_popup_to_screen(position, popup.size, direction)
-
 
 static func show_popup(popup: PopupControl, position: Vector2, direction: Direction, blocking: bool = true) -> void:
 	if not _instance:
@@ -245,6 +178,13 @@ static func show_popup_anchored(popup: PopupControl, anchor_position: Vector2, d
 		return
 	
 	_instance.create_anchored_popup(popup, anchor_position, direction, blocking)
+
+
+static func move_popup(popup: PopupControl, delta: Vector2) -> void:
+	if not _instance:
+		return
+	
+	_instance.translate_popup(popup, delta)
 
 
 static func move_popup_anchored(popup: PopupControl, anchor_position: Vector2, direction: Direction) -> void:
@@ -277,11 +217,127 @@ static func is_popup_shown(popup: PopupControl) -> bool:
 	return _instance.has_popup(popup)
 
 
+static func get_click_catcher() -> Control:
+	if not _instance:
+		return null
+	
+	return _instance._click_catcher
+
+
 class PopupControl extends Control:
 	signal click_handled()
 	signal about_to_popup()
 	signal about_to_hide()
 	
+	var _last_direction: Direction = Direction.BOTTOM_RIGHT
+	
+	
+	# Input events.
 	
 	func mark_click_handled() -> void:
 		click_handled.emit()
+	
+	
+	# Popup management.
+	
+	func get_popup_anchor() -> PopupAnchor:
+		var parent_node := get_parent()
+		if parent_node && parent_node is PopupAnchor:
+			return parent_node
+		
+		return null
+	
+	
+	func align_popup(direction: Direction) -> void:
+		_last_direction = direction
+		
+		match _last_direction:
+			Direction.BOTTOM_RIGHT:
+				set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT, Control.PRESET_MODE_KEEP_SIZE)
+				grow_horizontal = Control.GROW_DIRECTION_END
+				grow_vertical = Control.GROW_DIRECTION_END
+			Direction.BOTTOM_LEFT:
+				set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT, Control.PRESET_MODE_KEEP_SIZE)
+				grow_horizontal = Control.GROW_DIRECTION_BEGIN
+				grow_vertical = Control.GROW_DIRECTION_END
+			Direction.TOP_RIGHT:
+				set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT, Control.PRESET_MODE_KEEP_SIZE)
+				grow_horizontal = Control.GROW_DIRECTION_END
+				grow_vertical = Control.GROW_DIRECTION_BEGIN
+			Direction.TOP_LEFT:
+				set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT, Control.PRESET_MODE_KEEP_SIZE)
+				grow_horizontal = Control.GROW_DIRECTION_BEGIN
+				grow_vertical = Control.GROW_DIRECTION_BEGIN
+			Direction.OMNI:
+				set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_KEEP_SIZE)
+				grow_horizontal = Control.GROW_DIRECTION_BOTH
+				grow_vertical = Control.GROW_DIRECTION_BOTH
+
+
+class PopupAnchor extends Control:
+	func _init() -> void:
+		name = "PopupAnchor"
+		mouse_filter = Control.MOUSE_FILTER_IGNORE
+	
+	
+	func update_absolute_position(next_position: Vector2, popup_size: Vector2, direction: Direction) -> void:
+		global_position = _fit_to_screen(next_position, popup_size, direction)
+	
+	
+	func update_relative_position(next_position: Vector2, popup_size: Vector2, direction: Direction) -> void:
+		# Reset values which may affect the position.
+		global_position = Vector2.ZERO
+		offset_left = 0
+		offset_right = 0
+		offset_top = 0
+		offset_bottom = 0
+		
+		# Set relative position using anchoring.
+		anchor_left = next_position.x
+		anchor_right = next_position.x
+		anchor_top = next_position.y
+		anchor_bottom = next_position.y
+		
+		# Make sure that the actual position is valid.
+		global_position = _fit_to_screen(global_position, popup_size, direction)
+	
+	
+	func _fit_to_screen(next_position: Vector2, popup_size: Vector2, direction: Direction) -> Vector2:
+		# Apply smart adjustments if the desired position + size would put the popup out of screen.
+		# We trust the hardcoded direction, so the solution is to nudge it back in.
+		var valid_position := next_position
+		
+		var effective_popup_rect := Rect2()
+		effective_popup_rect.size.x = popup_size.x
+		effective_popup_rect.size.y = popup_size.y
+		
+		match direction:
+			Direction.BOTTOM_RIGHT:
+				effective_popup_rect.position.x = next_position.x
+				effective_popup_rect.position.y = next_position.y
+			Direction.BOTTOM_LEFT:
+				effective_popup_rect.position.x = next_position.x - popup_size.x
+				effective_popup_rect.position.y = next_position.y
+			Direction.TOP_RIGHT:
+				effective_popup_rect.position.x = next_position.x
+				effective_popup_rect.position.y = next_position.y - popup_size.y
+			Direction.TOP_LEFT:
+				effective_popup_rect.position.x = next_position.x - popup_size.x
+				effective_popup_rect.position.y = next_position.y - popup_size.y
+			Direction.OMNI:
+				effective_popup_rect.position.x = next_position.x - popup_size.x / 2.0
+				effective_popup_rect.position.y = next_position.y - popup_size.y / 2.0
+		
+		var click_catcher := PopupManager.get_click_catcher()
+		
+		if effective_popup_rect.position.x < 0:
+			valid_position.x -= effective_popup_rect.position.x
+		elif click_catcher && effective_popup_rect.end.x > click_catcher.size.x:
+			valid_position.x -= effective_popup_rect.end.x - click_catcher.size.x
+		
+		if effective_popup_rect.position.y < 0:
+			valid_position.y -= effective_popup_rect.position.y
+		elif click_catcher && effective_popup_rect.end.y > click_catcher.size.y:
+			valid_position.y -= effective_popup_rect.end.y - click_catcher.size.y
+		
+		return valid_position

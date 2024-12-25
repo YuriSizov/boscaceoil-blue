@@ -20,6 +20,8 @@ var button_autoswap: bool = true
 var button_alignment: HorizontalAlignment = HORIZONTAL_ALIGNMENT_RIGHT:
 	set = set_button_alignment
 
+var _dragging: bool = false
+
 @onready var _title_label: Label = %TitleLabel
 @onready var _close_button: Button = %CloseButton
 # This node must be added by inheriting scenes.
@@ -40,12 +42,31 @@ func _notification(what: int) -> void:
 		_title_label = %TitleLabel
 		_close_button = %CloseButton
 		_button_bar = get_node_or_null("%ButtonBar")
+	
+	elif _dragging && what == NOTIFICATION_DRAG_END:
+		_dragging = false
 
 
 func _gui_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton && event.is_pressed():
+	if event is InputEventMouseButton:
+		var mb := event as InputEventMouseButton
+		
+		var title_height := get_theme_constant("title_height")
+		var title_rect := Rect2(Vector2.ZERO, Vector2(size.x, title_height))
+		
+		if title_rect.has_point(mb.position) && mb.button_index == MOUSE_BUTTON_LEFT && mb.pressed:
+			_dragging = true
+		elif mb.button_index == MOUSE_BUTTON_LEFT && not mb.pressed:
+			_dragging = false
+		
 		mark_click_handled()
 		accept_event()
+	
+	elif event is InputEventMouseMotion:
+		var mm := event as InputEventMouseMotion
+		
+		if _dragging:
+			PopupManager.move_popup(self, mm.relative)
 
 
 func _draw() -> void:
