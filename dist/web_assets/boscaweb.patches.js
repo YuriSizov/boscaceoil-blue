@@ -24,7 +24,7 @@
 					while (true) {
 						const { value, done } = await reader.read();
 						if (done) {
-							bosca.setLoadingProgress(resource, (totalBytes - loadedBytes));
+							bosca.setLoadingProgress(resource, totalBytes);
 							break;
 						}
 						

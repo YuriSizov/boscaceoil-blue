@@ -153,8 +153,8 @@ class BoscaWeb {
 		this._boot_failedState.style.display   = (this.state === BOSCAWEB_STATE_FAILED   ? 'block' : 'none');
 	}
 	
-	setLoadingProgress(file, chunkSize) {
-		this._progressValues[file].loaded += chunkSize;
+	setLoadingProgress(file, loadedSize) {
+		this._progressValues[file].loaded = loadedSize;
 		requestAnimationFrame(this._updateBootProgress.bind(this));
 	}
 	
