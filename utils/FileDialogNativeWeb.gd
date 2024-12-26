@@ -90,6 +90,7 @@ func _file_selected(_event: JavaScriptObject) -> void:
 		var file_reader: JavaScriptObject = JavaScriptBridge.create_object("FileReader")
 		_add_event_handler(file_reader, "load", _file_loaded.bind(file_name))
 		file_reader.readAsArrayBuffer(_element.files[0])
+		_element.value = "" # Clear the input so the same file can be loaded in the future.
 
 
 func _file_loaded(event: JavaScriptObject, filename: String) -> void:
