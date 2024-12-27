@@ -51,3 +51,27 @@
 		return forwardedResponse;
 	}
 })(window);
+
+// Monkey-patch the Godot initializer to influence initialization where it cannot be configured.
+(function(window){
+	const _orig_Godot = window.Godot;
+	
+	window.Godot = function(Module) {
+		// Use a pre-allocated buffer that uses a safer amount of maximum memory, which
+		// avoids instant crashes in Safari. Although, there can still be memory issues
+		// in Safari (both macOS and iOS/iPadOS), with some indication of improvements
+		// starting with Safari 18.
+		if (window.bosca.memory != null) {
+			Module["wasmMemory"] = window.bosca.memory;
+		}
+		
+		// The initializer can still throw exceptions, including an out of memory exception.
+		// Due to nested levels of async and promise handling, this is not captured by
+		// try-catching Engine.startGame(). But it can be captured here.
+		try {
+			return _orig_Godot(Module);
+		} catch (err) {
+			window.bosca._fatalError(err);
+		}
+	}
+})(window);

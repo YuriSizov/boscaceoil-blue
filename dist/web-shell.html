@@ -13,7 +13,7 @@
 	<meta property="og:image:height" content="630">
 	
 	$GODOT_HEAD_INCLUDE
-	<link href="styles.css" rel="stylesheet">
+	<link href="styles.css?2" rel="stylesheet">
 </head>
 <body>
 	<canvas id="canvas">
@@ -41,7 +41,8 @@
 						</p>
 					</div>
 					<div id="boot-compat-failed">
-						<h3>⛔ Your browser appears to be incompatible.</h3>
+						<h3 id="boot-compat-failed-error">⛔ Your browser appears to be incompatible.</h3>
+						<h3 id="boot-compat-failed-warning">⚠️ Your browser may be incompatible.</h3>
 						<p>
 							Sorry about that! 💙<br>
 							You can still try to launch Bosca, but probably it will not work.<br>
@@ -74,8 +75,8 @@
 	</div>
 	
 	<script src="$GODOT_URL"></script>
-	<script src="boscaweb.patches.js?2"></script>
-	<script src="boscaweb.main.js?2"></script>
+	<script src="boscaweb.patches.js?3"></script>
+	<script src="boscaweb.main.js?3"></script>
 	<script>
 		const GODOT_CONFIG = $GODOT_CONFIG;
 		const GODOT_THREADS_ENABLED = $GODOT_THREADS_ENABLED;

@@ -183,6 +183,10 @@ ul {
 	width: 100%;
 }
 
+#boot-compat-failed-error, #boot-compat-failed-warning {
+	display: none;
+}
+
 #boot-compat-tryfix {
 	font-size: 15px;
 	padding: 6px 18px;
