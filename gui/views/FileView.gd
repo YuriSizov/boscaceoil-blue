@@ -8,10 +8,6 @@ extends MarginContainer
 
 const CREDITS_POPUP_SCENE := preload("res://gui/widgets/popups/CreditsPopup.tscn")
 
-enum ImportOption {
-	IMPORT_MID,
-}
-
 enum ExportOption {
 	EXPORT_WAV,
 	EXPORT_MID,
@@ -52,7 +48,6 @@ func _ready() -> void:
 	_credits_popup.add_button("Close", _credits_popup.close_popup)
 	
 	_update_version_flair()
-	_populate_import_options()
 	_populate_export_options()
 	
 	_version_subtitle.gui_input.connect(_subtitle_gui_input)
@@ -68,7 +63,7 @@ func _ready() -> void:
 	_load_song_button.pressed.connect(Controller.io_manager.load_ceol_song_safe)
 	_save_song_button.pressed.connect(Controller.io_manager.save_ceol_song)
 	
-	_import_song_button.option_pressed.connect(_handle_import_options)
+	_import_song_button.pressed.connect(Controller.io_manager.import_song_safe)
 	_export_song_button.option_pressed.connect(_handle_export_option)
 	
 	_pattern_size_stepper.value_changed.connect(_change_pattern_size)
@@ -157,23 +152,6 @@ func _show_credits() -> void:
 
 
 # Import and export.
-
-func _populate_import_options() -> void:
-	var mid_item := OptionListPopup.Item.new()
-	mid_item.id = ImportOption.IMPORT_MID
-	mid_item.text = "IMPORT .mid"
-	_import_song_button.options.push_back(mid_item)
-	
-	_import_song_button.commit_options()
-
-
-func _handle_import_options(item: OptionListPopup.Item) -> void:
-	match item.id:
-		ImportOption.IMPORT_MID:
-			Controller.io_manager.import_mid_song_safe()
-		_:
-			Controller.update_status("FORMAT NOT SUPPORTED (YET)", Controller.StatusLevel.WARNING)
-
 
 func _populate_export_options() -> void:
 	var wav_item := OptionListPopup.Item.new()

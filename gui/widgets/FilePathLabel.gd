@@ -9,6 +9,8 @@ class_name FilePathLabel extends Control
 
 @export var text: String = "":
 	set = set_text
+@export var empty_text: String = "":
+	set = set_empty_text
 
 var _text_buffer: TextLine = TextLine.new()
 var _rendered_buffer: TextLine = TextLine.new()
@@ -28,6 +30,8 @@ func _notification(what: int) -> void:
 
 func _draw() -> void:
 	var font_color := get_theme_color("font_color")
+	var empty_color := get_theme_color("empty_color")
+	
 	var font_shadow_color := get_theme_color("font_shadow_color")
 	var font_shadow_offset := Vector2(
 		get_theme_constant("font_shadow_offset_x"),
@@ -36,7 +40,7 @@ func _draw() -> void:
 	
 	if _rendered_buffer:
 		_rendered_buffer.draw(get_canvas_item(), font_shadow_offset, font_shadow_color)
-		_rendered_buffer.draw(get_canvas_item(), Vector2.ZERO, font_color)
+		_rendered_buffer.draw(get_canvas_item(), Vector2.ZERO, empty_color if text.is_empty() else font_color)
 
 
 func _get_minimum_size() -> Vector2:
@@ -62,14 +66,27 @@ func set_text(value: String) -> void:
 	_update_buffers()
 
 
+func set_empty_text(value: String) -> void:
+	# Remove extra whitespaces and Windows-ness.
+	if empty_text == value:
+		return
+	
+	empty_text = value
+	_update_buffers()
+
+
 func _update_buffers() -> void:
 	var font := get_theme_font("font")
 	var font_size := get_theme_font_size("font_size")
 	
-	_text_buffer.clear()
-	_text_buffer.add_string(text, font, font_size)
-	_update_rendered_buffer()
+	if text.is_empty():
+		_text_buffer.clear()
+		_text_buffer.add_string(empty_text, font, font_size)
+	else:
+		_text_buffer.clear()
+		_text_buffer.add_string(text, font, font_size)
 	
+	_update_rendered_buffer()
 	minimum_size_changed.emit()
 	queue_redraw()
 
@@ -77,6 +94,13 @@ func _update_buffers() -> void:
 func _update_rendered_buffer() -> void:
 	var font := get_theme_font("font")
 	var font_size := get_theme_font_size("font_size")
+	
+	# When there is no value, render the placeholder without processing.
+	if text.is_empty():
+		_rendered_buffer.clear()
+		_rendered_buffer.add_string(empty_text, font, font_size)
+		queue_redraw()
+		return
 	
 	# Simplest case: the whole string fits, render as is.
 	

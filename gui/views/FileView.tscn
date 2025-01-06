@@ -187,7 +187,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 text = "IMPORT..."
-operation_mode = 1
 
 [node name="ExportSong" parent="Layout/BaseControls/Rows/ImportExport" instance=ExtResource("3_6fmtw")]
 unique_name_in_owner = true

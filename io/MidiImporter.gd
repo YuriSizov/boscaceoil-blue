@@ -13,16 +13,8 @@ class_name MidiImporter extends RefCounted
 const FILE_EXTENSION := "mid"
 
 
-static func prepare_import(path: String) -> bool:
-	var file := _open_file(path)
-	if not file:
-		return false
-	
-	return true
-
-
-static func import(path: String, config: Config) -> Song:
-	var file := _open_file(path)
+static func import(config: ImportMasterPopup.ImportConfig) -> Song:
+	var file := _open_file(config.path)
 	if not file:
 		return null
 	
@@ -61,10 +53,6 @@ static func _read(reader: MidiFileReader) -> Song:
 	return song
 
 
-class Config:
-	var pattern_size: int = 0
-
-
 class MidiFileReader:
 	var format: int = MidiFile.FileFormat.MULTI_TRACK
 	var resolution: int = MidiFile.DEFAULT_RESOLUTION
@@ -74,10 +62,10 @@ class MidiFileReader:
 	var _notes_instrument_map: Dictionary = {}
 	
 	var _file: FileAccess = null
-	var _config: Config = null
+	var _config: ImportMasterPopup.ImportConfig = null
 	
 	
-	func _init(file: FileAccess, config: Config) -> void:
+	func _init(file: FileAccess, config: ImportMasterPopup.ImportConfig) -> void:
 		_file = file
 		_file.seek(0)
 		_config = config

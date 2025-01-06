@@ -8,12 +8,13 @@
 ## exporting of songs.
 class_name IOManager extends RefCounted
 
-const IO_CONFIG_POPUP_SCENE := preload("res://gui/widgets/popups/IOConfigPopup.tscn")
+const IMPORT_MASTER_POPUP_SCENE := preload("res://gui/widgets/popups/ImportMasterPopup.tscn")
 
-var _io_config_popup: IOConfigPopup = null
+var _import_master_popup: ImportMasterPopup = null
 # We must keep references around, otherwise they get silently destroyed.
 # JavaScriptBridge doesn't tick the reference counter, it seems.
 var _check_song_on_browser_close_ref: JavaScriptObject = null
+
 
 func _init() -> void:
 	if OS.has_feature("web"):
@@ -22,21 +23,21 @@ func _init() -> void:
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_PREDELETE:
-		if is_instance_valid(_io_config_popup):
-			_io_config_popup.queue_free()
+		if is_instance_valid(_import_master_popup):
+			_import_master_popup.queue_free()
 
 
 # Popup management.
 
-func get_io_config_popup() -> IOConfigPopup:
-	if not _io_config_popup:
-		_io_config_popup = IO_CONFIG_POPUP_SCENE.instantiate()
+func get_import_master_popup() -> ImportMasterPopup:
+	if not _import_master_popup:
+		_import_master_popup = IMPORT_MASTER_POPUP_SCENE.instantiate()
 	
-	if _io_config_popup.is_visible_in_tree():
-		_io_config_popup.close_popup()
+	if _import_master_popup.is_visible_in_tree():
+		_import_master_popup.close_popup()
 	
-	_io_config_popup.clear()
-	return _io_config_popup
+	_import_master_popup.clear()
+	return _import_master_popup
 
 
 # Creation.
@@ -232,26 +233,26 @@ func _check_song_on_browser_close(event: JavaScriptObject) -> void:
 
 # External format import.
 
-func import_mid_song() -> void:
-	if OS.has_feature("web"):
-		var import_dialog_web := Controller.get_file_dialog_web()
-		import_dialog_web.add_filter(".mid")
-		import_dialog_web.file_selected.connect(_import_mid_song_confirmed, CONNECT_ONE_SHOT)
+
+func import_song() -> void:
+	var import_dialog := get_import_master_popup()
+	import_dialog.title = "Import from external format"
+	import_dialog.add_button("Cancel", import_dialog.close_popup)
+	import_dialog.add_button("Import", func() -> void:
+		var import_config: ImportMasterPopup.ImportConfig = import_dialog.get_import_config()
+		if import_config.path.is_empty():
+			Controller.update_status("PLEASE SELECT A FILE TO IMPORT", Controller.StatusLevel.WARNING)
+			return
 		
-		import_dialog_web.popup()
-		return
+		import_dialog.close_popup()
+		_import_song_confirmed(import_config)
+	)
 	
-	var import_dialog := Controller.get_file_dialog()
-	import_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
-	import_dialog.title = "Import .mid File"
-	import_dialog.add_filter("*.mid", "MIDI File")
-	import_dialog.current_file = ""
-	import_dialog.file_selected.connect(_import_mid_song_confirmed, CONNECT_ONE_SHOT)
-	
-	Controller.show_file_dialog(import_dialog)
+	Controller.music_player.stop_playback()
+	Controller.show_window_popup(import_dialog, Vector2(580, 360))
 
 
-func import_mid_song_safe() -> void:
+func import_song_safe() -> void:
 	if Controller.current_song && Controller.current_song.is_dirty():
 		var unsaved_warning := Controller.get_info_popup()
 		if not unsaved_warning:
@@ -262,50 +263,33 @@ func import_mid_song_safe() -> void:
 		unsaved_warning.add_button("Cancel", unsaved_warning.close_popup)
 		unsaved_warning.add_button("I'm sure!", func() -> void:
 			unsaved_warning.close_popup()
-			import_mid_song()
+			import_song()
 		)
 		
 		Controller.show_window_popup(unsaved_warning, Vector2(640, 190))
 		return
 	
-	import_mid_song()
+	import_song()
 
 
-func _import_mid_song_confirmed(path: String) -> void:
-	var can_import_song := MidiImporter.prepare_import(path)
-	if not can_import_song:
-		Controller.update_status("FAILED TO IMPORT SONG", Controller.StatusLevel.ERROR)
-		return
-	
-	var import_dialog := get_io_config_popup()
-	import_dialog.title = "MIDI import settings"
-	import_dialog.activate_view(IOConfigPopup.View.MIDI_IMPORT)
-	import_dialog.add_button("Cancel", import_dialog.close_popup)
-	import_dialog.add_button("Import", func() -> void:
-		var import_config: MidiImporter.Config = import_dialog.get_view_config()
-		import_dialog.close_popup()
+func _import_song_confirmed(import_config: ImportMasterPopup.ImportConfig) -> void:
+	match import_config.type:
+		ImportMasterPopup.ImportType.IMPORT_MIDI:
+			_import_mid_song(import_config)
 		
-		if not import_config:
-			Controller.update_status("FAILED TO IMPORT SONG: CONFIG MISSING", Controller.StatusLevel.ERROR)
-			return
-		
-		_import_mid_song_configured(path, import_config)
-	)
-	
-	Controller.show_window_popup(import_dialog, import_dialog.get_view_size())
+		_:
+			Controller.update_status("FORMAT NOT SUPPORTED (YET)", Controller.StatusLevel.WARNING)
 
 
-func _import_mid_song_configured(path: String, import_config: MidiImporter.Config) -> void:
-	var imported_song := MidiImporter.import(path, import_config)
+func _import_mid_song(import_config: ImportMasterPopup.ImportConfig) -> void:
+	var imported_song := MidiImporter.import(import_config)
 	if not imported_song:
 		Controller.update_status("FAILED TO IMPORT SONG", Controller.StatusLevel.ERROR)
 		return
 	
-	Controller.music_player.stop_playback()
-	
 	Controller.set_current_song(imported_song)
 	Controller.update_status("SONG IMPORTED FROM MIDI", Controller.StatusLevel.SUCCESS)
-	print("Successfully imported song from %s:\n  %s" % [ path, imported_song ])
+	print("Successfully imported song from %s:\n  %s" % [ import_config.path, imported_song ])
 
 
 # External format export.

@@ -1,0 +1,103 @@
+[gd_scene load_steps=6 format=3 uid="uid://dsvwsruw2mfk6"]
+
+[ext_resource type="PackedScene" uid="uid://brt3f2i74x70n" path="res://gui/widgets/popups/WindowPopup.tscn" id="1_wmva6"]
+[ext_resource type="Script" path="res://gui/widgets/popups/ImportMasterPopup.gd" id="2_inwde"]
+[ext_resource type="PackedScene" uid="uid://ckt2fd1qbsk7f" path="res://gui/widgets/FilePathLabel.tscn" id="3_avs5w"]
+[ext_resource type="PackedScene" uid="uid://d2peohvka6nmb" path="res://gui/widgets/Stepper.tscn" id="3_u7du7"]
+[ext_resource type="PackedScene" uid="uid://71sw1mddco3" path="res://gui/widgets/SquishyButton.tscn" id="4_3wr70"]
+
+[node name="ImportMasterPopup" instance=ExtResource("1_wmva6")]
+offset_right = -620.0
+offset_bottom = -580.0
+script = ExtResource("2_inwde")
+title = "Import from external format"
+
+[node name="TitleLabel" parent="Layout/TitleBar/TitleBox" index="0"]
+text = "Import from external format"
+
+[node name="ContentBox" type="VBoxContainer" parent="Layout/Content" index="0"]
+layout_mode = 2
+theme_type_variation = &"InfoPopupContentBox"
+
+[node name="File" type="HBoxContainer" parent="Layout/Content/ContentBox" index="0"]
+layout_mode = 2
+theme_type_variation = &"HBoxSpaced"
+
+[node name="FilePathLabel" parent="Layout/Content/ContentBox/File" index="0" instance=ExtResource("3_avs5w")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+empty_text = "No file selected"
+
+[node name="SelectFile" parent="Layout/Content/ContentBox/File" index="1" instance=ExtResource("4_3wr70")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "SELECT"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Layout/Content/ContentBox" index="1"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="Layout/Content/ContentBox/ScrollContainer" index="0"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_type_variation = &"HelpMarginContainer"
+
+[node name="Layout" type="VBoxContainer" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer" index="0"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"InfoPopupContentBox"
+
+[node name="ConfigurationTitle" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout" index="0"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"CreditsLabelHeader"
+text = "Configuration"
+
+[node name="PatternSize" type="HBoxContainer" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout" index="1"]
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="Label" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/PatternSize" index="0"]
+layout_mode = 2
+text = "PATTERN SIZE"
+
+[node name="Spacer" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/PatternSize" index="1"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PatternSizeValue" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/PatternSize" index="2" instance=ExtResource("3_u7du7")]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 32
+
+[node name="PatternSizeNote" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout" index="2"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 8
+theme_type_variation = &"CreditsLabel"
+text = "0 means AUTO"
+horizontal_alignment = 2
+
+[node name="ImportNote" type="Label" parent="Layout/Content/ContentBox" index="2"]
+auto_translate_mode = 1
+layout_mode = 2
+theme_type_variation = &"CreditsLabel"
+text = "Import is done on the best-effort basis.
+External formats may be incompatible with Bosca
+in many ways. But feel free to experiment!"
+
+[node name="Padding" type="Control" parent="Layout/Content/ContentBox" index="3"]
+layout_mode = 2
+
+[node name="ButtonBar" type="HBoxContainer" parent="Layout/Content/ContentBox" index="4"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"HBoxSpaced"
+alignment = 2
