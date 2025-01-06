@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=82 format=3 uid="uid://chpsnl8o0raaf"]
+[gd_resource type="Theme" load_steps=83 format=3 uid="uid://chpsnl8o0raaf"]
 
 [ext_resource type="Texture2D" uid="uid://n8jw4gat8tg7" path="res://assets/icons/arrow_down_small.png" id="1_1ij5d"]
 [ext_resource type="Texture2D" uid="uid://d2aswndmtik56" path="res://assets/overlap-dither.png" id="1_4kypt"]
@@ -82,6 +82,8 @@ border_width_left = 4
 border_width_right = 4
 border_width_bottom = 4
 border_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5tv38"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5rijg"]
 
@@ -499,6 +501,12 @@ DeleteArea/colors/hover_color = Color(0.890395, 0.382085, 0.507052, 0.235294)
 DeleteArea/styles/normal = SubResource("StyleBoxFlat_lg4yk")
 ExportIndicator/colors/base_color = Color(0.101961, 0.129412, 0.137255, 1)
 ExportIndicator/colors/stripe_color = Color(0.203922, 0.258824, 0.27451, 1)
+FilePathLabel/base_type = &"Control"
+FilePathLabel/colors/font_color = Color(1, 1, 1, 1)
+FilePathLabel/colors/font_shadow_color = Color(0, 0, 0, 1)
+FilePathLabel/constants/font_shadow_offset_x = 2
+FilePathLabel/constants/font_shadow_offset_y = 1
+FilePathLabel/styles/panel = SubResource("StyleBoxEmpty_5tv38")
 FullscreenButton/base_type = &"Button"
 FullscreenButton/styles/disabled = SubResource("StyleBoxEmpty_5rijg")
 FullscreenButton/styles/focus = SubResource("StyleBoxEmpty_cuba5")

@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://ckt2fd1qbsk7f"]
+
+[ext_resource type="Script" path="res://gui/widgets/FilePathLabel.gd" id="1_2ugrn"]
+
+[node name="FilePathLabel" type="Control"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 60.0
+offset_bottom = 23.0
+theme_type_variation = &"FilePathLabel"
+script = ExtResource("1_2ugrn")
