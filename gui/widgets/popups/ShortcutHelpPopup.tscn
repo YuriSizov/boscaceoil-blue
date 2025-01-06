@@ -94,6 +94,11 @@ layout_mode = 2
 
 [node name="ShortcutLine7" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section/GeneralList" index="8" instance=ExtResource("2_1wrnf")]
 layout_mode = 2
+key_text = "bosca_toggle_fullscreen"
+description_text = "Toggle fullscreen"
+
+[node name="ShortcutLine8" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section/GeneralList" index="9" instance=ExtResource("2_1wrnf")]
+layout_mode = 2
 key_text = "bosca_exit"
 description_text = "Quit Bosca Ceoil"
 hide_on_web = true

@@ -130,6 +130,11 @@ func _shortcut_input(event: InputEvent) -> void:
 		if not OS.has_feature("web"):
 			io_manager.check_song_on_exit(true)
 	
+	elif event.is_action_pressed("bosca_toggle_fullscreen", false, true):
+		settings_manager.toggle_fullscreen()
+		
+		get_viewport().set_input_as_handled()
+	
 	elif event.is_action_pressed("bosca_playstop", false, true):
 		if music_player.is_playing():
 			music_player.stop_playback()
