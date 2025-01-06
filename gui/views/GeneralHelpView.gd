@@ -10,7 +10,7 @@ const SHORCUTS_POPUP_SCENE := preload("res://gui/widgets/popups/ShortcutHelpPopu
 
 var _shortcut_help: WindowPopup = null
 
-@onready var _navigate_back_button: SquishyButton = %NavigateBack
+@onready var _navigate_back_button: BackButton = %NavigateBack
 @onready var _basic_guide_button: SquishyButton = %StartBasicGuide
 @onready var _advanced_guide_button: SquishyButton = %StartAdvancedGuide
 @onready var _show_shortcuts_button: SquishyButton = %ShowShortcutsButton

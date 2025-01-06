@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3 uid="uid://dhu2m0bp5l822"]
+
+[ext_resource type="Script" path="res://gui/views/help_view/BackButton.gd" id="1_wmavh"]
+
+[node name="BackButton" type="Label"]
+custom_minimum_size = Vector2(120, 34)
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 22.2222
+grow_horizontal = 2
+mouse_filter = 0
+theme_type_variation = &"BackButton"
+text = "BACK"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("1_wmavh")

@@ -5,12 +5,11 @@
 [node name="DeleteArea" type="Label"]
 auto_translate_mode = 1
 show_behind_parent = true
-custom_minimum_size = Vector2(0, 30)
+custom_minimum_size = Vector2(0, 34)
 anchors_preset = 10
 anchor_right = 1.0
 offset_bottom = 34.0
 grow_horizontal = 2
-mouse_filter = 0
 theme_type_variation = &"DeleteArea"
 text = "DELETE?"
 horizontal_alignment = 1

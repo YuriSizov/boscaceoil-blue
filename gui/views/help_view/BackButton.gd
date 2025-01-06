@@ -4,25 +4,20 @@
 # Provided under MIT                              #
 ###################################################
 
-class_name DeleteArea extends Label
+class_name BackButton extends Label
 
-const FADE_DURATION := 0.06
+signal pressed()
 
 var _hovered: bool = false
-var _tween: Tween = null
 
 
 func _ready() -> void:
-	offset_top = -size.y
-	
 	mouse_entered.connect(func() -> void:
 		_hovered = true
-		text = "DROP TO CONFIRM"
 		queue_redraw()
 	)
 	mouse_exited.connect(func() -> void:
 		_hovered = false
-		text = "DELETE?"
 		queue_redraw()
 	)
 
@@ -33,19 +28,9 @@ func _draw() -> void:
 		draw_rect(Rect2(Vector2.ZERO, size), hover_color)
 
 
-func fade_in() -> void:
-	if _tween:
-		_tween.kill()
-	
-	_tween = get_tree().create_tween()
-	_tween.tween_property(self, "offset_top", 0, FADE_DURATION)
-	_tween.tween_callback(set_mouse_filter.bind(MOUSE_FILTER_STOP))
-
-
-func fade_out() -> void:
-	if _tween:
-		_tween.kill()
-	
-	_tween = get_tree().create_tween()
-	_tween.tween_property(self, "offset_top", -size.y, FADE_DURATION)
-	_tween.tween_callback(set_mouse_filter.bind(MOUSE_FILTER_IGNORE))
+func _gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		var mb := event as InputEventMouseButton
+		
+		if mb.pressed && mb.button_index == MOUSE_BUTTON_LEFT:
+			pressed.emit()
