@@ -318,8 +318,6 @@ class MidiFileReader:
 	
 	
 	func create_patterns(song: Song) -> void:
-		var last_bar_idx := 0
-		
 		for instrument_key: Vector2i in _notes_instrument_map:
 			var instrument_index: int = _instruments_index_map[instrument_key]
 			var instrument := song.instruments[instrument_index]
@@ -361,13 +359,13 @@ class MidiFileReader:
 				note_idx += 1
 			
 			_commit_pattern_to_arrangement(pattern, song, bar_idx)
-			if bar_idx > last_bar_idx:
-				last_bar_idx = bar_idx
-		
-		song.arrangement.set_loop(0, last_bar_idx + 1)
 	
 	
 	func _commit_pattern_to_arrangement(pattern: Pattern, song: Song, bar_idx: int) -> void:
+		# Don't create empty patterns.
+		if pattern.note_amount == 0:
+			return
+		
 		var pattern_index := song.patterns.size()
 		var reusing_pattern := false
 		
@@ -400,6 +398,10 @@ class MidiFileReader:
 		
 		if not pattern_added:
 			printerr("MidiImporter: Couldn't find a free channel for pattern %d at bar %d." % [ pattern_index, bar_idx ])
+			return
+		
+		if song.arrangement.loop_end < (bar_idx + 1):
+			song.arrangement.set_loop(0, bar_idx + 1)
 
 
 class MidiInstrument:
