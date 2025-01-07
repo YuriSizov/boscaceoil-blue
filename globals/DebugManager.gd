@@ -49,12 +49,13 @@ func _debug_song_merger() -> void:
 	
 	var bytes_per_pattern := floori(current_song.pattern_size / 8.0)
 	var pattern_inset := current_song.pattern_size + bytes_per_pattern
+	var arrangement_bars := current_song.arrangement.timeline_bars.slice(0, current_song.arrangement.timeline_length)
 	
 	print("")
 	print("DebugManager: Packing song per channel with SongMerger.")
 	for i in Arrangement.CHANNEL_NUMBER:
 		print("# CHANNEL %d" % [ i ])
-		var channel_sequences := SongMerger.encode_arrangement_channel(current_song.arrangement, i, encoded_patterns, current_song.pattern_size)
+		var channel_sequences := SongMerger.encode_arrangement_channel(arrangement_bars, i, encoded_patterns, current_song.pattern_size)
 		
 		var cs := 0
 		for sequence in channel_sequences:
@@ -71,7 +72,7 @@ func _debug_song_merger() -> void:
 	
 	print("")
 	print("DebugManager: Packing full song with SongMerger.")
-	var arrangement_sequences := SongMerger.encode_arrangement(current_song.arrangement, encoded_patterns, current_song.pattern_size)
+	var arrangement_sequences := SongMerger.encode_arrangement(arrangement_bars, encoded_patterns, current_song.pattern_size)
 	
 	var ars := 0
 	for sequence in arrangement_sequences:

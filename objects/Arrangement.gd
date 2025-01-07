@@ -47,6 +47,14 @@ func _init() -> void:
 
 # Timeline bars.
 
+func create_empty_bar() -> PackedInt32Array:
+	var channels := PackedInt32Array()
+	channels.resize(CHANNEL_NUMBER)
+	channels.fill(-1)
+	
+	return channels
+
+
 func insert_bar(at_index: int, silent: bool = false) -> void:
 	var index_ := ValueValidator.index(at_index, BAR_NUMBER, "Arrangement: Cannot insert a bar at index %d, index is outside of the valid range [%d, %d]." % [ at_index, 0, BAR_NUMBER - 1 ])
 	if index_ != at_index:
@@ -70,10 +78,7 @@ func clear_bar(at_index: int, silent: bool = false) -> void:
 	if index_ != at_index:
 		return
 	
-	var channels := PackedInt32Array()
-	channels.resize(CHANNEL_NUMBER)
-	channels.fill(-1)
-	timeline_bars[at_index] = channels
+	timeline_bars[at_index] = create_empty_bar()
 	
 	if not silent:
 		patterns_changed.emit()
@@ -90,10 +95,7 @@ func remove_bar(at_index: int, silent: bool = false) -> void:
 	for i in range(at_index, timeline_length):
 		# Erase the last bar by clearing it.
 		if i == (BAR_NUMBER - 1):
-			var channels := PackedInt32Array()
-			channels.resize(CHANNEL_NUMBER)
-			channels.fill(-1)
-			timeline_bars[i] = channels
+			timeline_bars[i] = create_empty_bar()
 		else:
 			timeline_bars[i] = timeline_bars[i + 1].duplicate()
 	

@@ -89,15 +89,15 @@ static func encode_pattern(pattern: Pattern, instrument: Instrument, pattern_siz
 	return enc_pattern
 
 
-static func _encode_sequences(arrangement: Arrangement, encoded_patterns: Array[EncodedPattern], pattern_size: int, from_channel: int, to_channel: int) -> Array[EncodedSequence]:
+static func _encode_sequences(arrangement_bars: Array[PackedInt32Array], encoded_patterns: Array[EncodedPattern], pattern_size: int, from_channel: int, to_channel: int) -> Array[EncodedSequence]:
 	var sequences: Array[EncodedSequence] = []
 	
 	# Group pattern tracks into sequences. Avoid tracks which overlap.
 	
 	var channel_num := from_channel
 	while channel_num <= to_channel:
-		for bar_idx in arrangement.timeline_length:
-			var pattern_index := arrangement.timeline_bars[bar_idx][channel_num]
+		for bar_idx in arrangement_bars.size():
+			var pattern_index := arrangement_bars[bar_idx][channel_num]
 			if pattern_index < 0:
 				continue # No pattern.
 			var enc_pattern := encoded_patterns[pattern_index]
@@ -121,12 +121,12 @@ static func _encode_sequences(arrangement: Arrangement, encoded_patterns: Array[
 	return sequences
 
 
-static func encode_arrangement_channel(arrangement: Arrangement, channel_num: int, encoded_patterns: Array[EncodedPattern], pattern_size: int) -> Array[EncodedSequence]:
-	return _encode_sequences(arrangement, encoded_patterns, pattern_size, channel_num, channel_num)
+static func encode_arrangement_channel(arrangement_bars: Array[PackedInt32Array], channel_num: int, encoded_patterns: Array[EncodedPattern], pattern_size: int) -> Array[EncodedSequence]:
+	return _encode_sequences(arrangement_bars, encoded_patterns, pattern_size, channel_num, channel_num)
 
 
-static func encode_arrangement(arrangement: Arrangement, encoded_patterns: Array[EncodedPattern], pattern_size: int) -> Array[EncodedSequence]:
-	return _encode_sequences(arrangement, encoded_patterns, pattern_size, 0, Arrangement.CHANNEL_NUMBER - 1)
+static func encode_arrangement(arrangement_bars: Array[PackedInt32Array], encoded_patterns: Array[EncodedPattern], pattern_size: int) -> Array[EncodedSequence]:
+	return _encode_sequences(arrangement_bars, encoded_patterns, pattern_size, 0, Arrangement.CHANNEL_NUMBER - 1)
 
 
 ## Encoded data of a pattern note. Notes are grouped into tracks using their masks.

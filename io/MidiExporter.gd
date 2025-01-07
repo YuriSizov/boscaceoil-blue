@@ -13,7 +13,7 @@ class_name MidiExporter extends RefCounted
 const FILE_EXTENSION := "mid"
 
 
-static func save(song: Song, path: String) -> bool:
+static func save(song: Song, path: String, _export_config: ExportMasterPopup.ExportConfig) -> bool:
 	if path.get_extension() != FILE_EXTENSION:
 		printerr("MidiExporter: The MIDI file must have a .%s extension." % [ FILE_EXTENSION ])
 		return false

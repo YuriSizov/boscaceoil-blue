@@ -17,7 +17,7 @@ const FILE_EXTENSION := "xm"
 const INT16_MAX := 32767
 
 
-static func save(song: Song, path: String) -> bool:
+static func save(song: Song, path: String, export_config: ExportMasterPopup.ExportConfig) -> bool:
 	if path.get_extension() != FILE_EXTENSION:
 		printerr("XMExporter: The XM file must have a .%s extension." % [ FILE_EXTENSION ])
 		return false
@@ -29,7 +29,7 @@ static func save(song: Song, path: String) -> bool:
 		return false
 	
 	var writer := XMFileWriter.new(path)
-	_write(writer, song)
+	_write(writer, song, export_config)
 	
 	# Try to write the file with the new contents.
 	
@@ -46,10 +46,10 @@ static func save(song: Song, path: String) -> bool:
 	return true
 
 
-static func _write(writer: XMFileWriter, song: Song) -> void:
+static func _write(writer: XMFileWriter, song: Song, export_config: ExportMasterPopup.ExportConfig) -> void:
 	writer.song_default_bpm = song.bpm
 	writer.song_pattern_size = song.pattern_size
-	writer.encode_song(song.arrangement, song.patterns, song.instruments)
+	writer.encode_song(song.arrangement, song.patterns, song.instruments, export_config.loop_start, export_config.loop_end)
 	
 	# Render out the samples before proceeding.
 	var samples: Array[MusicPlayer.QueuedSample] = []
@@ -203,10 +203,12 @@ class XMFileWriter:
 	
 	# Data management.
 	
-	func encode_song(arrangement: Arrangement, patterns: Array[Pattern], instruments: Array[Instrument]) -> void:
+	func encode_song(arrangement: Arrangement, patterns: Array[Pattern], instruments: Array[Instrument], from_bar: int, to_bar: int) -> void:
 		# Each bar is converted to an XM pattern, containing all notes by all instruments played in it.
 		# One extra "bar" is added for slurs/residual sounds, but the total size is capped at MAX_LENGTH.
-		_song_length = mini(MAX_LENGTH, arrangement.timeline_length + 1)
+		var arrangement_bars: Array[PackedInt32Array] = arrangement.timeline_bars.slice(from_bar, to_bar)
+		arrangement_bars.push_back(arrangement.create_empty_bar())
+		_song_length = mini(MAX_LENGTH, arrangement_bars.size())
 		
 		var bosca_patterns: Array[SongMerger.EncodedPattern] = []
 		for pattern in patterns:
@@ -238,7 +240,7 @@ class XMFileWriter:
 							var xm_instrument := _encode_xm_instrument(instrument_name, instrument_voice, drumkit_instrument.volume, instrument_note)
 							_instrument_index_map[unique_index] = xm_instrument.index
 		
-		_channels = SongMerger.encode_arrangement(arrangement, bosca_patterns, song_pattern_size)
+		_channels = SongMerger.encode_arrangement(arrangement_bars, bosca_patterns, song_pattern_size)
 		
 		# Each XM pattern can have up to 256 rows. This means that with the pattern size of 16 we
 		# can only put 16 arrangement bars into one XM pattern. There can also only be at most 256
@@ -264,7 +266,7 @@ class XMFileWriter:
 			channel_tracks.push_back(sequence.get_tracks())
 		
 		for current_time in _song_length:
-			var bar_patterns := arrangement.timeline_bars[current_time]
+			var bar_patterns := arrangement_bars[current_time]
 			var unique_hash := 0
 			for pattern_idx in bar_patterns:
 				unique_hash = hash("%d" % [ unique_hash + pattern_idx ])

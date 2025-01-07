@@ -26,7 +26,7 @@ const EMPTY_NOTE_COMMAND := "     "
 const REST_COMMAND := "  r  "
 
 
-static func save(song: Song, path: String) -> bool:
+static func save(song: Song, path: String, export_config: ExportMasterPopup.ExportConfig) -> bool:
 	if path.get_extension() != FILE_EXTENSION:
 		printerr("MMLExporter: The MML file must have a .%s extension." % [ FILE_EXTENSION ])
 		return false
@@ -38,7 +38,7 @@ static func save(song: Song, path: String) -> bool:
 		return false
 	
 	var writer := MMLFileWriter.new()
-	_write(writer, song)
+	_write(writer, song, export_config)
 	
 	# Try to write the file with the new contents.
 	
@@ -55,7 +55,7 @@ static func save(song: Song, path: String) -> bool:
 	return true
 
 
-static func _write(writer: MMLFileWriter, song: Song) -> void:
+static func _write(writer: MMLFileWriter, song: Song, export_config: ExportMasterPopup.ExportConfig) -> void:
 	# Prepare data for reuse.
 	
 	writer.bpm = song.bpm
@@ -66,7 +66,7 @@ static func _write(writer: MMLFileWriter, song: Song) -> void:
 		writer.encode_pattern(pattern, instrument)
 	for instrument in song.instruments:
 		writer.encode_instrument(instrument)
-	writer.encode_channels(song.arrangement)
+	writer.encode_channels(song.arrangement, export_config.loop_start, export_config.loop_end)
 	
 	# Header comment.
 	writer.write_line("/** SiON MML flavor. Exported from Bosca Ceoil Blue */")
@@ -312,15 +312,18 @@ class MMLFileWriter:
 		return _used_drumkit_voices[instrument_index].find(drumkit_note)
 	
 	
-	func encode_channels(arrangement: Arrangement) -> void:
+	func encode_channels(arrangement: Arrangement, from_bar: int, to_bar: int) -> void:
 		# We want as little sequences as possible, so we merge pattern tracks in a manner similar to
 		# how we merged notes within patterns. For simplicity sequences are limited to patterns
 		# of the same channel. In MML terms these are not actual channels, so this is an
 		# artificial limitation.
 		
+		# Only export the chosen bar range.
+		var arrangement_bars := arrangement.timeline_bars.slice(from_bar, to_bar)
+		
 		for i in Arrangement.CHANNEL_NUMBER:
 			var mml_channel := MMLChannel.new()
-			mml_channel.sequences = SongMerger.encode_arrangement_channel(arrangement, i, _patterns, pattern_size)
+			mml_channel.sequences = SongMerger.encode_arrangement_channel(arrangement_bars, i, _patterns, pattern_size)
 			
 			_channels.push_back(mml_channel)
 

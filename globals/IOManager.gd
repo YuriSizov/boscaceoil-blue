@@ -401,7 +401,7 @@ func _save_wav_song(exporter: WavExporter) -> void:
 	print("Successfully exported song to %s." % [ exporter.get_export_path() ])
 
 
-func _export_mid_song(_export_config: ExportMasterPopup.ExportConfig) -> void:
+func _export_mid_song(export_config: ExportMasterPopup.ExportConfig) -> void:
 	if not Controller.current_song:
 		return
 	
@@ -410,7 +410,7 @@ func _export_mid_song(_export_config: ExportMasterPopup.ExportConfig) -> void:
 	# On web we don't show a file dialog, since it can only access a virtual
 	# file system.
 	if OS.has_feature("web"):
-		_export_mid_song_confirmed("/tmp/" + file_name)
+		_export_mid_song_confirmed("/tmp/" + file_name, export_config)
 		return
 	
 	var export_dialog := Controller.get_file_dialog()
@@ -418,16 +418,16 @@ func _export_mid_song(_export_config: ExportMasterPopup.ExportConfig) -> void:
 	export_dialog.title = "Export .mid File"
 	export_dialog.add_filter("*.mid", "MIDI File")
 	export_dialog.current_file = file_name
-	export_dialog.file_selected.connect(_export_mid_song_confirmed, CONNECT_ONE_SHOT)
+	export_dialog.file_selected.connect(_export_mid_song_confirmed.bind(export_config), CONNECT_ONE_SHOT)
 	
 	Controller.show_file_dialog(export_dialog)
 
 
-func _export_mid_song_confirmed(path: String) -> void:
+func _export_mid_song_confirmed(path: String, export_config: ExportMasterPopup.ExportConfig) -> void:
 	if not Controller.current_song:
 		return
 	
-	var success := MidiExporter.save(Controller.current_song, path)
+	var success := MidiExporter.save(Controller.current_song, path, export_config)
 	if not success:
 		Controller.update_status("FAILED TO EXPORT SONG", Controller.StatusLevel.ERROR)
 		return
@@ -436,7 +436,7 @@ func _export_mid_song_confirmed(path: String) -> void:
 	print("Successfully exported song to %s." % [ path ])
 
 
-func _export_mml_song(_export_config: ExportMasterPopup.ExportConfig) -> void:
+func _export_mml_song(export_config: ExportMasterPopup.ExportConfig) -> void:
 	if not Controller.current_song:
 		return
 	
@@ -445,7 +445,7 @@ func _export_mml_song(_export_config: ExportMasterPopup.ExportConfig) -> void:
 	# On web we don't show a file dialog, since it can only access a virtual
 	# file system.
 	if OS.has_feature("web"):
-		_export_mml_song_confirmed("/tmp/" + file_name)
+		_export_mml_song_confirmed("/tmp/" + file_name, export_config)
 		return
 	
 	var export_dialog := Controller.get_file_dialog()
@@ -453,16 +453,16 @@ func _export_mml_song(_export_config: ExportMasterPopup.ExportConfig) -> void:
 	export_dialog.title = "Export SiON .mml File"
 	export_dialog.add_filter("*.mml", "MML File")
 	export_dialog.current_file = file_name
-	export_dialog.file_selected.connect(_export_mml_song_confirmed, CONNECT_ONE_SHOT)
+	export_dialog.file_selected.connect(_export_mml_song_confirmed.bind(export_config), CONNECT_ONE_SHOT)
 	
 	Controller.show_file_dialog(export_dialog)
 
 
-func _export_mml_song_confirmed(path: String) -> void:
+func _export_mml_song_confirmed(path: String, export_config: ExportMasterPopup.ExportConfig) -> void:
 	if not Controller.current_song:
 		return
 	
-	var success := MMLExporter.save(Controller.current_song, path)
+	var success := MMLExporter.save(Controller.current_song, path, export_config)
 	if not success:
 		Controller.update_status("FAILED TO EXPORT SONG", Controller.StatusLevel.ERROR)
 		return
@@ -471,7 +471,7 @@ func _export_mml_song_confirmed(path: String) -> void:
 	print("Successfully exported song to %s." % [ path ])
 
 
-func _export_xm_song(_export_config: ExportMasterPopup.ExportConfig) -> void:
+func _export_xm_song(export_config: ExportMasterPopup.ExportConfig) -> void:
 	if not Controller.current_song:
 		return
 	
@@ -480,7 +480,7 @@ func _export_xm_song(_export_config: ExportMasterPopup.ExportConfig) -> void:
 	# On web we don't show a file dialog, since it can only access a virtual
 	# file system.
 	if OS.has_feature("web"):
-		_export_xm_song_confirmed("/tmp/" + file_name)
+		_export_xm_song_confirmed("/tmp/" + file_name, export_config)
 		return
 	
 	var export_dialog := Controller.get_file_dialog()
@@ -488,16 +488,16 @@ func _export_xm_song(_export_config: ExportMasterPopup.ExportConfig) -> void:
 	export_dialog.title = "Export .xm File"
 	export_dialog.add_filter("*.xm", "XM Tracker File")
 	export_dialog.current_file = file_name
-	export_dialog.file_selected.connect(_export_xm_song_confirmed, CONNECT_ONE_SHOT)
+	export_dialog.file_selected.connect(_export_xm_song_confirmed.bind(export_config), CONNECT_ONE_SHOT)
 	
 	Controller.show_file_dialog(export_dialog)
 
 
-func _export_xm_song_confirmed(path: String) -> void:
+func _export_xm_song_confirmed(path: String, export_config: ExportMasterPopup.ExportConfig) -> void:
 	if not Controller.current_song:
 		return
 	
-	var success := XMExporter.save(Controller.current_song, path)
+	var success := XMExporter.save(Controller.current_song, path, export_config)
 	if not success:
 		Controller.update_status("FAILED TO EXPORT SONG", Controller.StatusLevel.ERROR)
 		return
