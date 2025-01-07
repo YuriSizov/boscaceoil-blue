@@ -6,12 +6,14 @@
 [node name="OptionPicker" type="MarginContainer"]
 offset_right = 105.0
 offset_bottom = 23.0
+mouse_filter = 0
 theme_type_variation = &"OptionPicker"
 script = ExtResource("1_m580c")
 placeholder_text = "Picker"
 
 [node name="Layout" type="HBoxContainer" parent="."]
 layout_mode = 2
+mouse_filter = 2
 theme_type_variation = &"OptionPickerBox"
 
 [node name="Arrow" type="TextureRect" parent="Layout"]

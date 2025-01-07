@@ -1,0 +1,176 @@
+[gd_scene load_steps=4 format=3 uid="uid://dj5vt42d3qp05"]
+
+[ext_resource type="PackedScene" uid="uid://brt3f2i74x70n" path="res://gui/widgets/popups/WindowPopup.tscn" id="1_dyfod"]
+[ext_resource type="Script" path="res://gui/widgets/popups/ExportMasterPopup.gd" id="2_gwh82"]
+[ext_resource type="PackedScene" uid="uid://dpno0cpboqdm0" path="res://gui/widgets/OptionPicker.tscn" id="3_owy01"]
+
+[node name="ExportMasterPopup" instance=ExtResource("1_dyfod")]
+offset_right = -520.0
+offset_bottom = -580.0
+script = ExtResource("2_gwh82")
+title = "Export to external format"
+
+[node name="TitleLabel" parent="Layout/TitleBar/TitleBox" index="0"]
+text = "Export to external format"
+
+[node name="ContentBox" type="VBoxContainer" parent="Layout/Content" index="0"]
+layout_mode = 2
+theme_type_variation = &"InfoPopupContentBox"
+
+[node name="PanelContainer" type="PanelContainer" parent="Layout/Content/ContentBox" index="0"]
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"WidgetPanel"
+
+[node name="FileTypeBox" type="HBoxContainer" parent="Layout/Content/ContentBox/PanelContainer" index="0"]
+layout_mode = 2
+theme_type_variation = &"HBoxSpaced"
+
+[node name="Label" type="Label" parent="Layout/Content/ContentBox/PanelContainer/FileTypeBox" index="0"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 3
+text = "FILE TYPE"
+uppercase = true
+
+[node name="FileType" parent="Layout/Content/ContentBox/PanelContainer/FileTypeBox" index="1" instance=ExtResource("3_owy01")]
+unique_name_in_owner = true
+layout_mode = 2
+direction = 1
+placeholder_text = "XXX"
+
+[node name="Spacer" type="Control" parent="Layout/Content/ContentBox" index="1"]
+layout_mode = 2
+
+[node name="ExportNotes" type="MarginContainer" parent="Layout/Content/ContentBox" index="2"]
+layout_mode = 2
+
+[node name="ExportNoteWAV" type="VBoxContainer" parent="Layout/Content/ContentBox/ExportNotes" index="0"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"VBoxSpaced"
+
+[node name="Label" type="Label" parent="Layout/Content/ContentBox/ExportNotes/ExportNoteWAV" index="0"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_vertical = 0
+theme_type_variation = &"IOHintLabel"
+text = "Waveform file."
+
+[node name="Label2" type="Label" parent="Layout/Content/ContentBox/ExportNotes/ExportNoteWAV" index="1"]
+auto_translate_mode = 1
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+size_flags_vertical = 0
+theme_type_variation = &"IOHintLabel"
+text = "- Universally supported by media players, music and video production software, game engines, etc.
+- What you hear is what you get."
+autowrap_mode = 2
+
+[node name="ExportNoteMIDI" type="VBoxContainer" parent="Layout/Content/ContentBox/ExportNotes" index="1"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_type_variation = &"VBoxSpaced"
+
+[node name="Label" type="Label" parent="Layout/Content/ContentBox/ExportNotes/ExportNoteMIDI" index="0"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_vertical = 0
+theme_type_variation = &"IOHintLabel"
+text = "Standard MIDI file."
+
+[node name="Label2" type="Label" parent="Layout/Content/ContentBox/ExportNotes/ExportNoteMIDI" index="1"]
+auto_translate_mode = 1
+custom_minimum_size = Vector2(0, 130)
+layout_mode = 2
+size_flags_vertical = 0
+theme_type_variation = &"IOHintLabel"
+text = "- Supports only 15 unique instruments + 1 drumkit.
+- Non-MIDI Bosca instruments are converted to their closest MIDI approximation.
+- Low-pass filter and instrument recording are not supported."
+autowrap_mode = 2
+
+[node name="ExportNoteMML" type="VBoxContainer" parent="Layout/Content/ContentBox/ExportNotes" index="2"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_type_variation = &"VBoxSpaced"
+
+[node name="Label" type="Label" parent="Layout/Content/ContentBox/ExportNotes/ExportNoteMML" index="0"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_vertical = 0
+theme_type_variation = &"IOHintLabel"
+text = "Music Macro Language file with SiON flavor."
+
+[node name="Label2" type="Label" parent="Layout/Content/ContentBox/ExportNotes/ExportNoteMML" index="1"]
+auto_translate_mode = 1
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+size_flags_vertical = 0
+theme_type_variation = &"IOHintLabel"
+text = "- Requires SiON/GDSiON-based software to play.
+- Volume is normalized, which may result in minimal precision loss."
+autowrap_mode = 2
+
+[node name="ExportNoteXM" type="VBoxContainer" parent="Layout/Content/ContentBox/ExportNotes" index="3"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_type_variation = &"VBoxSpaced"
+
+[node name="Label" type="Label" parent="Layout/Content/ContentBox/ExportNotes/ExportNoteXM" index="0"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_vertical = 0
+theme_type_variation = &"IOHintLabel"
+text = "FastTracker 2 XM file."
+
+[node name="Label2" type="Label" parent="Layout/Content/ContentBox/ExportNotes/ExportNoteXM" index="1"]
+auto_translate_mode = 1
+custom_minimum_size = Vector2(0, 130)
+layout_mode = 2
+size_flags_vertical = 0
+theme_type_variation = &"IOHintLabel"
+text = "- Supports up to 256 bars in the arrangement.
+- Only one sample per instrument is rendered, which may affect the playback.
+- Low-pass filter and instrument recording are not supported."
+autowrap_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Layout/Content/ContentBox" index="3"]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="Layout/Content/ContentBox/ScrollContainer" index="0"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_type_variation = &"HelpMarginContainer"
+
+[node name="Layout" type="VBoxContainer" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer" index="0"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"InfoPopupContentBox"
+
+[node name="ConfigurationTitle" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout" index="0"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"CreditsLabelHeader"
+text = "Configuration"
+
+[node name="Spacer2" type="Control" parent="Layout/Content/ContentBox" index="4"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="ButtonBar" type="HBoxContainer" parent="Layout/Content/ContentBox" index="5"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_vertical = 10
+mouse_filter = 2
+theme_type_variation = &"HBoxSpaced"
+alignment = 2

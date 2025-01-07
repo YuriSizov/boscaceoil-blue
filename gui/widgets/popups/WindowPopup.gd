@@ -102,13 +102,6 @@ func _draw() -> void:
 
 # Lifecycle.
 
-func is_popped() -> bool:
-	if not is_node_ready() || not is_inside_tree():
-		return false
-	
-	return PopupManager.is_popup_shown(self)
-
-
 func popup_anchored(anchor_position: Vector2, popup_size: Vector2, direction: PopupManager.Direction = PopupManager.Direction.BOTTOM_RIGHT, blocking: bool = true) -> void:
 	size = popup_size
 	_update_before_popup()

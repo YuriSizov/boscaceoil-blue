@@ -9,8 +9,10 @@
 class_name IOManager extends RefCounted
 
 const IMPORT_MASTER_POPUP_SCENE := preload("res://gui/widgets/popups/ImportMasterPopup.tscn")
+const EXPORT_MASTER_POPUP_SCENE := preload("res://gui/widgets/popups/ExportMasterPopup.tscn")
 
 var _import_master_popup: ImportMasterPopup = null
+var _export_master_popup: ExportMasterPopup = null
 # We must keep references around, otherwise they get silently destroyed.
 # JavaScriptBridge doesn't tick the reference counter, it seems.
 var _check_song_on_browser_close_ref: JavaScriptObject = null
@@ -25,6 +27,8 @@ func _notification(what: int) -> void:
 	if what == NOTIFICATION_PREDELETE:
 		if is_instance_valid(_import_master_popup):
 			_import_master_popup.queue_free()
+		if is_instance_valid(_export_master_popup):
+			_export_master_popup.queue_free()
 
 
 # Popup management.
@@ -38,6 +42,17 @@ func get_import_master_popup() -> ImportMasterPopup:
 	
 	_import_master_popup.clear()
 	return _import_master_popup
+
+
+func get_export_master_popup() -> ExportMasterPopup:
+	if not _export_master_popup:
+		_export_master_popup = EXPORT_MASTER_POPUP_SCENE.instantiate()
+	
+	if _export_master_popup.is_visible_in_tree():
+		_export_master_popup.close_popup()
+	
+	_export_master_popup.clear()
+	return _export_master_popup
 
 
 # Creation.
@@ -249,7 +264,7 @@ func import_song() -> void:
 	)
 	
 	Controller.music_player.stop_playback()
-	Controller.show_window_popup(import_dialog, Vector2(580, 360))
+	Controller.show_window_popup(import_dialog, Vector2(680, 400))
 
 
 func import_song_safe() -> void:
@@ -294,7 +309,40 @@ func _import_mid_song(import_config: ImportMasterPopup.ImportConfig) -> void:
 
 # External format export.
 
-func export_wav_song() -> void:
+func export_song() -> void:
+	if not Controller.current_song:
+		return
+	
+	var export_dialog := get_export_master_popup()
+	export_dialog.title = "Export to external format"
+	export_dialog.add_button("Cancel", export_dialog.close_popup)
+	export_dialog.add_button("Export", func() -> void:
+		var export_config: ExportMasterPopup.ExportConfig = export_dialog.get_export_config()
+		
+		export_dialog.close_popup()
+		_export_song_confirmed(export_config)
+	)
+	
+	Controller.music_player.stop_playback()
+	Controller.show_window_popup(export_dialog, Vector2(680, 360))
+
+
+func _export_song_confirmed(export_config: ExportMasterPopup.ExportConfig) -> void:
+	match export_config.type:
+		ExportMasterPopup.ExportType.EXPORT_WAV:
+			_export_wav_song(export_config)
+		ExportMasterPopup.ExportType.EXPORT_MIDI:
+			_export_mid_song(export_config)
+		ExportMasterPopup.ExportType.EXPORT_MML:
+			_export_mml_song(export_config)
+		ExportMasterPopup.ExportType.EXPORT_XM:
+			_export_xm_song(export_config)
+		
+		_:
+			Controller.update_status("FORMAT NOT SUPPORTED (YET)", Controller.StatusLevel.WARNING)
+
+
+func _export_wav_song(_export_config: ExportMasterPopup.ExportConfig) -> void:
 	if not Controller.current_song:
 		return
 	
@@ -327,7 +375,6 @@ func _export_wav_song_confirmed(path: String) -> void:
 		return
 	
 	Controller.lock_song_editing("NOW EXPORTING AS WAV, PLEASE WAIT")
-	Controller.music_player.stop_playback()
 	
 	Controller.current_song.arrangement.set_loop(0, Controller.current_song.arrangement.timeline_length)
 	Controller.current_song.reset_arrangement()
@@ -352,7 +399,7 @@ func _save_wav_song(exporter: WavExporter) -> void:
 	print("Successfully exported song to %s." % [ exporter.get_export_path() ])
 
 
-func export_mid_song() -> void:
+func _export_mid_song(_export_config: ExportMasterPopup.ExportConfig) -> void:
 	if not Controller.current_song:
 		return
 	
@@ -387,7 +434,7 @@ func _export_mid_song_confirmed(path: String) -> void:
 	print("Successfully exported song to %s." % [ path ])
 
 
-func export_mml_song() -> void:
+func _export_mml_song(_export_config: ExportMasterPopup.ExportConfig) -> void:
 	if not Controller.current_song:
 		return
 	
@@ -422,7 +469,7 @@ func _export_mml_song_confirmed(path: String) -> void:
 	print("Successfully exported song to %s." % [ path ])
 
 
-func export_xm_song() -> void:
+func _export_xm_song(_export_config: ExportMasterPopup.ExportConfig) -> void:
 	if not Controller.current_song:
 		return
 	

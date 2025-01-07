@@ -250,6 +250,13 @@ class PopupControl extends Control:
 	
 	# Popup management.
 	
+	func is_popped() -> bool:
+		if not is_node_ready() || not is_inside_tree():
+			return false
+		
+		return PopupManager.is_popup_shown(self)
+	
+	
 	func get_popup_anchor() -> PopupAnchor:
 		var parent_node := get_parent()
 		if parent_node && parent_node is PopupAnchor:

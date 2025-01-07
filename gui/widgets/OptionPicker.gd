@@ -55,10 +55,10 @@ func _notification(what: int) -> void:
 
 
 func _gui_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton && event.is_pressed():
+	if event is InputEventMouseButton:
 		var mb := event as InputEventMouseButton
 
-		if mb.button_index == MOUSE_BUTTON_LEFT:
+		if mb.pressed && mb.button_index == MOUSE_BUTTON_LEFT && not _popup_control.is_popped():
 			_popup_control.show_popup(global_position, size)
 
 
@@ -108,7 +108,7 @@ func get_linked_options() -> Array[LinkedItem]:
 # Visuals and drawables.
 
 func _update_label() -> void:
-	if not is_inside_tree():
+	if not is_node_ready():
 		return
 
 	if not _selected_option:
@@ -119,7 +119,7 @@ func _update_label() -> void:
 
 
 func _update_icon() -> void:
-	if not is_inside_tree():
+	if not is_node_ready():
 		return
 
 	if direction == PopupManager.Direction.TOP_RIGHT || direction == PopupManager.Direction.TOP_LEFT:

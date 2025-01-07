@@ -8,16 +8,9 @@ extends MarginContainer
 
 const CREDITS_POPUP_SCENE := preload("res://gui/widgets/popups/CreditsPopup.tscn")
 
-enum ExportOption {
-	EXPORT_WAV,
-	EXPORT_MID,
-	EXPORT_MML,
-	EXPORT_XM
-}
+var _credits_popup: WindowPopup = null
 
 var _subtitle_easter_egg: bool = false
-
-var _credits_popup: WindowPopup = null
 
 @onready var _version_number: Label = %VersionNumber
 @onready var _version_subtitle: Label = %VersionSubtitle
@@ -48,7 +41,6 @@ func _ready() -> void:
 	_credits_popup.add_button("Close", _credits_popup.close_popup)
 	
 	_update_version_flair()
-	_populate_export_options()
 	
 	_version_subtitle.gui_input.connect(_subtitle_gui_input)
 	
@@ -62,9 +54,8 @@ func _ready() -> void:
 	_create_song_button.pressed.connect(Controller.io_manager.create_new_song_safe)
 	_load_song_button.pressed.connect(Controller.io_manager.load_ceol_song_safe)
 	_save_song_button.pressed.connect(Controller.io_manager.save_ceol_song)
-	
 	_import_song_button.pressed.connect(Controller.io_manager.import_song_safe)
-	_export_song_button.option_pressed.connect(_handle_export_option)
+	_export_song_button.pressed.connect(Controller.io_manager.export_song)
 	
 	_pattern_size_stepper.value_changed.connect(_change_pattern_size)
 	_bar_size_stepper.value_changed.connect(_change_bar_size)
@@ -149,43 +140,3 @@ func _update_song_steppers() -> void:
 func _show_credits() -> void:
 	# Extra size to compensate for some things.
 	Controller.show_window_popup(_credits_popup, _credits_popup.custom_minimum_size + Vector2(10, 10))
-
-
-# Import and export.
-
-func _populate_export_options() -> void:
-	var wav_item := OptionListPopup.Item.new()
-	wav_item.id = ExportOption.EXPORT_WAV
-	wav_item.text = "EXPORT .wav"
-	_export_song_button.options.push_back(wav_item)
-	
-	var mid_item := OptionListPopup.Item.new()
-	mid_item.id = ExportOption.EXPORT_MID
-	mid_item.text = "EXPORT .mid"
-	_export_song_button.options.push_back(mid_item)
-	
-	var mml_item := OptionListPopup.Item.new()
-	mml_item.id = ExportOption.EXPORT_MML
-	mml_item.text = "EXPORT .mml"
-	_export_song_button.options.push_back(mml_item)
-	
-	var xm_item := OptionListPopup.Item.new()
-	xm_item.id = ExportOption.EXPORT_XM
-	xm_item.text = "EXPORT .xm"
-	_export_song_button.options.push_back(xm_item)
-	
-	_export_song_button.commit_options()
-
-
-func _handle_export_option(item: OptionListPopup.Item) -> void:
-	match item.id:
-		ExportOption.EXPORT_WAV:
-			Controller.io_manager.export_wav_song()
-		ExportOption.EXPORT_MID:
-			Controller.io_manager.export_mid_song()
-		ExportOption.EXPORT_MML:
-			Controller.io_manager.export_mml_song()
-		ExportOption.EXPORT_XM:
-			Controller.io_manager.export_xm_song()
-		_:
-			Controller.update_status("FORMAT NOT SUPPORTED (YET)", Controller.StatusLevel.WARNING)

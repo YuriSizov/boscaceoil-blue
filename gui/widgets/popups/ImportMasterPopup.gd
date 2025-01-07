@@ -56,7 +56,7 @@ func _show_file_dialog() -> void:
 	
 	var import_dialog := Controller.get_file_dialog()
 	import_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
-	import_dialog.title = "Import Song from File"
+	import_dialog.title = "Select File to Import"
 	import_dialog.add_filter("*.mid", "MIDI File")
 	import_dialog.current_file = ""
 	import_dialog.file_selected.connect(_confirm_file_dialog, CONNECT_ONE_SHOT)

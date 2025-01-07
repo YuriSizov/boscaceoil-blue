@@ -7,8 +7,8 @@
 [ext_resource type="PackedScene" uid="uid://71sw1mddco3" path="res://gui/widgets/SquishyButton.tscn" id="4_3wr70"]
 
 [node name="ImportMasterPopup" instance=ExtResource("1_wmva6")]
-offset_right = -620.0
-offset_bottom = -580.0
+offset_right = -520.0
+offset_bottom = -540.0
 script = ExtResource("2_inwde")
 title = "Import from external format"
 
@@ -23,7 +23,12 @@ theme_type_variation = &"InfoPopupContentBox"
 layout_mode = 2
 theme_type_variation = &"HBoxSpaced"
 
-[node name="FilePathLabel" parent="Layout/Content/ContentBox/File" index="0" instance=ExtResource("3_avs5w")]
+[node name="PanelContainer" type="PanelContainer" parent="Layout/Content/ContentBox/File" index="0"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"WidgetPanel"
+
+[node name="FilePathLabel" parent="Layout/Content/ContentBox/File/PanelContainer" index="0" instance=ExtResource("3_avs5w")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -35,7 +40,10 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "SELECT"
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Layout/Content/ContentBox" index="1"]
+[node name="Spacer" type="Control" parent="Layout/Content/ContentBox" index="1"]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Layout/Content/ContentBox" index="2"]
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
@@ -83,21 +91,26 @@ theme_type_variation = &"CreditsLabel"
 text = "0 means AUTO"
 horizontal_alignment = 2
 
-[node name="ImportNote" type="Label" parent="Layout/Content/ContentBox" index="2"]
+[node name="Spacer2" type="Control" parent="Layout/Content/ContentBox" index="3"]
+layout_mode = 2
+
+[node name="ImportNote" type="Label" parent="Layout/Content/ContentBox" index="4"]
 auto_translate_mode = 1
+custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
-theme_type_variation = &"CreditsLabel"
-text = "Import is done on the best-effort basis.
-External formats may be incompatible with Bosca
-in many ways. But feel free to experiment!"
+theme_type_variation = &"IOHintLabel"
+text = "External formats may be incompatible with Bosca in various ways. Import is done on the best-effort basis.
+But feel free to experiment!"
+autowrap_mode = 2
 
-[node name="Padding" type="Control" parent="Layout/Content/ContentBox" index="3"]
+[node name="Spacer3" type="Control" parent="Layout/Content/ContentBox" index="5"]
 layout_mode = 2
 
-[node name="ButtonBar" type="HBoxContainer" parent="Layout/Content/ContentBox" index="4"]
+[node name="ButtonBar" type="HBoxContainer" parent="Layout/Content/ContentBox" index="6"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
+size_flags_vertical = 8
 mouse_filter = 2
 theme_type_variation = &"HBoxSpaced"
 alignment = 2
