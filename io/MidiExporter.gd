@@ -13,7 +13,7 @@ class_name MidiExporter extends RefCounted
 const FILE_EXTENSION := "mid"
 
 
-static func save(song: Song, path: String, _export_config: ExportMasterPopup.ExportConfig) -> bool:
+static func save(song: Song, path: String, export_config: ExportMasterPopup.ExportConfig) -> bool:
 	if path.get_extension() != FILE_EXTENSION:
 		printerr("MidiExporter: The MIDI file must have a .%s extension." % [ FILE_EXTENSION ])
 		return false
@@ -25,7 +25,7 @@ static func save(song: Song, path: String, _export_config: ExportMasterPopup.Exp
 		return false
 	
 	var writer := MidiFileWriter.new()
-	_write(writer, song)
+	_write(writer, song, export_config)
 	
 	# Try to write the file with the new contents.
 	
@@ -42,7 +42,7 @@ static func save(song: Song, path: String, _export_config: ExportMasterPopup.Exp
 	return true
 
 
-static func _write(writer: MidiFileWriter, song: Song) -> void:
+static func _write(writer: MidiFileWriter, song: Song, export_config: ExportMasterPopup.ExportConfig) -> void:
 	# Basic information.
 	writer.write_midi_header()
 	
@@ -56,17 +56,17 @@ static func _write(writer: MidiFileWriter, song: Song) -> void:
 	
 	# Indices 0-8.
 	var main_track1 := writer.create_track()
-	_write_instruments_to_track(main_track1, song, MidiFile.DRUMKIT_CHANNEL, 0)
+	_write_instruments_to_track(main_track1, song, export_config.loop_start, export_config.loop_end, MidiFile.DRUMKIT_CHANNEL, 0)
 	
 	# Indices 9-15.
 	if song.instruments.size() > MidiFile.DRUMKIT_CHANNEL:
 		var main_track2 := writer.create_track()
-		_write_instruments_to_track(main_track2, song, MidiFile.DRUMKIT_CHANNEL, MidiFile.DRUMKIT_CHANNEL)
+		_write_instruments_to_track(main_track2, song, export_config.loop_start, export_config.loop_end, MidiFile.DRUMKIT_CHANNEL, MidiFile.DRUMKIT_CHANNEL)
 	
 	# Track chunk 3. Drumkit instrument and notes.
 	
 	var drum_track := writer.create_track()
-	_write_drumkits_to_track(drum_track, song)
+	_write_drumkits_to_track(drum_track, song, export_config.loop_start, export_config.loop_end)
 	
 	# Prepare the rest of the file for output.
 	writer.finalize()
@@ -112,7 +112,7 @@ static func _write_time_signature(track: MidiTrack, song: Song) -> void:
 	track.add_tempo(song.bpm, note_denominator)
 
 
-static func _write_instruments_to_track(track: MidiTrack, song: Song, limit: int, offset: int) -> void:
+static func _write_instruments_to_track(track: MidiTrack, song: Song, from_bar: int, to_bar: int, limit: int, offset: int) -> void:
 	# Define all standard instruments in separate channels (up to limit, but no more than 16 overall).
 	var max_instrument_size := mini(song.instruments.size() - offset, limit)
 	for i in max_instrument_size:
@@ -123,11 +123,12 @@ static func _write_instruments_to_track(track: MidiTrack, song: Song, limit: int
 		track.set_instrument(i, instrument.voice_index)
 	
 	# Write all non-drumkit notes.
-	for i in song.arrangement.timeline_length:
+	var arrangement_bars: Array[PackedInt32Array] = song.arrangement.timeline_bars.slice(from_bar, to_bar)
+	for i in arrangement_bars.size():
 		var note_offset := i * song.pattern_size
 		
 		for j in Arrangement.CHANNEL_NUMBER:
-			var pattern_index := song.arrangement.timeline_bars[i][j]
+			var pattern_index := arrangement_bars[i][j]
 			if pattern_index == -1:
 				continue
 			
@@ -144,16 +145,17 @@ static func _write_instruments_to_track(track: MidiTrack, song: Song, limit: int
 				track.add_note(pattern.instrument_idx - offset, note_offset + note.y, note.x, note.z, instrument.volume)
 
 
-static func _write_drumkits_to_track(track: MidiTrack, song: Song) -> void:
+static func _write_drumkits_to_track(track: MidiTrack, song: Song, from_bar: int, to_bar: int) -> void:
 	# Use special drumkit channel and a catch-all instrument.
 	track.set_instrument(MidiFile.DRUMKIT_CHANNEL, 0)
 
 	# Write all drumkit notes.
-	for i in song.arrangement.timeline_length:
+	var arrangement_bars: Array[PackedInt32Array] = song.arrangement.timeline_bars.slice(from_bar, to_bar)
+	for i in arrangement_bars.size():
 		var note_offset := i * song.pattern_size
 		
 		for j in Arrangement.CHANNEL_NUMBER:
-			var pattern_index := song.arrangement.timeline_bars[i][j]
+			var pattern_index := arrangement_bars[i][j]
 			if pattern_index == -1:
 				continue
 			
