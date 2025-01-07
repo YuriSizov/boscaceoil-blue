@@ -323,8 +323,10 @@ func export_song() -> void:
 		_export_song_confirmed(export_config)
 	)
 	
+	export_dialog.set_song(Controller.current_song)
+	
 	Controller.music_player.stop_playback()
-	Controller.show_window_popup(export_dialog, Vector2(680, 360))
+	Controller.show_window_popup(export_dialog, Vector2(680, 450))
 
 
 func _export_song_confirmed(export_config: ExportMasterPopup.ExportConfig) -> void:
@@ -342,7 +344,7 @@ func _export_song_confirmed(export_config: ExportMasterPopup.ExportConfig) -> vo
 			Controller.update_status("FORMAT NOT SUPPORTED (YET)", Controller.StatusLevel.WARNING)
 
 
-func _export_wav_song(_export_config: ExportMasterPopup.ExportConfig) -> void:
+func _export_wav_song(export_config: ExportMasterPopup.ExportConfig) -> void:
 	if not Controller.current_song:
 		return
 	
@@ -351,7 +353,7 @@ func _export_wav_song(_export_config: ExportMasterPopup.ExportConfig) -> void:
 	# On web we don't show a file dialog, since it can only access a virtual
 	# file system.
 	if OS.has_feature("web"):
-		_export_wav_song_confirmed("/tmp/" + file_name)
+		_export_wav_song_confirmed("/tmp/" + file_name, export_config)
 		return
 	
 	var export_dialog := Controller.get_file_dialog()
@@ -359,12 +361,12 @@ func _export_wav_song(_export_config: ExportMasterPopup.ExportConfig) -> void:
 	export_dialog.title = "Export .wav File"
 	export_dialog.add_filter("*.wav", "Waveform Audio File")
 	export_dialog.current_file = file_name
-	export_dialog.file_selected.connect(_export_wav_song_confirmed, CONNECT_ONE_SHOT)
+	export_dialog.file_selected.connect(_export_wav_song_confirmed.bind(export_config), CONNECT_ONE_SHOT)
 	
 	Controller.show_file_dialog(export_dialog)
 
 
-func _export_wav_song_confirmed(path: String) -> void:
+func _export_wav_song_confirmed(path: String, export_config: ExportMasterPopup.ExportConfig) -> void:
 	if not Controller.current_song:
 		return
 	
@@ -376,7 +378,7 @@ func _export_wav_song_confirmed(path: String) -> void:
 	
 	Controller.lock_song_editing("NOW EXPORTING AS WAV, PLEASE WAIT")
 	
-	Controller.current_song.arrangement.set_loop(0, Controller.current_song.arrangement.timeline_length)
+	Controller.current_song.arrangement.set_loop(export_config.loop_start, export_config.loop_end)
 	Controller.current_song.reset_arrangement()
 	
 	Controller.music_player.export_ended.connect(_save_wav_song.bind(exporter), CONNECT_ONE_SHOT)

@@ -6,7 +6,7 @@
 
 [node name="ExportMasterPopup" instance=ExtResource("1_dyfod")]
 offset_right = -520.0
-offset_bottom = -580.0
+offset_bottom = -540.0
 script = ExtResource("2_gwh82")
 title = "Export to external format"
 
@@ -139,7 +139,6 @@ text = "- Supports up to 256 bars in the arrangement.
 autowrap_mode = 2
 
 [node name="ScrollContainer" type="ScrollContainer" parent="Layout/Content/ContentBox" index="3"]
-visible = false
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
@@ -162,6 +161,58 @@ size_flags_horizontal = 4
 theme_type_variation = &"CreditsLabelHeader"
 text = "Configuration"
 
+[node name="ExportLoop" type="HBoxContainer" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout" index="1"]
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="Label" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/ExportLoop" index="0"]
+layout_mode = 2
+text = "EXPORT BARS"
+
+[node name="Spacer" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/ExportLoop" index="1"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/ExportLoop" index="2"]
+layout_mode = 2
+theme_type_variation = &"StepperBox"
+
+[node name="Label" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/ExportLoop/HBoxContainer" index="0"]
+layout_mode = 2
+text = "from"
+
+[node name="LoopStart" type="SpinBox" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/ExportLoop/HBoxContainer" index="1"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(110, 34)
+layout_mode = 2
+min_value = 1.0
+max_value = 1000.0
+value = 1000.0
+rounded = true
+alignment = 2
+
+[node name="Spacer2" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/ExportLoop" index="3"]
+custom_minimum_size = Vector2(16, 0)
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/ExportLoop" index="4"]
+layout_mode = 2
+theme_type_variation = &"StepperBox"
+
+[node name="Label" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/ExportLoop/HBoxContainer2" index="0"]
+layout_mode = 2
+text = "to"
+
+[node name="LoopEnd" type="SpinBox" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/ExportLoop/HBoxContainer2" index="1"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(110, 34)
+layout_mode = 2
+min_value = 1.0
+max_value = 1000.0
+value = 1000.0
+rounded = true
+alignment = 2
+
 [node name="Spacer2" type="Control" parent="Layout/Content/ContentBox" index="4"]
 layout_mode = 2
 mouse_filter = 2
@@ -170,7 +221,6 @@ mouse_filter = 2
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-size_flags_vertical = 10
 mouse_filter = 2
 theme_type_variation = &"HBoxSpaced"
 alignment = 2

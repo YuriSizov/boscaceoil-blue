@@ -22,6 +22,9 @@ var _file_type: ExportType = ExportType.EXPORT_WAV
 @onready var _export_mml_note: Control = %ExportNoteMML
 @onready var _export_xm_note: Control = %ExportNoteXM
 
+@onready var _loop_start_spinner: SpinBox = %LoopStart
+@onready var _loop_end_spinner: SpinBox = %LoopEnd
+
 
 func _ready() -> void:
 	super()
@@ -41,6 +44,8 @@ func _notification(what: int) -> void:
 		_export_midi_note = %ExportNoteMIDI
 		_export_mml_note = %ExportNoteMML
 		_export_xm_note = %ExportNoteXM
+		_loop_start_spinner = %LoopStart
+		_loop_end_spinner = %LoopEnd
 
 
 # Lifecycle.
@@ -102,12 +107,24 @@ func _update_export_notes() -> void:
 
 # Config management.
 
+func set_song(song: Song) -> void:
+	_loop_start_spinner.value = 1 # For display purposes it's 1-based.
+	_loop_end_spinner.value = song.arrangement.timeline_length
+
+
 func get_export_config() -> ExportConfig:
 	var config := ExportConfig.new()
 	config.type = _file_type
+	
+	@warning_ignore("narrowing_conversion")
+	config.loop_start = mini(_loop_start_spinner.value, _loop_end_spinner.value) - 1
+	@warning_ignore("narrowing_conversion")
+	config.loop_end = maxi(_loop_start_spinner.value, _loop_end_spinner.value)
 	
 	return config
 
 
 class ExportConfig extends RefCounted:
 	var type: ExportType = ExportType.EXPORT_WAV
+	var loop_start: int = 0
+	var loop_end: int = 1
