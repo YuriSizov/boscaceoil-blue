@@ -10,6 +10,7 @@ extends EditorExportPlugin
 const WEB_ASSETS_PATH := "res://dist/web_assets"
 const TARGET_SUFFIXES := [ "pck", "wasm", "side.wasm" ]
 
+var _supported_platform: bool = false
 var _target_path: String = ""
 var _target_gdextensions: PackedStringArray = PackedStringArray()
 
@@ -22,20 +23,37 @@ func _supports_platform(platform: EditorExportPlatform) -> bool:
 	return platform.get_os_name() == "Web"
 
 
+# Export hooks.
+
 func _export_begin(features: PackedStringArray, is_debug: bool, path: String, flags: int) -> void:
+	# Despite what its name might suggest, _supports_platform is not called to prevent the
+	# plugin from running on unsupported platforms. It's only called by the editor to update
+	# the export UI. So we must add manual guards. This seems to be the only viable option.
+	_supported_platform = features.has("web")
+	if not _supported_platform:
+		return
+	
 	_target_path = path
 	_target_gdextensions.clear()
 
 
 func _export_file(path: String, type: String, features: PackedStringArray) -> void:
+	if not _supported_platform:
+		return
+	
 	if type == "GDExtension":
 		_target_gdextensions.push_back(path.get_file().get_basename())
 
 
 func _export_end() -> void:
+	if not _supported_platform:
+		return
+	
 	_copy_assets()
 	_update_html_shell()
 
+
+# Helpers.
 
 func _copy_assets() -> void:
 	var target_dir := _target_path.get_base_dir()
