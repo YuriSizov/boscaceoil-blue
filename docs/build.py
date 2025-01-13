@@ -30,7 +30,11 @@ PAGE_TEMPLATES = {}
 DEFAULT_PAGE_TEMPLATE = "article"
 
 # Navigation.
-TOP_LEVEL_PAGES = {}
+# Add page names here to force the order. Top-level pages not on
+# this list are appended to the end.
+TOP_LEVEL_PAGES = {
+    "index": {},
+}
 ALL_PAGES = []
 
 # Instance of the markdown builder.
@@ -110,7 +114,11 @@ def convert_source(inpath, outpath, toplevel = False):
         
         # Add top-level pages to the navigation list. But only if it has a title.
         if toplevel and "title" in meta and len(meta["title"]) > 0:
-            TOP_LEVEL_PAGES[outpath] = meta["title"][0]
+            toplevel_key = outpath.name[:-len(outpath.suffix)]
+            TOP_LEVEL_PAGES[toplevel_key] = {
+                "outpath": outpath,
+                "title": meta["title"][0],
+            }
 
 
 def create_navigation(current_path):
@@ -118,12 +126,13 @@ def create_navigation(current_path):
     # Normalize the DOCS_OUT variable before calculating its length.
     outdir_len = len(str(Path(DOCS_OUT)))
     
-    for outpath in TOP_LEVEL_PAGES:
+    for toplevel_key in TOP_LEVEL_PAGES:
+        data = TOP_LEVEL_PAGES[toplevel_key]
         # Normalize the outpath and remove output path prefix.
-        url = str(outpath)[outdir_len:].replace("\\", "/")
-        title = TOP_LEVEL_PAGES[outpath]
+        url = str(data["outpath"])[outdir_len:].replace("\\", "/")
+        title = data["title"]
         
-        if current_path == outpath:
+        if current_path == data["outpath"]:
             text += f'<a href="{url}" class="navigation-item active">{title}</a>\n'
         else:
             text += f'<a href="{url}" class="navigation-item">{title}</a>\n'
