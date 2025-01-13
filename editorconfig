@@ -5,3 +5,8 @@ charset = utf-8
 end_of_line = lf
 indent_style = tab
 insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{html,css,js}]
+indent_style = space
+indent_size = 2

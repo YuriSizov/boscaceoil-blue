@@ -1,0 +1,5 @@
+# Documentation-specific ignores.
+
+__pycache__
+.venv
+out

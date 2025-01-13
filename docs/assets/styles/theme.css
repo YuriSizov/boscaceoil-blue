@@ -1,0 +1,113 @@
+/** Colors and variables **/
+:root {
+  color-scheme: light dark;
+
+  --g-background-color: #f2f1f4;
+  --g-content-background-color: #fcfcfa;
+  --g-font-color: #121314;
+  --g-font-size: 16px;
+  --g-font-weight: 400;
+  --g-line-height: 20px;
+
+  --h-font-size: 24px;
+  --h-font-weight: 700;
+  --h-line-height: 32px;
+
+  --link-font-color: #1d6dff;
+  --link-font-color-hover: #1051c9;
+  
+  --nav-hover-background-color: rgb(24 24 24 / 16%);
+  --nav-active-background-color: rgb(24 24 24 / 85%);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --g-background-color: #0c0d0e;
+    --g-content-background-color: #252931;
+    --g-font-color: #e1e5e8;
+    
+    --link-font-color: #4989ff;
+    --link-font-color-hover: #2d63c4;
+    
+    --nav-hover-background-color: rgb(255 255 255 / 16%);
+    --nav-active-background-color: rgb(255 255 255 / 85%);
+  }
+}
+
+/** General styling **/
+
+body {
+  background: var(--g-background-color);
+  color: var(--g-font-color);
+  font-family: 'Roboto', sans-serif;
+  font-size: var(--g-font-size);
+  font-weight: var(--g-font-weight);
+  line-height: var(--g-line-height);
+  min-width: 380px;
+}
+
+a {
+  color: var(--link-font-color);
+  font-weight: 700;
+  text-decoration: none;
+}
+a:hover {
+  color: var(--link-font-color-hover);
+}
+
+h1 {
+  font-size: 32px;
+  line-height: 40px;
+}
+
+/** Main layout **/
+
+.main {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  padding: 24px 24px;
+}
+
+.navigation {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 240px;
+}
+
+.navigation-item {
+  padding: 6px 8px 6px 24px;
+  text-align: right;
+}
+.navigation-item:hover {
+  background-color: var(--nav-hover-background-color);
+  color: var(--link-font-color);
+}
+.navigation-item.active {
+  background-color: var(--nav-active-background-color);
+  color: var(--g-background-color);
+}
+
+.content {
+  background-color: var(--g-content-background-color);
+  padding: 24px 32px;
+  max-width: 900px;
+  width: calc(100% - 64px);
+}
+
+/** Compact adjustments **/
+
+@media (max-width: 760px) {
+  .main {
+    flex-direction: column;
+  }
+  
+  .navigation {
+    max-width: 100%;
+  }
+  
+  .navigation-item {
+    padding: 8px 16px;
+    text-align: center;
+  }
+}
