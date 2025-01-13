@@ -1,5 +1,4 @@
 ---
-template: article
 title: Introduction
 ---
 
