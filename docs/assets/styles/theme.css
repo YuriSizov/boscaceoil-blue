@@ -1,23 +1,25 @@
 /** Colors and variables **/
 :root {
   color-scheme: light dark;
-
+  
   --g-background-color: #f2f1f4;
   --g-content-background-color: #fcfcfa;
   --g-font-color: #121314;
   --g-font-size: 16px;
   --g-font-weight: 400;
   --g-line-height: 20px;
-
+  
   --h-font-size: 24px;
   --h-font-weight: 700;
   --h-line-height: 32px;
-
+  
   --link-font-color: #1d6dff;
   --link-font-color-hover: #1051c9;
   
   --nav-hover-background-color: rgb(24 24 24 / 16%);
   --nav-active-background-color: rgb(24 24 24 / 85%);
+  
+  --notice-background-color: rgb(245 126 56 / 30%);
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -30,6 +32,8 @@
     
     --nav-hover-background-color: rgb(255 255 255 / 16%);
     --nav-active-background-color: rgb(255 255 255 / 85%);
+    
+    --notice-background-color: rgb(245 126 56 / 25%);
   }
 }
 
@@ -95,6 +99,23 @@ h1 {
   width: calc(100% - 64px);
 }
 
+.content > h2 {
+  margin-top: 1.75em;
+  margin-bottom: 1em;
+}
+.content > h3 {
+  margin-top: 1.3em;
+  margin-bottom: 0.825em;
+}
+.content > h4 {
+  margin-top: 1.125em;
+  margin-bottom: 0.675em;
+}
+.content > p {
+  margin-top: 0.825em;
+  margin-bottom: 0.825em;
+}
+
 /** Compact adjustments **/
 
 @media (max-width: 760px) {
@@ -110,4 +131,19 @@ h1 {
     padding: 8px 16px;
     text-align: center;
   }
+}
+
+
+/** Page elements **/
+
+.notice {
+  background-color: var(--notice-background-color);
+  padding: 10px 16px;
+}
+
+.notice:before {
+  content: "⚠️";
+  display: inline-block;
+  vertical-align: text-bottom;
+  padding-right: 4px;
 }

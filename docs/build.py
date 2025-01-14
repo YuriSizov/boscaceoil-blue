@@ -34,6 +34,12 @@ DEFAULT_PAGE_TEMPLATE = "article"
 # this list are appended to the end.
 TOP_LEVEL_PAGES = {
     "index": {},
+    "overview": {},
+    "notes_and_patterns": {},
+    "arrangements": {},
+    "instruments": {},
+    "shortcuts": {},
+    "community": {},
 }
 ALL_PAGES = []
 
