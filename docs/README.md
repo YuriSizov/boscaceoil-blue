@@ -134,7 +134,7 @@ pip install -r requirements.txt
 
 If you want to add another dependency to the project, make sure to list it with a pinned version in the same file.
 
-#### Building
+#### Building and running
 
 To build the project, execute the following:
 
@@ -143,3 +143,11 @@ python ./build.py
 ```
 
 If you want to contribute to the build system, the `build.py` file contains the entire workflow and is fairly well documented. Please follow the code style established by existing code when making changes.
+
+Once the build is complete, all resources necessary for the project to run can be found in the `/out` folder. You can create a local web server with Python to view the results:
+
+```sh
+python -m http.server -d ./out 8080
+```
+
+You can now open your browser and navigate to [localhost:8080](http://localhost:8080).
