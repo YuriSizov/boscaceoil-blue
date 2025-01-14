@@ -16,8 +16,14 @@
   --link-font-color: #1d6dff;
   --link-font-color-hover: #1051c9;
   
+  --kbd-background-color: rgba(0 0 0 / 12%);
+  --kbd-border-color: rgba(0 0 0 / 20%);
+  
   --nav-hover-background-color: rgb(24 24 24 / 16%);
   --nav-active-background-color: rgb(24 24 24 / 85%);
+  
+  --odd-background-color: rgb(200 200 200 / 12%);
+  --even-background-color: rgb(0 0 0 / 16%);
   
   --notice-background-color: rgb(245 126 56 / 30%);
 }
@@ -29,9 +35,15 @@
     
     --link-font-color: #4989ff;
     --link-font-color-hover: #2d63c4;
+  
+    --kbd-background-color: rgb(255 255 255 / 14%);
+    --kbd-border-color: rgb(255 255 255 / 24%);
     
     --nav-hover-background-color: rgb(255 255 255 / 16%);
     --nav-active-background-color: rgb(255 255 255 / 85%);
+  
+    --odd-background-color: rgb(255 255 255 / 12%);
+    --even-background-color: rgb(0 0 0 / 12%);
     
     --notice-background-color: rgb(245 126 56 / 25%);
   }
@@ -99,6 +111,26 @@ h1 {
   width: calc(100% - 64px);
 }
 
+/** Compact adjustments **/
+
+@media (max-width: 760px) {
+  .main {
+    flex-direction: column;
+  }
+  
+  .navigation {
+    max-width: 100%;
+  }
+  
+  .navigation-item {
+    padding: 8px 16px;
+    text-align: center;
+  }
+}
+
+
+/** Page content **/
+
 .content > h2 {
   margin-top: 1.75em;
   margin-bottom: 1em;
@@ -116,21 +148,32 @@ h1 {
   margin-bottom: 0.825em;
 }
 
-/** Compact adjustments **/
+.content > table {
+  margin-bottom: 1.25em;
+  width: 100%;
+}
+.content > table th {
+  border-bottom: 2px solid var(--g-font-color);
+  padding: 6px 12px;
+}
+.content > table td {
+  padding: 6px 10px;
+}
+.content > table > tbody > tr:nth-child(2n + 1) {
+  background-color: var(--odd-background-color);
+}
+.content > table > tbody > tr:nth-child(2n) {
+  background-color: var(--even-background-color);
+}
 
-@media (max-width: 760px) {
-  .main {
-    flex-direction: column;
-  }
-  
-  .navigation {
-    max-width: 100%;
-  }
-  
-  .navigation-item {
-    padding: 8px 16px;
-    text-align: center;
-  }
+.content kbd {
+  background-color: var(--kbd-background-color);
+  border: 1px solid var(--kbd-border-color);
+  border-bottom-width: 2px;
+  border-radius: 3px 3px;
+  font-size: 95%;
+  font-weight: 600;
+  padding: 1px 6px;
 }
 
 

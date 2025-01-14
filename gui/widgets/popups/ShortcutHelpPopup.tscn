@@ -388,7 +388,7 @@ auto_translate_mode = 1
 layout_mode = 2
 size_flags_horizontal = 0
 theme_type_variation = &"CreditsLabel"
-text = "DRAG'N'DROP patterns from to add/copy them."
+text = "DRAG'N'DROP patterns on grid to copy them."
 
 [node name="Label2" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/ArrangementBuildingList" index="1"]
 auto_translate_mode = 1

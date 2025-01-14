@@ -45,7 +45,7 @@ ALL_PAGES = []
 
 # Instance of the markdown builder.
 # The meta extension allows us to extra frontmatter-like metadata.
-builder = markdown.Markdown(extensions=['meta'])
+builder = markdown.Markdown(extensions=['meta', 'tables'])
 
 
 # Helpers.
