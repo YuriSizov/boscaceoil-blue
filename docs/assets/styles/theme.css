@@ -132,8 +132,10 @@ h1 {
 /** Page content **/
 
 .content > h2 {
+  border-bottom: 1px solid var(--g-font-color);
   margin-top: 1.75em;
   margin-bottom: 1em;
+  padding-bottom: 12px;
 }
 .content > h3 {
   margin-top: 1.3em;
