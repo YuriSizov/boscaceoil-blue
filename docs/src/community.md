@@ -8,6 +8,8 @@ _Bosca Ceoil Blue_ is inherently a community-made project building off of the 10
 
 Below you will find links to resources and communities related to _Bosca Ceoil_, where likeminded individuals can help you out and where you can share your work or share your tips.
 
+If you'd like to add a link of your own, please open a pull request against [this file](https://github.com/YuriSizov/boscaceoil-blue/blob/main/docs/src/community.md). Read more about contributing to the documentation [here](https://github.com/YuriSizov/boscaceoil-blue/blob/main/docs/README.md).
+
 
 ## Tutorials and overviews
 
@@ -39,5 +41,5 @@ A bug tracker platform provided by GitHub where you can report issues and more f
 
 #### [Discord](https://discord.gg/S657Y9KPF9)
 
-A Discord server hosted by Yuri Sizov where you can chat about _Bosca Ceoil Blue_, share your problems, and suggest new features in a more informal manner.
+A Discord server hosted by Yuri Sizov (lead project maintainer) where you can chat about _Bosca Ceoil Blue_, share your problems, and suggest new features in a more informal manner.
 
