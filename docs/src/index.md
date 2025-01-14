@@ -10,6 +10,8 @@ _[bús-ka kyó-al] — a music box._
 
 The best place to start learning about _Bosca Ceoil Blue_ and its features is the [Overview](/overview.html) page.
 
+![](/images/introduction-welcome.png)
+
 
 ## Version compatibility
 

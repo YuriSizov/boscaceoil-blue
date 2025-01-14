@@ -203,6 +203,12 @@ h1 {
   padding: 1px 6px;
 }
 
+.content img {
+  display: block;
+  margin: 0 auto;
+  max-width: 75%;
+}
+
 
 /** Page elements **/
 
