@@ -16,11 +16,12 @@
   --link-font-color: #1d6dff;
   --link-font-color-hover: #1051c9;
   
-  --kbd-background-color: rgba(0 0 0 / 12%);
-  --kbd-border-color: rgba(0 0 0 / 20%);
+  --kbd-background-color: #e7e9ed;
+  --kbd-border-color: #9da3ae;
   
   --nav-hover-background-color: rgb(24 24 24 / 16%);
   --nav-active-background-color: rgb(24 24 24 / 85%);
+  --sidebar-version-color: rgb(0 0 0 / 40%);
   
   --odd-background-color: rgb(200 200 200 / 12%);
   --even-background-color: rgb(0 0 0 / 16%);
@@ -36,11 +37,12 @@
     --link-font-color: #4989ff;
     --link-font-color-hover: #2d63c4;
   
-    --kbd-background-color: rgb(255 255 255 / 14%);
-    --kbd-border-color: rgb(255 255 255 / 24%);
+    --kbd-background-color: #575d65;
+    --kbd-border-color: #7c7f88;
     
     --nav-hover-background-color: rgb(255 255 255 / 16%);
     --nav-active-background-color: rgb(255 255 255 / 85%);
+    --sidebar-version-color: rgb(255 255 255 / 25%);
   
     --odd-background-color: rgb(255 255 255 / 12%);
     --even-background-color: rgb(0 0 0 / 12%);
@@ -84,11 +86,34 @@ h1 {
   padding: 24px 24px;
 }
 
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-width: 240px;
+}
+
+.sidebar-logo {
+  background-image: url("/logo.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  aspect-ratio: 500 / 240;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 320px;
+}
+
+.sidebar-version {
+  color: var(--sidebar-version-color);
+  font-size: 14px;
+  font-weight: 600;
+  text-align: right;
+}
+
 .navigation {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  max-width: 240px;
 }
 
 .navigation-item {
@@ -118,7 +143,7 @@ h1 {
     flex-direction: column;
   }
   
-  .navigation {
+  .sidebar {
     max-width: 100%;
   }
   

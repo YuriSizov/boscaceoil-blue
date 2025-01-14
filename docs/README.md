@@ -81,6 +81,7 @@ The documentation consists of static HTML files generated from the source Markdo
 
 Templates are written as normal HTML files with strings delimited with `%` used as placeholders for inserted content. Currently, these placeholders are used:
 
+- `%BOSCA_VERSION%`, the version of Bosca this documentation is for.
 - `%PAGE_TITLE%`, the title of the page.
 - `%PAGE_DESCRIPTION%`, the SEO-friendly description of the page.
 - `%PAGE_KEYWORDS%`, SEO-friendly keywords for the page.

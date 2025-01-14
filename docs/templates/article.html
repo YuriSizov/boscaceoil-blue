@@ -10,13 +10,22 @@
   <link href="https://fonts.googleapis.com/css?family=Roboto:400,500i,700,900&display=swap&subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet">
   <link rel="icon" type="image/png" href="/favicon.png" />
   
+  <meta property="og:image" content="/og_image.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  
   <link href="/styles/normalize.css" rel="stylesheet">
   <link href="/styles/theme.css" rel="stylesheet">
 </head>
 <body>
   <div class="main">
-    <div class="navigation">
+    <div class="sidebar">
+      <div class="sidebar-logo"></div>
+      <div class="navigation">
 %PAGE_NAVIGATION%
+      </div>
+      <div class="sidebar-version">Bosca Ceoil Blue v%BOSCA_VERSION%</div>
     </div>
     <div class="content">
 %PAGE_CONTENT%

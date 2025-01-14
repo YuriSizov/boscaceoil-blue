@@ -21,6 +21,7 @@ DOCS_ASSETS = "./assets"
 
 # Templates.
 PAGE_DEFAULTS = {
+    "BOSCA_VERSION": "3.1",
     "PAGE_TITLE": "Bosca Ceoil: The Blue Album — Documentation",
     "PAGE_DESCRIPTION": "Documentation for Bosca Ceoil Blue, a beginner-friendly music making app.",
     "PAGE_KEYWORDS": "bosca ceoil, bosca ceoil blue, music, sequencer, synthesizer, chiptune, documentation",
@@ -38,6 +39,7 @@ TOP_LEVEL_PAGES = {
     "notes_and_patterns": {},
     "arrangements": {},
     "instruments": {},
+    "export-import": {},
     "shortcuts": {},
     "community": {},
 }
