@@ -7,7 +7,7 @@
   --g-font-color: #121314;
   --g-font-size: 16px;
   --g-font-weight: 400;
-  --g-line-height: 20px;
+  --g-line-height: 22px;
   
   --h-font-size: 24px;
   --h-font-weight: 700;
@@ -18,6 +18,7 @@
   --link-font-color: #1d6dff;
   --link-font-color-hover: #1051c9;
   
+  --code-background-color: rgb(9 40 241 / 16%);
   --kbd-background-color: #e7e9ed;
   --kbd-border-color: #9da3ae;
   
@@ -42,6 +43,7 @@
     --link-font-color: #4989ff;
     --link-font-color-hover: #2d63c4;
   
+    --code-background-color: rgb(135 95 208 / 34%);
     --kbd-background-color: #575d65;
     --kbd-border-color: #7c7f88;
     
@@ -80,6 +82,10 @@ a:hover {
 h1 {
   font-size: 32px;
   line-height: 40px;
+}
+
+li {
+  margin: 0.25em 0;
 }
 
 /** Main layout **/
@@ -164,7 +170,6 @@ h1 {
 .content > h1 {
   color: var(--h1-color);
 }
-
 .content > h2 {
   border-bottom: 1px solid var(--g-font-color);
   color: var(--h2-color);
@@ -180,9 +185,15 @@ h1 {
   margin-top: 1.125em;
   margin-bottom: 0.675em;
 }
+
 .content > p {
   margin-top: 0.825em;
   margin-bottom: 0.825em;
+}
+.content > p code {
+  background-color: var(--code-background-color);
+  border-radius: 2px 2px;
+  padding: 0 4px;
 }
 
 .content > table {
