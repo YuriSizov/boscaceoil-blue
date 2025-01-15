@@ -12,6 +12,8 @@
   --h-font-size: 24px;
   --h-font-weight: 700;
   --h-line-height: 32px;
+  --h1-color: #e7034a;
+  --h2-color: #db9507;
   
   --link-font-color: #1d6dff;
   --link-font-color-hover: #1051c9;
@@ -33,6 +35,9 @@
     --g-background-color: #0c0d0e;
     --g-content-background-color: #252931;
     --g-font-color: #e1e5e8;
+    
+    --h1-color: #e31a51;
+    --h2-color: #ecc234;
     
     --link-font-color: #4989ff;
     --link-font-color-hover: #2d63c4;
@@ -156,8 +161,13 @@ h1 {
 
 /** Page content **/
 
+.content > h1 {
+  color: var(--h1-color);
+}
+
 .content > h2 {
   border-bottom: 1px solid var(--g-font-color);
+  color: var(--h2-color);
   margin-top: 1.75em;
   margin-bottom: 1em;
   padding-bottom: 12px;
