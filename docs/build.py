@@ -45,9 +45,11 @@ TOP_LEVEL_PAGES = {
 }
 ALL_PAGES = []
 
-# Instance of the markdown builder.
-# The meta extension allows us to extra frontmatter-like metadata.
-builder = markdown.Markdown(extensions=['meta', 'tables'])
+# Instance of the markdown builder. We enabled several extensions by default:
+# - The meta extension allows to extract frontmatter-like metadata.
+# - The tables extension enables syntax for tables.
+# - The toc extension adds support for a table of content, and gives headings unique ids.
+builder = markdown.Markdown(extensions=['meta', 'tables', 'toc'])
 
 
 # Helpers.
