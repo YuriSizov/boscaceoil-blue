@@ -88,6 +88,10 @@ li {
   margin: 0.25em 0;
 }
 
+em {
+  font-weight: 500;
+}
+
 /** Main layout **/
 
 .main {
@@ -237,10 +241,21 @@ li {
   background-color: var(--notice-background-color);
   padding: 10px 16px;
 }
-
 .notice:before {
   content: "⚠️";
   display: inline-block;
   vertical-align: text-bottom;
   padding-right: 4px;
+}
+
+.caption {
+  display: block;
+  font-style: italic;
+  font-size: 95%;
+  font-weight: 300;
+  opacity: 0.9;
+  margin: 0 auto;
+  padding: 4px 12px;
+  text-align: center;
+  max-width: 75%;
 }
