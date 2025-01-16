@@ -312,6 +312,7 @@ func _update_whole_grid() -> void:
 func _update_whole_grid_and_reset_scroll() -> void:
 	_update_max_scroll_offset()
 	_scroll_offset = 0
+	_update_scrollbar()
 	_update_grid_layout()
 	_update_active_patterns()
 	_update_active_loop()
