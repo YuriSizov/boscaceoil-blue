@@ -159,7 +159,7 @@ def create_navigation(current_path):
         if current_path == data["outpath"]:
             text += f'<a href="#_content" class="navigation-item active">{title}</a>\n'
         else:
-            text += f'<a href="{url}#_content" class="navigation-item">{title}</a>\n'
+            text += f'<a href="{LINK_BASE_PATH}/{url}#_content" class="navigation-item">{title}</a>\n'
     
     return text
 
