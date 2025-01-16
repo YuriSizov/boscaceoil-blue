@@ -39,6 +39,7 @@ TOP_LEVEL_PAGES = {
     "notes_and_patterns": {},
     "arrangements": {},
     "instruments": {},
+    "effects": {},
     "export_import": {},
     "shortcuts": {},
     "community": {},

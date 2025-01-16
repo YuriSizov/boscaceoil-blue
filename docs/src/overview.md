@@ -108,7 +108,7 @@ The advanced view can be accessed at any time by pressing `ADVANCED` in the top 
 
 ![](/images/overview-advanced-view.png)
 
-The advanced view contains several extra settings for the song and the app overall. For the song you can adjust the swing effect, which affects the timing of upcoming notes, as well as add a global audio effect, which is applied to the entire composition. Only one global effect can be active at a time.
+The advanced view contains several extra settings for the song and the app overall. For the song you can adjust the swing effect, which affects the timing of upcoming notes, as well as add a global audio effect, which is applied to the entire composition. Learn more about various effects and filters in [Effects](/effects.html).
 
 The application settings include the scale of the graphical user interface, the note format, and the size of the internal buffer for the synthesizer. The application settings persist on application restarts and affect all songs. They are not saved with the song, though.
 
