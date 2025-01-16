@@ -9,6 +9,7 @@ from markdown.treeprocessors import Treeprocessor
 import xml.etree.ElementTree as etree
 
 
+# Convert link and image paths that start with "/" to absolute paths using configured base.
 class AbsoluteLinkProcessor(Treeprocessor):
     def __init__(self, md, config):
         super().__init__(md)
@@ -24,7 +25,13 @@ class AbsoluteLinkProcessor(Treeprocessor):
     def update_links(self, root: etree.Element):
         for el in root.iter("a"):
             if "href" in el.attrib and el.attrib["href"].startswith("/"):
-                el.attrib["href"] = self.base_path + el.attrib["href"]
+                path = self.base_path + el.attrib["href"]
+                # Make sure the content is immediately visible on mobile, but only
+                # if there are no other hashes in the URL.
+                if path.endswith(".html"):
+                    path += "#_content"
+                
+                el.attrib["href"] = path
     
     
     def update_images(self, root: etree.Element):
