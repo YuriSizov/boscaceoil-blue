@@ -159,10 +159,15 @@ func _gui_input(event: InputEvent) -> void:
 
 
 func _shortcut_input(event: InputEvent) -> void:
+	if not _hovering || Controller.is_song_editing_locked():
+		return
+	
 	if event.is_action_pressed("bosca_patternmap_scale_bigger", true, true):
 		_resize_pattern_width(1)
+		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("bosca_patternmap_scale_smaller", true, true):
 		_resize_pattern_width(-1)
+		get_viewport().set_input_as_handled()
 
 
 func _physics_process(_delta: float) -> void:

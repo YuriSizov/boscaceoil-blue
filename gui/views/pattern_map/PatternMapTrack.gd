@@ -113,10 +113,10 @@ func _shortcut_input(event: InputEvent) -> void:
 	if not _hovering || Controller.is_song_editing_locked():
 		return
 	
-	if event.is_action_pressed("ui_copy"):
+	if event.is_action_pressed("ui_copy", false, true):
 		_copy_bars_in_loop()
 		get_viewport().set_input_as_handled()
-	elif event.is_action_pressed("ui_paste"):
+	elif event.is_action_pressed("ui_paste", false, true):
 		_paste_bars_at_cursor()
 		get_viewport().set_input_as_handled()
 

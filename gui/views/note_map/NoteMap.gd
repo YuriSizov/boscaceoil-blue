@@ -150,17 +150,19 @@ func _gui_input(event: InputEvent) -> void:
 
 
 func _shortcut_input(event: InputEvent) -> void:
-	if Controller.is_song_editing_locked():
+	if not _note_cursor_visible || Controller.is_song_editing_locked():
 		return
 	
 	if event.is_action_pressed("bosca_notemap_cursor_bigger", true, true):
 		_adjust_note_cursor(1)
+		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("bosca_notemap_cursor_smaller", true, true):
 		_adjust_note_cursor(-1)
-	elif event.is_action_pressed("ui_copy"):
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("ui_copy", false, true):
 		_copy_selected_notes()
 		get_viewport().set_input_as_handled()
-	elif event.is_action_pressed("ui_paste"):
+	elif event.is_action_pressed("ui_paste", false, true):
 		_paste_selected_notes()
 		get_viewport().set_input_as_handled()
 
@@ -839,7 +841,8 @@ func _copy_selected_notes() -> void:
 		
 		_note_copied_buffer[i] = relative_data
 	
-	Controller.update_status("SELECTED NOTES COPIED", Controller.StatusLevel.INFO)
+	if not _note_copied_buffer.is_empty():
+		Controller.update_status("SELECTED NOTES COPIED", Controller.StatusLevel.INFO)
 
 
 func _paste_selected_notes() -> void:
