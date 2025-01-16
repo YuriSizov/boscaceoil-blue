@@ -109,7 +109,7 @@ em {
 }
 
 .sidebar-logo {
-  background-image: url("/logo.png");
+  background-image: url("../logo.png");
   background-size: contain;
   background-repeat: no-repeat;
   aspect-ratio: 500 / 240;

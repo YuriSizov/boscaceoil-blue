@@ -140,7 +140,7 @@ def create_navigation(current_path):
     for toplevel_key in TOP_LEVEL_PAGES:
         data = TOP_LEVEL_PAGES[toplevel_key]
         # Normalize the outpath and remove output path prefix.
-        url = str(data["outpath"])[outdir_len:].replace("\\", "/")
+        url = str(data["outpath"])[outdir_len:].replace("\\", "/")[1:]
         title = data["title"]
         
         if current_path == data["outpath"]:

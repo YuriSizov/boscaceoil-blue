@@ -8,9 +8,9 @@ _[bús-ka kyó-al] — a music box._
 
 **Bosca Ceoil: The Blue Album** (or _Bosca Ceoil Blue_, for short) is a simple and beginner-friendly app for making music. Using a step sequencer you can create anything from a simple beat to a complex melodic piece — with huge selection of synthesized instruments at your disposal!
 
-The best place to start learning about _Bosca Ceoil Blue_ and its features is the [Overview](/overview.html) page.
+The best place to start learning about _Bosca Ceoil Blue_ and its features is the [Overview](overview.html) page.
 
-![](/images/introduction-welcome.png)
+![](images/introduction-welcome.png)
 
 
 ## Version compatibility
@@ -24,7 +24,7 @@ Versions prior to 3.0 (i.e. original _Bosca Ceoil_) are not covered by this docu
 
 ## Available languages
 
-_Bosca Ceoil Blue_ is available in **English**, and so is this documentation. If you have made a tutorial or an overview of the app in your native language, please feel free to add a link to it to the [Community](/community.html) page.
+_Bosca Ceoil Blue_ is available in **English**, and so is this documentation. If you have made a tutorial or an overview of the app in your native language, please feel free to add a link to it to the [Community](community.html) page.
 
 
 ## Contributing
