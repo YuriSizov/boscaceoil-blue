@@ -6,11 +6,11 @@ title: Overview
 
 In the following article we give an overview for every part of the user interface of _Bosca Ceoil Blue_, and how it relates to making music.
 
-If you want to jump right into compositing, check [Notes and Patterns](notes_and_patterns.html) next!
+If you want to jump right into compositing, check [Notes and Patterns](/notes_and_patterns.html) next!
 
 If you'd rather learn with practice, _Bosca Ceoil Blue_ features an interactive guide built right into the app itself! Go to `FILE > HELP` and press `BASIC GUIDE` to get started.
 
-![](images/overview-builtin-guide.png)
+![](/images/overview-builtin-guide.png)
 
 
 ## Bosca Ceoil, a step sequencer
@@ -26,7 +26,7 @@ That's the basic principle of making songs with _Bosca Ceoil_. Don't worry if it
 
 Every time you open _Bosca Ceoil Blue_, this is what you immediately see:
 
-![](images/introduction-welcome.png)
+![](/images/introduction-welcome.png)
 
 The whole user interface can be split into two main areas, the upper _tool view_ and the lower _pattern view_.
 
@@ -42,37 +42,37 @@ The whole user interface can be split into two main areas, the upper _tool view_
 
 The file view is the first upper panel that you see when you open _Bosca Ceoil_. You can also access it at any time by pressing `FILE` in the top menu.
 
-![](images/overview-file-view.png)
+![](/images/overview-file-view.png)
 
 The file view provides access to basic file operations (creating new songs, saving and loading, exporting and importing), key song settings (BPM/tempo, pattern and bar sizes), and playback controls. It also let's you view the built-in help and the credits list.
 
-Most of these features are self-explanatory. You can learn more about song settings in [Notes and Patterns](notes_and_patterns.html) and [Arrangements](arrangements.html). Read more about exporting and importing in [Export and Import](export_import.html).
+Most of these features are self-explanatory. You can learn more about song settings in [Notes and Patterns](/notes_and_patterns.html) and [Arrangements](/arrangements.html). Read more about exporting and importing in [Export and Import](/export_import.html).
 
 
 ### Pattern editor
 
 The pattern editor is a permanent part of the user interface. No matter which tool view is currently open, the last selected pattern is always editable via the pattern editor in the lower part of the application window. To change the edited pattern, use the [arrangement view](#arrangement-view).
 
-![](images/overview-pattern-editor.png)
+![](/images/overview-pattern-editor.png)
 
-The pattern editor consists of a note grid and additional editing tools below it. The rows in the grid represent notes at different pitches, starting with low pitches at the bottom and going up. The rows are visually grouped into octaves, giving a number to a set of 12 notes from C (Do) to B (Si). You can scroll the grid using the buttons on the right side of it, or with a [shortcut](shortcuts.html).
+The pattern editor consists of a note grid and additional editing tools below it. The rows in the grid represent notes at different pitches, starting with low pitches at the bottom and going up. The rows are visually grouped into octaves, giving a number to a set of 12 notes from C (Do) to B (Si). You can scroll the grid using the buttons on the right side of it, or with a [shortcut](/shortcuts.html).
 
 The columns in the grid represent units of time as the pattern progresses. By default, there are 16 units in one pattern. That number can be configured in the [file view](#file-view). Notes can be placed on this grid taking any number of whole cells. Notes can also extend beyond the pattern view, but must always start on one of the pattern cells.
 
-Below the grid are configuration options for the edited pattern: the assigned instrument, the key, the scale. There are also buttons to shift all the notes higher or lower. Finally, you can enable instrument recording, an advanced tuning technique, from the bottom panel (read more in [Instruments](instruments.html)).
+Below the grid are configuration options for the edited pattern: the assigned instrument, the key, the scale. There are also buttons to shift all the notes higher or lower. Finally, you can enable instrument recording, an advanced tuning technique, from the bottom panel (read more in [Instruments](/instruments.html)).
 
-![](images/overview-pattern-editor-drums.png)
+![](/images/overview-pattern-editor-drums.png)
 
 When editing a pattern that uses a drumkit, notes are replaced with drumkit's instruments and some configuration options are disabled.
 
-Continue reading in [Notes and Patterns](notes_and_patterns.html).
+Continue reading in [Notes and Patterns](/notes_and_patterns.html).
 
 
 ### Arrangement view
 
 The arrangement view can be accessed at any time by pressing `ARRANGEMENT` in the top menu. This is the view you will probably spend the most time in.
 
-![](images/overview-arrangement-view.png)
+![](/images/overview-arrangement-view.png)
 
 The arrangement view consists of a arrangement grid and a pattern dock. The pattern dock contains a list of all available patterns and can be used to create and remove patterns. Patterns can be added to the arrangement by dragging them from the dock.
 
@@ -82,16 +82,16 @@ Above the grid there is a time row, giving you an indication of the real time le
 
 Below the grid there is a timeline row that allows you to select bars for playback, and also manipulate bars (insert a new bar, remove a bar, copy and paste bars).
 
-You can scroll both the dock and the grid using the on-screen buttons, or with a [shortcut](shortcuts.html).
+You can scroll both the dock and the grid using the on-screen buttons, or with a [shortcut](/shortcuts.html).
 
-Continue reading in [Arrangements](arrangements.html).
+Continue reading in [Arrangements](/arrangements.html).
 
 
 ### Instrument view
 
 The instrument view can be accessed at any time by pressing `INSTRUMENT` in the top menu.
 
-![](images/overview-instrument-view.png)
+![](/images/overview-instrument-view.png)
 
 The instrument view consists of an instrument dock and an instrument configuration panel. The instrument dock contains a list of all available instruments and can be used to add or remove instruments. Selecting an instrument in the list makes it available for editing and also makes it the default instrument for the next created pattern.
 
@@ -99,20 +99,20 @@ In the configuration panel you can select the instrument preset for the edited i
 
 Below the preset selector there are tuning pads for the low-pass filter and the volume of the instrument. The low-pass filter can be adjusted on two axes, configuring the resonance and cutoff values. Tuning the instrument affects all patterns that use that instrument, unless the currently edited pattern has instrument recording enabled.
 
-Continue reading in [Instruments](instruments.html).
+Continue reading in [Instruments](/instruments.html).
 
 
 ### Advanced view
 
 The advanced view can be accessed at any time by pressing `ADVANCED` in the top menu.
 
-![](images/overview-advanced-view.png)
+![](/images/overview-advanced-view.png)
 
-The advanced view contains several extra settings for the song and the app overall. For the song you can adjust the swing effect, which affects the timing of upcoming notes, as well as add a global audio effect, which is applied to the entire composition. Learn more about various effects and filters in [Effects](effects.html).
+The advanced view contains several extra settings for the song and the app overall. For the song you can adjust the swing effect, which affects the timing of upcoming notes, as well as add a global audio effect, which is applied to the entire composition. Learn more about various effects and filters in [Effects](/effects.html).
 
 The application settings include the scale of the graphical user interface, the note format, and the size of the internal buffer for the synthesizer. The application settings persist on application restarts and affect all songs. They are not saved with the song, though.
 
 
 ## Making music
 
-Continue on with the basics of creating and editing patterns in [Notes and Patterns](notes_and_patterns.html)!
+Continue on with the basics of creating and editing patterns in [Notes and Patterns](/notes_and_patterns.html)!

@@ -6,12 +6,14 @@
 
 # Main docs builder script.
 
+import argparse
 from pathlib import Path
 from os import walk
 import shutil
 
 import markdown
-from colorize import magenta, cyan, yellow, green, gray, bold
+from tools.colorize import magenta, cyan, yellow, green, gray, bold
+from tools.paths import MarkdownPaths
 
 # Paths.
 DOCS_SOURCE = "./src"
@@ -46,11 +48,22 @@ TOP_LEVEL_PAGES = {
 }
 ALL_PAGES = []
 
+LINK_BASE_PATH = "http://localhost:8080"
+
+
+# Command line arguments.
+parser = argparse.ArgumentParser()
+parser.add_argument("--release", action="store_true", help="Enables release-mode settings.")
+args = parser.parse_args()
+
+if args.release:
+    LINK_BASE_PATH = "https://humnom.net/apps/boscaceoil/docs"
+
 # Instance of the markdown builder. We enabled several extensions by default:
 # - The meta extension allows to extract frontmatter-like metadata.
 # - The tables extension enables syntax for tables.
 # - The toc extension adds support for a table of content, and gives headings unique ids.
-builder = markdown.Markdown(extensions=['meta', 'tables', 'toc'])
+builder = markdown.Markdown(extensions=['meta', 'tables', 'toc', MarkdownPaths(base=LINK_BASE_PATH)])
 
 
 # Helpers.

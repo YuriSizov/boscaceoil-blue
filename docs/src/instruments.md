@@ -8,14 +8,14 @@ The second most important tool after the arrangement view is the `INSTRUMENT` vi
 
 In _Bosca Ceoil Blue_ you can find hundreds of instrument presets, but instead of using them directly you first must create a song instrument out of one of them. This allows you to quickly find the instrument that you need when editing patterns, and to use the same preset multiple times with different tuning configurations.
 
-![](images/overview-instrument-view.png)
+![](/images/overview-instrument-view.png)
 
 
 ## Instrument management
 
-The instrument view is split into two parts: the instrument dock and the instrument configuration panel. Similarly to how you can create and delete patterns from the dock in the [arrangement view](arrangements.html), you can create and delete instruments from the instrument dock. Pressing `ADD NEW INSTRUMENT` adds a random instrument to the list, while dragging and dropping one of the existing instruments onto the `DELETE?` label deletes it.
+The instrument view is split into two parts: the instrument dock and the instrument configuration panel. Similarly to how you can create and delete patterns from the dock in the [arrangement view](/arrangements.html), you can create and delete instruments from the instrument dock. Pressing `ADD NEW INSTRUMENT` adds a random instrument to the list, while dragging and dropping one of the existing instruments onto the `DELETE?` label deletes it.
 
-![](images/instruments-dock-delete.png)
+![](/images/instruments-dock-delete.png)
 
 You can only create up to 16 unique instruments.
 
@@ -37,7 +37,7 @@ Instruments are grouped into several categories, with the MIDI set being split e
 - World
 - Drumkit
 
-![](images/instruments-categories.png)
+![](/images/instruments-categories.png)
 
 And the following are sub-categories of MIDI instruments:
 
@@ -60,9 +60,9 @@ And the following are sub-categories of MIDI instruments:
 
 Instruments are loosely color-coded, which not only makes _Bosca Ceoil BLue_ look fun and appealing, but also helps you to distinguish them. The instrument used also defines the color of the pattern, as you might've noticed already.
 
-Once created, the instrument can be selected for any pattern using the list in the bottom-left corner of the [pattern editor](notes_and_patterns.html).
+Once created, the instrument can be selected for any pattern using the list in the bottom-left corner of the [pattern editor](/notes_and_patterns.html).
 
-![](images/instruments-pattern-picker.png)
+![](/images/instruments-pattern-picker.png)
 
 
 ## Tuning
@@ -71,7 +71,7 @@ One way to further define the voice of the instrument that you've selected is to
 
 The low-pass filter may require a bit of an explanation. Controlled with a pad rather than a 1-dimensional slider, this filter has two parameters, resonance and cutoff. Moving the pad head left and right adjusts the cutoff point, while moving it up and down changes the resonance.
 
-![](images/instruments-tuning-pads.png)
+![](/images/instruments-tuning-pads.png)
 
 The low-pass filter, as the name suggests, allows audio frequencies below the cutoff threshold to pass freely, while damping those that go beyond that limit. In other words, the further left you move the pad head, the less high-frequency sounds will be allowed by the instrument.
 
@@ -84,15 +84,15 @@ Some sounds produced this way may be unpleasant, especially at extreme values. P
 
 ## Instrument recording
 
-You can push instrument tuning even further than that! At the bottom of the [pattern editor](notes_and_patterns.html) there is a mysterious `REC` button with a round icon. When clicked, the icon turns red and the instrument view opens — on the instrument that the edited pattern uses. A pinkish label `! RECORDING: PATTERN N !` also appears, as the tuning pads get a similarly pinkish frame.
+You can push instrument tuning even further than that! At the bottom of the [pattern editor](/notes_and_patterns.html) there is a mysterious `REC` button with a round icon. When clicked, the icon turns red and the instrument view opens — on the instrument that the edited pattern uses. A pinkish label `! RECORDING: PATTERN N !` also appears, as the tuning pads get a similarly pinkish frame.
 
-![](images/instruments-recording.png)
+![](/images/instruments-recording.png)
 
 This feature is called instrument recording, and what it allows you to do is to set specific values for the low-pass filter and volume of the instrument for each individual tick of the pattern.
 
 While the recoding mode is enabled and the pattern is being played through, start changing the values using the tuning pads. As you move a pad head, you should notice a colorful trail that is left by it. Those are the values recorded for each note of the pattern, color-coded from red to green.
 
-![](images/instruments-recording-values.png)
+![](/images/instruments-recording-values.png)
 
 If you disable the recording mode on the pattern, it reverts to using the default configuration of the instrument. But the recorded values are still stored, and you can re-enable the recording mode later.
 
@@ -105,4 +105,4 @@ This is a fancy tool which can be very powerful, but it may take some time to ma
 
 ## Adding audio effects
 
-Continue on to [Effects](effects.html), and you will learn about the final piece of the puzzle — global effects and filters.
+Continue on to [Effects](/effects.html), and you will learn about the final piece of the puzzle — global effects and filters.

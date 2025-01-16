@@ -33,13 +33,13 @@ If you want to insert an image, add it to the `/assets/images` folder first and 
 So if your image is at `/assets/images/bosca-is-awesome.png`, use
 
 ```md
-![](images/bosca-is-awesome.png)
+![](/images/bosca-is-awesome.png)
 ```
 
 And if the article that you want to link is at `/src/another-article.md`, use
 
 ```md
-Read in [another article](another-article.md)
+Read in [another article](/another-article.md)
 ``` 
 
 If you want to add a new article, place and `.md` file in the `/src` folder. Use the root of the `/src` folder for top-level articles (the ones that go into the sidebar navigation). Put other articles into subfolders according to their topic (you can create a new one if necessary).

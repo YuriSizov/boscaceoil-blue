@@ -22,7 +22,7 @@ Regardless of the format, during the export process you can configure a number o
 
 - **Export bars** allows you to define the range, in arrangement bars, that is going to be exported. By default the entire song is exported, but you might need to only export a part of it, which is where this option becomes helpful.
 
-![](images/io-export.png)
+![](/images/io-export.png)
 
 ### Limitations
 
@@ -65,7 +65,7 @@ If you're a daring soul, you might want to try importing a MIDI file into _Bosca
 
 This means that we cannot support multiple time signatures and tempos, as well as any command that doesn't perfectly map to metronome ticks. Within these limitations, you should have decent luck importing songs into the app this way. And on the plus side, _Bosca Ceoil Blue_ supports all standard MIDI instruments, including drumkits.
 
-![](images/io-import.png)
+![](/images/io-import.png)
 
 Several configuration options are available for you when importing songs:
 
