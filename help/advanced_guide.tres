@@ -196,8 +196,8 @@ size = Vector2(580, 200)
 [sub_resource type="Resource" id="Resource_2arx2"]
 script = ExtResource("2_6a2si")
 title = "TIPS & TRICKS - Advanced Tuning"
-description = "This button enables [accent]FILTER RECORDING[/accent] for the current pattern.
-When [accent]FILTER RECORDING[/accent] is on, the filter and volume values of the instrument in this pattern can be changed over time!
+description = "This button enables [accent]INSTRUMENT RECORDING[/accent] for the current pattern.
+When [accent]INSTRUMENT RECORDING[/accent] is on, the filter and volume values of the instrument in this pattern can be changed over time!
 
 Try clicking the [accent]RECORD[/accent] button and playing with the filter pad and the volume slider as the song plays."
 ref_image = ExtResource("4_f2mo2")

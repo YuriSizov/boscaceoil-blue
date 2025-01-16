@@ -53,7 +53,7 @@ Below the arrangement grid you can find an extra row with numbers, and a white l
 
 The bars selected this way do not affect the export. This is purely a tool for you to preview portions of your song. But the timeline itself can do more than that.
 
-<kbd>Middle Click</kbd> (or <kbd>Shift + Left Click</kbd>) on any bar to insert an empty bar before it. With <kbd>Right Click</kbd> remove the clicked bar completely, shifting every following bar to the left. With any number of bars selected, hover over the arrangement grid and press <kbd>Ctrl + C</kbd> to copy selected bars, then hover over a bar and press <kbd>Ctrl + V</kbd> to paste copied bars before that bar.
+<kbd>Middle Click</kbd> (or <kbd>Shift + Left Click</kbd>) on any bar to insert an empty bar before it. With <kbd>Right Click</kbd> remove the clicked bar completely, shifting every following bar to the left. With any number of bars selected, hover over the arrangement timeline and press <kbd>Ctrl + C</kbd> to copy selected bars, then hover over a bar and press <kbd>Ctrl + V</kbd> to paste copied bars before that bar.
 
 
 ## Managing instruments
