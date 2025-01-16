@@ -4,7 +4,7 @@ title: Instruments
 
 # Instruments
 
-<p class="notice">
+<p class="warning">
 This article is currently missing information.
 </p>
 

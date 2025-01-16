@@ -4,7 +4,7 @@ title: Effects
 
 # Effects and filters
 
-While individual instruments only allow you to configure a low-pass filter to adjust their sound, a variety of more interesting effects can be applied to the song overall. You can find these extra effects and filters on the `ADVANCED` tab.
+While individual instruments only allow you to configure a low-pass filter to adjust their sound, a variety of more interesting effects can be applied to the song overall. You can find these extra effects and filters in the `ADVANCED` view.
 
 ![](/images/overview-advanced-view.png)
 

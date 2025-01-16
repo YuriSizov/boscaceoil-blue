@@ -237,11 +237,11 @@ em {
 
 /** Page elements **/
 
-.notice {
+.warning {
   background-color: var(--notice-background-color);
   padding: 10px 16px;
 }
-.notice:before {
+.warning:before {
   content: "⚠️";
   display: inline-block;
   vertical-align: text-bottom;

@@ -4,7 +4,7 @@ title: Arrangements
 
 # Arrangements
 
-<p class="notice">
+<p class="warning">
 This article is currently missing information.
 </p>
 
