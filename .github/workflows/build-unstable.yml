@@ -15,3 +15,7 @@ jobs:
   export-project:
     name: Export the project for target platforms
     uses: ./.github/workflows/export-project.yml
+  
+  build-docs:
+    name: Build online documentation
+    uses: ./.github/workflows/build-documentation.yml

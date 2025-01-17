@@ -26,3 +26,7 @@ jobs:
     uses: ./.github/workflows/publish-project.yml
     with:
       release-version: ${{ github.ref_name }}
+  
+  build-docs:
+    name: Build online documentation
+    uses: ./.github/workflows/build-documentation.yml

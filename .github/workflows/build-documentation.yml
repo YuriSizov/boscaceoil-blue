@@ -1,0 +1,41 @@
+name: Build Online Documentation
+
+on:
+  workflow_call:
+
+# Make sure jobs cannot overlap.
+concurrency:
+  group: docs-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build online documentation
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        shell: bash
+        working-directory: docs
+        run: |
+          python -m venv ./.venv
+          source ./.venv/bin/activate
+          pip install -r requirements.txt
+
+      - name: Run the build script
+        shell: bash
+        working-directory: docs
+        run: |
+          source ./.venv/bin/activate
+          python ./build.py --release
+
+      # Upload the results.
+
+      - name: Upload the project
+        uses: actions/upload-artifact@v4
+        with:
+          name: boscaceoil-blue-docs
+          path: "docs/out"
+          retention-days: 14
