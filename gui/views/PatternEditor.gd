@@ -203,6 +203,9 @@ func _change_instrument() -> void:
 		
 		if not state_context.affected.is_empty():
 			Controller.update_status_notes_dropped(state_context.affected.size())
+		
+		if reference_pattern.record_instrument:
+			Controller.edit_instrument(reference_pattern.instrument_idx)
 	)
 	pattern_state.add_undo_action(func() -> void:
 		var reference_pattern := Controller.current_song.patterns[pattern_state.reference_id]
@@ -211,6 +214,9 @@ func _change_instrument() -> void:
 		reference_pattern.change_instrument(old_instrument_idx, pattern_instrument)
 		reference_pattern.restore_notes(state_context.affected)
 		reference_pattern.change_key(state_context.key)
+		
+		if reference_pattern.record_instrument:
+			Controller.edit_instrument(reference_pattern.instrument_idx)
 	)
 	
 	Controller.state_manager.commit_state_change(pattern_state)
