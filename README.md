@@ -8,6 +8,14 @@ _[bús-ka kyó-al] — a music box._
 
 _Bosca Ceoil Blue_ is a modern port of **Terry Cavanagh's [Bosca Ceoil](https://github.com/TerryCavanagh/boscaceoil)**, and attempts to preserve everything that made the original so approachable and intuitive. And just like the original, _Bosca Ceoil Blue_ is absolutely free and provided under a permissive open source license, should you need to modify it.
 
+## Bosca Ceoil: The Blue Album — Documentation
+
+The documentation for **Bosca Ceoil: The Blue Album** is available at: [Bosca Docs](https://humnom.net/apps/boscaceoil/docs/)
+
+### Improving Documentation
+
+If you want to help us improve the documentation, please refer to the guidelines on improving the documentation [here](docs/README.md).
+
 [![patreon-link](https://img.shields.io/badge/Patreon-orange?label=support%20the%20project&color=%23F2614B&style=for-the-badge)](https://patreon.com/YuriSizov)
 [![discord-link](https://img.shields.io/badge/Discord-purple?label=get%20in%20touch&color=%235865F2&style=for-the-badge)](https://discord.gg/S657Y9KPF9)
 

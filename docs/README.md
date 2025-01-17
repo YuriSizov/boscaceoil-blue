@@ -1,8 +1,6 @@
 ## Bosca Ceoil: The Blue Album — Documentation
 
-This folder contains source files for the online documentation for **Bosca Ceoil: The Blue Album**. The purpose of this documentation is to provide access to learning and reference materials related to _Bosca Ceoil_ at a permanent online location. You can find this documentation hosted at:
-
-- https://humnom.net/apps/boscaceoil/docs/
+This folder contains source files for the online documentation for **Bosca Ceoil: The Blue Album**. The purpose of this documentation is to provide access to learning and reference materials related to _Bosca Ceoil_ at a permanent online location. 
 
 All contributions that improve the quality and presentation of the content of this documentation are welcome! Read on to learn how to contribute.
 
