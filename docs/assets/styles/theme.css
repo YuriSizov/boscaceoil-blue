@@ -168,6 +168,17 @@ em {
   }
 }
 
+@media (max-width: 540px) {
+  .main {
+    padding: 12px 4px;
+  }
+  
+  .content {
+    padding: 12px 20px;
+    width: calc(100% - 40px);
+  }
+}
+
 
 /** Page content **/
 
@@ -232,6 +243,12 @@ em {
   display: block;
   margin: 0 auto;
   max-width: 75%;
+}
+
+@media (max-width: 540px) {
+  .content img {
+    max-width: 90%;
+  }
 }
 
 
