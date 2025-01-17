@@ -126,8 +126,9 @@ ul {
 
 .boot-init {
   display: flex;
-  align-items: flex-start;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
 }
 
 #boot-init-button {
@@ -143,6 +144,11 @@ ul {
 }
 #boot-init-button:not(.boot-init-suppressed):active {
   background-color: #396486;
+}
+
+.boot-docs {
+  color: #b3b9cb;
+  font-size: 14px;
 }
 
 .boot-compat {
@@ -202,6 +208,10 @@ ul {
 }
 
 @media (max-width: 720px) {
+  .boot-docs > br {
+    display: none;
+  }
+  
   .boot-compat {
     flex-direction: column;
     gap: 48px;
