@@ -56,6 +56,13 @@ Powered by a versatile software synthesizer, _Bosca Ceoil Blue_ offers you prett
 Export your creations to WAV and MIDI. Share them with the world, or use them for your next game or video!
 
 
+## Documentation
+
+_Bosca Ceoil Blue_ includes an interactive guide built right into the app, which helps you get familiar with its features in an engaging and fun manner! But there is also a comprehensive documentation available online, which goes into more detail about everything that _The Blue Album_ has to offer, and can be easily referenced and shared with others.
+
+You can find the online documentation at **[Learn Bosca Ceoil](https://humnom.net/apps/boscaceoil/docs/)**.
+
+
 ## FAQ
 
 ### Is _Bosca Ceoil Blue_ compatible with the original?
@@ -79,19 +86,21 @@ Your participation is welcome!
 
 Whether you can test the project and report bugs, or you can work on improvements and missing features, please don't hesitate to reach out.
 
-- For bugs, please consider creating a bug report in the [Issues](https://github.com/YuriSizov/boscaceoil-blue/issues) section of this repository.
-- For features, please start a thread in the [Discussion](https://github.com/YuriSizov/boscaceoil-blue/discussions) section of this repository.
-- For work coordination, or just to chat about the project, please join our [Discord server](https://discord.gg/S657Y9KPF9).
+- For bugs, please consider creating a bug report in the **[Issues](https://github.com/YuriSizov/boscaceoil-blue/issues)** section of this repository.
+- For features, please start a thread in the **[Discussion](https://github.com/YuriSizov/boscaceoil-blue/discussions)** section of this repository.
+- For work coordination, or just to chat about the project, please join our **[Discord server](https://discord.gg/S657Y9KPF9)**.
 
 ### Notes for developers
 
-The project is being developed using the latest available build of **Godot 4.3**. As this version of the engine is still unstable, some bugs unrelated to this project must be expected.
-
-To work on _Bosca Ceoil Blue_ you need to:
+The project is being developed using the latest available official build of **Godot 4.3**. To work on _Bosca Ceoil Blue_ you need to:
 
 - Check out this repository, or download it as a ZIP archive.
-- Get the [latest release of GDSiON 0.7](https://github.com/YuriSizov/gdsion/releases) and extract it into the `bin` folder in the project root.
-- Open and edit the project with [Godot 4.3](https://godotengine.org/download/archive/#4.3).
+- Get the [latest release of **GDSiON 0.7**](https://github.com/YuriSizov/gdsion/releases) and extract it into the `bin` folder in the project root.
+- Open and edit the project with **[Godot 4.3](https://godotengine.org/download/archive/#4.3)**.
+
+### Contributing to documentation
+
+The online documentation is maintained as a part of this repository. You can find more about the process of contributing to documentation in the [`/docs`](/docs/README.md) folder.
 
 
 ## License
