@@ -23,7 +23,7 @@ boot_splash/image="res://dist/logo-full.png"
 boot_splash/fullsize=false
 config/icon="res://icon.png"
 config/windows_native_icon="res://dist/windows-icon.ico"
-config/version_flair="beta1"
+config/version_flair="stable"
 
 [autoload]
 
