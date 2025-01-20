@@ -33,8 +33,10 @@ jobs:
           for name in ./*; do
             if [ -d "$name" ]; then
               cd "./$name"
-              tar -xvf boscaceoil-blue.tar
-              rm -f boscaceoil-blue.tar
+              if [ -f "boscaceoil-blue.tar" ]; then
+                tar -xvf boscaceoil-blue.tar
+                rm -f boscaceoil-blue.tar
+              fi
               cd ..
             fi
           done
