@@ -363,7 +363,7 @@ layout_mode = 2
 
 [node name="ShortcutLine5" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/ArrangementGridList" index="4" instance=ExtResource("2_1wrnf")]
 layout_mode = 2
-key_text = "CTRL + MOUSE WHEEL"
+key_text = "SHIFT + MOUSE WHEEL"
 key_is_action = false
 description_text = "Change grid scale"
 

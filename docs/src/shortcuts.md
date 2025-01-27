@@ -80,10 +80,10 @@ Shortcuts related to creating pattern arrangements.
 
 | Combination  | Description  |
 |--------------|--------------|
-| <kbd>Mouse Wheel</kbd>           | Scroll the arrangement grid/timeline  |
-| <kbd>Arrow Left</kbd>            | Scroll the arrangement grid to the left  |
-| <kbd>Arrow Right</kbd>           | Scroll the arrangement grid to the right  |
-| <kbd>Ctrl + Mouse Wheel</kbd>    | Change the scale of the arrangement grid  |
+| <kbd>Mouse Wheel</kbd>            | Scroll the arrangement grid/timeline  |
+| <kbd>Arrow Left</kbd>             | Scroll the arrangement grid to the left  |
+| <kbd>Arrow Right</kbd>            | Scroll the arrangement grid to the right  |
+| <kbd>Shift + Mouse Wheel</kbd>    | Change the scale of the arrangement grid  |
 
 ### Arrangement building
 
