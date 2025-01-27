@@ -41,7 +41,7 @@ codesign --verify "${app_path}"
 echo "Archiving and notarizing the signed app..."
 
 ditto -ck --keepParent "${app_path}" "${archive_path}"
-xcrun notarytool submit "${archive_path}" --apple-id ${apple_dev_id} --team-id ${apple_dev_team_id} --password ${apple_dev_password} --wait
+xcrun notarytool submit "${archive_path}" --apple-id ${apple_dev_id} --team-id ${apple_dev_team_id} --password ${apple_dev_password} --wait || { exit 1; }
 
 echo "Stapling the notarization ticket to the signed app..."
 

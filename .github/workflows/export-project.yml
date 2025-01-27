@@ -14,7 +14,7 @@ concurrency:
 
 env:
   GODOT_VERSION: "4.3.0-stable"
-  GDSION_VERSION: "0.7-beta6"
+  GDSION_VERSION: "0.7-beta7"
 
 jobs:
   export-publish:
