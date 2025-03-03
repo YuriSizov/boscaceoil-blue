@@ -89,14 +89,14 @@ Shortcuts related to creating pattern arrangements.
 
 ### Arrangement building
 
-Drag'n'drop patterns from the dock on the right to add them to the grid.
-
-Drag'n'drop patterns on the grid to copy them to a different bar. Hold <kbd>Alt</kbd> while dragging to create a variant instead!
+Drag'n'drop patterns from the dock on the right to add them to the grid. Drag'n'drop patterns on the grid to copy them to a different bar.
 
 | Combination  | Description  |
 |--------------|--------------|
 | <kbd>Right Click</kbd>         | Remove the clicked pattern  |
-| <kbd>Alt + Left Click</kbd>    | Replace the clicked pattern with a new variant  |
+| <kbd>Ctrl/Cmd + D</kbd>        | Replace the pattern at the cursor with a new variant  |
+
+Or hold <kbd>Alt</kbd> while dragging/clicking on the grid to create a pattern variant!
 
 
 ## Timeline

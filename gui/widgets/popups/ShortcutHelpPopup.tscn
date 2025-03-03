@@ -390,28 +390,31 @@ size_flags_horizontal = 0
 theme_type_variation = &"CreditsLabel"
 text = "DRAG'N'DROP patterns on grid to copy them."
 
-[node name="Label2" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/ArrangementBuildingList" index="1"]
-auto_translate_mode = 1
-layout_mode = 2
-size_flags_horizontal = 0
-theme_type_variation = &"CreditsLabel"
-text = "Hold ALT while dragging to create a variant instead!"
-
-[node name="Spacer" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/ArrangementBuildingList" index="2"]
+[node name="Spacer" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/ArrangementBuildingList" index="1"]
 custom_minimum_size = Vector2(0, 12)
 layout_mode = 2
 
-[node name="ShortcutLine3" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/ArrangementBuildingList" index="3" instance=ExtResource("2_1wrnf")]
+[node name="ShortcutLine3" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/ArrangementBuildingList" index="2" instance=ExtResource("2_1wrnf")]
 layout_mode = 2
 key_text = "RIGHT CLICK"
 key_is_action = false
 description_text = "Remove the pattern"
 
-[node name="ShortcutLine4" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/ArrangementBuildingList" index="4" instance=ExtResource("2_1wrnf")]
+[node name="ShortcutLine4" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/ArrangementBuildingList" index="3" instance=ExtResource("2_1wrnf")]
 layout_mode = 2
-key_text = "ALT + LEFT CLICK"
-key_is_action = false
-description_text = "Create pattern variant"
+key_text = "bosca_patternmap_duplicate"
+description_text = "Create a pattern variant"
+
+[node name="Spacer2" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/ArrangementBuildingList" index="4"]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3/ArrangementBuildingList" index="5"]
+auto_translate_mode = 1
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"CreditsLabel"
+text = "Or hold ALT while dragging/clicking to create a variant!"
 
 [node name="LastSpacer" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section3" index="6"]
 custom_minimum_size = Vector2(0, 16)

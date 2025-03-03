@@ -36,6 +36,10 @@ _Bosca Ceoil Blue_ automatically keeps track of every bar that you fill with pat
 
 To add a pattern to the arrangement, drag and drop it from the pattern dock, or <kbd>Left Click</kbd> and drag one of the existing patterns on the grid onto another cell, making a copy. Hold <kbd>Alt</kbd> as you do this, and instead of a copy a new variant of the original pattern will be created. You can also simply <kbd>Alt + Left Click</kbd> on a pattern to turn it into a variant.
 
+<p class="warning">
+If your operating system intercepts <kbd>Alt + Left Click</kbd>, you can also create a variant by hovering over a pattern and pressing <kbd>Ctrl/Cmd + D</kbd>.
+</p>
+
 <kbd>Right Click</kbd> removes the clicked pattern from the grid. This doesn't delete the pattern, however, and you can still use it later.
 
 ![](/images/arrangements-patterns.png)

@@ -129,6 +129,7 @@ func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		var mb := event as InputEventMouseButton
 		
+		# On mouse button press.
 		if mb.pressed:
 			if mb.button_index == MOUSE_BUTTON_WHEEL_UP:
 				if mb.shift_pressed:
@@ -153,6 +154,7 @@ func _gui_input(event: InputEvent) -> void:
 			elif mb.button_index == MOUSE_BUTTON_RIGHT:
 				_clear_pattern_at_cursor()
 		
+		# On mouse button release.
 		else:
 			if mb.button_index == MOUSE_BUTTON_LEFT && mb.alt_pressed:
 				_clone_pattern_at_cursor()
@@ -167,6 +169,9 @@ func _shortcut_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("bosca_patternmap_scale_smaller", true, true):
 		_resize_pattern_width(-1)
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("bosca_patternmap_duplicate", false, true):
+		_clone_pattern_at_cursor()
 		get_viewport().set_input_as_handled()
 
 
