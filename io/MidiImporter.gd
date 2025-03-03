@@ -80,6 +80,11 @@ class MidiFileReader:
 		# Read header bytes in order.
 		_file.get_32() # Header size.
 		format = _file.get_16()
+		
+		if format != MidiFile.FileFormat.SINGLE_TRACK && format != MidiFile.FileFormat.MULTI_TRACK:
+			printerr("MidiImporter: Failed to read the file at '%s', expected a single or multi track format, got format %d instead." % [ _file.get_path(), format ])
+			return false
+		
 		var track_num := _file.get_16()
 		resolution = _file.get_16()
 		
@@ -220,19 +225,33 @@ class MidiFileReader:
 					_extract_instrument(i, midi_payload, song)
 				
 				if midi_payload.midi_type == MidiTrackEvent.MidiType.NOTE_ON:
-					_extract_note(i, midi_payload, event.timestamp)
+					_extract_note(i, midi_payload, event.timestamp, song)
 				
 				if midi_payload.midi_type == MidiTrackEvent.MidiType.NOTE_OFF:
-					_change_note_length(i, midi_payload, event.timestamp)
+					_change_note_length(i, midi_payload, event.timestamp, song)
 			
 			i += 1
 	
 	
 	func _extract_instrument(track_idx: int, midi_payload: MidiTrackEvent.MidiPayload, song: Song) -> void:
+		_create_midi_instrument(track_idx, midi_payload.channel_num, midi_payload.data[0], song)
+	
+	
+	func _ensure_instrument(track_idx: int, midi_payload: MidiTrackEvent.MidiPayload, song: Song) -> void:
+		# This check can fail if the track contains no PROGRAM CHANGE events, which is possible.
+		# We can only create some fallback instrument in that case.
+		var instrument_key := Vector2i(track_idx, midi_payload.channel_num)
+		if _instruments_index_map.has(instrument_key):
+			return
+		
+		_create_midi_instrument(track_idx, midi_payload.channel_num, 0, song)
+	
+	
+	func _create_midi_instrument(track_idx: int, channel_num: int, voice_idx: int, song: Song) -> void:
 		var midi_instrument := MidiInstrument.new()
 		midi_instrument.track_index = track_idx
-		midi_instrument.channel_num = midi_payload.channel_num
-		midi_instrument.midi_voice = midi_payload.data[0]
+		midi_instrument.channel_num = channel_num
+		midi_instrument.midi_voice = voice_idx
 		
 		# Keep a map for future use by notes.
 		var index_key := midi_instrument.get_index_key()
@@ -258,11 +277,13 @@ class MidiFileReader:
 			song.instruments.push_back(bosca_instrument)
 	
 	
-	func _extract_note(track_idx: int, midi_payload: MidiTrackEvent.MidiPayload, timestamp: int) -> void:
+	func _extract_note(track_idx: int, midi_payload: MidiTrackEvent.MidiPayload, timestamp: int, song: Song) -> void:
+		_ensure_instrument(track_idx, midi_payload, song)
+		
 		var midi_volume := midi_payload.data[1]
 		# When a note on event comes with zero velocity/volume, it's actually a note off event.
 		if midi_volume == 0:
-			_change_note_length(track_idx, midi_payload, timestamp)
+			_change_note_length(track_idx, midi_payload, timestamp, song)
 			return
 		
 		var midi_track := _tracks[track_idx]
@@ -283,7 +304,9 @@ class MidiFileReader:
 		instrument_notes.push_back(midi_note)
 	
 	
-	func _change_note_length(track_idx: int, midi_payload: MidiTrackEvent.MidiPayload, timestamp: int) -> void:
+	func _change_note_length(track_idx: int, midi_payload: MidiTrackEvent.MidiPayload, timestamp: int, song: Song) -> void:
+		_ensure_instrument(track_idx, midi_payload, song)
+		
 		var instrument_key := Vector2i(track_idx, midi_payload.channel_num)
 		var instrument_notes: Array[MidiNote] = _notes_instrument_map[instrument_key]
 		var midi_track := _tracks[track_idx]
