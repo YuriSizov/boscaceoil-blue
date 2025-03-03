@@ -12,7 +12,7 @@ config_version=5
 
 config/name="Bosca Ceoil: The Blue Album"
 config/description="A simple music making app."
-config/version="3.1.1"
+config/version="3.1.2"
 run/main_scene="res://Main.tscn"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="boscaceoil-blue"
@@ -23,7 +23,7 @@ boot_splash/image="res://dist/logo-full.png"
 boot_splash/fullsize=false
 config/icon="res://icon.png"
 config/windows_native_icon="res://dist/windows-icon.ico"
-config/version_flair="stable"
+config/version_flair="dev"
 
 [autoload]
 
