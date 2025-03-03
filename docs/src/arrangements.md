@@ -42,7 +42,7 @@ To add a pattern to the arrangement, drag and drop it from the pattern dock, or 
 
 A pattern that has a reddish frame around it is selected for editing. This is the pattern that you see below, in the [pattern editor](/notes_and_patterns.html). Any time you <kbd>Left Click</kbd> a pattern or create a new pattern by any means, that pattern gets selected.
 
-The grid can be scrolled through with <kbd>Mouse Wheel</kbd> or a [keyboard shortcut](/shortcuts.html). On top of that, you can change the scale of the grid, making it more compact or more spacious, by holding <kbd>Ctrl</kbd> as you scroll.
+The grid can be scrolled through with <kbd>Mouse Wheel</kbd> or a [keyboard shortcut](/shortcuts.html). On top of that, you can change the scale of the grid, making it more compact or more spacious, by holding <kbd>Ctrl/Cmd</kbd> as you scroll.
 
 
 ## Timeline
@@ -53,7 +53,7 @@ Below the arrangement grid you can find an extra row with numbers, and a white l
 
 The bars selected this way do not affect the export. This is purely a tool for you to preview portions of your song. But the timeline itself can do more than that.
 
-<kbd>Middle Click</kbd> (or <kbd>Shift + Left Click</kbd>) on any bar to insert an empty bar before it. With <kbd>Right Click</kbd> remove the clicked bar completely, shifting every following bar to the left. With any number of bars selected, hover over the arrangement timeline and press <kbd>Ctrl + C</kbd> to copy selected bars, then hover over a bar and press <kbd>Ctrl + V</kbd> to paste copied bars before that bar.
+<kbd>Middle Click</kbd> (or <kbd>Shift + Left Click</kbd>) on any bar to insert an empty bar before it. With <kbd>Right Click</kbd> remove the clicked bar completely, shifting every following bar to the left. With any number of bars selected, hover over the arrangement timeline and press <kbd>Ctrl/Cmd + C</kbd> to copy selected bars, then hover over a bar and press <kbd>Ctrl/Cmd + V</kbd> to paste copied bars before that bar.
 
 
 ## Managing instruments

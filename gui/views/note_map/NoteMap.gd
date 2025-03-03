@@ -119,12 +119,12 @@ func _gui_input(event: InputEvent) -> void:
 		
 		if _note_cursor_visible && mb.pressed:
 			if mb.button_index == MOUSE_BUTTON_WHEEL_UP:
-				if mb.ctrl_pressed:
+				if mb.is_command_or_control_pressed():
 					_adjust_note_cursor(1)
 				else:
 					_change_scroll_offset(1)
 			elif mb.button_index == MOUSE_BUTTON_WHEEL_DOWN:
-				if mb.ctrl_pressed:
+				if mb.is_command_or_control_pressed():
 					_adjust_note_cursor(-1)
 				else:
 					_change_scroll_offset(-1)
@@ -134,7 +134,7 @@ func _gui_input(event: InputEvent) -> void:
 				
 				if mb.shift_pressed:
 					_start_selecting_notes()
-				elif mb.ctrl_pressed:
+				elif mb.is_command_or_control_pressed():
 					_set_cursor_size_at_cursor()
 				else:
 					_start_drawing_notes(DrawingMode.DRAWING_ADD)

@@ -14,7 +14,7 @@ Keep adding more notes! If it gets too noisy, <kbd>Right Click</kbd> on any exis
 
 ![](/images/patterns-removing-notes.png)
 
-You can also hold <kbd>Ctrl</kbd> and scroll your <kbd>Mouse Wheel</kbd> to adjust the size of the cursor, allowing you to place longer or shorter notes.
+You can also hold <kbd>Ctrl/Cmd</kbd> and scroll your <kbd>Mouse Wheel</kbd> to adjust the size of the cursor, allowing you to place longer or shorter notes.
 
 It's that simple, and you can probably pick some notes by ear to arrange a favorite childhood song already. But let's talk about patterns a bit.
 
@@ -42,7 +42,7 @@ A pitch is how high or how low the note sounds, and quite literally the lowest p
 
 ### Basics
 
-To place a note, <kbd>Left Click</kbd> on any empty cell of the grid. You cannot place a note into a cell that is already occupied. To remove the note, <kbd>Right Click</kbd> on it. Hold <kbd>Ctrl</kbd> and use your <kbd>Mouse Wheel</kbd> to change the size of the placed note. Hold <kbd>Ctrl</kbd> and <kbd>Left Click</kbd> on any existing note to copy its size; click on an empty space instead to reset the size back to 1.
+To place a note, <kbd>Left Click</kbd> on any empty cell of the grid. You cannot place a note into a cell that is already occupied. To remove the note, <kbd>Right Click</kbd> on it. Hold <kbd>Ctrl/Cmd</kbd> and use your <kbd>Mouse Wheel</kbd> to change the size of the placed note. Hold <kbd>Ctrl/Cmd</kbd> and <kbd>Left Click</kbd> on any existing note to copy its size; click on an empty space instead to reset the size back to 1.
 
 ![](/images/patterns-drawing.png)
 
@@ -56,7 +56,7 @@ To help you further, notes that are placed when the playback is stopped or pause
 
 ### Selecting and stamping
 
-If you hold <kbd>Shift</kbd> and then <kbd>Left Click</kbd> and drag across the grid, you can select notes. Pressing <kbd>Ctrl + C</kbd> when notes are selected copies them. Copied notes can be inserted into the same or a different pattern with <kbd>Ctrl + V</kbd>. Inserted notes are placed relative to the cursor, to the top-right of it.
+If you hold <kbd>Shift</kbd> and then <kbd>Left Click</kbd> and drag across the grid, you can select notes. Pressing <kbd>Ctrl/Cmd + C</kbd> when notes are selected copies them. Copied notes can be inserted into the same or a different pattern with <kbd>Ctrl/Cmd + V</kbd>. Inserted notes are placed relative to the cursor, to the top-right of it.
 
 ![](/images/patterns-stamping.png)
 
@@ -66,7 +66,7 @@ Using the plus and minus buttons below the grid the entire pattern of notes can 
 
 ### Action history
 
-You can always undo any recent change. The application remembers the last 40 actions that you performed, and allows you to step back and forth through these actions. Press <kbd>Ctrl + Z</kbd> to undo an action, and <kbd>Shift + Ctrl + Z</kbd> to redo the last undone action. This applies to everything you do in _Bosca Ceoil Blue_, not just placing notes.
+You can always undo any recent change. The application remembers the last 40 actions that you performed, and allows you to step back and forth through these actions. Press <kbd>Ctrl/Cmd + Z</kbd> to undo an action, and <kbd>Shift + Ctrl/Cmd + Z</kbd> to redo the last undone action. This applies to everything you do in _Bosca Ceoil Blue_, not just placing notes.
 
 
 ## Key and scale
