@@ -102,6 +102,17 @@ static func create_default_song() -> Song:
 	return song
 
 
+func is_valid_song() -> bool:
+	# A valid song must have at least one instrument and one pattern.
+	# We automatically create one of each whenever the last one is
+	# deleted. Loaded and imported songs are expected to have at least
+	# one as well.
+	if instruments.is_empty() || patterns.is_empty():
+		return false
+	
+	return true
+
+
 func get_safe_filename(extension: String = FILE_EXTENSION) -> String:
 	if filename.is_empty():
 		return "%s.%s" % [ FILE_DEFAULT_NAME, extension ]

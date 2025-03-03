@@ -144,7 +144,7 @@ func load_ceol_song_safe() -> void:
 
 func _load_ceol_song_confirmed(path: String) -> bool:
 	var loaded_song: Song = SongLoader.load(path)
-	if not loaded_song:
+	if not loaded_song || not loaded_song.is_valid_song():
 		Controller.update_status("FAILED TO LOAD SONG", Controller.StatusLevel.ERROR)
 		return false
 	
@@ -298,7 +298,7 @@ func _import_song_confirmed(import_config: ImportMasterPopup.ImportConfig) -> vo
 
 func _import_mid_song(import_config: ImportMasterPopup.ImportConfig) -> void:
 	var imported_song := MidiImporter.import(import_config)
-	if not imported_song:
+	if not imported_song || not imported_song.is_valid_song():
 		Controller.update_status("FAILED TO IMPORT SONG", Controller.StatusLevel.ERROR)
 		return
 	

@@ -30,8 +30,8 @@ static func load(path: String) -> Song:
 	if reader.get_version() == 3:
 		return _load_v3(reader)
 	
-	printerr("SongLoader: The song file at '%s' has unsupported version %d, an empty song is created instead." % [ path, reader.get_version() ])
-	return Song.create_default_song()
+	printerr("SongLoader: The song file at '%s' has unsupported version %d." % [ path, reader.get_version() ])
+	return null
 
 
 # Original release; due to a bug it never saved the instrument volume.
