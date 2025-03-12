@@ -107,8 +107,8 @@ text = "Support the project <3"
 layout_mode = 2
 size_flags_horizontal = 10
 theme_type_variation = &"CreditsLabelLink"
-text = "patreon.com/YuriSizov/"
-url = "https://patreon.com/YuriSizov"
+text = "humnom.net/donate/"
+url = "https://humnom.net/donate.html"
 
 [node name="Spacer" type="Control" parent="Layout/Content/ContentBox/ScrollContainer/MarginContainer/Layout/Section/SupportList" index="1"]
 auto_translate_mode = 1
