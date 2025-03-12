@@ -338,11 +338,10 @@ func _update_playback_cursor() -> void:
 		return
 	
 	var available_rect := get_available_rect()
-	var playback_note_index := Controller.music_player.get_pattern_time()
 	var reference_bar := -1
 	var extra_notes := 0
 	
-	if playback_note_index < 0:
+	if Controller.music_player.is_stopped():
 		# If the player is stopped, park the cursor on the left end of the loop range.
 		# This is normally unreachable by playback, as when playing at index 0 we want
 		# to display the cursor to the right of the first note.
@@ -356,7 +355,7 @@ func _update_playback_cursor() -> void:
 	
 	else:
 		reference_bar = current_arrangement.current_bar_idx
-		extra_notes = playback_note_index
+		extra_notes = Controller.music_player.get_pattern_time()
 	
 	# If following cursor enabled, update scroll offset when passing roughly 3/4ths
 	# of the visible bar.
@@ -840,9 +839,13 @@ func _change_arrangement_loop(starts_at: int, ends_at: int) -> void:
 	var arrangement_state := Controller.state_manager.create_state_change(StateManager.StateChangeType.ARRANGEMENT)
 	arrangement_state.add_do_action(func() -> void:
 		current_arrangement.set_loop(starts_at, ends_at)
+		if Controller.music_player.is_stopped():
+			Controller.current_song.reset_arrangement()
 	)
 	arrangement_state.add_undo_action(func() -> void:
 		current_arrangement.set_loop(old_loop_start, old_loop_end)
+		if Controller.music_player.is_stopped():
+			Controller.current_song.reset_arrangement()
 	)
 	
 	Controller.state_manager.commit_state_change(arrangement_state)
@@ -862,9 +865,13 @@ func _change_arrangement_loop_to_end(starts_at: int) -> void:
 	var arrangement_state := Controller.state_manager.create_state_change(StateManager.StateChangeType.ARRANGEMENT)
 	arrangement_state.add_do_action(func() -> void:
 		current_arrangement.set_loop(starts_at, ends_at)
+		if Controller.music_player.is_stopped():
+			Controller.current_song.reset_arrangement()
 	)
 	arrangement_state.add_undo_action(func() -> void:
 		current_arrangement.set_loop(old_loop_start, old_loop_end)
+		if Controller.music_player.is_stopped():
+			Controller.current_song.reset_arrangement()
 	)
 	
 	Controller.state_manager.commit_state_change(arrangement_state)

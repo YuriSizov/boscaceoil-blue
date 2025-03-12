@@ -307,6 +307,10 @@ func is_playing() -> bool:
 	return _music_playing
 
 
+func is_stopped() -> bool:
+	return not _music_playing && _pattern_time < 0
+
+
 func get_pattern_time() -> int:
 	return _pattern_time
 
