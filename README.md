@@ -16,13 +16,13 @@ _Bosca Ceoil Blue_ is a modern port of **Terry Cavanagh's [Bosca Ceoil](https://
 
 _If you find a usability issue or a bug, please [file a report](https://github.com/YuriSizov/boscaceoil-blue/issues). If you don't have a GitHub account, you can also reach out on [Discord](https://discord.gg/S657Y9KPF9)._
 
-### Current release: 3.1.1-stable
+### Current release: 3.1.2-stable
 
-* **[Download for Linux (x86_64)](https://github.com/YuriSizov/boscaceoil-blue/releases/download/3.1.1-stable/boscaceoil-blue-linux-x86_64.zip)**
-* **[Download for macOS (Universal)](https://github.com/YuriSizov/boscaceoil-blue/releases/download/3.1.1-stable/boscaceoil-blue-macos-universal.zip)**
-* **[Download for Windows (x86_64)](https://github.com/YuriSizov/boscaceoil-blue/releases/download/3.1.1-stable/boscaceoil-blue-windows-x86_64.zip)**
-* **[Download for Windows (x86_32)](https://github.com/YuriSizov/boscaceoil-blue/releases/download/3.1.1-stable/boscaceoil-blue-windows-x86_32.zip)**
-* [Download for web (self-hosting)](https://github.com/YuriSizov/boscaceoil-blue/releases/download/3.1.1-stable/boscaceoil-blue-web-universal.zip)
+* **[Download for Linux (x86_64)](https://github.com/YuriSizov/boscaceoil-blue/releases/download/3.1.2-stable/boscaceoil-blue-linux-x86_64.zip)**
+* **[Download for macOS (Universal)](https://github.com/YuriSizov/boscaceoil-blue/releases/download/3.1.2-stable/boscaceoil-blue-macos-universal.zip)**
+* **[Download for Windows (x86_64)](https://github.com/YuriSizov/boscaceoil-blue/releases/download/3.1.2-stable/boscaceoil-blue-windows-x86_64.zip)**
+* **[Download for Windows (x86_32)](https://github.com/YuriSizov/boscaceoil-blue/releases/download/3.1.2-stable/boscaceoil-blue-windows-x86_32.zip)**
+* [Download for web (self-hosting)](https://github.com/YuriSizov/boscaceoil-blue/releases/download/3.1.2-stable/boscaceoil-blue-web-universal.zip)
 
 Looking for the browser version? Try **[Bosca for Web (beta)](https://humnom.net/apps/boscaceoil/beta/)** right now!
 
