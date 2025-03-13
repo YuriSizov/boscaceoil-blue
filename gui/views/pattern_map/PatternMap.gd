@@ -742,22 +742,22 @@ func _set_pattern_over_range(starting_pos: Vector2, ending_pos: Vector2, pattern
 	# Jump to the next row; no point adding the pattern where it already is
 	_add_head_position.x += _pattern_width
 	
+	var arrangement_state := Controller.state_manager.create_state_change(StateManager.StateChangeType.ARRANGEMENT)
+	
 	while _add_head_position.x < ending_pos.x:
-		_set_pattern_at_position(_add_head_position, pattern_idx)
+		_set_pattern_at_position_uncommitted(arrangement_state, _add_head_position, pattern_idx)
 		_add_head_position.x += _pattern_width
 	
-func _set_pattern_at_position(at_position: Vector2, pattern_idx: int) -> void:
-	if not current_arrangement || not Controller.current_song:
-		return
+	Controller.state_manager.commit_state_change(arrangement_state)
 	
+func _set_pattern_at_position_uncommitted(arrangement_state, at_position: Vector2, pattern_idx: int) -> void:
 	var cell := _get_cell_at_position(at_position)
 	var bar_index := cell.x + _scroll_offset
 	if bar_index < 0 || bar_index >= Arrangement.BAR_NUMBER:
 		return
 	if cell.y < 0 || cell.y >= Arrangement.CHANNEL_NUMBER:
 		return
-	
-	var arrangement_state := Controller.state_manager.create_state_change(StateManager.StateChangeType.ARRANGEMENT)
+		
 	arrangement_state.add_setget_property(current_arrangement, "pattern", pattern_idx,
 		# Getter.
 		func() -> int:
@@ -770,6 +770,14 @@ func _set_pattern_at_position(at_position: Vector2, pattern_idx: int) -> void:
 			else:
 				current_arrangement.set_pattern(bar_index, cell.y, value)
 	)
+	
+func _set_pattern_at_position(at_position: Vector2, pattern_idx: int) -> void:
+	if not current_arrangement || not Controller.current_song:
+		return
+	
+	var arrangement_state := Controller.state_manager.create_state_change(StateManager.StateChangeType.ARRANGEMENT)
+	
+	_set_pattern_at_position_uncommitted(arrangement_state, at_position, pattern_idx)
 	
 	Controller.state_manager.commit_state_change(arrangement_state)
 
