@@ -45,7 +45,6 @@ func _update_theme() -> void:
 
 func _draw() -> void:
 	var selected_rects: Array[Rect2] = []
-	
 	for pattern in active_patterns:
 		if pattern.grid_positions.size() <= 0:
 			continue
@@ -62,7 +61,7 @@ func _draw() -> void:
 	# Draw selected indicator on top of everything.
 	for item_rect in selected_rects:
 		_draw_selected_outline(self, item_rect)
-
+		
 
 func draw_item(on_control: Control, pattern: PatternMap.ActivePattern, item_origin: Vector2, draw_selected: bool = false) -> void:
 	var item_position := item_origin + pattern.item_position

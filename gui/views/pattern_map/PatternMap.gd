@@ -1008,6 +1008,9 @@ class DraggedPatternPreview extends Control:
 	var reflect_transient_state: bool = false
 	var starting_pos: Vector2 = Vector2(-1, -1)
 	
+	func _process(delta: float) -> void:
+		queue_redraw()
+	
 	func _input(event: InputEvent) -> void:
 		if not reflect_transient_state:
 			return
