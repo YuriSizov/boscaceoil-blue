@@ -7,6 +7,8 @@
 @tool
 extends Control
 
+@onready var _timeline: Control = %PatternMapTimeline
+
 var active_patterns: Array[PatternMap.ActivePattern] = []
 
 # Theme cache.
@@ -58,7 +60,6 @@ func _draw() -> void:
 				selected_rects.push_back(Rect2(item_position, pattern.item_size))
 	
 	# Draw selected indicator on top of everything.
-	
 	for item_rect in selected_rects:
 		_draw_selected_outline(self, item_rect)
 
@@ -72,6 +73,8 @@ func draw_item(on_control: Control, pattern: PatternMap.ActivePattern, item_orig
 	if on_control.get("stretched"):
 		var starting_pos = on_control.get("starting_pos")
 		var ending_pos = on_control.position
+		# Clamp to end of screen. Need to subtract one width because the last column goes off screen
+		ending_pos.x = min(ending_pos.x, _timeline.size.x - pattern.item_size.x)
 		
 		var _add_head_position = starting_pos
 		# Jump to the next row; no point adding the pattern where it already is
