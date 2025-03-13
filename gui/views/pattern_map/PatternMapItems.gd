@@ -68,6 +68,22 @@ func draw_item(on_control: Control, pattern: PatternMap.ActivePattern, item_orig
 	var notes_area_position := item_origin + pattern.notes_area.position
 	var label_underline_position := item_origin + pattern.label_underline_area.position
 	
+	# Same hack as later on. Hey, it works!
+	if on_control.get("stretched"):
+		var starting_pos = on_control.get("starting_pos")
+		var ending_pos = on_control.position
+		
+		var _add_head_position = starting_pos
+		# Jump to the next row; no point adding the pattern where it already is
+		_add_head_position.x += pattern.item_size.x
+		
+		while _add_head_position.x < ending_pos.x:
+			# Rescale the coords so they can be drawn relative to the dragged control
+			# For some reason the origin is in the bottom left, hence adding item_size.y
+			var _relative_coords = _add_head_position - on_control.position + Vector2(0, pattern.item_size.y - 4)
+			on_control.draw_rect(Rect2(_relative_coords, pattern.item_size), pattern.gutter_color)
+			_add_head_position.x += pattern.item_size.x
+	
 	on_control.draw_rect(Rect2(item_position, pattern.item_size), pattern.gutter_color)
 	on_control.draw_rect(Rect2(notes_area_position, pattern.notes_area.size), pattern.main_color)
 	on_control.draw_rect(Rect2(label_underline_position, pattern.label_underline_area.size), pattern.main_color)
