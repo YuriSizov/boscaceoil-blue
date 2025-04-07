@@ -612,12 +612,15 @@ func _get_drag_data(at_position: Vector2) -> Variant:
 	
 	var drag_data := DraggedPattern.new()
 	drag_data.pattern_index = pattern_idx
+	drag_data.starting_pos = _get_cell_position(_get_cell_at_position(at_position))
 	
 	var pattern := _active_patterns[pattern_idx]
 	
 	var preview := DraggedPatternPreview.new()
 	preview.reflect_transient_state = true
 	preview.cloned = Input.is_key_pressed(KEY_ALT)
+	preview.stretched = Input.is_key_pressed(KEY_A)
+	preview.starting_pos = drag_data.starting_pos
 	preview.size = pattern.item_size
 	preview.draw.connect(_items.draw_item.bind(preview, pattern, Vector2.ZERO, true))
 	set_drag_preview(preview)
@@ -645,6 +648,8 @@ func _drop_data(_at_position: Vector2, data: Variant) -> void:
 		
 		if Input.is_key_pressed(KEY_ALT):
 			_clone_pattern_at_cursor(pattern_data.pattern_index)
+		elif Input.is_key_pressed(KEY_A):
+			_set_pattern_over_range(pattern_data.starting_pos, _at_position, pattern_data.pattern_index)
 		else:
 			_set_pattern_at_cursor(pattern_data.pattern_index)
 
@@ -728,17 +733,30 @@ func _get_pattern_at_position(at_position: Vector2) -> int:
 
 
 func _set_pattern_at_cursor(pattern_idx: int) -> void:
-	if not current_arrangement || not Controller.current_song:
-		return
+	_set_pattern_at_position(get_local_mouse_position(), pattern_idx)
 	
-	var cell := _get_cell_at_cursor()
+func _set_pattern_over_range(starting_pos: Vector2, ending_pos: Vector2, pattern_idx: int) -> void:
+	var _add_head_position = starting_pos
+	
+	# Jump to the next row; no point adding the pattern where it already is
+	_add_head_position.x += _pattern_width
+	
+	var arrangement_state := Controller.state_manager.create_state_change(StateManager.StateChangeType.ARRANGEMENT)
+	
+	while _add_head_position.x < ending_pos.x:
+		_set_pattern_at_position_uncommitted(arrangement_state, _add_head_position, pattern_idx)
+		_add_head_position.x += _pattern_width
+	
+	Controller.state_manager.commit_state_change(arrangement_state)
+	
+func _set_pattern_at_position_uncommitted(arrangement_state, at_position: Vector2, pattern_idx: int) -> void:
+	var cell := _get_cell_at_position(at_position)
 	var bar_index := cell.x + _scroll_offset
 	if bar_index < 0 || bar_index >= Arrangement.BAR_NUMBER:
 		return
 	if cell.y < 0 || cell.y >= Arrangement.CHANNEL_NUMBER:
 		return
-	
-	var arrangement_state := Controller.state_manager.create_state_change(StateManager.StateChangeType.ARRANGEMENT)
+		
 	arrangement_state.add_setget_property(current_arrangement, "pattern", pattern_idx,
 		# Getter.
 		func() -> int:
@@ -751,6 +769,14 @@ func _set_pattern_at_cursor(pattern_idx: int) -> void:
 			else:
 				current_arrangement.set_pattern(bar_index, cell.y, value)
 	)
+	
+func _set_pattern_at_position(at_position: Vector2, pattern_idx: int) -> void:
+	if not current_arrangement || not Controller.current_song:
+		return
+	
+	var arrangement_state := Controller.state_manager.create_state_change(StateManager.StateChangeType.ARRANGEMENT)
+	
+	_set_pattern_at_position_uncommitted(arrangement_state, at_position, pattern_idx)
 	
 	Controller.state_manager.commit_state_change(arrangement_state)
 
@@ -980,12 +1006,17 @@ class ActivePattern:
 
 class DraggedPattern:
 	var pattern_index: int = -1
+	var starting_pos: Vector2 = Vector2(-1, -1)
 
 
 class DraggedPatternPreview extends Control:
 	var cloned: bool = false
+	var stretched: bool = false
 	var reflect_transient_state: bool = false
+	var starting_pos: Vector2 = Vector2(-1, -1)
 	
+	func _process(delta: float) -> void:
+		queue_redraw()
 	
 	func _input(event: InputEvent) -> void:
 		if not reflect_transient_state:
@@ -995,4 +1026,7 @@ class DraggedPatternPreview extends Control:
 			var ke := event as InputEventKey
 			if ke.keycode == KEY_ALT:
 				cloned = ke.pressed
+				queue_redraw()
+			if ke.keycode == KEY_A:
+				stretched = ke.pressed
 				queue_redraw()
