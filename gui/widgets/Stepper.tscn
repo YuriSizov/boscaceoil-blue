@@ -10,6 +10,7 @@ offset_bottom = 32.0
 theme_type_variation = &"StepperBox"
 alignment = 1
 script = ExtResource("1_ng8l4")
+jump_step = null
 
 [node name="Decrease" type="Button" parent="."]
 custom_minimum_size = Vector2(28, 28)
@@ -24,7 +25,7 @@ icon_alignment = 1
 expand_icon = true
 
 [node name="Label" type="Label" parent="."]
-custom_minimum_size = Vector2(14, 0)
+custom_minimum_size = Vector2(10, 0)
 layout_mode = 2
 text = "0"
 horizontal_alignment = 1

@@ -1,10 +1,7 @@
-[gd_resource type="Resource" script_class="HelpGuide" load_steps=20 format=3 uid="uid://dpyar3sq303xm"]
+[gd_resource type="Resource" script_class="HelpGuide" load_steps=17 format=3 uid="uid://dpyar3sq303xm"]
 
 [ext_resource type="Script" path="res://objects/HelpGuide.gd" id="1_6yyxb"]
 [ext_resource type="Script" path="res://objects/HelpGuideStep.gd" id="2_6a2si"]
-[ext_resource type="Texture2D" uid="uid://r26ibp33l6if" path="res://help/advanced_guide_delete_instrument.png" id="3_7bj3b"]
-[ext_resource type="Texture2D" uid="uid://dlmdhoaldml2c" path="res://help/advanced_guide_note_selection.png" id="3_8j5sp"]
-[ext_resource type="Texture2D" uid="uid://dotqpsqiueyqi" path="res://help/advanced_guide_rec_filter.png" id="4_f2mo2"]
 
 [sub_resource type="Resource" id="Resource_ie5ya"]
 script = ExtResource("2_6a2si")
@@ -90,7 +87,6 @@ description = "You can [accent]SELECT[/accent] placed notes and [accent]COPY[/ac
 [accent]HOLD SHIFT and DRAG[/accent] across the pattern grid to select notes. Press [accent]CTRL + C[/accent] to copy and then
 [accent]CTRL + V[/accent] to paste them.
 Notes are pasted relative to the cursor, starting from the bottom-left corner."
-ref_image = ExtResource("3_8j5sp")
 ref_image_size = Vector2(320, 180)
 ref_image_position = 1
 navigation_target = 0
@@ -168,7 +164,6 @@ title = "TIPS & TRICKS - Instruments"
 description = "You can completely [accent]DELETE[/accent] instruments and patterns that you don't want.
 
 Start [accent]DRAGGING[/accent] the item from the [accent]side list[/accent], and a [accent]delete area[/accent] will appear below the panel. [accent]LET GO[/accent] of your instrument or pattern there to confirm the deletion."
-ref_image = ExtResource("3_7bj3b")
 ref_image_size = Vector2(480, 180)
 ref_image_position = 1
 navigation_target = 3
@@ -200,7 +195,6 @@ description = "This button enables [accent]INSTRUMENT RECORDING[/accent] for the
 When [accent]INSTRUMENT RECORDING[/accent] is on, the filter and volume values of the instrument in this pattern can be changed over time!
 
 Try clicking the [accent]RECORD[/accent] button and playing with the filter pad and the volume slider as the song plays."
-ref_image = ExtResource("4_f2mo2")
 ref_image_size = Vector2(590, 200)
 ref_image_position = 1
 navigation_target = 3

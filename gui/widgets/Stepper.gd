@@ -16,6 +16,7 @@ var _value: int = 0
 @export var min_value: int = 0
 @export var max_value: int = 1
 @export var step: int = 1
+@export var jump_step:int = 1
 
 var _button_holder: ButtonHolder = null
 @onready var _increment_button: Button = $Increase
@@ -94,11 +95,15 @@ func _change_value_on_hold(hold_button: Button) -> void:
 	
 	if delta_sign == 0:
 		return
-	
-	var raw_value := _value + delta_sign * step
+		
+	# Use larger step on shift holded, maybe use input map?
+	var is_jump = Input.is_key_label_pressed(KEY_SHIFT)
+	var _rel_step :int =  step if not is_jump else jump_step
+	var raw_value := _value + delta_sign * _rel_step
+		
 	# Round to the closest step value, then clamp into the limit.
 	@warning_ignore("integer_division")
-	var next_value := clampi((raw_value / step) * step, min_value, max_value)
+	var next_value := clampi((raw_value / _rel_step) * _rel_step, min_value, max_value)
 	_set_value_silent(next_value)
 
 

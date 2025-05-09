@@ -1,11 +1,7 @@
-[gd_resource type="Resource" script_class="HelpGuide" load_steps=29 format=3 uid="uid://c8snyulwofxh0"]
+[gd_resource type="Resource" script_class="HelpGuide" load_steps=25 format=3 uid="uid://c8snyulwofxh0"]
 
 [ext_resource type="Script" path="res://objects/HelpGuide.gd" id="1_bxt1b"]
 [ext_resource type="Script" path="res://objects/HelpGuideStep.gd" id="2_dumha"]
-[ext_resource type="Texture2D" uid="uid://dvrr63bss01ek" path="res://help/basic_guide_longnote.png" id="3_5vxqq"]
-[ext_resource type="Texture2D" uid="uid://bg8islw0t6v7u" path="res://help/basic_guide_pattern_drag.png" id="4_d3ksy"]
-[ext_resource type="Texture2D" uid="uid://sut1q8rtgo5d" path="res://help/basic_guide_pattern_paint.png" id="5_6t0bx"]
-[ext_resource type="Texture2D" uid="uid://d3o4jiisr6cfw" path="res://help/basic_guide_timeline_span.png" id="6_1qdak"]
 
 [sub_resource type="Resource" id="Resource_bgi50"]
 script = ExtResource("2_dumha")
@@ -82,7 +78,6 @@ title = "HELP - Placing Notes"
 description = "Use [accent]CTRL + MOUSE WHEEL[/accent] to change the length of the note.
 
 (Or press [accent]CTRL + LEFT or RIGHT[/accent] arrow key.)"
-ref_image = ExtResource("3_5vxqq")
 ref_image_size = Vector2(340, 130)
 ref_image_position = 2
 navigation_target = 1
@@ -126,7 +121,6 @@ title = "HELP - Arrangements"
 description = "[accent]DRAG[/accent] your new pattern from the list on the right to the row below the original pattern.
 
 Now you can edit this pattern and hear both playing together!"
-ref_image = ExtResource("4_d3ksy")
 ref_image_size = Vector2(320, 180)
 ref_image_position = 2
 navigation_target = 2
@@ -140,7 +134,6 @@ size = Vector2(780, 250)
 script = ExtResource("2_dumha")
 title = "HELP - Arrangements"
 description = "You can copy patterns between bars by [accent]DRAGGING[/accent] them, and remove them with [accent]RIGHT CLICK[/accent]."
-ref_image = ExtResource("5_6t0bx")
 ref_image_size = Vector2(450, 120)
 ref_image_position = 1
 navigation_target = 2
@@ -180,7 +173,6 @@ size = Vector2(560, 160)
 script = ExtResource("2_dumha")
 title = "HELP - Timeline"
 description = "[accent]HOLD and DRAG[/accent] over multiple sections to play them all!"
-ref_image = ExtResource("6_1qdak")
 ref_image_size = Vector2(460, 90)
 ref_image_position = 1
 navigation_target = 2

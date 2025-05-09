@@ -35,8 +35,7 @@ func _gui_input(event: InputEvent) -> void:
 
 		if mb.button_index == MOUSE_BUTTON_LEFT && mb.pressed && mb.double_click:
 			centered.emit()
-
-
+				
 func _shortcut_input(event: InputEvent) -> void:
 	_button_holder.input(event)
 

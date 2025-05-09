@@ -34,11 +34,15 @@ func _draw() -> void:
 	
 	draw_rect(available_rect, gutter_color)
 	
+	# Draw keyboard
+	
+	var note_height := get_theme_constant("note_height", "NoteMap")
+	_draw_keyboard(available_rect, note_height)
+	
 	# Draw note labels.
 	
 	var hover_color := get_theme_color("gutter_hover_color", "NoteMap")
-	var note_height := get_theme_constant("note_height", "NoteMap")
-	
+		
 	var font := get_theme_default_font()
 	var font_size := get_theme_default_font_size()
 	var font_color := get_theme_color("font_color", "Label")
@@ -47,19 +51,35 @@ func _draw() -> void:
 	
 	var i := 0
 	for note in note_rows:
+		var _hover_offset = Vector2.ZERO # small enhance on hover
 		if i == _hovered_row:
 			var cursor_size := Vector2(available_rect.size.x, note_height)
 			var cursor_position := note.grid_position - cursor_size
-			
 			draw_rect(Rect2(cursor_position, cursor_size), hover_color)
-		
+			_hover_offset += Vector2(6,0)
+			
 		var string_position := note.label_position + Vector2(8, 0)
 		var shadow_position := string_position + shadow_size
 		
-		draw_string(font, shadow_position, note.label, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, shadow_color)
-		draw_string(font, string_position, note.label, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, font_color)
+		draw_string(font, shadow_position+_hover_offset, note.label, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, shadow_color)
+		draw_string(font, string_position+_hover_offset, note.label, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, font_color)
 		
 		i += 1
+
+func _draw_keyboard(available_rect:Rect2, note_height:float):
+	var _opc = 0.3
+	var bkc = Color(Color.BLACK, _opc)
+	var wkc = Color(Color.WHITE, _opc)
+	for note in note_rows:
+		var cursor_size := Vector2(available_rect.size.x, note_height)
+		var rect = Rect2(note.grid_position-cursor_size, cursor_size)
+		if Note.is_note_sharp(note.note_index) :
+			var b_key = rect.grow_individual(0, -cursor_size.y*0.1, -cursor_size.x*0.2, -cursor_size.y*0.1)
+			draw_rect(b_key, bkc)
+		else:
+			var w_key = rect.grow_individual(0, -cursor_size.y*0.05, -cursor_size.x*0.1, -cursor_size.y*0.05)
+			draw_rect(w_key, wkc)
+
 
 
 func get_available_rect() -> Rect2:

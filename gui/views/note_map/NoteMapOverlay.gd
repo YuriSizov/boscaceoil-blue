@@ -16,6 +16,7 @@ var note_cursor_size: int = 1
 var note_cursor_position: Vector2 = Vector2i(-1, -1)
 var note_selecting_rect: Rect2 = Rect2(-1, -1, 0, 0)
 
+var hovered_note : String = ""
 
 func _draw() -> void:
 	var note_height := get_theme_constant("note_height", "NoteMap")
@@ -27,6 +28,10 @@ func _draw() -> void:
 	var label_font_color := get_theme_color("font_color", "Label")
 	var label_shadow_color := get_theme_color("shadow_color", "Label")
 	var label_shadow_size := Vector2(get_theme_constant("shadow_offset_x", "Label"), get_theme_constant("shadow_offset_y", "Label"))
+	
+	# little helper function
+	var _draw_string_fn = func(pos:Vector2, text:String, color:Color):
+		draw_string(label_font, pos, text, HORIZONTAL_ALIGNMENT_LEFT, -1, label_font_size, color)
 	
 	# Draw octave bars.
 	
@@ -141,14 +146,23 @@ func _draw() -> void:
 			spanning_active_indices.push_back(active_note.note_index + active_note.length)
 		
 		# Draw the note length in the box if it goes off screen.
-		if (note_position.x + note_size.x) >= size.x:
+		var gose_off_screen = (note_position.x + note_size.x) >= size.x
+		# Hovered note 
+		var offset_x = 36 if gose_off_screen else 0
+		var note_string_position := note_position + Vector2(8+offset_x, note_height - 8)
+		var string_shadow_position := note_string_position + label_shadow_size
+		var note_name = Note.get_note_name(active_note.note_value)
+		_draw_string_fn.call(string_shadow_position, note_name, label_font_color)
+		_draw_string_fn.call(note_string_position, note_name, label_shadow_color)
+	
+		if gose_off_screen:
 			var string_position := note_position + Vector2(8, note_height - 8)
 			var shadow_position := string_position + label_shadow_size
 
-			var cursor_label := "%d" % active_note.length
+			var cursor_label := "%d |" % active_note.length
 			# Colors are inverted on purpose, because the background is light here.
-			draw_string(label_font, shadow_position, cursor_label, HORIZONTAL_ALIGNMENT_LEFT, -1, label_font_size, label_font_color)
-			draw_string(label_font, string_position, cursor_label, HORIZONTAL_ALIGNMENT_LEFT, -1, label_font_size, label_shadow_color)
+			_draw_string_fn.call(shadow_position, cursor_label, label_font_color)
+			_draw_string_fn.call( string_position, cursor_label, label_shadow_color)
 	
 	# Draw the playback cursor.
 	
@@ -188,11 +202,24 @@ func _draw() -> void:
 		draw_rect(Rect2(shadow_position, note_size), note_cursor_shadow_color, false, note_cursor_width)
 		draw_rect(Rect2(note_position, note_size), note_cursor_color, false, note_cursor_width)
 		
+		
+		var gose_off_screen = (note_position.x + note_size.x) >= size.x
+		# Hovered note 
+		if hovered_note:
+			var offset_x = 36 if gose_off_screen else 0
+			var string_position := note_position + Vector2(8+offset_x, note_height - 8)
+			var string_shadow_position := string_position + label_shadow_size
+			_draw_string_fn.call(string_shadow_position, hovered_note, label_shadow_color)
+			_draw_string_fn.call(string_position, hovered_note, label_font_color)
+		
 		# Draw the size in the box if it goes off screen.
-		if (note_position.x + note_size.x) >= size.x:
-			var string_position := note_position + Vector2(8, note_height - 8)
+		if gose_off_screen:
+			var string_position := note_position + Vector2(8, note_height -8)
 			var string_shadow_position := string_position + label_shadow_size
 			
-			var cursor_label := "%d" % note_cursor_size
-			draw_string(label_font, string_shadow_position, cursor_label, HORIZONTAL_ALIGNMENT_LEFT, -1, label_font_size, label_shadow_color)
-			draw_string(label_font, string_position, cursor_label, HORIZONTAL_ALIGNMENT_LEFT, -1, label_font_size, label_font_color)
+			var cursor_label := "%d |" % note_cursor_size
+			_draw_string_fn.call(string_shadow_position, cursor_label, label_shadow_color)
+			_draw_string_fn.call(string_position, cursor_label, label_font_color)
+	
+		
+		

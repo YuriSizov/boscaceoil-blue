@@ -122,12 +122,13 @@ func _gui_input(event: InputEvent) -> void:
 				if mb.is_command_or_control_pressed():
 					_adjust_note_cursor(1)
 				else:
-					_change_scroll_offset(1)
+					# offset an octave if shift pressed
+					_change_scroll_offset(1 if not mb.shift_pressed else _scale_layout.size()) 
 			elif mb.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 				if mb.is_command_or_control_pressed():
 					_adjust_note_cursor(-1)
 				else:
-					_change_scroll_offset(-1)
+					_change_scroll_offset(-1 if not mb.shift_pressed else -_scale_layout.size())
 			
 			elif mb.button_index == MOUSE_BUTTON_LEFT:
 				_clear_note_selection()
@@ -165,8 +166,14 @@ func _shortcut_input(event: InputEvent) -> void:
 	elif event.is_action_pressed("ui_paste", false, true):
 		_paste_selected_notes()
 		get_viewport().set_input_as_handled()
-
-
+	elif event.is_action_pressed("ui_cut", false, true):
+		_cut_selected_notes()
+		get_viewport().set_input_as_handled()
+			
+	elif event.is_action_pressed("delete", false, true):
+		_delete_selected_notes()
+		get_viewport().set_input_as_handled()
+	
 func _physics_process(_delta: float) -> void:
 	_process_note_cursor()
 	_process_note_drawing()
@@ -675,9 +682,10 @@ func _process_note_cursor() -> void:
 	var note_indexed := _get_cell_at_cursor()
 	if note_indexed.x >= 0 && note_indexed.y >= 0:
 		_overlay.note_cursor_position = _get_cell_position(note_indexed)
+		_overlay.hovered_note = _get_hovered_note_value()
 	else:
 		_overlay.note_cursor_position = Vector2(-1, -1)
-	
+		_overlay.hovered_note = ""
 	_overlay.queue_redraw()
 
 
@@ -695,7 +703,19 @@ func _process_note_drawing() -> void:
 		_add_note_at_cursor()
 	elif _note_drawing_mode == DrawingMode.DRAWING_REMOVE:
 		_remove_note_at_cursor()
-
+		
+func _get_hovered_note_value() -> String:
+	# I'm not sure is there any better way to get hovered note value | @JACKADUX
+	var note_indexed := _get_cell_at_cursor()
+	if note_indexed.x < 0 || note_indexed.y < 0:
+		return ""
+	var note_value_index := note_indexed.y + _scroll_offset
+	if note_value_index >= _note_row_value_map.size():
+		return ""
+	var note_value: int = _note_row_value_map[note_value_index] + current_pattern.key
+	if current_pattern.has_note(note_value, note_indexed.x, true):
+		return ""# Space is already occupied.
+	return Note.get_note_name(note_value)
 
 func _add_note_at_cursor() -> void:
 	if not Controller.current_song || not current_pattern:
@@ -812,7 +832,6 @@ func _clear_note_selection() -> void:
 	for active_note in _active_notes:
 		active_note.selected = false
 
-
 func _copy_selected_notes() -> void:
 	_note_copied_buffer.clear()
 	
@@ -843,7 +862,6 @@ func _copy_selected_notes() -> void:
 	
 	if not _note_copied_buffer.is_empty():
 		Controller.update_status("SELECTED NOTES COPIED", Controller.StatusLevel.INFO)
-
 
 func _paste_selected_notes() -> void:
 	if not Controller.current_song || not current_pattern:
@@ -897,7 +915,42 @@ func _paste_selected_notes() -> void:
 	
 	Controller.state_manager.commit_state_change(pattern_state)
 
+func _delete_selected_notes() -> void:
+	# WARNING: I'm not fully understand how the undo/redo works, so there maybe have some bugs
+	if not Controller.current_song || not current_pattern:
+		return
+	var notes_to_add: Array[Vector3i] = []
+	var notes_to_remove: Array[Vector3i] = []
+	
+	for active_note in _active_notes:
+		if not active_note.selected:
+			continue
+		var note_data := Vector3i(active_note.note_value, active_note.cell_index.x, active_note.length)
+		notes_to_remove.append(note_data)
+		notes_to_add.append(note_data)
+	
+	var pattern_state := Controller.state_manager.create_state_change(StateManager.StateChangeType.PATTERN, Controller.current_pattern_index)
+	var state_context := pattern_state.get_context()
+	state_context["removed"] = notes_to_remove
+	state_context["added"] = notes_to_add
+	
+	pattern_state.add_do_action(func() -> void:
+		var reference_pattern := Controller.current_song.patterns[pattern_state.reference_id]
+		reference_pattern.remove_notes(state_context.removed)
+	)
+	pattern_state.add_undo_action(func() -> void:
+		var reference_pattern := Controller.current_song.patterns[pattern_state.reference_id]
+		reference_pattern.restore_notes(state_context.added)
+	)
+	
+	Controller.state_manager.commit_state_change(pattern_state)
 
+func _cut_selected_notes() -> void:
+	if not Controller.current_song || not current_pattern:
+		return
+	_copy_selected_notes()
+	_delete_selected_notes()
+	
 class NoteRow:
 	var note_index: int = -1
 	var label: String = ""
