@@ -22,7 +22,7 @@ boot_splash/bg_color=Color(0.0593993, 0.0688814, 0.10927, 1)
 boot_splash/image="res://dist/logo-full.png"
 boot_splash/fullsize=false
 config/icon="res://icon.png"
-config/windows_native_icon="res://dist/windows-icon.ico"
+config/windows_native_icon="res://icon.ico"
 config/version_flair="dev"
 
 [autoload]
@@ -37,6 +37,10 @@ gdscript/warnings/untyped_declaration=1
 
 window/size/viewport_width=1200
 window/size/viewport_height=900
+
+[dotnet]
+
+project/assembly_name="Bosca Ceoil- The Blue Album"
 
 [editor]
 
