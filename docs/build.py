@@ -8,6 +8,7 @@
 
 import argparse
 from pathlib import Path
+from string import Template
 from os import walk
 import shutil
 
@@ -16,10 +17,11 @@ from tools.colorize import magenta, cyan, yellow, green, gray, bold
 from tools.paths import MarkdownPaths
 
 # Paths.
-DOCS_SOURCE = "./src"
-DOCS_OUT = "./out"
-DOCS_TEMPLATES = "./templates"
-DOCS_ASSETS = "./assets"
+DOCS_BASE = Path(__file__).parent.resolve()
+DOCS_SOURCE = DOCS_BASE / "src"
+DOCS_OUT = DOCS_BASE / "out"
+DOCS_TEMPLATES = DOCS_BASE / "templates"
+DOCS_ASSETS = DOCS_BASE / "assets"
 
 # Templates.
 PAGE_DEFAULTS = {
@@ -50,7 +52,6 @@ ALL_PAGES = []
 
 LINK_BASE_PATH = "http://localhost:8080"
 
-
 # Command line arguments.
 parser = argparse.ArgumentParser()
 parser.add_argument("--release", action="store_true", help="Enables release-mode settings.")
@@ -68,91 +69,75 @@ builder = markdown.Markdown(extensions=['meta', 'tables', 'toc', MarkdownPaths(b
 
 # Helpers.
 
-def get_template(key, fallback = True):
+def get_template(key, fallback=True):
     # Check the cache first.
     if key in PAGE_TEMPLATES:
         return PAGE_TEMPLATES[key]
     
     # If not in cache, try to find the file.
-    template_path = Path(DOCS_TEMPLATES, f"{key}.html")
+    template_path = DOCS_TEMPLATES / f"{key}.html"
     if not template_path.exists():
         # If the file doesn't exist, try the default template.
         if fallback:
             return get_template(DEFAULT_PAGE_TEMPLATE, False)
-        # If even the default template doesn't exist, that's bad.
+         # If even the default template doesn't exist, that's bad.
         raise ValueError(f"Invalid template key '{key}'")
     
     # Read the template contents.
-    template = ""
-    with open(template_path, mode="r", encoding="utf-8") as f:
-        template = f.read()
-    
-    # Store it in cache and return.
-    PAGE_TEMPLATES[key] = template
-    return template
+    template_str = template_path.read_text(encoding="utf-8")
+    PAGE_TEMPLATES[key] = template_str
+    return template_str
 
-
-def convert_source(inpath, outpath, toplevel = False):
-    html = ""
-    meta = {}
-    
+def convert_source(inpath, outpath, toplevel=False):
     print(f"{gray('Rendering page')} {yellow(inpath)} {gray('to')} {cyan(outpath)}")
     
     # Read the source file, convert it to HTML, and extract metadata.
-    with open(inpath, mode="r", encoding="utf-8") as f:
-        text = f.read()
-        builder.reset()
-        html = builder.convert(text)
-        meta = builder.Meta
-    
-    # Retrieve the template used by this page.
+    text = inpath.read_text(encoding="utf-8")
+    builder.reset()
+    html = builder.convert(text)
+    meta = builder.Meta
+
     template_key = DEFAULT_PAGE_TEMPLATE
-    if "template" in meta and len(meta["template"]) > 0:
+    if "template" in meta and meta["template"]:
         template_key = meta["template"][0]
-    template = get_template(template_key)
+    template_str = get_template(template_key)
     
     # Prepare values for template placeholders.
     
     template_values = PAGE_DEFAULTS.copy()
     template_values["PAGE_CONTENT"] = html
-    
-    if "title" in meta and len(meta["title"]) > 0:
-        value = meta["title"][0]
-        template_values["PAGE_TITLE"] = f"{value} — Bosca Ceoil: The Blue Album — Documentation"
-    
-    if "description" in meta and len(meta["description"]) > 0:
+
+    if "title" in meta and meta["title"]:
+        template_values["PAGE_TITLE"] = f"{meta['title'][0]} — Bosca Ceoil: The Blue Album — Documentation"
+    if "description" in meta and meta["description"]:
         template_values["PAGE_DESCRIPTION"] = meta["description"][0]
-    
-    if "keywords" in meta and len(meta["keywords"]) > 0:
+    if "keywords" in meta and meta["keywords"]:
         template_values["PAGE_KEYWORDS"] = meta["keywords"][0]
     
     # Complete the page by replacing placeholder in the template.
-    for key in template_values:
-        value = template_values[key]
-        template = template.replace(f"%{key}%", value)
+    html_output = Template(template_str).safe_substitute(template_values)
     
     # Write the output.
-    with open(outpath, mode="w", encoding="utf-8") as f:
-        f.write(template)
-        ALL_PAGES.append(outpath)
+    outpath.parent.mkdir(parents=True, exist_ok=True)
+    outpath.write_text(html_output, encoding="utf-8")
+    ALL_PAGES.append(outpath)
         
-        # Add top-level pages to the navigation list. But only if it has a title.
-        if toplevel and "title" in meta and len(meta["title"]) > 0:
-            toplevel_key = outpath.name[:-len(outpath.suffix)]
-            TOP_LEVEL_PAGES[toplevel_key] = {
-                "outpath": outpath,
-                "title": meta["title"][0],
-            }
-
+    # Add top-level pages to the navigation list. But only if it has a title
+    if toplevel and "title" in meta and meta["title"]:
+        toplevel_key = outpath.stem
+        TOP_LEVEL_PAGES[toplevel_key] = {
+            "outpath": outpath,
+            "title": meta["title"][0],
+        }
 
 def create_navigation(current_path):
     text = ""
     # Normalize the DOCS_OUT variable before calculating its length.
-    outdir_len = len(str(Path(DOCS_OUT)))
+    outdir_len = len(str(DOCS_OUT))
     
-    for toplevel_key in TOP_LEVEL_PAGES:
-        data = TOP_LEVEL_PAGES[toplevel_key]
-        # Normalize the outpath and remove output path prefix.
+    for key, data in TOP_LEVEL_PAGES.items():
+        if "outpath" not in data or "title" not in data:
+            continue
         url = str(data["outpath"])[outdir_len:].replace("\\", "/")[1:]
         title = data["title"]
         
@@ -178,10 +163,10 @@ def build():
     print(bold("Rendering pages..."))
 
     # Iterate over all source files, recursively, and convert them.
-    for (dirpath, dirnames, filenames) in walk(DOCS_SOURCE):
-        toplevel = (dirpath == DOCS_SOURCE)
+    for dirpath, dirnames, filenames in walk(DOCS_SOURCE):
+        toplevel = (Path(dirpath) == DOCS_SOURCE)
         
-        out_dirpath = Path(DOCS_OUT, dirpath[len(DOCS_SOURCE) + 1:])
+        out_dirpath = DOCS_OUT / Path(dirpath).relative_to(DOCS_SOURCE)
         # Ensure that the output folder exists.
         out_dirpath.mkdir(parents=True, exist_ok=True)
         
@@ -189,9 +174,8 @@ def build():
         for filename in filenames:
             if not filename.endswith(".md"):
                 continue
-            
-            filepath = Path(dirpath, filename)
-            out_filepath = out_dirpath.joinpath(f"{filename[:-3]}.html")
+            filepath = Path(dirpath) / filename
+            out_filepath = out_dirpath / f"{filename[:-3]}.html"
             convert_source(filepath, out_filepath, toplevel)
 
     print("")
@@ -199,31 +183,27 @@ def build():
 
     # Update generated HTML files with the navigation.
     for outpath in ALL_PAGES:
-        with open(outpath, "r+") as f:
-            print(f"{gray('Creating navigation on page')} {cyan(outpath)}")
+        print(f"{gray('Creating navigation on page')} {cyan(outpath)}")
+        text = outpath.read_text(encoding="utf-8")
             
-            text = f.read()
-            f.seek(0)
-            f.truncate()
-            
-            # Generate custom navigation for each page to highlight active page.
-            navigation = create_navigation(outpath)
-            text = text.replace(f"%PAGE_NAVIGATION%", navigation)
-            f.write(text)
+        # Generate custom navigation for each page to highlight active page.
+        navigation = create_navigation(outpath)
+        html_output = Template(text).safe_substitute(PAGE_NAVIGATION=navigation)
+        outpath.write_text(html_output, encoding="utf-8")
 
     print("")
     print(bold("Copying assets..."))
 
     # Copy the assets to the output.
-    for (dirpath, dirnames, filenames) in walk(DOCS_ASSETS):
-        out_dirpath = Path(DOCS_OUT, dirpath[len(DOCS_ASSETS) + 1:])
+    for dirpath, dirnames, filenames in walk(DOCS_ASSETS):
+        out_dirpath = DOCS_OUT / Path(dirpath).relative_to(DOCS_ASSETS)
         # Ensure that the output folder exists.
         out_dirpath.mkdir(parents=True, exist_ok=True)
         
         # For every Markdown file in the folder, perform the conversion.
         for filename in filenames:
-            filepath = Path(dirpath, filename)
-            out_filepath = out_dirpath.joinpath(filename)
+            filepath = Path(dirpath) / filename
+            out_filepath = out_dirpath / filename
             
             print(f"{gray('Copying asset')} {yellow(filepath)} {gray('to')} {cyan(out_filepath)}")
             shutil.copyfile(filepath, out_filepath)

@@ -79,14 +79,14 @@ The documentation consists of static HTML files generated from the source Markdo
 - Each page uses one of the templates located in `/templates`, with `article.html` being the default one.
 - Other static files which can be used by the documentation pages are located in `/assets` and copied as is to the output folder by the [documentation build system](#building-and-testing).
 
-Templates are written as normal HTML files with strings delimited with `%` used as placeholders for inserted content. Currently, these placeholders are used:
+Templates are written as normal HTML files with strings delimited with `$` used as placeholders for inserted content. Currently, these placeholders are used:
 
-- `%BOSCA_VERSION%`, the version of Bosca this documentation is for.
-- `%PAGE_TITLE%`, the title of the page.
-- `%PAGE_DESCRIPTION%`, the SEO-friendly description of the page.
-- `%PAGE_KEYWORDS%`, SEO-friendly keywords for the page.
-- `%PAGE_CONTENT%`, rendered page content as HTML.
-- `%PAGE_NAVIGATION%`, rendered navigation entries as HTML.
+- `$BOSCA_VERSION`, the version of Bosca this documentation is for.
+- `$PAGE_TITLE`, the title of the page.
+- `$PAGE_DESCRIPTION`, the SEO-friendly description of the page.
+- `$PAGE_KEYWORDS`, SEO-friendly keywords for the page.
+- `$PAGE_CONTENT`, rendered page content as HTML.
+- `$PAGE_NAVIGATION`, rendered navigation entries as HTML.
 
 The main styling configuration is defined in `/assets/styles/theme.css`. Both light and dark modes are supported and must be accounted for. Make sure to use CSS variables to colors and other shared values.
 
