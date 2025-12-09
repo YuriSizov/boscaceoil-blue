@@ -4,7 +4,7 @@
 # Provided under MIT                              #
 ###################################################
 
-class_name ColorPalette extends Object
+class_name BoscaColorPalette extends Object
 
 const PALETTE_BLUE   := 0
 const PALETTE_PURPLE := 1
@@ -22,4 +22,4 @@ static func validate(value: int) -> int:
 	if value == PALETTE_GRAY:
 		return value
 
-	return ValueValidator.index(value, ColorPalette.MAX, "Invalid value: Expected an index value between 0 and %d, or %d, got %d instead." % [ ColorPalette.MAX - 1, ColorPalette.PALETTE_GRAY, value ])
+	return ValueValidator.index(value, BoscaColorPalette.MAX, "Invalid value: Expected an index value between 0 and %d, or %d, got %d instead." % [ BoscaColorPalette.MAX - 1, BoscaColorPalette.PALETTE_GRAY, value ])

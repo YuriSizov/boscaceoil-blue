@@ -43,7 +43,7 @@ var name: String:
 	set(value): pass
 ## Color palette for the instrument, used to color code the UI.
 var color_palette: int:
-	get: return _voice_data.color_palette if _voice_data else ColorPalette.PALETTE_GRAY
+	get: return _voice_data.color_palette if _voice_data else BoscaColorPalette.PALETTE_GRAY
 	set(value): pass
 
 # Adjustments.
