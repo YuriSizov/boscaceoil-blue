@@ -37,6 +37,7 @@ var _has_next_pager: bool = false
 var _hovering: bool = false
 var _hovered_item: int = -1
 var drag_source_id: int = -1
+var _pan_accumulator: float = 0.0
 
 var _button_holder: ButtonHolder = null
 var _fake_scroll_up_button: Button = Button.new()
@@ -120,6 +121,17 @@ func _gui_input(event: InputEvent) -> void:
 				item_index += 1
 		
 		else:
+			accept_event()
+
+	elif event is InputEventPanGesture:
+		var pan := event as InputEventPanGesture
+		_pan_accumulator += pan.delta.y
+		if absf(_pan_accumulator) >= 0.5:
+			if _pan_accumulator > 0:
+				_change_scroll_offset(1)
+			else:
+				_change_scroll_offset(-1)
+			_pan_accumulator = 0.0
 			accept_event()
 
 

@@ -29,6 +29,7 @@ var _scroll_offset: int = 0
 var _max_scroll_offset: int = -1
 ## Whether to follow the playback cursor with scroll or not.
 var _following_playback_cursor: bool = false
+var _pan_accumulator: Vector2 = Vector2.ZERO
 
 var _arrangement_channels: Array[ArrangementChannel] = []
 var _arrangement_bars: Array[ArrangementBar] = []
@@ -158,6 +159,22 @@ func _gui_input(event: InputEvent) -> void:
 		else:
 			if mb.button_index == MOUSE_BUTTON_LEFT && mb.alt_pressed:
 				_clone_pattern_at_cursor()
+
+	elif event is InputEventPanGesture:
+		var pan := event as InputEventPanGesture
+		_pan_accumulator += pan.delta
+		if absf(_pan_accumulator.y) >= 0.5 && pan.shift_pressed:
+			if _pan_accumulator.y > 0:
+				_resize_pattern_width(-1)
+			else:
+				_resize_pattern_width(1)
+			_pan_accumulator.y = 0.0
+		if absf(_pan_accumulator.x) >= 0.5 && not pan.shift_pressed:
+			if _pan_accumulator.x > 0:
+				_change_scroll_offset(1)
+			else:
+				_change_scroll_offset(-1)
+			_pan_accumulator.x = 0.0
 
 
 func _shortcut_input(event: InputEvent) -> void:

@@ -47,6 +47,7 @@ var _octave_rows: Array[OctaveRow] = []
 var _active_notes: Array[ActiveNote] = []
 var _note_cursor_visible: bool = false
 var _note_cursor_size: int = 1
+var _pan_accumulator: float = 0.0
 
 var _note_drawing_mode: DrawingMode = DrawingMode.DRAWING_OFF
 
@@ -147,6 +148,22 @@ func _gui_input(event: InputEvent) -> void:
 				_stop_drawing_notes()
 			elif _note_selecting && mb.button_index == MOUSE_BUTTON_LEFT:
 				_stop_selecting_notes()
+
+	elif event is InputEventPanGesture && _note_cursor_visible:
+		var pan := event as InputEventPanGesture
+		_pan_accumulator += pan.delta.y
+		if absf(_pan_accumulator) >= 0.5:
+			if pan.is_command_or_control_pressed():
+				if _pan_accumulator > 0:
+					_adjust_note_cursor(-1)
+				else:
+					_adjust_note_cursor(1)
+			else:
+				if _pan_accumulator > 0:
+					_change_scroll_offset(-1)
+				else:
+					_change_scroll_offset(1)
+			_pan_accumulator = 0.0
 
 
 func _shortcut_input(event: InputEvent) -> void:
